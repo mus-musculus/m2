@@ -10572,52 +10572,53 @@ then_1:
 ;stmt4:
   %6 = extractvalue %LLVM_Value %0, 1
   %7 = call i1 (%Type*) @func357 (%Type* %6)
-  br i1 %7, label %then_2, label %else_2
-then_2:
-;stmt5:
-  %8 = call %LLVM_Value (%LLVM_Value) @loadImmPtr (%LLVM_Value %0)
-  ret %LLVM_Value %8
-  br label %endif_2
-else_2:
-  br label %endif_2
-endif_2:
-;stmt6:
-  ret %LLVM_Value %0
+  br label %select_1_0
+select_1_0:
+  %8 = icmp eq i1 %7, 1
+  br i1 %8, label %select_1_0_ok, label %select_1_1
+select_1_0_ok:
+  %9 = call %LLVM_Value (%LLVM_Value) @loadImmPtr (%LLVM_Value %0)
+  br label %select_1_end
+select_1_1:
+  br label %select_1_end
+select_1_end:
+  %10 = phi %LLVM_Value [ %9, %select_1_0_ok ], [ %0, %select_1_1 ]
+  ret %LLVM_Value %10
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-;stmt7:
-  %11 = icmp ne %LLVM_ValueKind %2, 4
-  %12 = icmp ne %LLVM_ValueKind %2, 5
-  %13 = icmp ne %LLVM_ValueKind %2, 6
-  %14 = and i1 %12, %13
-  %15 = and i1 %11, %14
-  br i1 %15, label %then_3, label %else_3
-then_3:
-;stmt8:
+;stmt5:
+  %12 = icmp ne %LLVM_ValueKind %2, 4
+  %13 = icmp ne %LLVM_ValueKind %2, 5
+  %14 = icmp ne %LLVM_ValueKind %2, 6
+  %15 = and i1 %13, %14
+  %16 = and i1 %12, %15
+  br i1 %16, label %then_2, label %else_2
+then_2:
+;stmt6:
   ret %LLVM_Value %0
-  br label %endif_3
-else_3:
-  br label %endif_3
-endif_3:
+  br label %endif_2
+else_2:
+  br label %endif_2
+endif_2:
+;stmt7:
+  %18 = extractvalue %LLVM_Value %0, 1
+;stmt8:
+  %19 = bitcast [5 x %Nat8]* @func319_str1 to %Str
+  %20 = call %Nat32 (%Str, %Type*) @func279 (%Str %19, %Type* %18)
 ;stmt9:
-  %17 = extractvalue %LLVM_Value %0, 1
-;stmt10:
-  %18 = bitcast [5 x %Nat8]* @func319_str1 to %Str
-  %19 = call %Nat32 (%Str, %Type*) @func279 (%Str %18, %Type* %17)
-;stmt11:
   call void () @comma ()
+;stmt10:
+  call void (%Type*) @func339 (%Type* %18)
+;stmt11:
+  %21 = bitcast [3 x %Nat8]* @func319_str2 to %Str
+  call void (%Str) @o (%Str %21)
 ;stmt12:
-  call void (%Type*) @func339 (%Type* %17)
-;stmt13:
-  %20 = bitcast [3 x %Nat8]* @func319_str2 to %Str
-  call void (%Str) @o (%Str %20)
-;stmt14:
   call void (%LLVM_Value) @func321 (%LLVM_Value %0)
-;stmt15:
-  %21 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %17, %Nat32 %19)
-  ret %LLVM_Value %21
+;stmt13:
+  %22 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %18, %Nat32 %20)
+  ret %LLVM_Value %22
 }
 
 define %Int32 @print_val_imm (%LLVM_Value) {

@@ -1010,8 +1010,10 @@ load = (x : LLVM_Value) -> LLVM_Value {
   // явной операцией inttoptr. Поэтому если нам попался указатель вида #ValueImmediate
   // то его нужно будет загрузить в регистр функцией inttoptr
   if k == #LLVM_ValueImmediate {
-    if type_is_ref(x.type) {return loadImmPtr(x)}
-    return x
+    return select type_is_ref(x.type) {
+      true => loadImmPtr(x)
+      else => x
+    }
   }
 
   // в загрузке нуждаются только значения с изменяемым классом памяти
