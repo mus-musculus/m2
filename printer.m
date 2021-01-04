@@ -1229,8 +1229,6 @@ print_block = (b : *Block) -> () {
 
 
 
-
-
 printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
   assert(t != nil, "prn/printType :: t = nil\n")
 
