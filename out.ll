@@ -13544,146 +13544,143 @@ then_5:
   %69 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 2
   %70 = load %Int64, %Int64* %69
 ;stmt26:
-  %71 = load %Type*, %Type** %55
-  %72 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
-  %73 = load %TokenInfo*, %TokenInfo** %72
-  %74 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func389 (%ValueKind 3, %Type* %71, %TokenInfo* %73)
-;stmt27:
-  %75 = getelementptr inbounds %Value, %Value* %74, i1 0, i32 2
   br label %select_1_0
 select_1_0:
-  %76 = icmp eq %ValueKind %0, 14
-  br i1 %76, label %select_1_0_ok, label %select_1_1
+  %71 = icmp eq %ValueKind %0, 14
+  br i1 %71, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %77 = add %Int64 %68, %70
+  %72 = add %Int64 %68, %70
   br label %select_1_end
 select_1_1:
-  %78 = icmp eq %ValueKind %0, 15
-  br i1 %78, label %select_1_1_ok, label %select_1_2
+  %73 = icmp eq %ValueKind %0, 15
+  br i1 %73, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
-  %79 = sub %Int64 %68, %70
+  %74 = sub %Int64 %68, %70
   br label %select_1_end
 select_1_2:
-  %80 = icmp eq %ValueKind %0, 16
-  br i1 %80, label %select_1_2_ok, label %select_1_3
+  %75 = icmp eq %ValueKind %0, 16
+  br i1 %75, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
-  %81 = mul %Int64 %68, %70
+  %76 = mul %Int64 %68, %70
   br label %select_1_end
 select_1_3:
-  %82 = icmp eq %ValueKind %0, 17
-  br i1 %82, label %select_1_3_ok, label %select_1_4
+  %77 = icmp eq %ValueKind %0, 17
+  br i1 %77, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
-  %83 = sdiv %Int64 %68, %70
+  %78 = sdiv %Int64 %68, %70
   br label %select_1_end
 select_1_4:
-  %84 = icmp eq %ValueKind %0, 18
-  br i1 %84, label %select_1_4_ok, label %select_1_5
+  %79 = icmp eq %ValueKind %0, 18
+  br i1 %79, label %select_1_4_ok, label %select_1_5
 select_1_4_ok:
-  %85 = srem %Int64 %68, %70
+  %80 = srem %Int64 %68, %70
   br label %select_1_end
 select_1_5:
-  %86 = icmp eq %ValueKind %0, 19
-  br i1 %86, label %select_1_5_ok, label %select_1_6
+  %81 = icmp eq %ValueKind %0, 19
+  br i1 %81, label %select_1_5_ok, label %select_1_6
 select_1_5_ok:
-  %87 = or %Int64 %68, %70
+  %82 = or %Int64 %68, %70
   br label %select_1_end
 select_1_6:
-  %88 = icmp eq %ValueKind %0, 20
-  br i1 %88, label %select_1_6_ok, label %select_1_7
+  %83 = icmp eq %ValueKind %0, 20
+  br i1 %83, label %select_1_6_ok, label %select_1_7
 select_1_6_ok:
-  %89 = xor %Int64 %68, %70
+  %84 = xor %Int64 %68, %70
   br label %select_1_end
 select_1_7:
-  %90 = icmp eq %ValueKind %0, 21
-  br i1 %90, label %select_1_7_ok, label %select_1_8
+  %85 = icmp eq %ValueKind %0, 21
+  br i1 %85, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
-  %91 = and %Int64 %68, %70
+  %86 = and %Int64 %68, %70
   br label %select_1_end
 select_1_8:
-  %92 = icmp eq %ValueKind %0, 22
-  br i1 %92, label %select_1_8_ok, label %select_1_9
+  %87 = icmp eq %ValueKind %0, 22
+  br i1 %87, label %select_1_8_ok, label %select_1_9
 select_1_8_ok:
-  %93 = icmp eq %Int64 %68, %70
-  %94 = zext i1 %93 to %Int64
+  %88 = icmp eq %Int64 %68, %70
+  %89 = zext i1 %88 to %Int64
   br label %select_1_end
 select_1_9:
-  %95 = icmp eq %ValueKind %0, 23
-  br i1 %95, label %select_1_9_ok, label %select_1_10
+  %90 = icmp eq %ValueKind %0, 23
+  br i1 %90, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
-  %96 = icmp ne %Int64 %68, %70
-  %97 = zext i1 %96 to %Int64
+  %91 = icmp ne %Int64 %68, %70
+  %92 = zext i1 %91 to %Int64
   br label %select_1_end
 select_1_10:
-  %98 = icmp eq %ValueKind %0, 24
-  br i1 %98, label %select_1_10_ok, label %select_1_11
+  %93 = icmp eq %ValueKind %0, 24
+  br i1 %93, label %select_1_10_ok, label %select_1_11
 select_1_10_ok:
-  %99 = icmp slt %Int64 %68, %70
-  %100 = zext i1 %99 to %Int64
+  %94 = icmp slt %Int64 %68, %70
+  %95 = zext i1 %94 to %Int64
   br label %select_1_end
 select_1_11:
-  %101 = icmp eq %ValueKind %0, 25
-  br i1 %101, label %select_1_11_ok, label %select_1_12
+  %96 = icmp eq %ValueKind %0, 25
+  br i1 %96, label %select_1_11_ok, label %select_1_12
 select_1_11_ok:
-  %102 = icmp sgt %Int64 %68, %70
-  %103 = zext i1 %102 to %Int64
+  %97 = icmp sgt %Int64 %68, %70
+  %98 = zext i1 %97 to %Int64
   br label %select_1_end
 select_1_12:
-  %104 = icmp eq %ValueKind %0, 26
-  br i1 %104, label %select_1_12_ok, label %select_1_13
+  %99 = icmp eq %ValueKind %0, 26
+  br i1 %99, label %select_1_12_ok, label %select_1_13
 select_1_12_ok:
-  %105 = icmp sle %Int64 %68, %70
-  %106 = zext i1 %105 to %Int64
+  %100 = icmp sle %Int64 %68, %70
+  %101 = zext i1 %100 to %Int64
   br label %select_1_end
 select_1_13:
-  %107 = icmp eq %ValueKind %0, 27
-  br i1 %107, label %select_1_13_ok, label %select_1_14
+  %102 = icmp eq %ValueKind %0, 27
+  br i1 %102, label %select_1_13_ok, label %select_1_14
 select_1_13_ok:
-  %108 = icmp sge %Int64 %68, %70
-  %109 = zext i1 %108 to %Int64
+  %103 = icmp sge %Int64 %68, %70
+  %104 = zext i1 %103 to %Int64
   br label %select_1_end
 select_1_14:
-  %110 = bitcast %Numeric 0 to %Int64
+  %105 = bitcast %Numeric 0 to %Int64
   br label %select_1_end
 select_1_end:
-  %111 = phi %Int64 [ %77, %select_1_0_ok ], [ %79, %select_1_1_ok ], [ %81, %select_1_2_ok ], [ %83, %select_1_3_ok ], [ %85, %select_1_4_ok ], [ %87, %select_1_5_ok ], [ %89, %select_1_6_ok ], [ %91, %select_1_7_ok ], [ %94, %select_1_8_ok ], [ %97, %select_1_9_ok ], [ %100, %select_1_10_ok ], [ %103, %select_1_11_ok ], [ %106, %select_1_12_ok ], [ %109, %select_1_13_ok ], [ %110, %select_1_14 ]
-  store %Int64 %111, %Int64* %75, align 8
-;stmt28:
-  ret %Value* %74
+  %106 = phi %Int64 [ %72, %select_1_0_ok ], [ %74, %select_1_1_ok ], [ %76, %select_1_2_ok ], [ %78, %select_1_3_ok ], [ %80, %select_1_4_ok ], [ %82, %select_1_5_ok ], [ %84, %select_1_6_ok ], [ %86, %select_1_7_ok ], [ %89, %select_1_8_ok ], [ %92, %select_1_9_ok ], [ %95, %select_1_10_ok ], [ %98, %select_1_11_ok ], [ %101, %select_1_12_ok ], [ %104, %select_1_13_ok ], [ %105, %select_1_14 ]
+;stmt27:
+  %107 = load %Type*, %Type** %55
+  %108 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
+  %109 = load %TokenInfo*, %TokenInfo** %108
+  %110 = call %Value* (%Type*, %Int64, %TokenInfo*) @func391 (%Type* %107, %Int64 %106, %TokenInfo* %109)
+  ret %Value* %110
   br label %endif_5
 else_5:
   br label %endif_5
 endif_5:
+;stmt28:
+  %112 = load %Type*, %Type** %55
+  %113 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
+  %114 = load %TokenInfo*, %TokenInfo** %113
+  %115 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func389 (%ValueKind %0, %Type* %112, %TokenInfo* %114)
 ;stmt29:
-  %113 = load %Type*, %Type** %55
-  %114 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
-  %115 = load %TokenInfo*, %TokenInfo** %114
-  %116 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func389 (%ValueKind %0, %Type* %113, %TokenInfo* %115)
+  %116 = getelementptr inbounds %Value, %Value* %115, i1 0, i32 9
+  %117 = getelementptr inbounds %ValueBin, %ValueBin* %116, i1 0, i32 0
+  store %Value* %21, %Value** %117, align 8
 ;stmt30:
-  %117 = getelementptr inbounds %Value, %Value* %116, i1 0, i32 9
-  %118 = getelementptr inbounds %ValueBin, %ValueBin* %117, i1 0, i32 0
-  store %Value* %21, %Value** %118, align 8
+  %118 = getelementptr inbounds %Value, %Value* %115, i1 0, i32 9
+  %119 = getelementptr inbounds %ValueBin, %ValueBin* %118, i1 0, i32 1
+  store %Value* %24, %Value** %119, align 8
 ;stmt31:
-  %119 = getelementptr inbounds %Value, %Value* %116, i1 0, i32 9
-  %120 = getelementptr inbounds %ValueBin, %ValueBin* %119, i1 0, i32 1
-  store %Value* %24, %Value** %120, align 8
+  %120 = getelementptr inbounds %Value, %Value* %115, i1 0, i32 17
+  %121 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 17
+  %122 = load i1, i1* %121
+  %123 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 17
+  %124 = load i1, i1* %123
+  %125 = or i1 %122, %124
+  store i1 %125, i1* %120, align 1
 ;stmt32:
-  %121 = getelementptr inbounds %Value, %Value* %116, i1 0, i32 17
-  %122 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 17
-  %123 = load i1, i1* %122
-  %124 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 17
-  %125 = load i1, i1* %124
-  %126 = or i1 %123, %125
-  store i1 %126, i1* %121, align 1
+  ret %Value* %115
 ;stmt33:
-  ret %Value* %116
-;stmt34:
   br label %fail
 fail:
-;stmt35:
-  %128 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
-  %129 = load %TokenInfo*, %TokenInfo** %128
-  %130 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %129)
-  ret %Value* %130
+;stmt34:
+  %127 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
+  %128 = load %TokenInfo*, %TokenInfo** %127
+  %129 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %128)
+  ret %Value* %129
 }
 
 define void @func402 (%Unit*, %Unit*, %Nat32) {
@@ -14635,25 +14632,21 @@ else_1:
 endif_1:
 ;stmt6:
   %21 = load %Type*, %Type** @typeNumeric
-  %22 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
-  %23 = load %TokenInfo*, %TokenInfo** %22
-  %24 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func389 (%ValueKind 3, %Type* %21, %TokenInfo* %23)
+  %22 = getelementptr inbounds %Type, %Type* %4, i1 0, i32 2
+  %23 = load %Nat32, %Nat32* %22
+  %24 = sext %Nat32 %23 to %Int64
+  %25 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
+  %26 = load %TokenInfo*, %TokenInfo** %25
+  %27 = call %Value* (%Type*, %Int64, %TokenInfo*) @func391 (%Type* %21, %Int64 %24, %TokenInfo* %26)
+  ret %Value* %27
 ;stmt7:
-  %25 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 2
-  %26 = getelementptr inbounds %Type, %Type* %4, i1 0, i32 2
-  %27 = load %Nat32, %Nat32* %26
-  %28 = sext %Nat32 %27 to %Int64
-  store %Int64 %28, %Int64* %25, align 8
-;stmt8:
-  ret %Value* %24
-;stmt9:
   br label %fail
 fail:
-;stmt10:
-  %30 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
-  %31 = load %TokenInfo*, %TokenInfo** %30
-  %32 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %31)
-  ret %Value* %32
+;stmt8:
+  %29 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
+  %30 = load %TokenInfo*, %TokenInfo** %29
+  %31 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %30)
+  ret %Value* %31
 }
 
 define %Value* @func419 (%AstValue*) {
@@ -14697,25 +14690,21 @@ else_1:
 endif_1:
 ;stmt6:
   %21 = load %Type*, %Type** @typeNumeric
-  %22 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
-  %23 = load %TokenInfo*, %TokenInfo** %22
-  %24 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func389 (%ValueKind 3, %Type* %21, %TokenInfo* %23)
+  %22 = getelementptr inbounds %Type, %Type* %4, i1 0, i32 2
+  %23 = load %Nat32, %Nat32* %22
+  %24 = sext %Nat32 %23 to %Int64
+  %25 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
+  %26 = load %TokenInfo*, %TokenInfo** %25
+  %27 = call %Value* (%Type*, %Int64, %TokenInfo*) @func391 (%Type* %21, %Int64 %24, %TokenInfo* %26)
+  ret %Value* %27
 ;stmt7:
-  %25 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 2
-  %26 = getelementptr inbounds %Type, %Type* %4, i1 0, i32 3
-  %27 = load %Nat32, %Nat32* %26
-  %28 = sext %Nat32 %27 to %Int64
-  store %Int64 %28, %Int64* %25, align 8
-;stmt8:
-  ret %Value* %24
-;stmt9:
   br label %fail
 fail:
-;stmt10:
-  %30 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
-  %31 = load %TokenInfo*, %TokenInfo** %30
-  %32 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %31)
-  ret %Value* %32
+;stmt8:
+  %29 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
+  %30 = load %TokenInfo*, %TokenInfo** %29
+  %31 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %30)
+  ret %Value* %31
 }
 
 define %Value* @func420 (%AstValue*) {

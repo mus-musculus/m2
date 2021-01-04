@@ -236,8 +236,8 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
      r.kind == #ValueImmediate {
     lv = l.imm
     rv = r.imm
-    v = value_new(#ValueImmediate, typ, x.ti)
-    v.imm := select k {
+
+    imm = select k {
       #ValueAdd => lv + rv
       #ValueSub => lv - rv
       #ValueMul => lv * rv
@@ -254,7 +254,8 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
       #ValueGe => (lv >= rv) to Int64
       => 0
     }
-    return v
+
+    return value_new_imm(typ, imm, x.ti)
   }
 
   v = value_new(k, typ, x.ti)
@@ -576,9 +577,7 @@ do_value_sizeof = DoValue {
     return value_new_poison (x.ti)
   }
 
-  vx = value_new(#ValueImmediate, typeNumeric, x.ti)
-  vx.imm := t.size to Int64
-  return vx
+  return value_new_imm(typeNumeric, t.size to Int64, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -594,9 +593,7 @@ do_value_alignof = DoValue {
     return value_new_poison (x.ti)
   }
 
-  vx = value_new(#ValueImmediate, typeNumeric, x.ti)
-  vx.imm := t.align to Int64
-  return vx
+  return value_new_imm(typeNumeric, t.size to Int64, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -616,8 +613,9 @@ do_value_named = DoValue {
     return nv
   }
 
+  // копируется все норм, но есть ValueUndefined
+  // которые будут потом определены, и вот с ними бывает пролет
   //vv = malloc(sizeof Value) to *Value
-  //memcpy(vv, v, sizeof Value)
   //*vv := *v
 
   return v
@@ -632,7 +630,6 @@ do_value_numeric = DoValue {
     sscanf(&str[0], "%lld", &d)
   }
 
-  //type_numeric_new()
   return value_new_imm(typeNumeric, d, x.ti)
 }
 
