@@ -32,7 +32,7 @@ dold = (x : *Value) -> *Value {
 
   typ = select x.type.kind {
     #TypeVar => x.type.var.of
-    => x.type
+    else => x.type
   }
 
   k = x.kind
@@ -97,7 +97,7 @@ do_valuex = DoValuex {
     #AstValueSizeof  => do_value_sizeof(x)
     #AstValueAlignof => do_value_alignof(x)
     #AstValueSelect  => do_value_select(x)
-    => value_new_poison (x.ti)
+    else => value_new_poison (x.ti)
   }
 
   assert(v != nil, "do_value : v == nil")
@@ -106,7 +106,7 @@ do_valuex = DoValuex {
 
   return select load {
     true => dold(v)
-    => v
+    else => v
   }
 }
 
@@ -227,7 +227,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
 
   typ = select isReletionOpKind(k) {
     true => typeBool
-    => l.type
+    else => l.type
   }
 
   if l.kind == #ValueImmediate and
@@ -250,7 +250,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
       #ValueGt => (lv > rv) to Int64
       #ValueLe => (lv <= rv) to Int64
       #ValueGe => (lv >= rv) to Int64
-      => 0
+      else => 0
     }
 
     return value_new_imm(typ, imm, x.ti)
@@ -524,7 +524,7 @@ do_value_cast = DoValue {
       #TypePointer => do_value_cast_ptr (v, t, ti)
       #TypeArray => do_value_cast_arr (v, t, ti)
       #TypeArrayU => do_value_cast_uarr (v, t, ti)
-      => DoValueCast {fatal("do_value_cast unk"); return nil to *Value} (v, t, ti)
+      else => DoValueCast {fatal("do_value_cast unk"); return nil to *Value} (v, t, ti)
     }
   }
 
@@ -693,7 +693,7 @@ do_value_func = DoValue {
 
   fctx.id := select old_fctx {
     nil => uid
-    => cat3(old_fctx.id, "_", uid)
+    else => cat3(old_fctx.id, "_", uid)
   }
 
   // set current block ^^ (after add to parent)
@@ -783,7 +783,7 @@ do_value_shift = DoValue {
 
   k = select x.kind {
     #AstValueShl => #ValueShl
-    => #ValueShr
+    else => #ValueShr
   }
 
   // свертка констант
@@ -791,7 +791,7 @@ do_value_shift = DoValue {
 
     d = select k {
       #ValueShl => l.imm << r.imm
-      => l.imm >> r.imm
+      else => l.imm >> r.imm
     }
 
     return value_new_imm(l.type, d, x.ti)

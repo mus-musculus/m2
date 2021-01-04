@@ -910,8 +910,8 @@ parse_value_select = AstValueParser {
   skip_nl()
   while not match("}") {
 
-    match("else")
-    if match("=>") {
+    if match("else") {
+      need("=>")
       // otherwise
       v.select.other := parse_value()
       skip_nl()

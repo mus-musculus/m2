@@ -488,8 +488,8 @@ target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"target triple = "x86_
 @func259_str6 = private unnamed_addr constant [44 x i8] c"; llc out2.ll ; for create .s file from .ll\00", align 1
 @func259_str7 = private unnamed_addr constant [25 x i8] c"target datalayout = \22%s\22\00", align 1
 @func259_str8 = private unnamed_addr constant [21 x i8] c"target triple = \22%s\22\00", align 1
-@func259_str9 = private unnamed_addr constant [17 x i8] c"%Bool = type i1à\00", align 1
-@func259_str10 = private unnamed_addr constant [17 x i8] c"%Unit = type {}à\00", align 1
+@func259_str9 = private unnamed_addr constant [16 x i8] c"%Bool = type i1\00", align 1
+@func259_str10 = private unnamed_addr constant [16 x i8] c"%Unit = type {}\00", align 1
 @func259_str11 = private unnamed_addr constant [16 x i8] c"%Str = type i8*\00", align 1
 @func259_str12 = private unnamed_addr constant [20 x i8] c"%Numeric = type i64\00", align 1
 @func259_func260_str1 = private unnamed_addr constant [17 x i8] c"\0A%%%s = type i%d\00", align 1
@@ -7141,11 +7141,11 @@ body_0:
 ;stmt8:
   %14 = bitcast [5 x %Nat8]* @func220_str3 to %Str
   %15 = call i1 (%Str) @func185 (%Str %14)
+  br i1 %15, label %then_0, label %else_0
+then_0:
 ;stmt9:
   %16 = bitcast [3 x %Nat8]* @func220_str4 to %Str
-  %17 = call i1 (%Str) @func185 (%Str %16)
-  br i1 %17, label %then_0, label %else_0
-then_0:
+  %17 = call i1 (%Str) @need (%Str %16)
 ;stmt10:
   %18 = getelementptr inbounds %AstValue, %AstValue* %3, i1 0, i32 10
   %19 = getelementptr inbounds %AstValueSelect, %AstValueSelect* %18, i1 0, i32 2
@@ -8535,10 +8535,10 @@ endif_2:
 ;stmt12:
   call void () @nl ()
 ;stmt13:
-  %35 = bitcast [17 x %Nat8]* @func259_str9 to %Str
+  %35 = bitcast [16 x %Nat8]* @func259_str9 to %Str
   call void (%Str) @ol (%Str %35)
 ;stmt14:
-  %36 = bitcast [17 x %Nat8]* @func259_str10 to %Str
+  %36 = bitcast [16 x %Nat8]* @func259_str10 to %Str
   call void (%Str) @ol (%Str %36)
 ;stmt15:
   %37 = bitcast [16 x %Nat8]* @func259_str11 to %Str
