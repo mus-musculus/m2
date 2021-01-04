@@ -617,6 +617,7 @@ do_value_named = DoValue {
   }
 
   //vv = malloc(sizeof Value) to *Value
+  //memcpy(vv, v, sizeof Value)
   //*vv := *v
 
   return v
