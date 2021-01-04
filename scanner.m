@@ -150,7 +150,7 @@ getToken = () -> TokenKind {
       "!"[0]  => fill(bang)
       "\""[0] => string()
       symEOF  => x_eof()
-      => func () -> () {} ()
+      else => func () -> () {} ()
     }
   }
 
@@ -231,7 +231,7 @@ string = () -> () {
           "a"[0] => "\a"[0]
           "b"[0] => "\b"[0]
           "v"[0] => "\v"[0]
-          => c
+          else => c
         }
       }
     }

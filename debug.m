@@ -24,7 +24,7 @@ prttype2 = (t, selfptr : *Type) -> () {
     #TypeFunc => type_print_func(&t.func)
     #TypePoison => printf("<TypePoison>") to ()
     #TypeForbidden => printf("<TypeForbidden>") to ()
-    => printf("<TypeUnknown>") to ()
+    else => printf("<TypeUnknown>") to ()
   }
 }
 
@@ -116,7 +116,7 @@ value_print_kind = (k : ValueKind) -> () {
     #ValueAccess => "#ValueAccess" to Str
     #ValueCast => "#ValueCast" to Str
     #ValueSelect => "#ValueSelect" to Str
-    => "<unknown-value-kind>" to Str
+    else => "<unknown-value-kind>" to Str
   }
 
   printf("%s", kstr)
@@ -175,7 +175,7 @@ value_print = (v : *Value) -> () {
     #ValueAccess => value_print_access (v)
     #ValueCast => value_print_cast (v)
     #ValueSelect => value_print_select (v)
-    => () -> ()  {} ()
+    else => () -> ()  {} ()
   }
 }
 

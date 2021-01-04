@@ -20,7 +20,6 @@ value_new_poison = (ti : *TokenInfo) -> *Value {
 }
 
 
-
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
   v = value_new(#ValueImmediate, t, ti)
   v.imm := dx
@@ -30,15 +29,14 @@ value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
 
 
 dold = (x : *Value) -> *Value {
-  typ = x.type to Var *Type
 
-  isvar = x.type.kind == #TypeVar
-  if isvar {
-    typ := typ.var.of
+  typ = select x.type.kind {
+    #TypeVar => x.type.var.of
+    => x.type
   }
 
   k = x.kind
-  if isvar or
+  if x.type.kind == #TypeVar or
   k == #ValueGlobalVar or // это плохо
   k == #ValueLocalVar or  // и это плохо
   k == #ValueDeref or
@@ -227,9 +225,9 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
     goto fail
   }
 
-  typ = l.type to Var *Type
-  if isReletionOpKind(k) {
-    typ := typeBool
+  typ = select isReletionOpKind(k) {
+    true => typeBool
+    => l.type
   }
 
   if l.kind == #ValueImmediate and

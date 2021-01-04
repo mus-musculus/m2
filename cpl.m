@@ -34,7 +34,7 @@ compile = (a : *AstModule) -> *Assembly {
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
       #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)
       #AstNodeImport => do_import (e to *AstNodeImport)
-      => () -> () {} ()
+      else => () -> () {} ()
     }
   }
   list_foreach(&a.nodes, do_node, nil)

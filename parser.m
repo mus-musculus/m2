@@ -357,7 +357,7 @@ parse_type = () -> *AstType {
       "{"[0] => parse_type_enum()
       "["[0] => parse_type_array()
       "("[0] => parse_type_rec_func()
-      => nil to *AstType
+      else => nil to *AstType
     }
   }
 
@@ -866,7 +866,7 @@ parse_value_term = AstValueParser {
     #TokenId  => parse_value_id()
     #TokenNum => parse_value_num()
     #TokenString => parse_value_str()
-    => (token : *Token) -> *AstValue {
+    else => (token : *Token) -> *AstValue {
       error("unexpected symbol\n", &token.ti)
       printf("received: %s\n", &token.text[0])
       assert(false, "bad term")
@@ -910,6 +910,7 @@ parse_value_select = AstValueParser {
   skip_nl()
   while not match("}") {
 
+    match("else")
     if match("=>") {
       // otherwise
       v.select.other := parse_value()
@@ -1256,7 +1257,7 @@ is_it_type = () -> Bool {
     #TokenString => false
     #TokenComment => false
     #TokenEOF => false
-    => true
+    else => true
   } {return false}
 
 
@@ -1275,7 +1276,7 @@ is_it_type = () -> Bool {
     "["[0] => true
     "{"[0] => true
     "*"[0] => () -> Bool {skip(); return is_it_type()} ()
-    => false
+    else => false
   } {goto yes}
 
 no:

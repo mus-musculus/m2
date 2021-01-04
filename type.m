@@ -128,7 +128,7 @@ do_type = DoType {
     #AstTypePointer => do_type_pointer(x)
     #AstTypeEnum    => do_type_enum(x)
     #AstTypeRecord  => do_type_record(x)
-    => type_new(#TypePoison, 0, 0, x.ti)
+    else => type_new(#TypePoison, 0, 0, x.ti)
   }
 }
 
@@ -351,7 +351,7 @@ type_eq = (a, b : *Type) -> Bool {
     #TypeRecord  => type_eq_record(&a.record, &b.record)
     #TypeEnum    => false
     #TypeBool    => true
-    => false
+    else => false
   }
 }
 

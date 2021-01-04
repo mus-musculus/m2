@@ -32,7 +32,7 @@ asm_init = (a : *Assembly, arch : Arch, name : Str) -> () {
       a.triple := "thumbv7em-unknown-none-eabi"
     } (a)
 
-    => func (a : *Assembly) -> () {a.datalayout := nil; a.triple := nil} (a)
+    else => func (a : *Assembly) -> () {a.datalayout := nil; a.triple := nil} (a)
   }
 }
 
@@ -512,7 +512,7 @@ eval = Eval {
       return 0 to Var LLVM_Value
     } (x)
 
-    => eval_bin (x)
+    else => eval_bin (x)
   }
 }
 
@@ -717,7 +717,7 @@ EvalCast = (v : LLVM_Value, t : *Type) -> LLVM_Value
 eval_cast_to_ref = EvalCast {
   return select v.type.kind {
     #TypeNumeric => llvm_cast("inttoptr", v, t)  // Int -> Ref
-    => llvm_cast("bitcast", v, t)  // X -> Ref
+    else => llvm_cast("bitcast", v, t)  // X -> Ref
   }
 }
 
@@ -768,7 +768,7 @@ eval_cast_to_basic = EvalCast {
     #TypeEnum => eval_cast_enum_to_basic (v, t)
     #TypeBool => llvm_cast ("zext", v, t)
 
-    => EvalCast {
+    else => EvalCast {
       k = v.type.kind
       fprintf (fout, "\n<invalid k %d in cast>", k)
       printf ("e.type.kind = %d\n", k)
@@ -841,7 +841,7 @@ eval_bin = Eval {
     #ValueShl => "shl" to Str
     #ValueShr => (s : Bool) -> Str {if s {return "ashr"}; return "lshr"} (signed)
 
-    => "<unknown-binary-operation>" to Str
+    else => "<unknown-binary-operation>" to Str
   }
 
   reg = llvm_binary(op, l, r, l.type)
@@ -862,7 +862,7 @@ loadImmPtr = (x : LLVM_Value) -> LLVM_Value {
 loadIfImmAs = (x : LLVM_Value, t : *Type) -> LLVM_Value {
   return select x.kind {
     #LLVM_ValueImmediate => llvm_cast("bitcast", x, t)
-    => x
+    else => x
   }
 }
 
@@ -1066,7 +1066,7 @@ print_val = (x : LLVM_Value) -> () {
     #LLVM_ValueGlobalVar   => fprintf(fout, "@%s", x.id)
     #LLVM_ValueGlobalConst => fprintf(fout, "@%s", x.id)
     #LLVM_ValueLocalVar    => fprintf(fout, "%%%d", x.reg)
-    => fprintf(fout, "<LLVM_ValueInvalid x.kind = %d>", x.kind)
+    else => fprintf(fout, "<LLVM_ValueInvalid x.kind = %d>", x.kind)
   }
 }
 
@@ -1112,7 +1112,7 @@ print_stmt = (s : *Stmt) -> () {
     #StmtContinue => print_stmt_continue()
     #StmtGoto     => print_stmt_goto(s.l)
     #StmtLabel    => print_stmt_label(s.l)
-    => fprintf(fout, "<print::stmt_unknown>") to ()
+    else => fprintf(fout, "<print::stmt_unknown>") to ()
   }
 }
 
@@ -1247,7 +1247,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
     #TypePointer => printTypePointer(&t.pointer)
     #TypeFunc => printTypeFunc(&t.func, func_as_ptr)
     #TypeBool => o("i1")
-    => (t : *Type) -> () {
+    else => (t : *Type) -> () {
       o("<type-unknown-kind>");
       printf("unk type kind %d\n", t.kind);
     } (t)

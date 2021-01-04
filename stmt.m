@@ -36,7 +36,7 @@ do_stmt = DoStmt {
     #AstStmtContinue => do_stmt_continue(x)
     #AstStmtGoto     => do_stmt_goto(x)
     #AstStmtLabel    => do_stmt_label(x)
-    => nil to *Stmt
+    else => nil to *Stmt
   }
 }
 
@@ -57,7 +57,7 @@ do_stmt_assign = DoStmt {
     #AstValueDeref => do_value_deref(lx)
     #AstValueIndex => do_value_index(lx)
     #AstValueAccess => do_value_access(lx)
-    => nil to *Value
+    else => nil to *Value
   }
 
   if lval == nil {
@@ -79,7 +79,7 @@ do_stmt_assign = DoStmt {
 
   ltype = select lval.type.kind {
     #TypeVar => lval.type.var.of
-    => lval.type
+    else => lval.type
   }
 
   rval = nat(rval0, ltype)
@@ -183,7 +183,7 @@ do_stmt_if = DoStmt {
 
   _else = select x.if._else {
     nil => nil to *Stmt
-    => do_stmt (x.if._else)
+    else => do_stmt (x.if._else)
   }
 
   if cond.kind == #ValuePoison {return nil}
@@ -222,7 +222,7 @@ do_stmt_return = DoStmt {
   retval = select rv {
     nil => nil to *Value
 
-    => (rv : *AstValue, ft : *Type) -> *Value {
+    else => (rv : *AstValue, ft : *Type) -> *Value {
       v0 = do_value (rv)
       if v0.kind == #ValuePoison {return nil}
       v = nat (v0, ft)
