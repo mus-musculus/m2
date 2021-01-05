@@ -84,12 +84,7 @@ do_stmt_assign = DoStmt {
 
   rval = nat(rval0, ltype)
 
-  if not type_eq(ltype, rval.type) {
-    error("type error", x.ti)
-    printf("LTYPE = "); prttype(ltype); printf("\n")
-    printf("RTYPE = "); prttype(rval0.type); printf("\n")
-    return nil
-  }
+  if not type_eqe (ltype, rval.type, x.ti) {return nil}
 
   return stmt_assign_new(lval, rval, x.ti)
 }
@@ -226,9 +221,7 @@ do_stmt_return = DoStmt {
       v0 = do_value (rv)
       if v0.kind == #ValuePoison {return nil}
       v = nat (v0, ft)
-      if not type_eq (v.type, ft) {
-        error ("type error", rv.ti)
-      }
+      if not type_eqe (ft, v.type, rv.ti) {}
       return v
     } (rv, func_to)
   }

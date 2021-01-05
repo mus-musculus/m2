@@ -130,16 +130,12 @@ do_value_select = DoValue {
     if kit.v.type == nil {
       kit.v.type := val.type
     } else {
-      if not type_eq(val.type, kit.v.type) {
-        error("type error", val.ti)
-      }
+      if not type_eqe(val.type, kit.v.type, val.ti) {}
     }
 
     v = malloc(sizeof ValueSelectVariant) to *ValueSelectVariant
 
-    if not type_eq(key.type, kit.selector.type) {
-      error("selector type error", key.ti)
-    }
+    if not type_eqe(kit.selector.type, key.type, key.ti) {}
 
     v.x := key
     v.y := val
@@ -213,12 +209,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   l = nat(lv, rv.type)
   r = nat(rv, l.type)
 
-  if not type_eq(l.type, r.type) {
-    error("type error", x.ti)
-    printf("LTYPE = "); prttype(l.type); printf("\n")
-    printf("RTYPE = "); prttype(r.type); printf("\n")
-    goto fail
-  }
+  if not type_eqe(l.type, r.type, x.ti) {goto fail}
 
   if not typeValidForBin(k, l.type) {
     error("binary type error", x.ti)
@@ -333,9 +324,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     na = nat (a, p.type)
 
     /* check argument type */
-    if not type_eq(p.type, na.type) {
-      error ("type error", a.ti)
-    }
+    if not type_eqe (p.type, na.type, a.ti) {}
 
     list_append (context.arglist, na)
 
@@ -372,7 +361,7 @@ do_value_index = DoValue {
   }
 
   if typ == nil {
-    error("type error", a.ti)
+    error_type_error (a.ti, a.type, nil)
     goto fail
   }
 
@@ -405,7 +394,7 @@ do_value_access = DoValue {
   }
 
   if r_typ == nil {
-    error("type error", r.ti)
+    error_type_error (r.ti, r.type, nil)
     goto fail
   }
 
@@ -443,7 +432,7 @@ do_value_cast_ref = DoValueCast {
   if not type_is_ref(t) {
     error("type cast error", ti)
   }
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_num = DoValueCast {
@@ -451,7 +440,7 @@ do_value_cast_num = DoValueCast {
   if type_is_ref(t) {
     warning("cast num to ref", ti)
   }
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_func = DoValueCast {
@@ -459,7 +448,7 @@ do_value_cast_func = DoValueCast {
   if not typeIsPointerToUnit (t) {
     error("type cast error", ti)
   }
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_set = DoValueCast {
@@ -467,24 +456,24 @@ do_value_cast_set = DoValueCast {
   if t.kind != #TypeNumeric {
     error("type cast error", ti)
   }
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 
 do_value_cast_rec = DoValueCast {
   error("type cast error", ti)
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_ptr = DoValueCast {
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_arr = DoValueCast {
   // массив можно привести к записи или другому массиву
   // в любом случае это будет unsafe операция
   error("type cast error", ti)
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast_uarr = DoValueCast {
@@ -493,7 +482,7 @@ do_value_cast_uarr = DoValueCast {
   if not typeIsPointerToUnit (t) {
     error("type cast error", ti)
   }
-  return cast(v, t, v.ti)
+  return cast(v, t, ti)
 }
 
 do_value_cast = DoValue {

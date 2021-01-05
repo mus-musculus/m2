@@ -157,3 +157,12 @@ fatal = (s : Str) -> () {
   exit(1)
 }
 
+
+error_type_error = (ti : *TokenInfo, recv, exp : *Type) -> () {
+  error("type error", ti)
+  if exp != nil {printf("type expected: "); prttype(exp); printf("\n")}
+  if recv != nil {printf("type received: "); prttype(recv); printf("\n")}
+}
+
+
+
