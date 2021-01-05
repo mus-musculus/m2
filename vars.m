@@ -1,15 +1,13 @@
 
 
 
-typeUnknown = nil to Var *Type
 typeVoid = nil to Var *Type
 typeUnit = nil to Var *Type
 typeBool = nil to Var *Type
 typeChar = nil to Var *Type
 typeStr = nil to Var *Type
-typeEnum = nil to Var *Type
+
 typeBaseInt = nil to Var *Type
-typeBaseNat64 = nil to Var *Type
 typeFreePtr = nil to Var *Type
 typeNumeric = nil to Var *Type
 

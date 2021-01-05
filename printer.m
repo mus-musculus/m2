@@ -1240,7 +1240,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
   select t.kind {
     #TypeNumeric => fprintf(fout, "%%%s", t.aka) to ()
     #TypeVar => func (t : *Type) -> () {printType(t.var.of)} (t)
-    #TypeEnum => printType(typeEnum)
+    #TypeEnum => fprintf(fout, "i%d", cfgEnumSize * 8) to ()
     #TypeRecord => printTypeRecord(&t.record)
     #TypeArray => printTypeArray(&t.array)
     #TypeArrayU => printTypeArrayU(&t.array_u)

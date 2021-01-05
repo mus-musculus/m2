@@ -15,7 +15,7 @@ value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
 
 
 value_new_poison = (ti : *TokenInfo) -> *Value {
-  tp = type_new(#TypePoison, 0, 0, ti)
+  tp = type_new(#TypePoison, 0, ti)
   return value_new(#ValuePoison, tp, ti)
 }
 
@@ -1050,7 +1050,7 @@ value_init = () -> () {
   builtin_value_bind("true", _true)
 
   // nil
-  nil_type = type_new(#TypeGenericReference, cfgPointerSize, cfgPointerAlign, nil)
+  nil_type = type_new(#TypeGenericReference, cfgPointerSize, nil)
   _nil = value_new_imm(nil_type, 0, nil)
   builtin_value_bind("nil", _nil)
 

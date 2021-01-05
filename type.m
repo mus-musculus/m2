@@ -3,45 +3,47 @@
 /*****************************************************************************/
 
 
-type_new = (k : TypeKind, size : Nat, align : Nat, ti : *TokenInfo) -> *Type {
+type_new = (k : TypeKind, size : Nat, ti : *TokenInfo) -> *Type {
   t = malloc(sizeof Type) to *Type
   assert(t != nil, "type_new")
   memset(t, 0, sizeof Type)
   t.kind := k
   t.size := size
-  t.align := align
+  t.align := size
   t.ti := ti
   return t
 }
 
 type_var_new = (of : *Type, ti : *TokenInfo) -> *Type {
-  tn = type_new(#TypeVar, of.size, of.align, ti)
+  tn = type_new(#TypeVar, of.size, ti)
+  tn.align := of.align
   tn.var.of := of
   return tn
 }
 
 type_pointer_new = (to : *Type, ti : *TokenInfo) -> *Type {
-  t = type_new(#TypePointer, cfgPointerSize, cfgPointerAlign, ti)
+  t = type_new(#TypePointer, cfgPointerSize, ti)
   t.pointer.to := to
   return t
 }
 
 type_array_u_new = (of : *Type, ti : *TokenInfo) -> *Type {
-  t = type_new(#TypeArrayU, cfgPointerSize, cfgPointerAlign, ti)
+  t = type_new(#TypeArrayU, cfgPointerSize, ti)
   t.array_u.of := of
   return t
 }
 
 type_array_new = (of : *Type, volume : Nat32, ti : *TokenInfo) -> *Type {
   size = volume * of.size
-  t = type_new(#TypeArray, size, of.align, ti)
+  t = type_new(#TypeArray, size, ti)
+  t.align := of.align
   t.array.of := of
   t.array.volume := volume
   return t
 }
 
 type_enum_new = (constructors : *List, ti : *TokenInfo) -> *Type {
-  t = type_new(#TypeEnum, cfgEnumSize, cfgEnumAlign, ti)
+  t = type_new(#TypeEnum, cfgEnumSize, ti)
   create_constructor = ListForeachHandler {
     cons = data to *EnumConstructor
     enum_type = ctx to *Type
@@ -54,7 +56,7 @@ type_enum_new = (constructors : *List, ti : *TokenInfo) -> *Type {
 
 
 type_func_new = (from, _to : *Type, arghack : Bool, ti : *TokenInfo) -> *Type {
-  t = type_new(#TypeFunc, cfgPointerSize, cfgPointerAlign, ti)
+  t = type_new(#TypeFunc, cfgPointerSize, ti)
   t.func.from := from
   t.func.to := _to
   t.func.arghack := arghack
@@ -128,7 +130,7 @@ do_type = DoType {
     #AstTypePointer => do_type_pointer(x)
     #AstTypeEnum    => do_type_enum(x)
     #AstTypeRecord  => do_type_record(x)
-    else => type_new(#TypePoison, 0, 0, x.ti)
+    else => type_new(#TypePoison, 0, x.ti)
   }
 }
 
@@ -144,7 +146,7 @@ do_type_named = DoType {
   xt = get_type(id)
   if xt == nil {
     // создаем неопределенный тип если типа с таким именем не было
-    nt = type_new(#TypeUndefined, 0, 0, x.ti)
+    nt = type_new(#TypeUndefined, 0, x.ti)
     nt.ti := x.name.ti
     bind_type(&module.private, id, nt)
     return nt
@@ -177,7 +179,7 @@ do_type_array = DoType {
   if of.kind == #TypePoison {return of}
 
   size = do_valuex(x.array.size, false)
-  if size.kind == #ValuePoison {return type_new(#TypePoison, 0, 0, x.ti)}
+  if size.kind == #ValuePoison {return type_new(#TypePoison, 0, x.ti)}
 
   return type_array_new(of, size.imm to Nat32, x.ti)
 }
@@ -201,7 +203,7 @@ align = (req_sz : Nat32, align : Nat) -> Nat32 {
 
 do_type_record = DoType {
   old_ctype = ctype
-  t = type_new(#TypeRecord, 0, 0, x.ti)
+  t = type_new(#TypeRecord, 0, x.ti)
   ctype := t
 
   Ctx0 = (fields : *List, undef_field : Bool)
@@ -366,20 +368,19 @@ type_init = () -> () {
   builtin_type_bind("Void", typeVoid)
 
   // Unit is an empty record
-  typeUnit := type_new(#TypeRecord, 0, 0, nil)
+  typeUnit := type_new(#TypeRecord, 0, nil)
   typeUnit.record.decls := list_new()
 
   typeUnit.aka := "Unit"
   builtin_type_bind("Unit", typeUnit)
 
   // Bool is an enum with false & true constructors
-  typeBool := type_new(#TypeBool, 1, 1, nil)
+  typeBool := type_new(#TypeBool, 1, nil)
   builtin_type_bind("Bool", typeBool)
 
   type_numeric_new = (id : Str, power : Nat, signed : Bool) -> *Type {
     size = power / 8
-    align = size
-    t = type_new(#TypeNumeric, size, align, nil)
+    t = type_new(#TypeNumeric, size, nil)
     t.aka := id
     t.num.power := power
     t.num.signed := signed
@@ -443,11 +444,17 @@ type_init = () -> () {
 
 
   // main types shortcuts
-  typeUnknown := type_new(#TypeUndefined, 0, 0, nil)
   typeFreePtr := type_pointer_new(typeUnit, nil)
   typeNumeric := type_numeric_new("Numeric",  0, true)
-  typeBaseInt := typeInt32
-  typeBaseNat64 := typeNat64
-  typeEnum := typeInt16
+
+  typeBaseInt := select cfgIntegerSize {
+    2 => typeInt16
+    4 => typeInt32
+    8 => typeInt64
+    16 => typeInt128
+    32 => typeInt256
+    else => () -> *Type {fatal("unsupported cfgIntegerSize"); return nil} ()
+  }
 }
+
 

@@ -5,10 +5,8 @@ cfgLibraryVar = "MINOR_LIB"
 cfgSystem = 64
 
 cfgPointerSize = cfgSystem / 8
-cfgPointerAlign = cfgPointerSize
-
-cfgEnumSize = 4
-cfgEnumAlign = cfgEnumSize
+cfgIntegerSize = cfgSystem / 8
+cfgEnumSize = 2
 
 
 // временно ограниченно количество
