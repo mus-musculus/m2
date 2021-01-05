@@ -169,8 +169,11 @@ do_value_ref = DoValue {
   } else {
     v0.type := v0.type.var.of
   }
+
   v = v0
+
   if v.kind == #ValuePoison {return v}
+
   vx = value_new(#ValueRef, type_pointer_new(v.type, x.ti), x.ti)
   vx.un.x := v
   return vx
@@ -190,8 +193,6 @@ do_value_deref = DoValue {
 
   vx = value_new(#ValueDeref, v.type.pointer.to, x.ti)
   vx.un.x := v
-
-  // если нужна загрузка для переменных (когда вычисляем rval)
   return vx
 }
 
