@@ -70,8 +70,10 @@ do_stmt_assign = DoStmt {
     return nil
   }
 
-  if lx.kind != #AstValueAccess and lx.kind != #AstValueIndex and
-  lx.kind != #AstValueDeref {
+  if lx.kind != #AstValueAccess and
+     lx.kind != #AstValueIndex and
+     lx.kind != #AstValueDeref
+  {
     if lval.type.kind != #TypeVar {
       //warning("expected var", x.ti)
     }
@@ -195,7 +197,6 @@ do_stmt_if = DoStmt {
   s.i.cond := cond
   s.i.then := then
   s.i.else := _else
-
   return s
 }
 
