@@ -11999,41 +11999,27 @@ endif_0:
   ret %Type* %12
 }
 
-define %Nat32 @func373 (%Nat32, %Nat32) {
+define %Nat32 @align (%Nat32, %Nat32) {
 ;stmt0:
   %3 = icmp ne %Nat32 %1, 0
   %4 = bitcast [20 x %Nat8]* @func373_str1 to %Str
   call void (i1, %Str) @assert (i1 %3, %Str %4)
 ;stmt1:
-  %5 = icmp eq %Nat32 %1, 0
-  br i1 %5, label %then_0, label %else_0
-then_0:
+  %5 = urem %Nat32 %0, %1
 ;stmt2:
-  ret %Nat32 0
-  br label %endif_0
-else_0:
-  br label %endif_0
-endif_0:
-;stmt3:
-  %7 = alloca %Nat32
-  store %Nat32 %0, %Nat32* %7, align 4
-;stmt4:
-  br label %continue_0
-continue_0:
-  %8 = load %Nat32, %Nat32* %7
-  %9 = urem %Nat32 %8, %1
-  %10 = icmp ne %Nat32 %9, 0
-  br i1 %10, label %body_0, label %break_0
-body_0:
-;stmt5:
-  %11 = load %Nat32, %Nat32* %7
-  %12 = add %Nat32 %11, 1
-  store %Nat32 %12, %Nat32* %7, align 4
-  br label %continue_0
-break_0:
-;stmt6:
-  %13 = load %Nat32, %Nat32* %7
-  ret %Nat32 %13
+  br label %select_1_0
+select_1_0:
+  %6 = icmp eq %Nat32 %5, 0
+  br i1 %6, label %select_1_0_ok, label %select_1_1
+select_1_0_ok:
+  br label %select_1_end
+select_1_1:
+  %7 = sub %Nat32 %1, %5
+  %8 = add %Nat32 %0, %7
+  br label %select_1_end
+select_1_end:
+  %9 = phi %Nat32 [ %0, %select_1_0_ok ], [ %8, %select_1_1 ]
+  ret %Nat32 %9
 }
 
 define %Decl* @func377 (%AstId*, %Type*, %TokenInfo*) {
@@ -12217,7 +12203,7 @@ endif_2:
   %51 = load %Type*, %Type** %50
   %52 = getelementptr inbounds %Type, %Type* %51, i1 0, i32 3
   %53 = load %Nat32, %Nat32* %52
-  %54 = call %Nat32 (%Nat32, %Nat32) @func373 (%Nat32 %49, %Nat32 %53)
+  %54 = call %Nat32 (%Nat32, %Nat32) @align (%Nat32 %49, %Nat32 %53)
 ;stmt12:
   %55 = getelementptr inbounds %Decl, %Decl* %4, i1 0, i32 1
   %56 = load %Type*, %Type** %55
@@ -12238,7 +12224,7 @@ then_3:
   %65 = getelementptr inbounds %Type, %Type* %16, i1 0, i32 2
   %66 = getelementptr inbounds %Type, %Type* %16, i1 0, i32 3
   %67 = load %Nat32, %Nat32* %66
-  %68 = call %Nat32 (%Nat32, %Nat32) @func373 (%Nat32 %59, %Nat32 %67)
+  %68 = call %Nat32 (%Nat32, %Nat32) @align (%Nat32 %59, %Nat32 %67)
   store %Nat32 %68, %Nat32* %65, align 4
   br label %endif_3
 else_3:

@@ -190,12 +190,13 @@ do_type_pointer = DoType {
 }
 
 
-alignment = (req_sz : Nat32, align : Nat) -> Nat32 {
+align = (req_sz : Nat32, align : Nat) -> Nat32 {
   assert(align != 0, "alignment : align=0")
-  if align == 0 {return 0}
-  sz = req_sz to Var Nat32
-  while (sz % align) != 0 {sz := sz + 1}
-  return sz
+  a = req_sz % align
+  return select a {
+    0 => req_sz
+    else => req_sz + (align - a)
+  }
 }
 
 do_type_record = DoType {
@@ -272,7 +273,7 @@ do_type_record = DoType {
       error("align 0 in", decl.type.ti)
     }
 
-    offset = alignment(record_type.record.end, decl.type.align)
+    offset = align(record_type.record.end, decl.type.align)
 
     // получаем конец записи (учитывая это поле)
     end = offset + decl.type.size
@@ -283,7 +284,7 @@ do_type_record = DoType {
     if end > record_type.size {
       // не вмещаемся в текущий размер структуры
       // => увеличим ее на величину кратную размеру наибольшего поля
-      record_type.size := alignment(end, record_type.align)
+      record_type.size := align(end, record_type.align)
     }
   }
 
