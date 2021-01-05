@@ -796,7 +796,6 @@ parse_value11 = AstValueParser {
             return nil  // unexpected EOF
           }
         }
-        a.ti := ti
 
         list_append(arglist, a)
         if not match(")") {

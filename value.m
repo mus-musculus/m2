@@ -324,7 +324,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     na = nat (a, p.type)
 
     /* check argument type */
-    if not type_check (p.type, na.type, a.ti) {}
+    if not type_check (p.type, na.type, na.ti) {}
 
     list_append (context.arglist, na)
 
