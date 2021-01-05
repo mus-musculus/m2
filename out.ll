@@ -12687,7 +12687,7 @@ select_1_end:
   ret i1 %72
 }
 
-define i1 @type_eqe (%Type*, %Type*, %TokenInfo*) {
+define i1 @type_check (%Type*, %Type*, %TokenInfo*) {
 ;stmt0:
   %4 = call i1 (%Type*, %Type*) @func388 (%Type* %0, %Type* %1)
 ;stmt1:
@@ -13339,7 +13339,7 @@ else_0:
   %32 = load %Type*, %Type** %31
   %33 = getelementptr inbounds %Value, %Value* %16, i1 0, i32 19
   %34 = load %TokenInfo*, %TokenInfo** %33
-  %35 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %28, %Type* %32, %TokenInfo* %34)
+  %35 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %28, %Type* %32, %TokenInfo* %34)
   %36 = xor i1 %35, 1
   br i1 %36, label %then_1, label %else_1
 then_1:
@@ -13361,7 +13361,7 @@ endif_0:
   %44 = load %Type*, %Type** %43
   %45 = getelementptr inbounds %Value, %Value* %13, i1 0, i32 19
   %46 = load %TokenInfo*, %TokenInfo** %45
-  %47 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %42, %Type* %44, %TokenInfo* %46)
+  %47 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %42, %Type* %44, %TokenInfo* %46)
   %48 = xor i1 %47, 1
   br i1 %48, label %then_2, label %else_2
 then_2:
@@ -13631,7 +13631,7 @@ endif_1:
   %28 = load %Type*, %Type** %27
   %29 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 12
   %30 = load %TokenInfo*, %TokenInfo** %29
-  %31 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %26, %Type* %28, %TokenInfo* %30)
+  %31 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %26, %Type* %28, %TokenInfo* %30)
   %32 = xor i1 %31, 1
   br i1 %32, label %then_2, label %else_2
 then_2:
@@ -13953,7 +13953,7 @@ endif_1:
   %38 = load %Type*, %Type** %37
   %39 = getelementptr inbounds %Value, %Value* %13, i1 0, i32 19
   %40 = load %TokenInfo*, %TokenInfo** %39
-  %41 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %36, %Type* %38, %TokenInfo* %40)
+  %41 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %36, %Type* %38, %TokenInfo* %40)
   %42 = xor i1 %41, 1
   br i1 %42, label %then_3, label %else_3
 then_3:
@@ -16257,7 +16257,7 @@ select_2_end:
   %66 = load %Type*, %Type** %65
   %67 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
   %68 = load %TokenInfo*, %TokenInfo** %67
-  %69 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %63, %Type* %66, %TokenInfo* %68)
+  %69 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %63, %Type* %66, %TokenInfo* %68)
   %70 = xor i1 %69, 1
   br i1 %70, label %then_5, label %else_5
 then_5:
@@ -16506,8 +16506,14 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt5:
-  %24 = icmp eq %Stmt* %9, zeroinitializer
-  br i1 %24, label %then_1, label %else_1
+  %24 = load %Type*, %Type** @typeBool
+  %25 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
+  %26 = load %Type*, %Type** %25
+  %27 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 19
+  %28 = load %TokenInfo*, %TokenInfo** %27
+  %29 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %24, %Type* %26, %TokenInfo* %28)
+  %30 = xor i1 %29, 1
+  br i1 %30, label %then_1, label %else_1
 then_1:
 ;stmt6:
   ret %Stmt* zeroinitializer
@@ -16516,23 +16522,33 @@ else_1:
   br label %endif_1
 endif_1:
 ;stmt7:
-  %26 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
-  %27 = load %TokenInfo*, %TokenInfo** %26
-  %28 = call %Stmt* (%StmtKind, %TokenInfo*) @func451 (%StmtKind 5, %TokenInfo* %27)
+  %32 = icmp eq %Stmt* %9, zeroinitializer
+  br i1 %32, label %then_2, label %else_2
+then_2:
 ;stmt8:
-  %29 = getelementptr inbounds %Stmt, %Stmt* %28, i1 0, i32 6
-  %30 = getelementptr inbounds %If, %If* %29, i1 0, i32 0
-  store %Value* %5, %Value** %30, align 8
+  ret %Stmt* zeroinitializer
+  br label %endif_2
+else_2:
+  br label %endif_2
+endif_2:
 ;stmt9:
-  %31 = getelementptr inbounds %Stmt, %Stmt* %28, i1 0, i32 6
-  %32 = getelementptr inbounds %If, %If* %31, i1 0, i32 1
-  store %Stmt* %9, %Stmt** %32, align 8
+  %34 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
+  %35 = load %TokenInfo*, %TokenInfo** %34
+  %36 = call %Stmt* (%StmtKind, %TokenInfo*) @func451 (%StmtKind 5, %TokenInfo* %35)
 ;stmt10:
-  %33 = getelementptr inbounds %Stmt, %Stmt* %28, i1 0, i32 6
-  %34 = getelementptr inbounds %If, %If* %33, i1 0, i32 2
-  store %Stmt* %19, %Stmt** %34, align 8
+  %37 = getelementptr inbounds %Stmt, %Stmt* %36, i1 0, i32 6
+  %38 = getelementptr inbounds %If, %If* %37, i1 0, i32 0
+  store %Value* %5, %Value** %38, align 8
 ;stmt11:
-  ret %Stmt* %28
+  %39 = getelementptr inbounds %Stmt, %Stmt* %36, i1 0, i32 6
+  %40 = getelementptr inbounds %If, %If* %39, i1 0, i32 1
+  store %Stmt* %9, %Stmt** %40, align 8
+;stmt12:
+  %41 = getelementptr inbounds %Stmt, %Stmt* %36, i1 0, i32 6
+  %42 = getelementptr inbounds %If, %If* %41, i1 0, i32 2
+  store %Stmt* %19, %Stmt** %42, align 8
+;stmt13:
+  ret %Stmt* %36
 }
 
 define %Stmt* @func461 (%AstStmt*) {
@@ -16575,8 +16591,14 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt6:
-  %26 = icmp eq %Stmt* %15, zeroinitializer
-  br i1 %26, label %then_1, label %else_1
+  %26 = load %Type*, %Type** @typeBool
+  %27 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
+  %28 = load %Type*, %Type** %27
+  %29 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 19
+  %30 = load %TokenInfo*, %TokenInfo** %29
+  %31 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %26, %Type* %28, %TokenInfo* %30)
+  %32 = xor i1 %31, 1
+  br i1 %32, label %then_1, label %else_1
 then_1:
 ;stmt7:
   ret %Stmt* zeroinitializer
@@ -16585,19 +16607,29 @@ else_1:
   br label %endif_1
 endif_1:
 ;stmt8:
-  %28 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
-  %29 = load %TokenInfo*, %TokenInfo** %28
-  %30 = call %Stmt* (%StmtKind, %TokenInfo*) @func451 (%StmtKind 6, %TokenInfo* %29)
+  %34 = icmp eq %Stmt* %15, zeroinitializer
+  br i1 %34, label %then_2, label %else_2
+then_2:
 ;stmt9:
-  %31 = getelementptr inbounds %Stmt, %Stmt* %30, i1 0, i32 5
-  %32 = getelementptr inbounds %While, %While* %31, i1 0, i32 0
-  store %Value* %5, %Value** %32, align 8
+  ret %Stmt* zeroinitializer
+  br label %endif_2
+else_2:
+  br label %endif_2
+endif_2:
 ;stmt10:
-  %33 = getelementptr inbounds %Stmt, %Stmt* %30, i1 0, i32 5
-  %34 = getelementptr inbounds %While, %While* %33, i1 0, i32 1
-  store %Stmt* %15, %Stmt** %34, align 8
+  %36 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
+  %37 = load %TokenInfo*, %TokenInfo** %36
+  %38 = call %Stmt* (%StmtKind, %TokenInfo*) @func451 (%StmtKind 6, %TokenInfo* %37)
 ;stmt11:
-  ret %Stmt* %30
+  %39 = getelementptr inbounds %Stmt, %Stmt* %38, i1 0, i32 5
+  %40 = getelementptr inbounds %While, %While* %39, i1 0, i32 0
+  store %Value* %5, %Value** %40, align 8
+;stmt12:
+  %41 = getelementptr inbounds %Stmt, %Stmt* %38, i1 0, i32 5
+  %42 = getelementptr inbounds %While, %While* %41, i1 0, i32 1
+  store %Stmt* %15, %Stmt** %42, align 8
+;stmt13:
+  ret %Stmt* %38
 }
 
 define %Value* @func463 (%AstValue*, %Type*) {
@@ -16622,7 +16654,7 @@ endif_0:
   %10 = load %Type*, %Type** %9
   %11 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 12
   %12 = load %TokenInfo*, %TokenInfo** %11
-  %13 = call i1 (%Type*, %Type*, %TokenInfo*) @type_eqe (%Type* %1, %Type* %10, %TokenInfo* %12)
+  %13 = call i1 (%Type*, %Type*, %TokenInfo*) @type_check (%Type* %1, %Type* %10, %TokenInfo* %12)
   %14 = xor i1 %13, 1
   br i1 %14, label %then_1, label %else_1
 then_1:

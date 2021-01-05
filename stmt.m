@@ -84,7 +84,9 @@ do_stmt_assign = DoStmt {
 
   rval = nat(rval0, ltype)
 
-  if not type_eqe (ltype, rval.type, x.ti) {return nil}
+  if not type_check (ltype, rval.type, x.ti) {
+    return nil
+  }
 
   return stmt_assign_new(lval, rval, x.ti)
 }
@@ -182,6 +184,11 @@ do_stmt_if = DoStmt {
   }
 
   if cond.kind == #ValuePoison {return nil}
+
+  if not type_check(typeBool, cond.type, cond.ti) {
+    return nil
+  }
+
   if then == nil {return nil}
 
   s = stmt_new (#StmtIf, x.ti)
@@ -201,6 +208,11 @@ do_stmt_while = DoStmt {
   fctx.loop := fctx.loop - 1
 
   if cond.kind == #ValuePoison {return nil}
+
+  if not type_check(typeBool, cond.type, cond.ti) {
+    return nil
+  }
+
   if block == nil {return nil}
 
   s = stmt_new (#StmtWhile, x.ti)
@@ -221,7 +233,7 @@ do_stmt_return = DoStmt {
       v0 = do_value (rv)
       if v0.kind == #ValuePoison {return nil}
       v = nat (v0, ft)
-      if not type_eqe (ft, v.type, rv.ti) {}
+      if not type_check (ft, v.type, rv.ti) {}
       return v
     } (rv, func_to)
   }

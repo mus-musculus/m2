@@ -361,7 +361,7 @@ type_eq = (a, b : *Type) -> Bool {
 
 
 // type eq with error_type_error
-type_eqe = (exp, recv : *Type, ti : *TokenInfo) -> Bool {
+type_check = (exp, recv : *Type, ti : *TokenInfo) -> Bool {
   eq = type_eq (exp, recv)
   if not eq {error_type_error (ti, recv, exp)}
   return eq

@@ -130,12 +130,12 @@ do_value_select = DoValue {
     if kit.v.type == nil {
       kit.v.type := val.type
     } else {
-      if not type_eqe(val.type, kit.v.type, val.ti) {}
+      if not type_check(val.type, kit.v.type, val.ti) {}
     }
 
     v = malloc(sizeof ValueSelectVariant) to *ValueSelectVariant
 
-    if not type_eqe(kit.selector.type, key.type, key.ti) {}
+    if not type_check(kit.selector.type, key.type, key.ti) {}
 
     v.x := key
     v.y := val
@@ -209,7 +209,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   l = nat(lv, rv.type)
   r = nat(rv, l.type)
 
-  if not type_eqe(l.type, r.type, x.ti) {goto fail}
+  if not type_check(l.type, r.type, x.ti) {goto fail}
 
   if not typeValidForBin(k, l.type) {
     error("binary type error", x.ti)
@@ -324,7 +324,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     na = nat (a, p.type)
 
     /* check argument type */
-    if not type_eqe (p.type, na.type, a.ti) {}
+    if not type_check (p.type, na.type, a.ti) {}
 
     list_append (context.arglist, na)
 
