@@ -1,5 +1,6 @@
 
 
+lines = 0 to Var Nat  // счетчик количества отсканированных строк за всю компиляцию
 
 typeVoid = nil to Var *Type
 typeUnit = nil to Var *Type

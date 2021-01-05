@@ -125,12 +125,19 @@ do_value_select = DoValue {
     variant = data to *AstValueSelectVariant
     kit = ctx to *Kit
     key = implicit_cast (do_value(variant.x), kit.selector.type)
-    val = do_value(variant.y)
+    val0 = do_value(variant.y)
 
     if kit.v.type == nil {
-      kit.v.type := val.type
+      kit.v.type := val0.type
     } else {
-      if not type_check(val.type, kit.v.type, val.ti) {}
+      if not type_check(val0.type, kit.v.type, val0.ti) {}
+    }
+
+    // если тип селекта определен,
+    // пытаемся неявно привести к нему все варианты
+    val = select kit.v.type {
+      nil => val0
+      else => implicit_cast (val0, kit.v.type)
     }
 
     v = malloc(sizeof ValueSelectVariant) to *ValueSelectVariant
@@ -150,7 +157,7 @@ do_value_select = DoValue {
     return value_new_poison (x.ti)
   }
 
-  v.select.other := do_value(x.select.other)
+  v.select.other := implicit_cast (do_value(x.select.other), kit.v.type)
 
   v.ti := x.ti
 
@@ -358,7 +365,7 @@ do_value_index = DoValue {
         else => nil to *Type
       }
     } (a.type.pointer.to)
-    else => nil to *Type
+    else => nil
   }
 
   if typ == nil {
@@ -388,10 +395,10 @@ do_value_access = DoValue {
     #TypePointer => (_to : *Type) -> *Type {
       return select _to.kind {
         #TypeRecord => _to
-        else => nil to *Type
+        else => nil
       }
     } (r.type.pointer.to)
-    else => nil to *Type
+    else => nil
   }
 
   if r_typ == nil {

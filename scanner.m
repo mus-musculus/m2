@@ -22,8 +22,6 @@ symEOF = 0  // getcc returns EOF when file is over
 
 lstate = 0 to Var LexerState
 
-lines = 0 to Var Nat  // счетчик количества отсканированных строк за всю компиляцию
-
 
 lex_init = (fname : Str) -> () {
   if not exists(fname) {

@@ -36,7 +36,7 @@ do_stmt = DoStmt {
     #AstStmtContinue => do_stmt_continue(x)
     #AstStmtGoto     => do_stmt_goto(x)
     #AstStmtLabel    => do_stmt_label(x)
-    else => nil to *Stmt
+    else => nil
   }
 }
 
@@ -57,7 +57,7 @@ do_stmt_assign = DoStmt {
     #AstValueDeref => do_value_deref(lx)
     #AstValueIndex => do_value_index(lx)
     #AstValueAccess => do_value_access(lx)
-    else => nil to *Value
+    else => nil
   }
 
   if lval == nil {
@@ -84,7 +84,7 @@ do_stmt_assign = DoStmt {
     else => lval.type
   }
 
-  rval = implicit_cast(rval0, ltype)
+  rval = implicit_cast (rval0, ltype)
 
   if not type_check (ltype, rval.type, x.ti) {
     return nil

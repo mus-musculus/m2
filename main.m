@@ -60,6 +60,7 @@ main = (argc : Nat, argv : []Str) -> Int32 {
   a = compile(m)
 
   if a != nil {
+    printf("lines: %d\n", lines)
     print_assembly(a, "out.ll")
   }
 

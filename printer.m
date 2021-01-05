@@ -32,7 +32,10 @@ asm_init = (a : *Assembly, arch : Arch, name : Str) -> () {
       a.triple := "thumbv7em-unknown-none-eabi"
     } (a)
 
-    else => func (a : *Assembly) -> () {a.datalayout := nil; a.triple := nil} (a)
+    else => func (a : *Assembly) -> () {
+      a.datalayout := nil;
+      a.triple := nil
+    } (a)
   }
 }
 
