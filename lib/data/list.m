@@ -8,6 +8,12 @@ import "data/node"
 
 List = (first, last : *Node, volume : Nat64)
 
+/*
+ * Foreach - проходят по всем элементам
+ * Search - проходит по всем элементам или прерывается в процесе возвращая указатель
+ * While - проходит пока f возвращает истину
+ */
+
 
 /*
  * Типы функций-обработчиков для объектов списка
@@ -16,19 +22,22 @@ List = (first, last : *Node, volume : Nat64)
  * параметр index - номер текущего элемента в списке
  */
 
-// list_foreach handler type
+// list_foreach handler
 ListForeachHandler = (data, ctx : *Unit, index : Nat) -> ()
 
-// list_foreach2 handler type
+// list_foreach2 handler
 ListForeachHandler2 = (data1, data2, ctx : *Unit, index : Nat) -> ()
 
-// list_compare handler type
+// list_while2 handler
+ListWhileHandler2 = (data1, data2, ctx : *Unit, index : Nat) -> Bool
+
+// list_compare handler
 ListCompareHandler = (data1, data2, ctx : *Unit, index : Nat) -> Bool
 
-// list_search handler type
+// list_search handler
 ListSearchHandler = (data, ctx : *Unit, index : Nat) -> Bool
 
-// list_map handler type
+// list_map handler
 ListMapHandler = (data, ctx : *Unit, index : Nat) -> *Unit
 
 
@@ -135,11 +144,45 @@ list_foreach2 = (list1, list2 : *List, f : ListForeachHandler2, ctx : *Unit) -> 
   index = 0 to Var Nat
   while n1 != nil and n2 != nil {
     f(n1.data, n2.data, ctx, index)
+    n1 := n1.next; n2 := n2.next
+    index := index + 1
+  }
+}
+
+// продолжаем пока оба списка не кончатся. (Может приетать nil если списки не равны)
+list_while2_or = (list1, list2 : *List, f : ListWhileHandler2, ctx : *Unit) -> () {
+  n1 = list1.first to Var *Node
+  n2 = list2.first to Var *Node
+  index = 0 to Var Nat
+  while n1 != nil or n2 != nil {
+    data1 = select n1 {
+      nil => nil to *Unit
+      else => n1.data
+    }
+
+    data2 = select n2 {
+      nil => nil to *Unit
+      else => n2.data
+    }
+
+    if not f(data1, data2, ctx, index) {break}
+    if n1 != nil {n1 := n1.next}
+    if n2 != nil {n2 := n2.next}
+    index := index + 1
+  }
+}
+
+/*list_while2 = (list1, list2 : *List, f : ListForeachHandler2, ctx : *Unit) -> () {
+  n1 = list1.first to Var *Node
+  n2 = list2.first to Var *Node
+  index = 0 to Var Nat
+  while n1 != nil and n2 != nil {
+    f(n1.data, n2.data, ctx, index)
     n1 := n1.next
     n2 := n2.next
     index := index + 1
   }
-}
+}*/
 
 
 list_compare = (list1, list2 : *List, f : ListCompareHandler, ctx : *Unit) -> Bool {
@@ -149,8 +192,7 @@ list_compare = (list1, list2 : *List, f : ListCompareHandler, ctx : *Unit) -> Bo
   index = 0 to Var Nat
   while n1 != nil and n2 != nil {
     if not f(n1.data, n2.data, ctx, index) {return false}
-    n1 := n1.next
-    n2 := n2.next
+    n1 := n1.next; n2 := n2.next
     index := index + 1
   }
   return true

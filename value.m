@@ -282,7 +282,7 @@ do_value_call = DoValue {
 
   if f.kind == #ValuePoison {return f}
 
-  if not checkParams(f, args, x.ti) {goto fail}
+  if not check_params(f, args, x.ti) {goto fail}
 
   v = value_new(#ValueCall, f.type.func.to, x.ti)
   v.call.func := f
@@ -295,65 +295,63 @@ fail:
 }
 
 
-checkParams = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
-  param_list = f.type.func.from.record.decls
+check_params = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
+  plist = f.type.func.from.record.decls  // parameters
 
-  if a.volume < param_list.volume {
-    error("not enough arguments", ti)
-    return false
-  } else if param_list.volume < a.volume {
-    if not f.type.func.arghack {
-      error("too many arguments", ti)
-    }
-  }
+  Ctx3 = (
+    f : *Value
+    paramlist : *List
+    arglist : *List
+    call_ti : *TokenInfo
+  )
 
-  pln = param_list.first to Var *Node
-  aln = a.first to Var *Node
+  ctx = 0 to Var Ctx3
+  ctx.f := f
+  ctx.paramlist := plist
+  ctx.arglist := a
+  ctx.call_ti := ti
 
-  // пока есть параметр
-  // аргументов тут точно достаточно
-  while pln != nil {
-    par = pln.data to *Decl
-    arg = aln.data to *Value
+  chk = ListWhileHandler2 {
+    p = data1 to *Decl   // param
+    a = data2 to *Value  // arg
+    context = ctx to *Ctx3
 
-    if arg.kind == #ValuePoison {goto nextarg}
-
-    new_arg = nat(arg, par.type)
-
-    // проверяем соответствие типа аргумента типу параметра
-    if not type_eq(par.type, new_arg.type) {
-      error("argument type not match param type: ", arg.ti)//, f.id)
-      printf("arg = "); prttype(new_arg.type); printf("\n")
-      printf("par = "); prttype(par.type); printf("\n")
-      goto nextarg
+    if a == nil {
+      // если аргументы кончились раньше чем параметры
+      // это точно ошибка
+      error ("not enough arguments", context.call_ti)
+      return false
     }
 
-    list_subst(a, arg, new_arg)
+    if p == nil {
+      if not context.f.type.func.arghack {
+        error ("excess argument", a.ti)
+      }
+      // кончились параметры, но есть аргументы - это особая ситуация
+      // просто избавляемся от Generic'ов
+      na = nat_int (a)
+      list_subst (context.arglist, a, na)
+      return true
+    }
 
-  nextarg:
-    aln := aln.next
-    pln := pln.next
+    // есть и параметр и аргумент
+
+    /* пытаемся натурально привести аргумент к параметру */
+    na = nat (a, p.type)
+
+    /* check argument type */
+    if not type_eq(p.type, na.type) {
+      error ("type error", a.ti)
+    }
+
+    list_subst (context.arglist, a, na)
+
+    return true
   }
-
-  // Rest. (we don't have params but we have args yet)
-  while aln != nil {
-    // тк у нас кончились параметры, мы мало что можем сделать
-    // но мы должны преобразовать Generic:Numeric аргументы к typeBaseInt
-    arg = aln.data to *Value
-
-    //checkValue(arg)
-
-    new_arg = nat_int(arg)
-
-    // заменяем аргумент в списке на приведенный
-    list_subst(a, arg, new_arg)
-
-    aln := aln.next
-  }
+  list_while2_or (plist, a, chk, &ctx to *Unit)
 
   return true
 }
-
 
 
 do_value_index = DoValue {
