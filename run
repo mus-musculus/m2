@@ -1,1 +1,3 @@
+# clang -S -masm=intel out.ll  # generate assembly output
+
 ./m2 && clang out.ll && mv a.out m2 && ./m2
