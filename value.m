@@ -267,27 +267,18 @@ fail:
 }
 
 
-args_is_dirty = false to Var Bool
+//args_is_dirty = false to Var Bool
 
 do_value_call = DoValue {
   f = do_value(x.call.func)
-  args = list_new()
-  get_arg = ListForeachHandler {
-    a = do_value(data to *AstValue)
-    args_is_dirty := args_is_dirty or a.dirty
-    arglist = ctx to *List
-    list_append(arglist, a)
-  }
-  list_foreach(&x.call.args, get_arg, args)
-
   if f.kind == #ValuePoison {return f}
 
-  if not check_params(f, args, x.ti) {goto fail}
+  args = do_args(f, &x.call.args, x.ti)
 
   v = value_new(#ValueCall, f.type.func.to, x.ti)
   v.call.func := f
   v.call.args := args
-  v.dirty := f.dirty or args_is_dirty
+  //v.dirty := f.dirty or args_is_dirty
   return v
 
 fail:
@@ -295,7 +286,7 @@ fail:
 }
 
 
-check_params = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
+do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
   plist = f.type.func.from.record.decls  // parameters
 
   Ctx3 = (
@@ -308,20 +299,22 @@ check_params = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
   ctx = 0 to Var Ctx3
   ctx.f := f
   ctx.paramlist := plist
-  ctx.arglist := a
+  ctx.arglist := list_new()
   ctx.call_ti := ti
 
   chk = ListWhileHandler2 {
     p = data1 to *Decl   // param
-    a = data2 to *Value  // arg
+    a0 = data2 to *AstValue  // arg
     context = ctx to *Ctx3
 
-    if a == nil {
+    if a0 == nil {
       // если аргументы кончились раньше чем параметры
       // это точно ошибка
       error ("not enough arguments", context.call_ti)
       return false
     }
+
+    a = do_value(a0)
 
     if p == nil {
       if not context.f.type.func.arghack {
@@ -330,7 +323,7 @@ check_params = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
       // кончились параметры, но есть аргументы - это особая ситуация
       // просто избавляемся от Generic'ов
       na = nat_int (a)
-      list_subst (context.arglist, a, na)
+      list_append (context.arglist, na)
       return true
     }
 
@@ -344,13 +337,13 @@ check_params = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
       error ("type error", a.ti)
     }
 
-    list_subst (context.arglist, a, na)
+    list_append (context.arglist, na)
 
     return true
   }
   list_while2_or (plist, a, chk, &ctx to *Unit)
 
-  return true
+  return ctx.arglist
 }
 
 

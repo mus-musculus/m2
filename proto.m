@@ -70,7 +70,7 @@ exist do_value_bin : (k : ValueKind, x : *AstValue) -> *Value
 
 exist do_value_call : DoValue
 
-exist check_params : (f : *Value, a : *List, ti : *TokenInfo) -> Bool
+exist do_args : (f : *Value, a : *List, ti : *TokenInfo) -> *List
 
 exist do_value_deref : DoValue
 exist do_value_index : DoValue
