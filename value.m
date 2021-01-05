@@ -124,7 +124,7 @@ do_value_select = DoValue {
   do_variants = ListForeachHandler {
     variant = data to *AstValueSelectVariant
     kit = ctx to *Kit
-    key = nat(do_value(variant.x), kit.selector.type)
+    key = implicit_cast (do_value(variant.x), kit.selector.type)
     val = do_value(variant.y)
 
     if kit.v.type == nil {
@@ -207,8 +207,8 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   if lv.kind == #ValuePoison {return lv}
   if rv.kind == #ValuePoison {return rv}
 
-  l = nat(lv, rv.type)
-  r = nat(rv, l.type)
+  l = implicit_cast(lv, rv.type)
+  r = implicit_cast(rv, l.type)
 
   if not type_check(l.type, r.type, x.ti) {goto fail}
 
@@ -314,7 +314,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
       }
       // кончились параметры, но есть аргументы - это особая ситуация
       // просто избавляемся от Generic'ов
-      na = nat_int (a)
+      na = implicit_cast_int (a)
       list_append (context.arglist, na)
       return true
     }
@@ -322,7 +322,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     // есть и параметр и аргумент
 
     /* пытаемся натурально привести аргумент к параметру */
-    na = nat (a, p.type)
+    na = implicit_cast (a, p.type)
 
     /* check argument type */
     if not type_check (p.type, na.type, na.ti) {}
@@ -368,7 +368,7 @@ do_value_index = DoValue {
 
   v = value_new (#ValueIndex, typ, x.ti)
   v.index.array := a
-  v.index.index := nat_int (i)
+  v.index.index := implicit_cast_int (i)
   return v
 
 fail:
@@ -789,7 +789,7 @@ do_value_shift = DoValue {
     return value_new_imm(l.type, d, x.ti)
   }
 
-  l2 = nat_int(l)
+  l2 = implicit_cast_int(l)
 
   // (!) LLVM требует чтобы типы левого и правого в шифтах были одинаковы,
   // что глупо но.. поэтому приводим правое к левому
@@ -878,7 +878,7 @@ fail:
 
 // если у v тип GenericNumeric -> приводим его к typeBaseInt
 // used in: [index, call, shift, expr]
-nat_int = (v : *Value) -> *Value {
+implicit_cast_int = (v : *Value) -> *Value {
   return select type_eq(v.type, typeNumeric) {
     true => value_new_imm(typeBaseInt, v.imm, v.ti)
     else => v
@@ -888,9 +888,9 @@ nat_int = (v : *Value) -> *Value {
 
 // натуральное преобразование значения к заданному типу
 // или просто возвращает значение без преобразования (когда оно невозможно)
-nat = (v : *Value, t : *Type) -> *Value {
-  assert(v.type != nil, "nat::v.type == nil")
-  assert(t != nil, "nat::t == nil")
+implicit_cast = (v : *Value, t : *Type) -> *Value {
+  assert(v.type != nil, "implicit_cast::v.type == nil")
+  assert(t != nil, "implicit_cast::t == nil")
 
   if v.kind == #ValuePoison {return v}
   if t.kind == #TypePoison {goto fail}
@@ -906,7 +906,7 @@ nat = (v : *Value, t : *Type) -> *Value {
     }
   }
 
-  if naturalConversionIsPossible(v.type, t) {
+  if implicit_cast_possible(v.type, t) {
     return cast(v, t, v.ti)
   }
 
@@ -919,7 +919,7 @@ fail:
 
 
 // возможно ли натуральное преобразование из типа a в nbg b?
-naturalConversionIsPossible = (a, b : *Type) -> Bool {
+implicit_cast_possible = (a, b : *Type) -> Bool {
   ak = a.kind
   bk = b.kind
 

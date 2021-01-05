@@ -754,8 +754,8 @@ target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"target triple = "x86_
 @func427_str4 = private unnamed_addr constant [5 x i8] c"%lld\00", align 1
 @func429_str1 = private unnamed_addr constant [5 x i8] c"func\00", align 1
 @func429_str2 = private unnamed_addr constant [2 x i8] c"_\00", align 1
-@func441_str1 = private unnamed_addr constant [19 x i8] c"nat::v.type == nil\00", align 1
-@func441_str2 = private unnamed_addr constant [14 x i8] c"nat::t == nil\00", align 1
+@func441_str1 = private unnamed_addr constant [29 x i8] c"implicit_cast::v.type == nil\00", align 1
+@func441_str2 = private unnamed_addr constant [24 x i8] c"implicit_cast::t == nil\00", align 1
 @func441_str3 = private unnamed_addr constant [14 x i8] c"type overflow\00", align 1
 @func450_str1 = private unnamed_addr constant [6 x i8] c"false\00", align 1
 @func450_str2 = private unnamed_addr constant [5 x i8] c"true\00", align 1
@@ -15568,11 +15568,11 @@ define %Value* @func441 (%Value*, %Type*) {
   %3 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %4 = load %Type*, %Type** %3
   %5 = icmp ne %Type* %4, zeroinitializer
-  %6 = bitcast [19 x %Nat8]* @func441_str1 to %Str
+  %6 = bitcast [29 x %Nat8]* @func441_str1 to %Str
   call void (i1, %Str) @assert (i1 %5, %Str %6)
 ;stmt1:
   %7 = icmp ne %Type* %1, zeroinitializer
-  %8 = bitcast [14 x %Nat8]* @func441_str2 to %Str
+  %8 = bitcast [24 x %Nat8]* @func441_str2 to %Str
   call void (i1, %Str) @assert (i1 %7, %Str %8)
 ;stmt2:
   %9 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 0

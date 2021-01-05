@@ -93,10 +93,10 @@ exist do_value_shift : DoValue
 exist typeValidForBin : (k : ValueKind, t : *Type) -> Bool
 exist cast : (v : *Value, t : *Type, ti : *TokenInfo) -> *Value
 
-exist nat_int : (v : *Value) -> *Value
-exist nat : (v : *Value, t : *Type) -> *Value
+exist implicit_cast_int : (v : *Value) -> *Value
+exist implicit_cast : (v : *Value, t : *Type) -> *Value
 
-exist naturalConversionIsPossible : (a, b : *Type) -> Bool
+exist implicit_cast_possible : (a, b : *Type) -> Bool
 
 exist isUnaryOpKind : (k : ValueKind) -> Bool
 

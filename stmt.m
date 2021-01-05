@@ -82,7 +82,7 @@ do_stmt_assign = DoStmt {
     else => lval.type
   }
 
-  rval = nat(rval0, ltype)
+  rval = implicit_cast(rval0, ltype)
 
   if not type_check (ltype, rval.type, x.ti) {
     return nil
@@ -232,7 +232,7 @@ do_stmt_return = DoStmt {
     else => (rv : *AstValue, ft : *Type) -> *Value {
       v0 = do_value (rv)
       if v0.kind == #ValuePoison {return nil}
-      v = nat (v0, ft)
+      v = implicit_cast (v0, ft)
       if not type_check (ft, v.type, rv.ti) {}
       return v
     } (rv, func_to)
