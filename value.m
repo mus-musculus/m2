@@ -348,35 +348,39 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
 
 do_value_index = DoValue {
-  a = unwrap_var(do_valuex(x.index.array, false)) to Var *Value
-  i = do_value(x.index.index)
+  a = unwrap_var (do_valuex(x.index.array, false)) to Var *Value
+  i = do_value (x.index.index)
 
-  if a.kind == #ValuePoison {return a}
-  if i.kind == #ValuePoison {return i}
+  if a.kind == #ValuePoison {goto fail}
+  if i.kind == #ValuePoison {goto fail}
 
   // индексация допускается и для указателей на определенные массивы!
   // тип операции индексирования - тип элемента ее массива
   // тк *[x]X = []X
 
-  typ = nil to Var *Type
-  if typeIsPointerToDefinedArray(a.type) {
-    typ := a.type.pointer.to.array.of
-  } else if typeIsDefinedArray(a.type) {
-    typ := a.type.array.of
-  } else if typeIsUndefinedArray(a.type) {
-    typ := a.type.array_u.of
+  // It expects array or undefined array or pointer to array
+  typ = select a.type.kind {
+    #TypeArray => a.type.array.of
+    #TypeArrayU => a.type.array_u.of
+    #TypePointer => (_to : *Type) -> *Type {
+      return select _to.kind {
+        #TypeArray => _to.array.of
+        else => nil to *Type
+      }
+    } (a.type.pointer.to)
+    else => nil to *Type
+  }
 
-  } else {
-    error("unsuitable value type", a.ti)
+  if typ == nil {
+    error("type error", a.ti)
     goto fail
   }
 
-  index = nat_int(i)
-
-  v = value_new(#ValueIndex, typ, x.ti)
+  v = value_new (#ValueIndex, typ, x.ti)
   v.index.array := a
-  v.index.index := index
+  v.index.index := nat_int (i)
   return v
+
 fail:
   return value_new_poison (x.ti)
 }
@@ -388,13 +392,20 @@ do_value_access = DoValue {
 
   if r.kind == #ValuePoison {goto fail}
 
-  r_typ = nil to Var *Type
-  if typeIsPointerToRecord(r.type) {
-    r_typ := r.type.pointer.to
-  } else if typeIsRecord(r.type) {
-    r_typ := r.type
-  } else {
-    error("expected record or pointer to record", r.ti)
+  // It expects record or pointer to record
+  r_typ = select r.type.kind {
+    #TypeRecord => r.type
+    #TypePointer => (_to : *Type) -> *Type {
+      return select _to.kind {
+        #TypeRecord => _to
+        else => nil to *Type
+      }
+    } (r.type.pointer.to)
+    else => nil to *Type
+  }
+
+  if r_typ == nil {
+    error("type error", r.ti)
     goto fail
   }
 
