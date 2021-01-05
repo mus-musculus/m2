@@ -343,7 +343,7 @@ checkParams = (f : *Value, a : *List, ti : *TokenInfo) -> Bool {
 
     //checkValue(arg)
 
-    new_arg = castIfGenericTo(arg, typeBaseInt)
+    new_arg = nat_int(arg)
 
     // заменяем аргумент в списке на приведенный
     list_subst(a, arg, new_arg)
@@ -380,7 +380,7 @@ do_value_index = DoValue {
     goto fail
   }
 
-  index = castIfGenericTo(i, typeBaseInt)
+  index = nat_int(i)
 
   v = value_new(#ValueIndex, typ, x.ti)
   v.index.array := a
@@ -797,7 +797,7 @@ do_value_shift = DoValue {
     return value_new_imm(l.type, d, x.ti)
   }
 
-  l2 = castIfGenericTo(l, typeBaseInt)
+  l2 = nat_int(l)
 
   // (!) LLVM требует чтобы типы левого и правого в шифтах были одинаковы,
   // что глупо но.. поэтому приводим правое к левому
@@ -887,11 +887,13 @@ fail:
 // 3. *Unit -> []  &&  [] -> *Unit
 
 
-// даем тип t значению v с типом #TypeNumeric (index, shift, call)
-// used in index, call, shift, expr
-castIfGenericTo = (v : *Value, t : *Type) -> *Value {
-  if type_eq(v.type, typeNumeric) {return value_new_imm(t, v.imm, v.ti)}
-  return v
+// если у v тип GenericNumeric -> приводим его к typeBaseInt
+// used in: [index, call, shift, expr]
+nat_int = (v : *Value) -> *Value {
+  return select type_eq(v.type, typeNumeric) {
+    true => value_new_imm(typeBaseInt, v.imm, v.ti)
+    else => v
+  }
 }
 
 

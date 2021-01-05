@@ -92,8 +92,8 @@ exist do_value_not : DoValue
 exist do_value_shift : DoValue
 exist typeValidForBin : (k : ValueKind, t : *Type) -> Bool
 exist cast : (v : *Value, t : *Type, ti : *TokenInfo) -> *Value
-exist castIfGenericTo : (v : *Value, t : *Type) -> *Value
 
+exist nat_int : (v : *Value) -> *Value
 exist nat : (v : *Value, t : *Type) -> *Value
 
 exist naturalConversionIsPossible : (a, b : *Type) -> Bool
