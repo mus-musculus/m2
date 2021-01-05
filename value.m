@@ -839,31 +839,28 @@ typeValidForBin = (k : ValueKind, t : *Type) -> Bool {
 
 
 
-cast = (v : *Value, t : *Type, ti : *TokenInfo) -> *Value {
-  if v.kind == #ValuePoison {goto fail}
+cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
+  if vx.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
 
   // приведение к собственному типу бессмыслено
-  if type_eq(v.type, t) {return v}
+  if type_eq(vx.type, t) {return vx}
 
   // можем ли мы приводить непосредственно значение v к типу t ?
   immCastIsPossible = (v : *Value, t : *Type) -> Bool {
-    if v.kind == #ValueImmediate {
-      return true  // STUB
-    }
-    return false
+    return v.kind == #ValueImmediate  // STUB
   }
 
   // creating new imm value with target type
-  if immCastIsPossible(v, t) {
-    return value_new_imm(t, v.imm, ti)
+  if immCastIsPossible(vx, t) {
+    return value_new_imm(t, vx.imm, ti)
   }
 
   // во всех остальных случаях выполняем runtime приведение
-  vc = value_new(#ValueCast, t, ti)
-  vc.cast.value := v
-  vc.cast.to := t
-  return vc
+  v = value_new(#ValueCast, t, ti)
+  v.cast.value := vx
+  v.cast.to := t
+  return v
 
 fail:
   return value_new_poison (ti)
@@ -944,7 +941,7 @@ naturalConversionIsPossible = (a, b : *Type) -> Bool {
 
   // Old shit
   // *Unit -> * && * -> *Unit
-  if bk == #TypePointer and ak == #TypePointer {
+  if ak == #TypePointer and bk == #TypePointer {
     // auto cast for: *Unit -> *
     if type_eq(a, typeFreePtr) {return true}
 

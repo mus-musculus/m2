@@ -15465,16 +15465,7 @@ define i1 @func439 (%Value*, %Type*) {
   %3 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 0
   %4 = load %ValueKind, %ValueKind* %3
   %5 = icmp eq %ValueKind %4, 3
-  br i1 %5, label %then_0, label %else_0
-then_0:
-;stmt1:
-  ret i1 1
-  br label %endif_0
-else_0:
-  br label %endif_0
-endif_0:
-;stmt2:
-  ret i1 0
+  ret i1 %5
 }
 
 define %Value* @func438 (%Value*, %Type*, %TokenInfo*) {
@@ -15755,8 +15746,8 @@ else_3:
   br label %endif_3
 endif_3:
 ;stmt11:
-  %27 = icmp eq %TypeKind %6, 10
-  %28 = icmp eq %TypeKind %4, 10
+  %27 = icmp eq %TypeKind %4, 10
+  %28 = icmp eq %TypeKind %6, 10
   %29 = and i1 %27, %28
   br i1 %29, label %then_6, label %else_6
 then_6:
