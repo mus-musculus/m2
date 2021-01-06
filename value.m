@@ -27,7 +27,6 @@ value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
 }
 
 
-
 dold = (x : *Value) -> *Value {
 
   typ = select x.type.kind {
@@ -229,11 +228,9 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
     else => l.type
   }
 
-  if l.kind == #ValueImmediate and
-     r.kind == #ValueImmediate {
+  if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
     lv = l.imm
     rv = r.imm
-
     imm = select k {
       #ValueAdd => lv + rv
       #ValueSub => lv - rv
@@ -277,7 +274,6 @@ do_value_call = DoValue {
   v = value_new(#ValueCall, f.type.func.to, x.ti)
   v.call.func := f
   v.call.args := args
-  //v.dirty := f.dirty or args_is_dirty
   return v
 
 fail:
@@ -342,6 +338,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
   return ctx.arglist
 }
+
 
 
 do_value_index = DoValue {
@@ -580,6 +577,7 @@ fail:
   return value_new_poison (x.ti)
 }
 
+
 do_value_alignof = DoValue {
   t = do_type(x.of_type)
 
@@ -618,6 +616,7 @@ do_value_named = DoValue {
   return v
 }
 
+
 do_value_numeric = DoValue {
   str = x.str
   d = 0 to Var Int64
@@ -629,6 +628,7 @@ do_value_numeric = DoValue {
 
   return value_new_imm(typeNumeric, d, x.ti)
 }
+
 
 do_value_string = DoValue {
   s = x.str
@@ -715,9 +715,8 @@ fail:
 }
 
 
-do_value_array = DoValue {return nil}
-do_value_record = DoValue {return nil}
-
+do_value_array = DoValue {return value_new_poison (x.ti)}
+do_value_record = DoValue {return value_new_poison (x.ti)}
 
 
 do_value_plus = DoValue {
@@ -736,6 +735,7 @@ do_value_plus = DoValue {
 fail:
   return value_new_poison (x.ti)
 }
+
 
 do_value_minus = DoValue {
   v = do_value(x.operand[0])
@@ -771,6 +771,7 @@ do_value_not = DoValue {
 fail:
   return value_new_poison (x.ti)
 }
+
 
 // shl, shr слишком отличны чтобы входить в bin
 do_value_shift = DoValue {
@@ -822,8 +823,7 @@ typeValidForBin = (k : ValueKind, t : *Type) -> Bool {
   if t.kind == #TypePoison {return true}
 
   // Record и Array не могут участвовать в бинарных операциях
-  if t.kind == #TypeRecord or
-     typeIsDefinedArray(t) {
+  if t.kind == #TypeRecord or typeIsDefinedArray(t) {
     return false
   }
 
@@ -1001,11 +1001,6 @@ isSpecialOpKind = (k : ValueKind) -> Bool {
 }
 
 
-valueIsTerm = (v : *Value) -> Bool {
-  k = v.kind
-  return isUnaryOpKind(k) or isBinaryOpKind(k) or isSpecialOpKind(k)
-}
-
 
 // испольуется в assign
 value_is_readonly = (v : *Value) -> Bool {
@@ -1056,4 +1051,5 @@ value_init = () -> () {
   _unit = value_new_imm(typeUnit, 0, nil)
   builtin_value_bind("unit", _unit)
 }
+
 
