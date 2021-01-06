@@ -296,7 +296,7 @@ TypeKind = {
 Type = (
   kind  : TypeKind
 
-  aka   : Str    // type alias (!need for printer)
+  aka   : Str    // type alias (used by printer)
 
   size  : Nat32  // размер типа в байтах
   align : Nat    // значение выравнивания (по умолчанию для этого типа)

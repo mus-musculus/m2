@@ -510,9 +510,8 @@ eval = Eval {
     #ValueSelect => eval_select (x)
 
     #ValueUndefined => Eval {
-      printf("error eval #ValueUndefined\n")
-      exit(1)
-      return 0 to Var LLVM_Value
+      fatal("error eval #ValueUndefined\n")
+      return llval_create(#LLVM_ValueInvalid, nil, 0)
     } (x)
 
     else => eval_bin (x)
@@ -607,11 +606,10 @@ eval_index = Eval {
     //%1 = getelementptr inbounds [10 x i32], [10 x i32]* @a, i64 0, i64 1
     o("\n; index array")
     // получаем тип массива (даже если получили указатель на массив)
-    atype = nil to Var *Type  // type of ARRAY
-    if a.type.kind == #TypeArray {
-      atype := a.type
-    } else if typeIsPointerToDefinedArray(a.type) {
-      atype := a.type.pointer.to
+
+    atype = select a.type.kind {
+      #TypeArray => a.type       // is just array
+      else => a.type.pointer.to  // is pointer to array
     }
 
     reg = llvm_getelementptr(atype, a)
@@ -776,8 +774,6 @@ eval_cast_to_basic = EvalCast {
       fprintf (fout, "\n<invalid k %d in cast>", k)
       printf ("e.type.kind = %d\n", k)
       assert (false, "eval_cast_to_basic")
-
-      // #todo надо иметь возможность конструировать значения на месте
       return llval_create(#LLVM_ValueInvalid, nil, 0)
     } (v, t)
   }
@@ -1046,7 +1042,7 @@ print_val_imm = (x : LLVM_Value) -> Int {
   if ot.kind == #TypeVar {
     of = ot.var.of
     if type_is_ref(of) or of.kind == #TypeRecord or of.kind == #TypeArray {
-      fprintf(fout, "zeroinitializer")
+      o("zeroinitializer")
       return 0
     }
   }
@@ -1054,7 +1050,7 @@ print_val_imm = (x : LLVM_Value) -> Int {
   if is_ref and x.imm == 0 {
     // если инициализируем структуру, то 0 превращается в zeroinitializer
     // тк LLVM не позволяет инициализировать простым нулем
-    fprintf(fout, "zeroinitializer")
+    o("zeroinitializer")
   } else {
     fprintf(fout, "%llu", x.imm)
   }
@@ -1076,12 +1072,8 @@ print_val = (x : LLVM_Value) -> () {
 }
 
 
-print_val_with_type = (x : LLVM_Value) -> () {
-  printType(x.type)
-  space()
-  print_val(x)
-}
-
+print_val_with_type = (x : LLVM_Value) -> ()
+{printType(x.type); space(); print_val(x)}
 
 
 //%agg1 = insertvalue {i32, float} undef, i32 1, 0  ; yields {i32 1, float undef}
@@ -1090,9 +1082,6 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
   o(" undef, ")
   return llval_create_reg(x.type, reg)
 }
-
-
-
 
 
 

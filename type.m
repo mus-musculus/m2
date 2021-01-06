@@ -335,14 +335,8 @@ type_eq_record = (a, b : *TypeRecord) -> Bool {
 
 type_eq = (a, b : *Type) -> Bool {
   if a == b {return true}
-  if a.kind != b.kind {return false}
 
-  if a.aka != nil and b.aka != nil {
-    // если псевдонимы равны, значит это гарантированно один тип
-    // (!) Это в том числе используется для исключения бесконечной рекурсии
-    // при сравнении типов содержащих ссылку на самих себя (!)
-    if strcmp(a.aka, b.aka) == 0 {return true}
-  }
+  if a.kind != b.kind {return false}
 
   return select a.kind {
     #TypeNumeric => type_eq_numeric(&a.num, &b.num)
@@ -373,6 +367,7 @@ type_init = () -> () {
 
   // Void is an empty enum
   typeVoid := type_enum_new(list_new(), nil)
+  typeVoid.aka := "Void"
   builtin_type_bind("Void", typeVoid)
 
   // Unit is an empty record
