@@ -632,18 +632,18 @@ eval_access = Eval {
 
   s = eval(x.access.value) to Var LLVM_Value
 
-  access_through_ptr = s.type.kind == #TypePointer
+  byptr = s.type.kind == #TypePointer
 
-  record_type = s.type to Var *Type
-  if access_through_ptr {
-    record_type := s.type.pointer.to
+  record_type = select byptr {
+    true => s.type.pointer.to
+    else => s.type
   }
 
 
   field = type_record_get_field(record_type, x.access.field)
   fieldno = field.offset
 
-  if not access_through_ptr {
+  if not byptr {
     is_record_in_register = s.kind == #LLVM_ValueRegister and s.type.kind == #TypeRecord
 
     // работа именно со значением в регистре
@@ -655,11 +655,13 @@ eval_access = Eval {
 
   // работа по ссылке на структуру
 
-  if access_through_ptr {
+  if byptr {
     s := load(s)  // загружаем значение УКАЗАТЕЛЯ в регистр
+  } else {
+    //warning("!?\n", x.ti)
   }
   reg = llvm_getelementptr(record_type, s)
-  //if access_through_ptr {o("i1 0, ")}
+
   fprintf(fout, "i1 0, i32 %u", fieldno)
 
   return llval_create_adr (x.type, reg)
