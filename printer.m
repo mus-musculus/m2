@@ -523,6 +523,8 @@ eval_call = Eval {
   // evaluate arguments values before printing call
 
   // context for evaluated & loaded arguments
+  // Делаю это потому что LLVM_Value передается по значению а не по ссылке
+  // и следовательно data/list не подойдет
   Arguments = (args : [maxArg]LLVM_Value, cnt : Nat16)
 
   args = 0 to Var Arguments
