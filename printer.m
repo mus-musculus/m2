@@ -623,14 +623,16 @@ eval_index = Eval {
 }
 
 
+
+/*.*/
+
 eval_access = Eval {
-  assert(x.access.field != nil, "print/expr:: x.field == nil\n")
+  assert (x.access.field != nil, "print/expr:: x.field == nil\n")
 
   if x.access.value.kind == #ValueAccess {
-    //warning("@@", x.ti)
   }
 
-  s = eval(x.access.value) to Var LLVM_Value
+  s = eval (x.access.value)
 
   byptr = s.type.kind == #TypePointer
 
@@ -639,33 +641,30 @@ eval_access = Eval {
     else => s.type
   }
 
-
-  field = type_record_get_field(record_type, x.access.field)
+  field = type_record_get_field (record_type, x.access.field)
   fieldno = field.offset
 
   if not byptr {
-    is_record_in_register = s.kind == #LLVM_ValueRegister and s.type.kind == #TypeRecord
-
     // работа именно со значением в регистре
-    if is_record_in_register {
-      reg = llvm_extractvalue(record_type, s, fieldno to Nat)
-      return llval_create_reg(x.type, reg)
+    if s.kind == #LLVM_ValueRegister {
+      reg = llvm_extractvalue (record_type, s, fieldno to Nat)
+      return llval_create_reg (x.type, reg)
     }
   }
 
-  // работа по ссылке на структуру
-
-  if byptr {
-    s := load(s)  // загружаем значение УКАЗАТЕЛЯ в регистр
-  } else {
-    //warning("!?\n", x.ti)
+  // локальная переменная это указатель
+  // локальная переменная "указатель на структуру"
+  // это `указатель на указатель на структуру`
+  ss = select byptr {
+    true => load (s)
+    else => s
   }
-  reg = llvm_getelementptr(record_type, s)
 
-  fprintf(fout, "i1 0, i32 %u", fieldno)
-
+  reg = llvm_getelementptr (record_type, ss)
+  fprintf (fout, "i1 0, i32 %u", fieldno)
   return llval_create_adr (x.type, reg)
 }
+
 
 
 eval_ref = Eval {

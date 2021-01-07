@@ -593,7 +593,7 @@ target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"target triple = "x86_
 @func306_str5 = private unnamed_addr constant [4 x i8] c"xor\00", align 1
 @func306_str6 = private unnamed_addr constant [4 x i8] c"and\00", align 1
 @func306_str7 = private unnamed_addr constant [8 x i8] c"icmp eq\00", align 1
-@func306_str8 = private unnamed_addr constant [9 x i8] c"icmp ne\00", align 1
+@func306_str8 = private unnamed_addr constant [8 x i8] c"icmp ne\00", align 1
 @func306_func309_str1 = private unnamed_addr constant [9 x i8] c"icmp slt\00", align 1
 @func306_func309_str2 = private unnamed_addr constant [9 x i8] c"icmp ult\00", align 1
 @func306_func310_str1 = private unnamed_addr constant [9 x i8] c"icmp sgt\00", align 1
@@ -9633,70 +9633,56 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt2:
-  %13 = alloca %LLVM_Value
-  %14 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
-  %15 = getelementptr inbounds %ValueAccess, %ValueAccess* %14, i1 0, i32 0
-  %16 = load %Value*, %Value** %15
-  %17 = call %LLVM_Value (%Value*) @func284 (%Value* %16)
-  store %LLVM_Value %17, %LLVM_Value* %13, align 8
+  %13 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
+  %14 = getelementptr inbounds %ValueAccess, %ValueAccess* %13, i1 0, i32 0
+  %15 = load %Value*, %Value** %14
+  %16 = call %LLVM_Value (%Value*) @func284 (%Value* %15)
 ;stmt3:
-  %18 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %13, i1 0, i32 1
-  %19 = load %Type*, %Type** %18
-  %20 = getelementptr inbounds %Type, %Type* %19, i1 0, i32 0
-  %21 = load %TypeKind, %TypeKind* %20
-  %22 = icmp eq %TypeKind %21, 10
+  %17 = extractvalue %LLVM_Value %16, 1
+  %18 = getelementptr inbounds %Type, %Type* %17, i1 0, i32 0
+  %19 = load %TypeKind, %TypeKind* %18
+  %20 = icmp eq %TypeKind %19, 10
 ;stmt4:
   br label %select_1_0
 select_1_0:
-  %23 = icmp eq i1 %22, 1
-  br i1 %23, label %select_1_0_ok, label %select_1_1
+  %21 = icmp eq i1 %20, 1
+  br i1 %21, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %24 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %13, i1 0, i32 1
+  %22 = extractvalue %LLVM_Value %16, 1
+  %23 = getelementptr inbounds %Type, %Type* %22, i1 0, i32 6
+  %24 = getelementptr inbounds %TypePointer, %TypePointer* %23, i1 0, i32 0
   %25 = load %Type*, %Type** %24
-  %26 = getelementptr inbounds %Type, %Type* %25, i1 0, i32 6
-  %27 = getelementptr inbounds %TypePointer, %TypePointer* %26, i1 0, i32 0
-  %28 = load %Type*, %Type** %27
   br label %select_1_end
 select_1_1:
-  %29 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %13, i1 0, i32 1
-  %30 = load %Type*, %Type** %29
+  %26 = extractvalue %LLVM_Value %16, 1
   br label %select_1_end
 select_1_end:
-  %31 = phi %Type* [ %28, %select_1_0_ok ], [ %30, %select_1_1 ]
+  %27 = phi %Type* [ %25, %select_1_0_ok ], [ %26, %select_1_1 ]
 ;stmt5:
-  %32 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
-  %33 = getelementptr inbounds %ValueAccess, %ValueAccess* %32, i1 0, i32 1
-  %34 = load %Str, %Str* %33
-  %35 = call %Decl* (%Type*, %Str) @func357 (%Type* %31, %Str %34)
+  %28 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
+  %29 = getelementptr inbounds %ValueAccess, %ValueAccess* %28, i1 0, i32 1
+  %30 = load %Str, %Str* %29
+  %31 = call %Decl* (%Type*, %Str) @func357 (%Type* %27, %Str %30)
 ;stmt6:
-  %36 = getelementptr inbounds %Decl, %Decl* %35, i1 0, i32 3
-  %37 = load %Nat16, %Nat16* %36
+  %32 = getelementptr inbounds %Decl, %Decl* %31, i1 0, i32 3
+  %33 = load %Nat16, %Nat16* %32
 ;stmt7:
-  %38 = xor i1 %22, 1
-  br i1 %38, label %then_1, label %else_1
+  %34 = xor i1 %20, 1
+  br i1 %34, label %then_1, label %else_1
 then_1:
 ;stmt8:
-  %39 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %13, i1 0, i32 0
-  %40 = load %LLVM_ValueKind, %LLVM_ValueKind* %39
-  %41 = icmp eq %LLVM_ValueKind %40, 7
-  %42 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %13, i1 0, i32 1
-  %43 = load %Type*, %Type** %42
-  %44 = getelementptr inbounds %Type, %Type* %43, i1 0, i32 0
-  %45 = load %TypeKind, %TypeKind* %44
-  %46 = icmp eq %TypeKind %45, 9
-  %47 = and i1 %41, %46
-;stmt9:
-  br i1 %47, label %then_2, label %else_2
+  %35 = extractvalue %LLVM_Value %16, 0
+  %36 = icmp eq %LLVM_ValueKind %35, 7
+  br i1 %36, label %then_2, label %else_2
 then_2:
+;stmt9:
+  %37 = zext %Nat16 %33 to %Nat32
+  %38 = call %Nat32 (%Type*, %LLVM_Value, %Nat32) @func283 (%Type* %27, %LLVM_Value %16, %Nat32 %37)
 ;stmt10:
-  %48 = load %LLVM_Value, %LLVM_Value* %13
-  %49 = zext %Nat16 %37 to %Nat32
-  %50 = call %Nat32 (%Type*, %LLVM_Value, %Nat32) @func283 (%Type* %31, %LLVM_Value %48, %Nat32 %49)
-;stmt11:
-  %51 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %52 = load %Type*, %Type** %51
-  %53 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %52, %Nat32 %50)
-  ret %LLVM_Value %53
+  %39 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %40 = load %Type*, %Type** %39
+  %41 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %40, %Nat32 %38)
+  ret %LLVM_Value %41
   br label %endif_2
 else_2:
   br label %endif_2
@@ -9705,29 +9691,29 @@ endif_2:
 else_1:
   br label %endif_1
 endif_1:
+;stmt11:
+  br label %select_2_0
+select_2_0:
+  %43 = icmp eq i1 %20, 1
+  br i1 %43, label %select_2_0_ok, label %select_2_1
+select_2_0_ok:
+  %44 = call %LLVM_Value (%LLVM_Value) @func321 (%LLVM_Value %16)
+  br label %select_2_end
+select_2_1:
+  br label %select_2_end
+select_2_end:
+  %45 = phi %LLVM_Value [ %44, %select_2_0_ok ], [ %16, %select_2_1 ]
 ;stmt12:
-  br i1 %22, label %then_3, label %else_3
-then_3:
+  %46 = call %Nat32 (%Type*, %LLVM_Value) @func282 (%Type* %27, %LLVM_Value %45)
 ;stmt13:
-  %55 = load %LLVM_Value, %LLVM_Value* %13
-  %56 = call %LLVM_Value (%LLVM_Value) @func321 (%LLVM_Value %55)
-  store %LLVM_Value %56, %LLVM_Value* %13, align 8
-  br label %endif_3
-else_3:
-  br label %endif_3
-endif_3:
+  %47 = load %FILE*, %FILE** @fout
+  %48 = bitcast [13 x %Nat8]* @func291_str2 to %Str
+  %49 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %47, %Str %48, %Nat16 %33)
 ;stmt14:
-  %57 = load %LLVM_Value, %LLVM_Value* %13
-  %58 = call %Nat32 (%Type*, %LLVM_Value) @func282 (%Type* %31, %LLVM_Value %57)
-;stmt15:
-  %59 = load %FILE*, %FILE** @fout
-  %60 = bitcast [13 x %Nat8]* @func291_str2 to %Str
-  %61 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %59, %Str %60, %Nat16 %37)
-;stmt16:
-  %62 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %63 = load %Type*, %Type** %62
-  %64 = call %LLVM_Value (%Type*, %Nat32) @llval_create_adr (%Type* %63, %Nat32 %58)
-  ret %LLVM_Value %64
+  %50 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %51 = load %Type*, %Type** %50
+  %52 = call %LLVM_Value (%Type*, %Nat32) @llval_create_adr (%Type* %51, %Nat32 %46)
+  ret %LLVM_Value %52
 }
 
 define %LLVM_Value @func292 (%Value*) {
@@ -10345,7 +10331,7 @@ select_1_9:
   %34 = icmp eq %ValueKind %15, 23
   br i1 %34, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
-  %35 = bitcast [9 x %Nat8]* @func306_str8 to %Str
+  %35 = bitcast [8 x %Nat8]* @func306_str8 to %Str
   br label %select_1_end
 select_1_10:
   %36 = icmp eq %ValueKind %15, 24
