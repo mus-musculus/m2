@@ -624,6 +624,8 @@ eval_index = Eval {
 
 
 eval_access = Eval {
+  assert(x.access.field != nil, "print/expr:: x.field == nil\n")
+
   if x.access.value.kind == #ValueAccess {
     //warning("@@", x.ti)
   }
@@ -635,12 +637,8 @@ eval_access = Eval {
   record_type = s.type to Var *Type
   if access_through_ptr {
     record_type := s.type.pointer.to
-    s := load(s)  // загружаем значение УКАЗАТЕЛЯ в регистр
   }
 
-
-
-  assert(x.access.field != nil, "print/expr:: x.field == nil\n")
 
   field = type_record_get_field(record_type, x.access.field)
   fieldno = field.offset
@@ -657,8 +655,11 @@ eval_access = Eval {
 
   // работа по ссылке на структуру
 
+  if access_through_ptr {
+    s := load(s)  // загружаем значение УКАЗАТЕЛЯ в регистр
+  }
   reg = llvm_getelementptr(record_type, s)
-  //if need_preload {o("i1 0, ")}
+  //if access_through_ptr {o("i1 0, ")}
   fprintf(fout, "i1 0, i32 %u", fieldno)
 
   return llval_create_adr (x.type, reg)
