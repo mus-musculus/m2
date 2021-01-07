@@ -624,30 +624,41 @@ eval_index = Eval {
 
 
 eval_access = Eval {
+  if x.access.value.kind == #ValueAccess {
+    //warning("@@", x.ti)
+  }
+
   s = eval(x.access.value) to Var LLVM_Value
 
+  access_through_ptr = s.type.kind == #TypePointer
+
   record_type = s.type to Var *Type
-  if s.type.kind == #TypePointer {
+  if access_through_ptr {
     record_type := s.type.pointer.to
-    s := load(s)
+    s := load(s)  // загружаем значение УКАЗАТЕЛЯ в регистр
   }
+
+
 
   assert(x.access.field != nil, "print/expr:: x.field == nil\n")
 
   field = type_record_get_field(record_type, x.access.field)
   fieldno = field.offset
 
-  is_record_in_register = s.kind == #LLVM_ValueRegister and s.type.kind == #TypeRecord
+  if not access_through_ptr {
+    is_record_in_register = s.kind == #LLVM_ValueRegister and s.type.kind == #TypeRecord
 
-  // работа именно со значением в регистре
-  if is_record_in_register {
-    reg = llvm_extractvalue(record_type, s, fieldno to Nat)
-    return llval_create_reg(x.type, reg)
+    // работа именно со значением в регистре
+    if is_record_in_register {
+      reg = llvm_extractvalue(record_type, s, fieldno to Nat)
+      return llval_create_reg(x.type, reg)
+    }
   }
 
   // работа по ссылке на структуру
 
   reg = llvm_getelementptr(record_type, s)
+  //if need_preload {o("i1 0, ")}
   fprintf(fout, "i1 0, i32 %u", fieldno)
 
   return llval_create_adr (x.type, reg)
