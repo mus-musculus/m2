@@ -445,9 +445,12 @@ type_init = () -> () {
   builtin_type_bind("Nat512", typeNat512)
   builtin_type_bind("Nat1024", typeNat1024)
 
-
   // main types shortcuts
+
+  // *Unit - указатель на произвольное значение
   typeFreePtr := type_pointer_new(typeUnit, nil)
+
+  // Тип который получают литеральные константы
   typeNumeric := type_numeric_new("Numeric",  0, true)
 
   typeBaseInt := select cfgIntegerSize {
