@@ -22,17 +22,17 @@ asm_init = (a : *Assembly, arch : Arch, name : Str) -> () {
   a.name := name
 
   select arch {
-    #Arch-x64 => func (a : *Assembly) -> () {
+    #Arch-x64 => (a : *Assembly) -> () {
       a.datalayout := "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
       a.triple := "x86_64-apple-macosx10.15.0"
     } (a)
 
-    #Arch-ARM-CM3 => func (a : *Assembly) -> () {
+    #Arch-ARM-CM3 => (a : *Assembly) -> () {
       a.datalayout := "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S64"
       a.triple := "thumbv7em-unknown-none-eabi"
     } (a)
 
-    else => func (a : *Assembly) -> () {
+    else => (a : *Assembly) -> () {
       a.datalayout := nil;
       a.triple := nil
     } (a)
@@ -1235,7 +1235,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
 
   select t.kind {
     #TypeNumeric => fprintf(fout, "%%%s", t.aka) to ()
-    #TypeVar => func (t : *Type) -> () {printType(t.var.of)} (t)
+    #TypeVar => (t : *Type) -> () {printType(t.var.of)} (t)
     #TypeEnum => fprintf(fout, "i%d", cfgEnumSize * 8) to ()
     #TypeRecord => printTypeRecord(&t.record)
     #TypeArray => printTypeArray(&t.array)

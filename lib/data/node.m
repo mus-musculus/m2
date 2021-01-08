@@ -75,7 +75,7 @@ node_search = (node_chain : *Node, f : NodeSearchHandler, ctx : *Unit) -> *Node 
 
 // поиск ноды по ссылке на data
 node_search_by_data = (node_chain : *Node, data : *Unit) -> *Node {
-  return node_search(node_chain, func NodeSearchHandler {return n.data == ctx}, data)
+  return node_search(node_chain, NodeSearchHandler {return n.data == ctx}, data)
 }
 
 

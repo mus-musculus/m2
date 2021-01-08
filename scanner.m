@@ -148,7 +148,7 @@ getToken = () -> TokenKind {
       "!"[0]  => fill(bang)
       "\""[0] => string()
       symEOF  => x_eof()
-      else => func () -> () {} ()
+      else => () -> () {} ()
     }
   }
 
