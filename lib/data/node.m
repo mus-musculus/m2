@@ -15,8 +15,9 @@ NodeSearchHandler = (n : *Node, ctx : *Unit, index : Nat) -> Bool
 node_init = (node : *Node) -> () {memset(node to *Unit, 0, sizeof Node)}
 
 
-node_new = () -> *Node {
-  new_node = malloc(sizeof Node) to *Node
+// extra - объем дополнительной памяти
+node_new = (extra : Nat) -> *Node {
+  new_node = malloc(sizeof Node + extra) to *Node
   node_init(new_node)
   return new_node
 }

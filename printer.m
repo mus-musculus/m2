@@ -746,35 +746,25 @@ eval_cast_to_bool = EvalCast {
 
 
 eval_cast_basic_to_basic = EvalCast {
-  if v.type.num.power > t.num.power {
-      return llvm_cast("trunc", v, t)    // INT -> int
-    } else if v.type.num.power < t.num.power {
-      if t.num.signed {
-        return llvm_cast("sext", v, t)   // Int -> SIGNED_INT
-      } else {
-        return llvm_cast("zext", v, t)   // Int -> UNSIGNED_INT
+  return select true {
+    v.type.num.power > t.num.power => llvm_cast("trunc", v, t)    // INT -> int
+    v.type.num.power < t.num.power => (v : LLVM_Value, t : *Type) -> LLVM_Value {
+      return select t.num.signed {
+        true => llvm_cast("sext", v, t)   // Int -> SIGNED_INT
+        else => llvm_cast("zext", v, t)   // Int -> UNSIGNED_INT
       }
-    } else {
-      return llvm_cast("bitcast", v, t)  // Int -> Int
-    }
+    } (v, t)
 
-  assert(false, "eval_cast_basic_to_basic")
-  return llval_create(#LLVM_ValueInvalid, nil, 0)
+    else => llvm_cast("bitcast", v, t)  // Int -> Int
+  }
 }
 
 eval_cast_enum_to_basic = EvalCast {
-  // Enum -> Basic
-  // вырази это через type base #todo а то дублируется
-  if cfgEnumSize > t.num.power {
-    return llvm_cast("trunc", v, t)    // power(v) > power(t)
-  } else if cfgEnumSize < t.num.power {
-    return llvm_cast("zext", v, t)     // power(v) < power(t)
-  } else {
-    return llvm_cast("bitcast", v, t)  // power(v) == power(t)
+  return select true {
+    cfgEnumSize > t.num.power => llvm_cast("trunc", v, t)  // power(v) > power(t)
+    cfgEnumSize < t.num.power => llvm_cast("zext", v, t)   // power(v) < power(t)
+    else => llvm_cast("bitcast", v, t)                     // power(v) == power(t)
   }
-
-  assert(false, "eval_cast_enum_to_basic")
-  return llval_create(#LLVM_ValueInvalid, nil, 0)
 }
 
 eval_cast_to_basic = EvalCast {
@@ -799,20 +789,19 @@ eval_cast = Eval {
   v = eval(x.cast.value)
   t = x.cast.to
 
-  if type_is_ref(t) {
-    return eval_cast_to_ref (v, t)    // cast -> Ref
-  } else if t.kind == #TypeBool {
-    return eval_cast_to_bool (v, t)   // cast -> Bool
-  } else if t.kind == #TypeNumeric {
-    return eval_cast_to_basic (v, t)  // cast -> Basic
-  } else if type_eq (t, typeUnit) {
-    return llval_create(#LLVM_ValueEmpty, t, 0)  // cast -> ()
-  }
+  return select true {
+    type_is_ref(t)         => eval_cast_to_ref (v, t)    // cast -> Ref
+    t.kind == #TypeBool    => eval_cast_to_bool (v, t)   // cast -> Bool
+    t.kind == #TypeNumeric => eval_cast_to_basic (v, t)  // cast -> Basic
+    type_eq (t, typeUnit)  => llval_create(#LLVM_ValueEmpty, t, 0)  // cast -> ()
 
-  printf("eval_cast error:\n")
-  warning("war", x.ti)
-  prttype(v.type); printf(" --> "); prttype(t); printf("\n")
-  return llval_create(#LLVM_ValueInvalid, t, 0)
+    else => EvalCast {
+      printf("eval_cast error:\n")
+      prttype(v.type); printf(" --> "); prttype(t); printf("\n")
+      fatal("eval_cast error")
+      return llval_create(#LLVM_ValueInvalid, t, 0)
+    } (v, t)
+  }
 }
 
 

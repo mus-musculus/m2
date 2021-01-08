@@ -20,7 +20,7 @@ map_init = list_init
 map_append = (m : *Map, k : Str, v : *Unit) -> Bool {
   if m == nil or k == nil or v == nil {return false}
 
-  new_node = node_new()
+  new_node = node_new(0)
 
   new_node.key := k to *Unit
   new_node.data := v

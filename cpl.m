@@ -157,10 +157,11 @@ do_value_bind = (x : *AstNodeBindValue) -> () {
   bind_value_global(id, v)
 
   // временно даю аргхак так
-  if strcmp("printf", id) == 0 or strcmp("scanf", id) == 0 or strcmp("sscanf", id) == 0 or strcmp("sprintf", id) == 0 or strcmp("fprintf", id) == 0 {
-    //printf("arghack!")
-    v.type.func.arghack := true
-  }
+  v.type.func.arghack := strcmp("printf", id) == 0 or
+      strcmp("scanf", id) == 0 or
+      strcmp("sscanf", id) == 0 or
+      strcmp("sprintf", id) == 0 or
+      strcmp("fprintf", id) == 0
 
   if v.def != nil {v.def.id := id}
 }

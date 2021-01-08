@@ -1,15 +1,4 @@
 
-import "C"
-import "ascii"
-import "assert"
-import "data/node"
-import "data/list"
-import "str"
-
-import "types"
-import "scanner"
-import "error"
-
 
 
 pstat = 0 to Var ParserState
@@ -1047,40 +1036,38 @@ parse_stmt = () -> *AstStmt {
   is_valdef = is_def and (isLowerCase(tk.text[0]) or tk.text[0] == "_"[0])
   is_typdef = is_def and isUpperCase(tk.text[0])
 
-  if match("let") or is_valdef {
-    return parse_stmt_valdef(ti)
-  } else if match("{") {
-    return parse_stmt_block(ti)
-  } else if match("if") {
-    return parse_stmt_if(ti)
-  } else if match("while") {
-    return parse_stmt_while(ti)
-  } else if match("return") {
-    return parse_stmt_return(ti)
-  } else if match("break") {
-    return ast_stmt_new(#AstStmtBreak, ti)
-  } else if match("continue") {
-    return ast_stmt_new(#AstStmtContinue, ti)
-  //} else if match("var") {
-  //  return parse_stmt_vardef(ti)
-  } else if match("type") or is_typdef {
-    return parse_stmt_typedef(ti)
-  } else if match("goto") {
-    return parse_stmt_goto(ti)
-  } else if tk.kind == #TokenId {
-    // Maybe Label?
-    nt = nextok()
-    if nt.text[0] == ":"[0] and nt.ti.length == 1 {
-      id = parse_id()
-      skip()  // `:`
-      ti = &ctok().ti
-      s = ast_stmt_new(#AstStmtLabel, ti)
-      s.label.label := id
-      return s
+
+  lab_or_expr = () -> *AstStmt {
+    tk = ctok()
+    if tk.kind == #TokenId {
+      // Maybe Label?
+      nt = nextok()
+      if nt.text[0] == ":"[0] and nt.ti.length == 1 {
+        id = parse_id()
+        skip()  // `:`
+        ti = &ctok().ti
+        s = ast_stmt_new(#AstStmtLabel, ti)
+        s.label.label := id
+        return s
+      }
     }
+
+    return parse_stmt_expr(&tk.ti)
   }
 
-  return parse_stmt_expr(&tk.ti)
+  return select true {
+    match("let") or is_valdef => parse_stmt_valdef(ti)
+    match("{") => parse_stmt_block(ti)
+    match("if") => parse_stmt_if(ti)
+    match("while") => parse_stmt_while(ti)
+    match("return") => parse_stmt_return(ti)
+    match("break") => ast_stmt_new(#AstStmtBreak, ti)
+    match("continue") => ast_stmt_new(#AstStmtContinue, ti)
+    //match("var") => parse_stmt_vardef(ti)
+    match("type") or is_typdef => parse_stmt_typedef(ti)
+    match("goto") => parse_stmt_goto(ti)
+    else => lab_or_expr()
+  }
 }
 
 

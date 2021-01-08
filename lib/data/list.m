@@ -59,7 +59,7 @@ list_new = () -> *List {
 list_append = (list : *List, obj : *Unit) -> Bool {
   if list == nil or obj == nil {return false}
 
-  new_node = node_new()
+  new_node = node_new(0)
 
   new_node.data := obj
 
@@ -74,6 +74,29 @@ list_append = (list : *List, obj : *Unit) -> Bool {
   list.volume := list.volume + 1
   return true
 }
+
+
+/*list_appendx = (list : *List, extra : Nat) -> *Unit {
+  if list == nil {return nil}
+
+  new_node = node_new(extra)
+
+  extra_ptr = (new_node to *Unit) + sizeof Node
+
+  new_node.data := extra_ptr
+
+  if list.first == nil {
+    list.first := new_node
+  } else {
+    node_append(list.last, new_node)
+  }
+
+  list.last := new_node
+
+  list.volume := list.volume + 1
+
+  return extra_ptr
+}*/
 
 
 list_extend = (list1, list2 : *List) -> Bool {
