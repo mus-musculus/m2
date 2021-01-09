@@ -4,9 +4,9 @@
 
 
 stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
-  s = malloc(sizeof Stmt) to *Stmt
-  assert(s != nil, "stmt_new")
-  memset(s, 0, sizeof Stmt)
+  s = malloc (sizeof Stmt) to *Stmt
+  assert (s != nil, "stmt_new")
+  memset (s, 0, sizeof Stmt)
   s.kind := kind
   s.ti := ti
   return s
@@ -14,7 +14,7 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 
 stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
-  s = stmt_new(#StmtAssign, ti)
+  s = stmt_new (#StmtAssign, ti)
   s.a[0] := l
   s.a[1] := r
   return s
@@ -23,19 +23,19 @@ stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
 
 do_stmt = DoStmt {
   return select x.kind {
-    #AstStmtAssign   => do_stmt_assign(x)
-    #AstStmtValueDef => do_stmt_valdef(x)
-    #AstStmtBlock    => do_stmt_block(x)
-    #AstStmtExpr     => do_stmt_expr(x)
-    #AstStmtIf       => do_stmt_if(x)
-    #AstStmtWhile    => do_stmt_while(x)
-    #AstStmtReturn   => do_stmt_return(x)
-    //#AstStmtVarDef   => do_stmt_vardef(x)
-    #AstStmtTypeDef  => do_stmt_typedef(x)
-    #AstStmtBreak    => do_stmt_break(x)
-    #AstStmtContinue => do_stmt_continue(x)
-    #AstStmtGoto     => do_stmt_goto(x)
-    #AstStmtLabel    => do_stmt_label(x)
+    #AstStmtAssign   => do_stmt_assign (x)
+    #AstStmtValueDef => do_stmt_valdef (x)
+    #AstStmtBlock    => do_stmt_block (x)
+    #AstStmtExpr     => do_stmt_expr (x)
+    #AstStmtIf       => do_stmt_if (x)
+    #AstStmtWhile    => do_stmt_while (x)
+    #AstStmtReturn   => do_stmt_return (x)
+    //#AstStmtVarDef   => do_stmt_vardef (x)
+    #AstStmtTypeDef  => do_stmt_typedef (x)
+    #AstStmtBreak    => do_stmt_break (x)
+    #AstStmtContinue => do_stmt_continue (x)
+    #AstStmtGoto     => do_stmt_goto (x)
+    #AstStmtLabel    => do_stmt_label (x)
     else => nil
   }
 }
@@ -47,26 +47,26 @@ do_stmt = DoStmt {
 lval - означающий что не нужно загружать значение окончательно.
 */
 do_stmt_assign = DoStmt {
-  rval0 = do_value(x.assign.r)
+  rval0 = do_value (x.assign.r)
 
   if rval0.kind == #ValuePoison {return nil}
 
   lx = x.assign.l
   lval = select lx.kind {
-    #AstValueId => do_value_named(lx)
-    #AstValueDeref => do_value_deref(lx)
-    #AstValueIndex => do_value_index(lx)
-    #AstValueAccess => do_value_access(lx)
+    #AstValueId => do_value_named (lx)
+    #AstValueDeref => do_value_deref (lx)
+    #AstValueIndex => do_value_index (lx)
+    #AstValueAccess => do_value_access (lx)
     else => nil
   }
 
   if lval == nil {
-    error("expected lvalue", lx.ti)
+    error ("expected lvalue", lx.ti)
     return nil
   }
 
-  if value_is_readonly(lval) {
-    error("invalid lval", x.ti)
+  if value_is_readonly (lval) {
+    error ("invalid lval", x.ti)
     return nil
   }
 
@@ -90,13 +90,13 @@ do_stmt_assign = DoStmt {
     return nil
   }
 
-  return stmt_assign_new(lval, rval, x.ti)
+  return stmt_assign_new (lval, rval, x.ti)
 }
 
 
 do_stmt_valdef = DoStmt {
   id = x.valdef.id
-  v = do_valuex(x.valdef.expr, false)
+  v = do_valuex (x.valdef.expr, false)
 
   // Local
   // важно чтобы undef переменные попадали сюда так как иначе
@@ -108,17 +108,17 @@ do_stmt_valdef = DoStmt {
        k != #ValueImmediate or
        k == #ValueUndefined {
 
-      v0 = value_new(#ValueLocalConst, v.type, x.ti)
-      bind_value_local(id.str, v0)
+      v0 = value_new (#ValueLocalConst, v.type, x.ti)
+      bind_value_local (id.str, v0)
 
-      se = stmt_new(#StmtExpr, x.ti)
-      se.e.v := dold(v)
+      se = stmt_new (#StmtExpr, x.ti)
+      se.e.v := dold (v)
       v0.expr := &se.e
       return se
     }
   }
 
-  bind_value_in_block(fctx.cblock, id.str, v)
+  bind_value_in_block (fctx.cblock, id.str, v)
   return nil
 }
 
@@ -126,13 +126,13 @@ do_stmt_valdef = DoStmt {
 stmt_block_new = (b, parent : *Block) -> *Block {
   //b = malloc(sizeof Block) to *Block
   //assert(b != nil, "stmt_block_new : b != nil")
-  memset(b, 0, sizeof Block)
+  memset (b, 0, sizeof Block)
 
   b.parent := parent
 
-  index_init(&b.index)
-  list_init(&b.stmts)
-  list_init(&b.local_funcs)
+  index_init (&b.index)
+  list_init (&b.stmts)
+  list_init (&b.local_funcs)
 
   return b
 }
@@ -166,7 +166,7 @@ do_stmt_expr = DoStmt {
 
   if v.kind == #ValuePoison {return nil}
 
-  if not type_eq(v.type, typeUnit) {
+  if not type_eq (v.type, typeUnit) {
     //warning("ignoring value", x.ti)
   }
 
@@ -187,7 +187,7 @@ do_stmt_if = DoStmt {
 
   if cond.kind == #ValuePoison {return nil}
 
-  if not type_check(typeBool, cond.type, cond.ti) {
+  if not type_check (typeBool, cond.type, cond.ti) {
     return nil
   }
 
@@ -202,15 +202,15 @@ do_stmt_if = DoStmt {
 
 
 do_stmt_while = DoStmt {
-  cond = do_value(x.while.cond)
+  cond = do_value (x.while.cond)
 
   fctx.loop := fctx.loop + 1
-  block = do_stmt(x.while.block)
+  block = do_stmt (x.while.block)
   fctx.loop := fctx.loop - 1
 
   if cond.kind == #ValuePoison {return nil}
 
-  if not type_check(typeBool, cond.type, cond.ti) {
+  if not type_check (typeBool, cond.type, cond.ti) {
     return nil
   }
 
@@ -239,7 +239,7 @@ do_stmt_return = DoStmt {
     } (rv, func_to)
   }
 
-  s = stmt_new(#StmtReturn, x.ti)
+  s = stmt_new (#StmtReturn, x.ti)
   s.a[0] := retval
   return s
 }
@@ -261,18 +261,18 @@ do_stmt_vardef = DoStmt {
 
 do_stmt_typedef = DoStmt {
   id = x.typedef.id.str
-  _type = do_type(x.typedef.type)
+  _type = do_type (x.typedef.type)
 
-  uid = get_suid_type_local()
+  uid = get_suid_type_local ()
   if _type.aka == nil {_type.aka := uid}
 
 //  // bind type in local index
 //  bind_type(&cblock.index, id, _type)
 
   // in GLOBAL index (временно тк не могу скомпилить сам себя, изза этого)
-  bind_type(&module.private, id, _type)
+  bind_type (&module.private, id, _type)
   // creating data for printer
-  asmTypedefAdd(&asm0, uid, _type)
+  asmTypedefAdd (&asm0, uid, _type)
 
   return nil
 }
@@ -280,25 +280,25 @@ do_stmt_typedef = DoStmt {
 
 do_stmt_break = DoStmt {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new(#StmtBreak, x.ti)
+  return stmt_new (#StmtBreak, x.ti)
 }
 
 
 do_stmt_continue = DoStmt {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new(#StmtContinue, x.ti)
+  return stmt_new (#StmtContinue, x.ti)
 }
 
 
 do_stmt_goto = DoStmt {
-  s = stmt_new(#StmtGoto, x.ti)
+  s = stmt_new (#StmtGoto, x.ti)
   s.l := x.goto.label.str
   return s
 }
 
 
 do_stmt_label = DoStmt {
-  s = stmt_new(#StmtLabel, x.ti)
+  s = stmt_new (#StmtLabel, x.ti)
   s.l := x.label.label.str
   return s
 }

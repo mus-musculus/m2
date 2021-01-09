@@ -43,25 +43,25 @@ compilerVersionMinor = 5
 
 
 main = (argc : Nat, argv : []Str) -> Int32 {
-  printf("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
+  printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
 
   /* если первым параметром не передано имя файла, то это main.m */
   /*fname = "main.m" to Var Str
   if argc > 1 {fname := argv[1]}*/
 
-  m = parse("main.m")
+  m = parse ("main.m")
 
   ee = errcnt
 
   if ee > 0 {return ee/* to Int32*/}
 
-  compiler_init()
+  compiler_init ()
 
-  a = compile(m)
+  a = compile (m)
 
   if a != nil {
-    printf("lines: %d\n", lines)
-    print_assembly(a, "out.ll")
+    printf ("lines: %d\n", lines)
+    print_assembly (a, "out.ll")
   }
 
   eee = errcnt
