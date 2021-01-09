@@ -15637,62 +15637,44 @@ define i1 @func445 (%Type*, %Type*) {
   %5 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 0
   %6 = load %TypeKind, %TypeKind* %5
 ;stmt2:
-  %7 = icmp eq %TypeKind %4, 2
-  %8 = icmp eq %TypeKind %6, 2
-  %9 = or i1 %7, %8
-  br i1 %9, label %then_0, label %else_0
+  %7 = icmp eq %TypeKind %4, 3
+  br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  ret i1 1
-  br label %endif_0
-else_0:
-  br label %endif_0
-endif_0:
-;stmt4:
-  %11 = icmp eq %TypeKind %4, 3
-  br i1 %11, label %then_1, label %else_1
+  %8 = icmp eq %TypeKind %6, 10
+  %9 = icmp eq %TypeKind %6, 12
+  %10 = icmp eq %TypeKind %6, 7
+  %11 = or i1 %9, %10
+  %12 = or i1 %8, %11
+  br i1 %12, label %then_1, label %else_1
 then_1:
-;stmt5:
-  %12 = icmp eq %TypeKind %6, 10
-  %13 = icmp eq %TypeKind %6, 12
-  %14 = icmp eq %TypeKind %6, 7
-  %15 = or i1 %13, %14
-  %16 = or i1 %12, %15
-  br i1 %16, label %then_2, label %else_2
-then_2:
-;stmt6:
+;stmt4:
   ret i1 1
-  br label %endif_2
-else_2:
-  br label %endif_2
-endif_2:
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-;stmt7:
-  %18 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
-  %19 = load %TypeKind, %TypeKind* %18
-  %20 = icmp eq %TypeKind %19, 10
-  br i1 %20, label %then_3, label %else_3
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+;stmt5:
+  %14 = icmp eq %TypeKind %4, 10
+  br i1 %14, label %then_2, label %else_2
+then_2:
+;stmt6:
+  %15 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 6
+  %16 = getelementptr inbounds %TypePointer, %TypePointer* %15, i1 0, i32 0
+  %17 = load %Type*, %Type** %16
+  %18 = call i1 (%Type*) @func363 (%Type* %17)
+  br i1 %18, label %then_3, label %else_3
 then_3:
-;stmt8:
-  %21 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 6
-  %22 = getelementptr inbounds %TypePointer, %TypePointer* %21, i1 0, i32 0
-  %23 = load %Type*, %Type** %22
-  %24 = call i1 (%Type*) @func363 (%Type* %23)
-  br i1 %24, label %then_4, label %else_4
+;stmt7:
+  %19 = call i1 (%Type*) @func365 (%Type* %1)
+  br i1 %19, label %then_4, label %else_4
 then_4:
-;stmt9:
-  %25 = call i1 (%Type*) @func365 (%Type* %1)
-  br i1 %25, label %then_5, label %else_5
-then_5:
-;stmt10:
+;stmt8:
   ret i1 1
-  br label %endif_5
-else_5:
-  br label %endif_5
-endif_5:
   br label %endif_4
 else_4:
   br label %endif_4
@@ -15701,16 +15683,25 @@ endif_4:
 else_3:
   br label %endif_3
 endif_3:
-;stmt11:
-  %27 = icmp eq %TypeKind %4, 10
-  %28 = icmp eq %TypeKind %6, 10
-  %29 = and i1 %27, %28
-  br i1 %29, label %then_6, label %else_6
+;stmt9:
+  %21 = icmp eq %TypeKind %6, 10
+  br i1 %21, label %then_5, label %else_5
+then_5:
+;stmt10:
+  %22 = load %Type*, %Type** @typeFreePtr
+  %23 = call i1 (%Type*, %Type*) @func391 (%Type* %0, %Type* %22)
+  br i1 %23, label %then_6, label %else_6
 then_6:
+;stmt11:
+  ret i1 1
+  br label %endif_6
+else_6:
+  br label %endif_6
+endif_6:
 ;stmt12:
-  %30 = load %Type*, %Type** @typeFreePtr
-  %31 = call i1 (%Type*, %Type*) @func391 (%Type* %0, %Type* %30)
-  br i1 %31, label %then_7, label %else_7
+  %25 = load %Type*, %Type** @typeFreePtr
+  %26 = call i1 (%Type*, %Type*) @func391 (%Type* %1, %Type* %25)
+  br i1 %26, label %then_7, label %else_7
 then_7:
 ;stmt13:
   ret i1 1
@@ -15718,22 +15709,15 @@ then_7:
 else_7:
   br label %endif_7
 endif_7:
+  br label %endif_5
+else_5:
+  br label %endif_5
+endif_5:
+  br label %endif_2
+else_2:
+  br label %endif_2
+endif_2:
 ;stmt14:
-  %33 = load %Type*, %Type** @typeFreePtr
-  %34 = call i1 (%Type*, %Type*) @func391 (%Type* %1, %Type* %33)
-  br i1 %34, label %then_8, label %else_8
-then_8:
-;stmt15:
-  ret i1 1
-  br label %endif_8
-else_8:
-  br label %endif_8
-endif_8:
-  br label %endif_6
-else_6:
-  br label %endif_6
-endif_6:
-;stmt16:
   ret i1 0
 }
 

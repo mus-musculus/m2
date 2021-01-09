@@ -324,7 +324,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
     // есть и параметр и аргумент
 
-    /* пытаемся натурально привести аргумент к параметру */
+    /* пытаемся неявно привести аргумент к параметру */
     na = implicit_cast (a, p.type)
 
     /* check argument type */
@@ -350,7 +350,7 @@ do_value_index = DoValue {
 
   // индексация допускается и для указателей на определенные массивы!
   // тип операции индексирования - тип элемента ее массива
-  // тк *[x]X = []X
+  // тк *[x]X <=> []X
 
   // It expects array or undefined array or pointer to array
   typ = select a.type.kind {
@@ -893,7 +893,7 @@ implicit_cast_int = (v : *Value) -> *Value {
 }
 
 
-// натуральное преобразование значения к заданному типу
+// неявное преобразование значения к заданному типу
 // или просто возвращает значение без преобразования (когда оно невозможно)
 implicit_cast = (v : *Value, t : *Type) -> *Value {
   assert(v.type != nil, "implicit_cast::v.type == nil")
@@ -925,35 +925,34 @@ fail:
 
 
 
-// возможно ли натуральное преобразование из типа a в nbg b?
+// возможно ли неявное преобразование из типа a в nbg b?
 implicit_cast_possible = (a, b : *Type) -> Bool {
   ak = a.kind
   bk = b.kind
-
-  if ak == #TypePoison or bk == #TypePoison {return true}
 
   // nil -> TypeReference
   if ak == #TypeGenericReference {
     if bk == #TypePointer or bk == #TypeArrayU or bk == #TypeFunc {return true}
   }
 
-  // cast for: *[x] -> []
-  if a.kind == #TypePointer {
+  if ak == #TypePointer {
+
+    // cast for: *[x] -> []
     if typeIsDefinedArray(a.pointer.to) {
       if typeIsUndefinedArray(b) {
         return true
       }
     }
-  }
 
-  // Old shit
-  // *Unit -> * && * -> *Unit
-  if ak == #TypePointer and bk == #TypePointer {
-    // auto cast for: *Unit -> *
-    if type_eq(a, typeFreePtr) {return true}
+    // if a is ptr & b is ptr
+    // *Unit -> * && * -> *Unit
+    if bk == #TypePointer {
+      // auto cast for: *Unit -> *
+      if type_eq(a, typeFreePtr) {return true}
 
-    // auto cast for: * -> *Unit
-    if type_eq(b, typeFreePtr) {return true}
+      // auto cast for: * -> *Unit
+      if type_eq(b, typeFreePtr) {return true}
+    }
   }
 
   return false
