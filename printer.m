@@ -162,8 +162,8 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
 
   nl ()
 
-  if a.datalayout != nil {fprintf (fout, "target datalayout = \"%s\"", a.datalayout)}
-  if a.triple != nil {fprintf (fout, "target triple = \"%s\"", a.triple)}
+  if a.datalayout != nil {fprintf (fout, "target datalayout = \"%s\"\n", a.datalayout)}
+  if a.triple != nil {fprintf (fout, "target triple = \"%s\"\n", a.triple)}
 
   nl()
 
