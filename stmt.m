@@ -23,19 +23,19 @@ stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
 
 do_stmt = DoStmt {
   return select x.kind {
-    #AstStmtAssign   => do_stmt_assign (x)
-    #AstStmtValueDef => do_stmt_valdef (x)
-    #AstStmtBlock    => do_stmt_block (x)
-    #AstStmtExpr     => do_stmt_expr (x)
-    #AstStmtIf       => do_stmt_if (x)
-    #AstStmtWhile    => do_stmt_while (x)
-    #AstStmtReturn   => do_stmt_return (x)
+    #AstStmtAssign   => do_stmt_assign   (x)
+    #AstStmtValueDef => do_stmt_valdef   (x)
+    #AstStmtBlock    => do_stmt_block    (x)
+    #AstStmtExpr     => do_stmt_expr     (x)
+    #AstStmtIf       => do_stmt_if       (x)
+    #AstStmtWhile    => do_stmt_while    (x)
+    #AstStmtReturn   => do_stmt_return   (x)
     //#AstStmtVarDef   => do_stmt_vardef (x)
-    #AstStmtTypeDef  => do_stmt_typedef (x)
-    #AstStmtBreak    => do_stmt_break (x)
+    #AstStmtTypeDef  => do_stmt_typedef  (x)
+    #AstStmtBreak    => do_stmt_break    (x)
     #AstStmtContinue => do_stmt_continue (x)
-    #AstStmtGoto     => do_stmt_goto (x)
-    #AstStmtLabel    => do_stmt_label (x)
+    #AstStmtGoto     => do_stmt_goto     (x)
+    #AstStmtLabel    => do_stmt_label    (x)
     else => nil
   }
 }
@@ -53,9 +53,9 @@ do_stmt_assign = DoStmt {
 
   lx = x.assign.l
   lval = select lx.kind {
-    #AstValueId => do_value_named (lx)
-    #AstValueDeref => do_value_deref (lx)
-    #AstValueIndex => do_value_index (lx)
+    #AstValueId => do_value_named      (lx)
+    #AstValueDeref => do_value_deref   (lx)
+    #AstValueIndex => do_value_index   (lx)
     #AstValueAccess => do_value_access (lx)
     else => nil
   }

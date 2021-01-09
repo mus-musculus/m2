@@ -396,9 +396,9 @@ type_init = () -> () {
   typeInt32 = type_numeric_new ("Int32", 32, true)
   typeInt64 = type_numeric_new ("Int64", 64, true)
 
-  typeInt128 = type_numeric_new ("Int128", 128, true)
-  typeInt256 = type_numeric_new ("Int256", 256, true)
-  typeInt512 = type_numeric_new ("Int512", 512, true)
+  typeInt128  = type_numeric_new ("Int128", 128, true)
+  typeInt256  = type_numeric_new ("Int256", 256, true)
+  typeInt512  = type_numeric_new ("Int512", 512, true)
   typeInt1024 = type_numeric_new ("Int1024", 1024, true)
 
   // Unsigned Numeric
@@ -407,9 +407,9 @@ type_init = () -> () {
   typeNat32 = type_numeric_new ("Nat32", 32, false)
   typeNat64 = type_numeric_new ("Nat64", 64, false)
 
-  typeNat128 = type_numeric_new ("Nat128", 128, false)
-  typeNat256 = type_numeric_new ("Nat256", 256, false)
-  typeNat512 = type_numeric_new ("Nat512", 512, false)
+  typeNat128  = type_numeric_new ("Nat128", 128, false)
+  typeNat256  = type_numeric_new ("Nat256", 256, false)
+  typeNat512  = type_numeric_new ("Nat512", 512, false)
   typeNat1024 = type_numeric_new ("Nat1024", 1024, false)
 
 
@@ -454,9 +454,9 @@ type_init = () -> () {
   typeNumeric := type_numeric_new ("Numeric",  0, true)
 
   typeBaseInt := select cfgIntegerSize {
-    2 => typeInt16
-    4 => typeInt32
-    8 => typeInt64
+    2  => typeInt16
+    4  => typeInt32
+    8  => typeInt64
     16 => typeInt128
     32 => typeInt256
     else => () -> *Type {fatal ("unsupported cfgIntegerSize"); return nil} ()

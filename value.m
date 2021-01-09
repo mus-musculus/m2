@@ -62,40 +62,40 @@ do_valuex = DoValuex {
       return nil
     } (x)
 
-    #AstValueId    => do_value_named (x)
-    #AstValueNum   => do_value_numeric (x)
-    #AstValueStr   => do_value_string (x)
-    #AstValueFunc  => do_value_func (x)
-    #AstValueArr   => do_value_array (x)
-    #AstValueRec   => do_value_record (x)
-    #AstValueRef   => do_value_ref (x)
-    #AstValueDeref => do_value_deref (x)
-    #AstValueNot   => do_value_not (x)
-    #AstValueMinus => do_value_minus (x)
-    #AstValuePlus  => do_value_plus (x)
-    #AstValueAdd   => do_value_bin (#ValueAdd, x)
-    #AstValueSub   => do_value_bin (#ValueSub, x)
-    #AstValueMul   => do_value_bin (#ValueMul, x)
-    #AstValueDiv   => do_value_bin (#ValueDiv, x)
-    #AstValueMod   => do_value_bin (#ValueMod, x)
-    #AstValueAnd   => do_value_bin (#ValueAnd, x)
-    #AstValueXor   => do_value_bin (#ValueXor, x)
-    #AstValueOr    => do_value_bin (#ValueOr, x)
-    #AstValueLt    => do_value_bin (#ValueLt, x)
-    #AstValueGt    => do_value_bin (#ValueGt, x)
-    #AstValueEq    => do_value_bin (#ValueEq, x)
-    #AstValueNe    => do_value_bin (#ValueNe, x)
-    #AstValueLe    => do_value_bin (#ValueLe, x)
-    #AstValueGe    => do_value_bin (#ValueGe, x)
-    #AstValueShl   => do_value_shift (x)
-    #AstValueShr   => do_value_shift (x)
-    #AstValueCall    => do_value_call (x)
-    #AstValueIndex   => do_value_index (x)
-    #AstValueAccess  => do_value_access (x)
-    #AstValueCast    => do_value_cast (x)
-    #AstValueSizeof  => do_value_sizeof (x)
+    #AstValueId      => do_value_named   (x)
+    #AstValueNum     => do_value_numeric (x)
+    #AstValueStr     => do_value_string  (x)
+    #AstValueFunc    => do_value_func    (x)
+    #AstValueArr     => do_value_array   (x)
+    #AstValueRec     => do_value_record  (x)
+    #AstValueRef     => do_value_ref     (x)
+    #AstValueDeref   => do_value_deref   (x)
+    #AstValueNot     => do_value_not     (x)
+    #AstValueMinus   => do_value_minus   (x)
+    #AstValuePlus    => do_value_plus    (x)
+    #AstValueAdd     => do_value_bin (#ValueAdd, x)
+    #AstValueSub     => do_value_bin (#ValueSub, x)
+    #AstValueMul     => do_value_bin (#ValueMul, x)
+    #AstValueDiv     => do_value_bin (#ValueDiv, x)
+    #AstValueMod     => do_value_bin (#ValueMod, x)
+    #AstValueAnd     => do_value_bin (#ValueAnd, x)
+    #AstValueXor     => do_value_bin (#ValueXor, x)
+    #AstValueOr      => do_value_bin (#ValueOr, x)
+    #AstValueLt      => do_value_bin (#ValueLt, x)
+    #AstValueGt      => do_value_bin (#ValueGt, x)
+    #AstValueEq      => do_value_bin (#ValueEq, x)
+    #AstValueNe      => do_value_bin (#ValueNe, x)
+    #AstValueLe      => do_value_bin (#ValueLe, x)
+    #AstValueGe      => do_value_bin (#ValueGe, x)
+    #AstValueShl     => do_value_shift   (x)
+    #AstValueShr     => do_value_shift   (x)
+    #AstValueCall    => do_value_call    (x)
+    #AstValueIndex   => do_value_index   (x)
+    #AstValueAccess  => do_value_access  (x)
+    #AstValueCast    => do_value_cast    (x)
+    #AstValueSizeof  => do_value_sizeof  (x)
     #AstValueAlignof => do_value_alignof (x)
-    #AstValueSelect  => do_value_select (x)
+    #AstValueSelect  => do_value_select  (x)
     else => value_new_poison (x.ti)
   }
 
@@ -241,12 +241,12 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
       #ValueOr  => lv or rv
       #ValueXor => lv xor rv
       #ValueAnd => lv and rv
-      #ValueEq => (lv == rv) to Int64
-      #ValueNe => (lv != rv) to Int64
-      #ValueLt => (lv < rv) to Int64
-      #ValueGt => (lv > rv) to Int64
-      #ValueLe => (lv <= rv) to Int64
-      #ValueGe => (lv >= rv) to Int64
+      #ValueEq  => (lv == rv) to Int64
+      #ValueNe  => (lv != rv) to Int64
+      #ValueLt  => (lv < rv) to Int64
+      #ValueGt  => (lv > rv) to Int64
+      #ValueLe  => (lv <= rv) to Int64
+      #ValueGe  => (lv >= rv) to Int64
       else => 0
     }
 
@@ -355,8 +355,8 @@ do_value_index = DoValue {
 
   // It expects array or undefined array or pointer to array
   typ = select a.type.kind {
-    #TypeArray => a.type.array.of
-    #TypeArrayU => a.type.array_u.of
+    #TypeArray   => a.type.array.of
+    #TypeArrayU  => a.type.array_u.of
     #TypePointer => (_to : *Type) -> *Type {
       return select _to.kind {
         #TypeArray => _to.array.of
@@ -389,7 +389,7 @@ do_value_access = DoValue {
 
   // It expects record or pointer to record
   r_typ = select r.type.kind {
-    #TypeRecord => r.type
+    #TypeRecord  => r.type
     #TypePointer => (_to : *Type) -> *Type {
       return select _to.kind {
         #TypeRecord => _to
@@ -511,17 +511,20 @@ do_value_cast = DoValue {
     // выполняем приведение
     return select v.type.kind {
       #TypeUndefined => nil to *Value
-      #TypeVar => do_value_cast_var (v, t, ti)
-      #TypeBool => do_value_cast_bool (v, t, ti)
+      #TypeVar       => do_value_cast_var  (v, t, ti)
+      #TypeBool      => do_value_cast_bool (v, t, ti)
       #TypeGenericReference => do_value_cast_ref (v, t, ti)
-      #TypeNumeric => do_value_cast_num (v, t, ti)
-      #TypeFunc => do_value_cast_func (v, t, ti)
-      #TypeEnum => do_value_cast_set (v, t, ti)
-      #TypeRecord => do_value_cast_rec (v, t, ti)
-      #TypePointer => do_value_cast_ptr (v, t, ti)
-      #TypeArray => do_value_cast_arr (v, t, ti)
-      #TypeArrayU => do_value_cast_uarr (v, t, ti)
-      else => DoValueCast {fatal ("do_value_cast unk"); return nil to *Value} (v, t, ti)
+      #TypeNumeric   => do_value_cast_num  (v, t, ti)
+      #TypeFunc      => do_value_cast_func (v, t, ti)
+      #TypeEnum      => do_value_cast_set  (v, t, ti)
+      #TypeRecord    => do_value_cast_rec  (v, t, ti)
+      #TypePointer   => do_value_cast_ptr  (v, t, ti)
+      #TypeArray     => do_value_cast_arr  (v, t, ti)
+      #TypeArrayU    => do_value_cast_uarr (v, t, ti)
+      else => DoValueCast {
+        fatal ("do_value_cast unk")
+        return nil to *Value
+      } (v, t, ti)
     }
   }
 
