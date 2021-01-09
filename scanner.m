@@ -65,7 +65,7 @@ fill = (rule : Rule) -> () {
     if rule(c) {
       lstate.token[lstate.ti.length] := c
       if (lstate.ti.length >= (tokenMaxLen - 1)) {
-        fatal("too long token\n")
+        fatal ("too long token\n")
       }
       lstate.ti.length := lstate.ti.length + 1
     } else {

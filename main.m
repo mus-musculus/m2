@@ -5,8 +5,6 @@
  * Это для типов аргументов функции
  */
 
-// Var тип
-// ввести or-типы и понятие контекста
 
 import "C"
 import "assert"
@@ -28,7 +26,6 @@ import "data"
 import "scanner"
 import "parser"
 import "printer"
-
 
 import "type"
 import "value"
