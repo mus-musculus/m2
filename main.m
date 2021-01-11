@@ -46,6 +46,11 @@ main = (argc : Nat, argv : []Str) -> Int32 {
   /*fname = "main.m" to Var Str
   if argc > 1 {fname := argv[1]}*/
 
+  /*printf ("sizeof Token %d\n", sizeof Token)
+  printf ("sizeof AstValue %d\n", sizeof AstValue)
+  printf ("sizeof Type %d\n", sizeof Type)
+  printf ("sizeof Value %d\n", sizeof Value)*/
+
   m = parse ("main.m")
 
   ee = errcnt

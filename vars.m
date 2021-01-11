@@ -13,6 +13,8 @@ typeFreePtr = nil to Var *Type
 typeNumeric = nil to Var *Type
 
 
+unsafe = false to Var Bool
+
 // used only for "Self" type
 ctype = nil to Var *Type
 

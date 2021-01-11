@@ -165,7 +165,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   if a.datalayout != nil {fprintf (fout, "target datalayout = \"%s\"\n", a.datalayout)}
   if a.triple != nil {fprintf (fout, "target triple = \"%s\"\n", a.triple)}
 
-  nl()
+  nl ()
 
   ol ("%Bool = type i1")
   ol ("%Unit = type {}")

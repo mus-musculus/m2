@@ -20,7 +20,11 @@ TokenInfo = (
 )
 
 
-Token = (kind : TokenKind, ti : TokenInfo, text : [0] Nat8)
+Token = (
+  kind : TokenKind,
+  ti : TokenInfo,
+  text : [0] Nat8
+)
 
 
 /*

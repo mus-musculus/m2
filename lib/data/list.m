@@ -6,7 +6,7 @@ import "data/node"
 
 
 
-List = (first, last : *Node, volume : Nat64)
+List = (first, last : *Node, volume : Nat64, extra : Nat)
 
 /*
  * Foreach - проходят по всем элементам
@@ -54,34 +54,46 @@ list_new = () -> *List {
   return n
 }
 
+list_new_extra = (extra : Nat) -> *List {
+  list = list_new()
+  list.extra := extra
+  return list
+}
 
-// добавляет объект в конец списка
-list_append = (list : *List, obj : *Unit) -> Bool {
-  if list == nil or obj == nil {return false}
 
-  new_node = node_new(0)
-
-  new_node.data := obj
+list_append_node = (list : *List, node : *Node) -> Bool {
+  if list == nil or node == nil {return false}
 
   if list.first == nil {
-    list.first := new_node
+    list.first := node
   } else {
-    node_append(list.last, new_node)
+    node_append(list.last, node)
   }
 
-  list.last := new_node
+  list.last := node
 
   list.volume := list.volume + 1
   return true
 }
 
 
-/*list_appendx = (list : *List, extra : Nat) -> *Unit {
+// добавляет объект в конец списка
+list_append = (list : *List, obj : *Unit) -> Bool {
+  if list == nil or obj == nil {return false}
+
+  new_node = node_new(list.extra)
+  new_node.data := obj
+
+  return list_append_node(list, new_node)
+}
+
+
+list_append_extra = (list : *List, extra : Nat) -> *Unit {
   if list == nil {return nil}
 
   new_node = node_new(extra)
 
-  extra_ptr = (new_node to *Unit) + sizeof Node
+  extra_ptr = ((new_node to Nat) + sizeof Node) to *Unit
 
   new_node.data := extra_ptr
 
@@ -96,7 +108,7 @@ list_append = (list : *List, obj : *Unit) -> Bool {
   list.volume := list.volume + 1
 
   return extra_ptr
-}*/
+}
 
 
 list_extend = (list1, list2 : *List) -> Bool {

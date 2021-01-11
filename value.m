@@ -443,8 +443,10 @@ do_value_cast_ref = DoValueCast {
 
 do_value_cast_num = DoValueCast {
   // Numeric can be casted to any Numeric (and Ref type :unsafe)
-  if type_is_ref (t) {
-    warning("cast num to ref", ti)
+  if not unsafe {
+    if type_is_ref (t) {
+      warning("cast num to ref", ti)
+    }
   }
   return cast (v, t, ti)
 }
