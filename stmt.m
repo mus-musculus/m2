@@ -74,9 +74,9 @@ do_stmt_assign = DoStmt {
      lx.kind != #AstValueIndex and
      lx.kind != #AstValueDeref
   {
-    if lval.type.kind != #TypeVar {
+    /*if lval.type.kind != #TypeVar {
       //warning("expected var", x.ti)
-    }
+    }*/
   }
 
   ltype = select lval.type.kind {
