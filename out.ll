@@ -5624,7 +5624,7 @@ then_9:
 ;stmt44:
   %80 = getelementptr inbounds %AstDecl, %AstDecl* %79, i1 0, i32 2
   %81 = load %TokenInfo*, %TokenInfo** %80
-  %82 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 5, %TokenInfo* %81)
+  %82 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 4, %TokenInfo* %81)
 ;stmt45:
   %83 = getelementptr inbounds %AstValue, %AstValue* %82, i1 0, i32 5
   %84 = getelementptr inbounds %AstValueFunc, %AstValueFunc* %83, i1 0, i32 0
@@ -6286,7 +6286,7 @@ then_1:
   %10 = call %AstValue* () @func210 ()
 ;stmt7:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 18, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 17, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6327,7 +6327,7 @@ then_1:
   %10 = call %AstValue* () @func211 ()
 ;stmt7:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 19, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 18, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6368,7 +6368,7 @@ then_1:
   %10 = call %AstValue* () @func212 ()
 ;stmt7:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 20, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 19, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6414,7 +6414,7 @@ then_1:
   %10 = call %AstValue* () @func213 ()
 ;stmt8:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 21, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 20, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6429,7 +6429,7 @@ then_2:
   %15 = call %AstValue* () @func213 ()
 ;stmt12:
   %16 = load %AstValue*, %AstValue** %1
-  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 22, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
+  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 21, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
   store %AstValue* %17, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6481,7 +6481,7 @@ then_1:
   %10 = call %AstValue* () @func215 ()
 ;stmt8:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 23, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 22, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6496,7 +6496,7 @@ then_2:
   %15 = call %AstValue* () @func215 ()
 ;stmt12:
   %16 = load %AstValue*, %AstValue** %1
-  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 24, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
+  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 23, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
   store %AstValue* %17, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6511,7 +6511,7 @@ then_3:
   %20 = call %AstValue* () @func215 ()
 ;stmt16:
   %21 = load %AstValue*, %AstValue** %1
-  %22 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 25, %AstValue* %21, %AstValue* %20, %TokenInfo* %7)
+  %22 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 24, %AstValue* %21, %AstValue* %20, %TokenInfo* %7)
   store %AstValue* %22, %AstValue** %1, align 8
   br label %endif_3
 else_3:
@@ -6526,7 +6526,7 @@ then_4:
   %25 = call %AstValue* () @func215 ()
 ;stmt20:
   %26 = load %AstValue*, %AstValue** %1
-  %27 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 26, %AstValue* %26, %AstValue* %25, %TokenInfo* %7)
+  %27 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 25, %AstValue* %26, %AstValue* %25, %TokenInfo* %7)
   store %AstValue* %27, %AstValue** %1, align 8
   br label %endif_4
 else_4:
@@ -6582,7 +6582,7 @@ then_1:
   %10 = call %AstValue* () @func216 ()
 ;stmt8:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 27, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 26, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6597,7 +6597,7 @@ then_2:
   %15 = call %AstValue* () @func216 ()
 ;stmt12:
   %16 = load %AstValue*, %AstValue** %1
-  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 28, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
+  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 27, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
   store %AstValue* %17, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6649,7 +6649,7 @@ then_1:
   %10 = call %AstValue* () @func217 ()
 ;stmt8:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 13, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 12, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6664,7 +6664,7 @@ then_2:
   %15 = call %AstValue* () @func217 ()
 ;stmt12:
   %16 = load %AstValue*, %AstValue** %1
-  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 14, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
+  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 13, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
   store %AstValue* %17, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6716,7 +6716,7 @@ then_1:
   %10 = call %AstValue* () @func218 ()
 ;stmt8:
   %11 = load %AstValue*, %AstValue** %1
-  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 15, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
+  %12 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 14, %AstValue* %11, %AstValue* %10, %TokenInfo* %7)
   store %AstValue* %12, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6731,7 +6731,7 @@ then_2:
   %15 = call %AstValue* () @func218 ()
 ;stmt12:
   %16 = load %AstValue*, %AstValue** %1
-  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 16, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
+  %17 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 15, %AstValue* %16, %AstValue* %15, %TokenInfo* %7)
   store %AstValue* %17, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6746,7 +6746,7 @@ then_3:
   %20 = call %AstValue* () @func218 ()
 ;stmt16:
   %21 = load %AstValue*, %AstValue** %1
-  %22 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 17, %AstValue* %21, %AstValue* %20, %TokenInfo* %7)
+  %22 = call %AstValue* (%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*) @infix (%AstValueKind 16, %AstValue* %21, %AstValue* %20, %TokenInfo* %7)
   store %AstValue* %22, %AstValue** %1, align 8
   br label %endif_3
 else_3:
@@ -6792,7 +6792,7 @@ then_1:
 ;stmt5:
   %10 = call %AstType* () @func201 ()
 ;stmt6:
-  %11 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 32, %TokenInfo* %7)
+  %11 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 31, %TokenInfo* %7)
 ;stmt7:
   %12 = getelementptr inbounds %AstValue, %AstValue* %11, i1 0, i32 9
   %13 = getelementptr inbounds %AstValueCast, %AstValueCast* %12, i1 0, i32 0
@@ -6828,7 +6828,7 @@ then_0:
 ;stmt3:
   %6 = call %AstValue* () @func219 ()
 ;stmt4:
-  %7 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 9, %AstValue* %6, %TokenInfo* %3)
+  %7 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 8, %AstValue* %6, %TokenInfo* %3)
   store %AstValue* %7, %AstValue** %1, align 8
   br label %endif_0
 else_0:
@@ -6840,7 +6840,7 @@ then_1:
 ;stmt6:
   %10 = call %AstValue* () @func220 ()
 ;stmt7:
-  %11 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 8, %AstValue* %10, %TokenInfo* %3)
+  %11 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 7, %AstValue* %10, %TokenInfo* %3)
   store %AstValue* %11, %AstValue** %1, align 8
   br label %endif_1
 else_1:
@@ -6852,7 +6852,7 @@ then_2:
 ;stmt9:
   %14 = call %AstValue* () @func219 ()
 ;stmt10:
-  %15 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 10, %AstValue* %14, %TokenInfo* %3)
+  %15 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 9, %AstValue* %14, %TokenInfo* %3)
   store %AstValue* %15, %AstValue** %1, align 8
   br label %endif_2
 else_2:
@@ -6864,7 +6864,7 @@ then_3:
 ;stmt12:
   %18 = call %AstValue* () @func219 ()
 ;stmt13:
-  %19 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 11, %AstValue* %18, %TokenInfo* %3)
+  %19 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 10, %AstValue* %18, %TokenInfo* %3)
   store %AstValue* %19, %AstValue** %1, align 8
   br label %endif_3
 else_3:
@@ -6876,7 +6876,7 @@ then_4:
 ;stmt15:
   %22 = call %AstValue* () @func219 ()
 ;stmt16:
-  %23 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 12, %AstValue* %22, %TokenInfo* %3)
+  %23 = call %AstValue* (%AstValueKind, %AstValue*, %TokenInfo*) @prefix (%AstValueKind 11, %AstValue* %22, %TokenInfo* %3)
   store %AstValue* %23, %AstValue** %1, align 8
   br label %endif_4
 else_4:
@@ -6904,7 +6904,7 @@ else_6:
   br label %endif_6
 endif_6:
 ;stmt23:
-  %32 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 33, %TokenInfo* %3)
+  %32 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 32, %TokenInfo* %3)
 ;stmt24:
   %33 = getelementptr inbounds %AstValue, %AstValue* %32, i1 0, i32 4
   store %AstType* %28, %AstType** %33, align 8
@@ -6936,7 +6936,7 @@ else_8:
   br label %endif_8
 endif_8:
 ;stmt32:
-  %42 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 34, %TokenInfo* %3)
+  %42 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 33, %TokenInfo* %3)
 ;stmt33:
   %43 = getelementptr inbounds %AstValue, %AstValue* %42, i1 0, i32 4
   store %AstType* %38, %AstType** %43, align 8
@@ -7066,7 +7066,7 @@ endif_5:
   br label %continue_1
 break_1:
 ;stmt21:
-  %34 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 29, %TokenInfo* %7)
+  %34 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 28, %TokenInfo* %7)
 ;stmt22:
   %35 = getelementptr inbounds %AstValue, %AstValue* %34, i1 0, i32 6
   %36 = getelementptr inbounds %AstValueCall, %AstValueCall* %35, i1 0, i32 0
@@ -7092,7 +7092,7 @@ then_6:
   %44 = bitcast [2 x %Nat8]* @func220_str9 to %Str
   %45 = call i1 (%Str) @func190 (%Str %44)
 ;stmt28:
-  %46 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 30, %TokenInfo* %7)
+  %46 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 29, %TokenInfo* %7)
 ;stmt29:
   %47 = getelementptr inbounds %AstValue, %AstValue* %46, i1 0, i32 7
   %48 = getelementptr inbounds %AstValueIndex, %AstValueIndex* %47, i1 0, i32 0
@@ -7114,7 +7114,7 @@ then_7:
 ;stmt33:
   %54 = call %AstId* () @parse_id ()
 ;stmt34:
-  %55 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 31, %TokenInfo* %7)
+  %55 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 30, %TokenInfo* %7)
 ;stmt35:
   %56 = getelementptr inbounds %AstValue, %AstValue* %55, i1 0, i32 8
   %57 = getelementptr inbounds %AstValueAccess, %AstValueAccess* %56, i1 0, i32 0
@@ -7300,7 +7300,7 @@ else_4:
   br label %endif_4
 endif_4:
 ;stmt12:
-  %22 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 4, %TokenInfo* %18)
+  %22 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 3, %TokenInfo* %18)
 ;stmt13:
   %23 = getelementptr inbounds %AstValue, %AstValue* %22, i1 0, i32 2
   %24 = getelementptr inbounds %AstName, %AstName* %23, i1 0, i32 0
@@ -7323,7 +7323,7 @@ define %AstValue* @func225 () {
   %1 = call %Token* () @func184 ()
 ;stmt1:
   %2 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 1
-  %3 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 35, %TokenInfo* %2)
+  %3 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 34, %TokenInfo* %2)
 ;stmt2:
   %4 = getelementptr inbounds %AstValue, %AstValue* %3, i1 0, i32 10
   %5 = getelementptr inbounds %AstValueSelect, %AstValueSelect* %4, i1 0, i32 1
@@ -7412,7 +7412,7 @@ define %AstValue* @func226 () {
   call void () @skip ()
 ;stmt5:
   %8 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 1
-  %9 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 3, %TokenInfo* %8)
+  %9 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 2, %TokenInfo* %8)
 ;stmt6:
   %10 = getelementptr inbounds %AstValue, %AstValue* %9, i1 0, i32 1
   store %Str %7, %Str* %10, align 8
@@ -7442,7 +7442,7 @@ define %AstValue* @func228 () {
 ;stmt5:
   %8 = call %AstStmt* (%TokenInfo*) @func237 (%TokenInfo* %5)
 ;stmt6:
-  %9 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 5, %TokenInfo* %2)
+  %9 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 4, %TokenInfo* %2)
 ;stmt7:
   %10 = getelementptr inbounds %AstValue, %AstValue* %9, i1 0, i32 5
   %11 = getelementptr inbounds %AstValueFunc, %AstValueFunc* %10, i1 0, i32 0
@@ -7462,7 +7462,7 @@ define %AstValue* @func229 () {
 ;stmt1:
   %3 = call %AstType* () @func201 ()
 ;stmt2:
-  %4 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 5, %TokenInfo* %2)
+  %4 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 4, %TokenInfo* %2)
 ;stmt3:
   %5 = getelementptr inbounds %AstValue, %AstValue* %4, i1 0, i32 5
   %6 = getelementptr inbounds %AstValueFunc, %AstValueFunc* %5, i1 0, i32 0
@@ -7492,7 +7492,7 @@ define %AstValue* @func230 () {
 ;stmt3:
   call void () @skip ()
 ;stmt4:
-  %7 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 2, %TokenInfo* %2)
+  %7 = call %AstValue* (%AstValueKind, %TokenInfo*) @func207 (%AstValueKind 1, %TokenInfo* %2)
 ;stmt5:
   %8 = getelementptr inbounds %AstValue, %AstValue* %7, i1 0, i32 1
   store %Str %6, %Str* %8, align 8
@@ -13059,205 +13059,205 @@ select_1_0_ok:
   %6 = call %Value* (%AstValue*) @func405 (%AstValue* %0)
   br label %select_1_end
 select_1_1:
-  %7 = icmp eq %AstValueKind %4, 4
+  %7 = icmp eq %AstValueKind %4, 3
   br i1 %7, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
   %8 = call %Value* (%AstValue*) @func432 (%AstValue* %0)
   br label %select_1_end
 select_1_2:
-  %9 = icmp eq %AstValueKind %4, 2
+  %9 = icmp eq %AstValueKind %4, 1
   br i1 %9, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
   %10 = call %Value* (%AstValue*) @func433 (%AstValue* %0)
   br label %select_1_end
 select_1_3:
-  %11 = icmp eq %AstValueKind %4, 3
+  %11 = icmp eq %AstValueKind %4, 2
   br i1 %11, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
   %12 = call %Value* (%AstValue*) @func434 (%AstValue* %0)
   br label %select_1_end
 select_1_4:
-  %13 = icmp eq %AstValueKind %4, 5
+  %13 = icmp eq %AstValueKind %4, 4
   br i1 %13, label %select_1_4_ok, label %select_1_5
 select_1_4_ok:
   %14 = call %Value* (%AstValue*) @func435 (%AstValue* %0)
   br label %select_1_end
 select_1_5:
-  %15 = icmp eq %AstValueKind %4, 6
+  %15 = icmp eq %AstValueKind %4, 5
   br i1 %15, label %select_1_5_ok, label %select_1_6
 select_1_5_ok:
   %16 = call %Value* (%AstValue*) @func437 (%AstValue* %0)
   br label %select_1_end
 select_1_6:
-  %17 = icmp eq %AstValueKind %4, 7
+  %17 = icmp eq %AstValueKind %4, 6
   br i1 %17, label %select_1_6_ok, label %select_1_7
 select_1_6_ok:
   %18 = call %Value* (%AstValue*) @func438 (%AstValue* %0)
   br label %select_1_end
 select_1_7:
-  %19 = icmp eq %AstValueKind %4, 8
+  %19 = icmp eq %AstValueKind %4, 7
   br i1 %19, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
   %20 = call %Value* (%AstValue*) @func408 (%AstValue* %0)
   br label %select_1_end
 select_1_8:
-  %21 = icmp eq %AstValueKind %4, 9
+  %21 = icmp eq %AstValueKind %4, 8
   br i1 %21, label %select_1_8_ok, label %select_1_9
 select_1_8_ok:
   %22 = call %Value* (%AstValue*) @func409 (%AstValue* %0)
   br label %select_1_end
 select_1_9:
-  %23 = icmp eq %AstValueKind %4, 10
+  %23 = icmp eq %AstValueKind %4, 9
   br i1 %23, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
   %24 = call %Value* (%AstValue*) @func441 (%AstValue* %0)
   br label %select_1_end
 select_1_10:
-  %25 = icmp eq %AstValueKind %4, 11
+  %25 = icmp eq %AstValueKind %4, 10
   br i1 %25, label %select_1_10_ok, label %select_1_11
 select_1_10_ok:
   %26 = call %Value* (%AstValue*) @func440 (%AstValue* %0)
   br label %select_1_end
 select_1_11:
-  %27 = icmp eq %AstValueKind %4, 12
+  %27 = icmp eq %AstValueKind %4, 11
   br i1 %27, label %select_1_11_ok, label %select_1_12
 select_1_11_ok:
   %28 = call %Value* (%AstValue*) @func439 (%AstValue* %0)
   br label %select_1_end
 select_1_12:
-  %29 = icmp eq %AstValueKind %4, 13
+  %29 = icmp eq %AstValueKind %4, 12
   br i1 %29, label %select_1_12_ok, label %select_1_13
 select_1_12_ok:
   %30 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 14, %AstValue* %0)
   br label %select_1_end
 select_1_13:
-  %31 = icmp eq %AstValueKind %4, 14
+  %31 = icmp eq %AstValueKind %4, 13
   br i1 %31, label %select_1_13_ok, label %select_1_14
 select_1_13_ok:
   %32 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 15, %AstValue* %0)
   br label %select_1_end
 select_1_14:
-  %33 = icmp eq %AstValueKind %4, 15
+  %33 = icmp eq %AstValueKind %4, 14
   br i1 %33, label %select_1_14_ok, label %select_1_15
 select_1_14_ok:
   %34 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 16, %AstValue* %0)
   br label %select_1_end
 select_1_15:
-  %35 = icmp eq %AstValueKind %4, 16
+  %35 = icmp eq %AstValueKind %4, 15
   br i1 %35, label %select_1_15_ok, label %select_1_16
 select_1_15_ok:
   %36 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 17, %AstValue* %0)
   br label %select_1_end
 select_1_16:
-  %37 = icmp eq %AstValueKind %4, 17
+  %37 = icmp eq %AstValueKind %4, 16
   br i1 %37, label %select_1_16_ok, label %select_1_17
 select_1_16_ok:
   %38 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 18, %AstValue* %0)
   br label %select_1_end
 select_1_17:
-  %39 = icmp eq %AstValueKind %4, 20
+  %39 = icmp eq %AstValueKind %4, 19
   br i1 %39, label %select_1_17_ok, label %select_1_18
 select_1_17_ok:
   %40 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 21, %AstValue* %0)
   br label %select_1_end
 select_1_18:
-  %41 = icmp eq %AstValueKind %4, 19
+  %41 = icmp eq %AstValueKind %4, 18
   br i1 %41, label %select_1_18_ok, label %select_1_19
 select_1_18_ok:
   %42 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 20, %AstValue* %0)
   br label %select_1_end
 select_1_19:
-  %43 = icmp eq %AstValueKind %4, 18
+  %43 = icmp eq %AstValueKind %4, 17
   br i1 %43, label %select_1_19_ok, label %select_1_20
 select_1_19_ok:
   %44 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 19, %AstValue* %0)
   br label %select_1_end
 select_1_20:
-  %45 = icmp eq %AstValueKind %4, 23
+  %45 = icmp eq %AstValueKind %4, 22
   br i1 %45, label %select_1_20_ok, label %select_1_21
 select_1_20_ok:
   %46 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 24, %AstValue* %0)
   br label %select_1_end
 select_1_21:
-  %47 = icmp eq %AstValueKind %4, 24
+  %47 = icmp eq %AstValueKind %4, 23
   br i1 %47, label %select_1_21_ok, label %select_1_22
 select_1_21_ok:
   %48 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 25, %AstValue* %0)
   br label %select_1_end
 select_1_22:
-  %49 = icmp eq %AstValueKind %4, 21
+  %49 = icmp eq %AstValueKind %4, 20
   br i1 %49, label %select_1_22_ok, label %select_1_23
 select_1_22_ok:
   %50 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 22, %AstValue* %0)
   br label %select_1_end
 select_1_23:
-  %51 = icmp eq %AstValueKind %4, 22
+  %51 = icmp eq %AstValueKind %4, 21
   br i1 %51, label %select_1_23_ok, label %select_1_24
 select_1_23_ok:
   %52 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 23, %AstValue* %0)
   br label %select_1_end
 select_1_24:
-  %53 = icmp eq %AstValueKind %4, 25
+  %53 = icmp eq %AstValueKind %4, 24
   br i1 %53, label %select_1_24_ok, label %select_1_25
 select_1_24_ok:
   %54 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 26, %AstValue* %0)
   br label %select_1_end
 select_1_25:
-  %55 = icmp eq %AstValueKind %4, 26
+  %55 = icmp eq %AstValueKind %4, 25
   br i1 %55, label %select_1_25_ok, label %select_1_26
 select_1_25_ok:
   %56 = call %Value* (%ValueKind, %AstValue*) @func410 (%ValueKind 27, %AstValue* %0)
   br label %select_1_end
 select_1_26:
-  %57 = icmp eq %AstValueKind %4, 27
+  %57 = icmp eq %AstValueKind %4, 26
   br i1 %57, label %select_1_26_ok, label %select_1_27
 select_1_26_ok:
   %58 = call %Value* (%AstValue*) @func442 (%AstValue* %0)
   br label %select_1_end
 select_1_27:
-  %59 = icmp eq %AstValueKind %4, 28
+  %59 = icmp eq %AstValueKind %4, 27
   br i1 %59, label %select_1_27_ok, label %select_1_28
 select_1_27_ok:
   %60 = call %Value* (%AstValue*) @func442 (%AstValue* %0)
   br label %select_1_end
 select_1_28:
-  %61 = icmp eq %AstValueKind %4, 29
+  %61 = icmp eq %AstValueKind %4, 28
   br i1 %61, label %select_1_28_ok, label %select_1_29
 select_1_28_ok:
   %62 = call %Value* (%AstValue*) @func411 (%AstValue* %0)
   br label %select_1_end
 select_1_29:
-  %63 = icmp eq %AstValueKind %4, 30
+  %63 = icmp eq %AstValueKind %4, 29
   br i1 %63, label %select_1_29_ok, label %select_1_30
 select_1_29_ok:
   %64 = call %Value* (%AstValue*) @func414 (%AstValue* %0)
   br label %select_1_end
 select_1_30:
-  %65 = icmp eq %AstValueKind %4, 31
+  %65 = icmp eq %AstValueKind %4, 30
   br i1 %65, label %select_1_30_ok, label %select_1_31
 select_1_30_ok:
   %66 = call %Value* (%AstValue*) @func416 (%AstValue* %0)
   br label %select_1_end
 select_1_31:
-  %67 = icmp eq %AstValueKind %4, 32
+  %67 = icmp eq %AstValueKind %4, 31
   br i1 %67, label %select_1_31_ok, label %select_1_32
 select_1_31_ok:
   %68 = call %Value* (%AstValue*) @func428 (%AstValue* %0)
   br label %select_1_end
 select_1_32:
-  %69 = icmp eq %AstValueKind %4, 33
+  %69 = icmp eq %AstValueKind %4, 32
   br i1 %69, label %select_1_32_ok, label %select_1_33
 select_1_32_ok:
   %70 = call %Value* (%AstValue*) @func430 (%AstValue* %0)
   br label %select_1_end
 select_1_33:
-  %71 = icmp eq %AstValueKind %4, 34
+  %71 = icmp eq %AstValueKind %4, 33
   br i1 %71, label %select_1_33_ok, label %select_1_34
 select_1_33_ok:
   %72 = call %Value* (%AstValue*) @func431 (%AstValue* %0)
   br label %select_1_end
 select_1_34:
-  %73 = icmp eq %AstValueKind %4, 35
+  %73 = icmp eq %AstValueKind %4, 34
   br i1 %73, label %select_1_34_ok, label %select_1_35
 select_1_34_ok:
   %74 = call %Value* (%AstValue*) @func406 (%AstValue* %0)
@@ -15337,7 +15337,7 @@ endif_1:
   %19 = load %AstValueKind, %AstValueKind* %18
   br label %select_1_0
 select_1_0:
-  %20 = icmp eq %AstValueKind %19, 27
+  %20 = icmp eq %AstValueKind %19, 26
   br i1 %20, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
   %21 = bitcast %ValueKind 29 to %ValueKind
@@ -16144,25 +16144,25 @@ endif_0:
   %14 = load %AstValueKind, %AstValueKind* %13
   br label %select_1_0
 select_1_0:
-  %15 = icmp eq %AstValueKind %14, 4
+  %15 = icmp eq %AstValueKind %14, 3
   br i1 %15, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
   %16 = call %Value* (%AstValue*) @func432 (%AstValue* %12)
   br label %select_1_end
 select_1_1:
-  %17 = icmp eq %AstValueKind %14, 9
+  %17 = icmp eq %AstValueKind %14, 8
   br i1 %17, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
   %18 = call %Value* (%AstValue*) @func409 (%AstValue* %12)
   br label %select_1_end
 select_1_2:
-  %19 = icmp eq %AstValueKind %14, 30
+  %19 = icmp eq %AstValueKind %14, 29
   br i1 %19, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
   %20 = call %Value* (%AstValue*) @func414 (%AstValue* %12)
   br label %select_1_end
 select_1_3:
-  %21 = icmp eq %AstValueKind %14, 31
+  %21 = icmp eq %AstValueKind %14, 30
   br i1 %21, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
   %22 = call %Value* (%AstValue*) @func416 (%AstValue* %12)
@@ -16205,13 +16205,13 @@ endif_2:
 ;stmt11:
   %35 = getelementptr inbounds %AstValue, %AstValue* %12, i1 0, i32 0
   %36 = load %AstValueKind, %AstValueKind* %35
-  %37 = icmp ne %AstValueKind %36, 31
+  %37 = icmp ne %AstValueKind %36, 30
   %38 = getelementptr inbounds %AstValue, %AstValue* %12, i1 0, i32 0
   %39 = load %AstValueKind, %AstValueKind* %38
-  %40 = icmp ne %AstValueKind %39, 30
+  %40 = icmp ne %AstValueKind %39, 29
   %41 = getelementptr inbounds %AstValue, %AstValue* %12, i1 0, i32 0
   %42 = load %AstValueKind, %AstValueKind* %41
-  %43 = icmp ne %AstValueKind %42, 9
+  %43 = icmp ne %AstValueKind %42, 8
   %44 = and i1 %40, %43
   %45 = and i1 %37, %44
   br i1 %45, label %then_3, label %else_3

@@ -123,8 +123,6 @@ AstNodeDeclValue = (decl : *AstDecl)
 AstValueKind = {
   #AstValueForbidden,
 
-  #AstValuePoison,
-
   // Literal Values
   #AstValueNum, #AstValueStr,
   #AstValueId, #AstValueFunc, #AstValueArr, #AstValueRec,
