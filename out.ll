@@ -731,14 +731,13 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func404_func405_str1 = private unnamed_addr constant [30 x i8] c"do_value : #AstValueForbidden\00", align 1
 @func404_str1 = private unnamed_addr constant [20 x i8] c"do_value : v == nil\00", align 1
 @func406_str1 = private unnamed_addr constant [25 x i8] c"expected 'other' variant\00", align 1
-@func409_str1 = private unnamed_addr constant [18 x i8] c"expected pointer\08\00", align 1
+@func409_str1 = private unnamed_addr constant [17 x i8] c"expected pointer\00", align 1
 @func410_str1 = private unnamed_addr constant [18 x i8] c"binary type error\00", align 1
 @func412_func413_str1 = private unnamed_addr constant [21 x i8] c"not enough arguments\00", align 1
 @func412_func413_str2 = private unnamed_addr constant [16 x i8] c"excess argument\00", align 1
 @func416_str1 = private unnamed_addr constant [16 x i8] c"undefined field\00", align 1
 @func419_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func420_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
-@func421_str1 = private unnamed_addr constant [16 x i8] c"cast num to ref\00", align 1
 @func422_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func423_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func424_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
@@ -765,6 +764,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func456_str1 = private unnamed_addr constant [9 x i8] c"stmt_new\00", align 1
 @func459_str1 = private unnamed_addr constant [16 x i8] c"expected lvalue\00", align 1
 @func459_str2 = private unnamed_addr constant [13 x i8] c"invalid lval\00", align 1
+@func467_str1 = private unnamed_addr constant [21 x i8] c"missing return value\00", align 1
 @func471_str1 = private unnamed_addr constant [34 x i8] c"`break` outside any loop operator\00", align 1
 @func472_str1 = private unnamed_addr constant [34 x i8] c"`break` outside any loop operator\00", align 1
 @func476_str1 = private unnamed_addr constant [4 x i8] c"##\0A\00", align 1
@@ -13579,7 +13579,7 @@ endif_0:
   br i1 %14, label %then_1, label %else_1
 then_1:
 ;stmt4:
-  %15 = bitcast [18 x %Nat8]* @func409_str1 to %Str
+  %15 = bitcast [17 x %Nat8]* @func409_str1 to %Str
   %16 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 19
   %17 = load %TokenInfo*, %TokenInfo** %16
   call void (%Str, %TokenInfo*) @error (%Str %15, %TokenInfo* %17)
@@ -14386,9 +14386,6 @@ then_0:
   %6 = call i1 (%Type*) @func365 (%Type* %1)
   br i1 %6, label %then_1, label %else_1
 then_1:
-;stmt2:
-  %7 = bitcast [16 x %Nat8]* @func421_str1 to %Str
-  call void (%Str, %TokenInfo*) @warning (%Str %7, %TokenInfo* %2)
   br label %endif_1
 else_1:
   br label %endif_1
@@ -14397,9 +14394,9 @@ endif_1:
 else_0:
   br label %endif_0
 endif_0:
-;stmt3:
-  %8 = call %Value* (%Value*, %Type*, %TokenInfo*) @func444 (%Value* %0, %Type* %1, %TokenInfo* %2)
-  ret %Value* %8
+;stmt2:
+  %7 = call %Value* (%Value*, %Type*, %TokenInfo*) @func444 (%Value* %0, %Type* %1, %TokenInfo* %2)
+  ret %Value* %7
 }
 
 define %Value* @do_value_cast_func (%Value*, %Type*, %TokenInfo*) {
@@ -16701,16 +16698,39 @@ select_1_1:
 select_1_end:
   %16 = phi %Value* [ %14, %select_1_0_ok ], [ %15, %select_1_1 ]
 ;stmt3:
-  %17 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
-  %18 = load %TokenInfo*, %TokenInfo** %17
-  %19 = call %Stmt* (%StmtKind, %TokenInfo*) @func456 (%StmtKind 7, %TokenInfo* %18)
+  %17 = icmp eq %Value* %16, zeroinitializer
+  br i1 %17, label %then_0, label %else_0
+then_0:
 ;stmt4:
-  %20 = getelementptr inbounds %Stmt, %Stmt* %19, i1 0, i32 1
-; index array
-  %21 = getelementptr inbounds [2 x %Value*], [2 x %Value*]* %20, i1 0, %Int64 0
-  store %Value* %16, %Value** %21, align 8
+  %18 = load %Type*, %Type** @typeUnit
+  %19 = call i1 (%Type*, %Type*) @func394 (%Type* %9, %Type* %18)
+  %20 = xor i1 %19, 1
+  br i1 %20, label %then_1, label %else_1
+then_1:
 ;stmt5:
-  ret %Stmt* %19
+  %21 = bitcast [21 x %Nat8]* @func467_str1 to %Str
+  %22 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
+  %23 = load %TokenInfo*, %TokenInfo** %22
+  call void (%Str, %TokenInfo*) @error (%Str %21, %TokenInfo* %23)
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+;stmt6:
+  %24 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 12
+  %25 = load %TokenInfo*, %TokenInfo** %24
+  %26 = call %Stmt* (%StmtKind, %TokenInfo*) @func456 (%StmtKind 7, %TokenInfo* %25)
+;stmt7:
+  %27 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
+; index array
+  %28 = getelementptr inbounds [2 x %Value*], [2 x %Value*]* %27, i1 0, %Int64 0
+  store %Value* %16, %Value** %28, align 8
+;stmt8:
+  ret %Stmt* %26
 }
 
 define %Stmt* @func469 (%AstStmt*) {

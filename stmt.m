@@ -239,6 +239,13 @@ do_stmt_return = DoStmt {
     } (rv, func_to)
   }
 
+  // missing return value
+  if retval == nil {
+    if not type_eq (func_to, typeUnit) {
+      error("missing return value", x.ti)
+    }
+  }
+
   s = stmt_new (#StmtReturn, x.ti)
   s.a[0] := retval
   return s

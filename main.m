@@ -33,6 +33,7 @@ import "stmt"
 import "cpl"
 
 
+
 // not_null реши что там за херня??!!
 
 compilerVersionMajor = 0
