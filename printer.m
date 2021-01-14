@@ -181,6 +181,16 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   }
   map_foreach (&builtinIndex.types, prt_itype, nil)
 
+
+  ol ("\n; aliases:")
+  // печатаем алиасы типов (пока только юнионы)
+  prt_alias = MapForeachHandler {
+    tid = k to Str
+    t = v to *Type
+    fprintf (fout, "\n%%%s = type ", tid); printType(t); o("\n")
+  }
+  map_foreach (&unions, prt_alias, nil)
+
   nl ()
 
 //  list_init(&md_list)
@@ -784,6 +794,11 @@ eval_cast_to_basic = EvalCast {
 }
 
 
+eval_cast_to_union = EvalCast {
+  //return select v.type.kind {}
+  return llvm_cast ("bitcast", v, t)
+}
+
 eval_cast = Eval {
   v = eval (x.cast.value)
   t = x.cast.to
@@ -792,6 +807,7 @@ eval_cast = Eval {
     type_is_ref(t)         => eval_cast_to_ref (v, t)    // cast -> Ref
     t.kind == #TypeBool    => eval_cast_to_bool (v, t)   // cast -> Bool
     t.kind == #TypeNumeric => eval_cast_to_basic (v, t)  // cast -> Basic
+    t.kind == #TypeUnion   => eval_cast_to_union (v, t)  // cast -> Union
     type_eq (t, typeUnit)  => llval_create (#LLVM_ValueEmpty, t, 0)  // cast -> ()
 
     else => EvalCast {
@@ -1242,6 +1258,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
     #TypePointer => printTypePointer (&t.pointer)
     #TypeFunc    => printTypeFunc    (&t.func, func_as_ptr)
     #TypeBool    => o ("i1")
+    #TypeUnion   => fprintf (fout, "%%%s", t.aka) to ()
     else => (t : *Type) -> () {
       o ("<type-unknown-kind>");
       printf ("unk type kind %d\n", t.kind);

@@ -93,6 +93,8 @@ do_valuex = DoValuex {
     #AstValueIndex   => do_value_index   (x)
     #AstValueAccess  => do_value_access  (x)
     #AstValueCast    => do_value_cast    (x)
+    #AstValueIs      => do_value_is      (x)
+    #AstValueAs      => do_value_as      (x)
     #AstValueSizeof  => do_value_sizeof  (x)
     #AstValueAlignof => do_value_alignof (x)
     #AstValueSelect  => do_value_select  (x)
@@ -567,6 +569,10 @@ fail:
 }
 
 
+
+do_value_is = DoValue {error("do_value_is", x.ti); return value_new_poison (x.ti)}
+do_value_as = DoValue {error("do_value_as", x.ti); return value_new_poison (x.ti)}
+
 do_value_sizeof = DoValue {
   t = do_type (x.of_type)
 
@@ -859,6 +865,19 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   // приведение к собственному типу бессмыслено
   if type_eq (vx.type, t) {return vx}
 
+
+
+
+
+  // приведение подтипа к Union-надтипу
+  if t.kind == #TypeUnion {
+    goto sact
+    error("приведение юнион", ti)
+    return value_new_poison (ti)
+  }
+
+
+
   // можем ли мы приводить непосредственно значение v к типу t ?
   immCastIsPossible = (v : *Value, t : *Type) -> Bool {
     return v.kind == #ValueImmediate  // STUB
@@ -868,6 +887,10 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   if immCastIsPossible (vx, t) {
     return value_new_imm (t, vx.imm, ti)
   }
+
+
+sact:
+
 
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)
@@ -931,7 +954,7 @@ fail:
 
 
 
-// возможно ли неявное преобразование из типа a в nbg b?
+// can we do implicit cast a ~> b ?
 implicit_cast_possible = (a, b : *Type) -> Bool {
   ak = a.kind
   bk = b.kind
@@ -959,6 +982,17 @@ implicit_cast_possible = (a, b : *Type) -> Bool {
       // auto cast for: * -> *Unit
       if type_eq (b, typeFreePtr) {return true}
     }
+  }
+
+  // если неявно приводим подтип к над-объединению
+  if bk == #TypeUnion {
+    search_type = ListSearchHandler {
+      xt = data to *Type
+      tt = ctx to *Type
+      return type_eq(xt, tt)
+    }
+    t = list_search (&b.union.types, search_type, a)
+    return t != nil
   }
 
   return false

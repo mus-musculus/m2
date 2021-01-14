@@ -90,17 +90,24 @@ skipto = (s : Str) -> () {
 }
 
 
-match = (s : Str) -> Bool {
+look = (s : Str) -> Bool {
   tok = ctok()
   tt = tok.kind
   if tt == #TokenString or tt == #TokenEOF {
     return false
   }
 
-  rc = strcmp(s, &tok.text to Str) == 0
+  return strcmp(s, &tok.text to Str) == 0
+}
+
+
+match = (s : Str) -> Bool {
+  rc = look(s)
   if rc {skip()}
   return rc
 }
+
+
 
 
 need = (s : Str) -> Bool {
@@ -327,7 +334,7 @@ exist parse_type_enum : AstTypeParser
 exist parse_type_array : AstTypeParser
 exist parse_type_rec_func : AstTypeParser
 
-parse_type = () -> *AstType {
+parse_type = AstTypeParser {
   tk = ctok()
   t = ast_type_new(#AstTypeUnknown, &tk.ti) to Var *AstType
 
@@ -350,6 +357,18 @@ parse_type = () -> *AstType {
     }
   }
 
+  // or приоритетнее ->
+  if look("or") {
+    t_union = ast_type_new(#AstTypeUnion, &tk.ti)
+    list_init (&t_union.union.types)
+    list_append(&t_union.union.types, t)
+    while match ("or") {
+      ot = parse_type()
+      list_append(&t_union.union.types, ot)
+    }
+    return t_union
+  }
+
   tk_func = ctok()
   if match("->") {
     from = t
@@ -362,6 +381,33 @@ parse_type = () -> *AstType {
 
   return t
 }
+
+
+
+/*parse_type0 = AstTypeParser {
+  t = parse_type1()
+  if match("->") {
+    from = t
+    _to = parse_type0()
+    ft = ast_type_new(#AstTypeFunc, &tk_func.ti)
+    ft.func.from := from
+    ft.func.to := _to
+    return ft
+  }
+  return t
+}
+
+
+parse_type1 = AstTypeParser {
+  t = parse_type2()
+
+  while match("or") {
+    t = parse_type0()
+  }
+}*/
+
+
+
 
 
 parse_type_pointer = AstTypeParser {
@@ -713,6 +759,18 @@ parse_value9 = AstValueParser {
     nv = ast_value_new(#AstValueCast, ti)
     nv.cast.value := v
     nv.cast.type := t
+    v := nv
+  } else if match("is") {
+    t = parse_type()
+    nv = ast_value_new(#AstValueIs, ti)
+    nv.is.value := v
+    nv.is.type := t
+    v := nv
+  } else if match("as") {
+    t = parse_type()
+    nv = ast_value_new(#AstValueAs, ti)
+    nv.as.value := v
+    nv.as.type := t
     v := nv
   }
   return v

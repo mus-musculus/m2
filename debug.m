@@ -3,6 +3,8 @@
 
 prttype = (t : *Type) -> () {prttype2(t, nil)}
 
+exist type_print_union : (t : *TypeUnion) -> ()
+
 prttype2 = (t, selfptr : *Type) -> () {
   if t == nil {printf("(nil)"); return}
   if t.aka != nil {
@@ -24,6 +26,7 @@ prttype2 = (t, selfptr : *Type) -> () {
     #TypeFunc => type_print_func(&t.func)
     #TypePoison => printf("<TypePoison>") to ()
     #TypeForbidden => printf("<TypeForbidden>") to ()
+    #TypeUnion => type_print_union(&t.union)
     else => printf("<TypeUnknown>") to ()
   }
 }
@@ -64,6 +67,15 @@ type_print_array_u = (t : *Type, selfptr : *Type) -> ()
 type_print_func = (t : *TypeFunc) -> ()
 {prttype(t.from); printf(" -> "); prttype(t.to)}
 
+
+type_print_union = (t : *TypeUnion) -> () {
+  print_variant = ListForeachHandler {
+    t = data to *Type
+    prttype(t)
+    printf(" or ")
+  }
+  list_foreach(&t.types, print_variant, nil)
+}
 
 
 value_print_kind = (k : ValueKind) -> () {

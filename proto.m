@@ -35,10 +35,10 @@ exist do_type_func : DoType
 exist do_type_array_u : DoType
 exist do_type_array : DoType
 exist do_type_pointer : DoType
-exist field_new : (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl
-exist alignment : (req_sz : Nat32, align : Nat) -> Nat32
 exist do_type_record : DoType
 exist do_type_enum : DoType
+exist do_type_union : DoType
+
 
 exist type_eq : (a, b : *Type) -> Bool
 exist type_init : () -> ()
@@ -76,6 +76,8 @@ exist do_value_deref : DoValue
 exist do_value_index : DoValue
 exist do_value_access : DoValue
 exist do_value_cast : DoValue
+exist do_value_is : DoValue
+exist do_value_as : DoValue
 exist do_value_sizeof : DoValue
 exist do_value_alignof : DoValue
 exist do_value_named : DoValue

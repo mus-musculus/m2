@@ -74,7 +74,8 @@ AstTypeKind = {
   #AstTypeArrayU,
   #AstTypeFunc,
   #AstTypePointer,
-  #AstTypeVar
+  #AstTypeVar,
+  #AstTypeUnion
 }
 
 AstTypeEnum = (constructors : List)
@@ -84,6 +85,7 @@ AstTypeArrayU = (of : *AstType)
 AstTypePointer = (to : *AstType)
 AstTypeFunc = (from, to : *AstType, arghack : Bool)
 AstTypeVar = (of : *AstType)
+AstTypeUnion = (types : List /* of *AstType */)
 
 AstType = (
   kind : AstTypeKind
@@ -96,6 +98,7 @@ AstType = (
   record  : AstTypeRecord
   func    : AstTypeFunc
   var     : AstTypeVar
+  union   : AstTypeUnion
 
   ti : *TokenInfo
 )
@@ -144,7 +147,8 @@ AstValueKind = {
   // special
   #AstValueShl, #AstValueShr,
   #AstValueCall, #AstValueIndex, #AstValueAccess,
-  #AstValueCast, #AstValueSizeof, #AstValueAlignof, #AstValueSelect
+  #AstValueCast, #AstValueIs, #AstValueAs,
+  #AstValueSizeof, #AstValueAlignof, #AstValueSelect
 }
 
 AstValueFunc = (type : *AstType, block_stmt : *AstStmt)
@@ -152,6 +156,8 @@ AstValueCall = (func : *AstValue, args : List)
 AstValueIndex = (array, index : *AstValue)
 AstValueAccess = (rec : *AstValue, field_id : *AstId)
 AstValueCast = (value : *AstValue, type : *AstType)
+AstValueIs = (value : *AstValue, type : *AstType)
+AstValueAs = (value : *AstValue, type : *AstType)
 
 AstValueSelectVariant = (x, y : *AstValue)
 AstValueSelect = (x : *AstValue, variants : List, other : *AstValue)
@@ -169,6 +175,8 @@ AstValue = (
   index   : AstValueIndex
   access  : AstValueAccess
   cast    : AstValueCast
+  is      : AstValueIs
+  as      : AstValueAs
   select  : AstValueSelect
 
   extern  : Bool
@@ -242,6 +250,8 @@ TypeEnum = (
   uid  : Nat32  // unical id
 )
 
+TypeUnion = (types : List)
+
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 
 Decl = (
@@ -288,7 +298,9 @@ TypeKind = {
   #TypeRecord,
   #TypePointer,
   #TypeArray,
-  #TypeArrayU
+  #TypeArrayU,
+
+  #TypeUnion
 }
 
 
@@ -312,6 +324,7 @@ Type = (
     record   : TypeRecord
     enum     : TypeEnum
     var      : TypeVar
+    union    : TypeUnion
 //)
 
   ti : *TokenInfo  // place in code where type was mentioned

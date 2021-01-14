@@ -130,6 +130,7 @@ do_type = DoType {
     #AstTypePointer => do_type_pointer (x)
     #AstTypeEnum    => do_type_enum    (x)
     #AstTypeRecord  => do_type_record  (x)
+    #AstTypeUnion   => do_type_union   (x)
     else => type_new (#TypePoison, 0, x.ti)
   }
 }
@@ -313,6 +314,54 @@ do_type_enum = DoType {
 }
 
 
+union_id = 0 to Var Nat
+
+do_type_union = DoType {
+  xuid = str_new(10)
+  sprintf(&xuid[0], "%d", union_id)
+  aka = cat("union.", xuid)
+  union_id = union_id + 1
+
+  t = type_new (#TypeUnion, 0, x.ti)
+  t.aka := aka
+
+  CtxUnion = (
+    tlist : *List
+    max_size : Nat
+  )
+
+  ctx = 0 to Var CtxUnion
+  ctx.tlist := &t.union.types
+
+  list_init (&t.union.types)
+  do_variant = ListForeachHandler {
+    ast_type = data to *AstType
+    c = ctx to *CtxUnion
+
+    tlist = ctx to *List
+    t = do_type (ast_type)
+
+    // получаем размер самого большого варианта
+    c.max_size := select true {
+      t.size > c.max_size => t.size
+      else => c.max_size
+    }
+
+    list_append(c.tlist, t)
+  }
+  list_foreach(&x.union.types, do_variant, &ctx)
+
+
+  //u = type_new (#TypeRecord, ctx.max_size + cfgEnumSize, x.ti)
+  //u.record.decls := list_new ()
+  //u = type_new (#TypePointer, cfgPointerSize, x.ti)
+  u = typeFreePtr  // пока юнионы только для ?указателей тест
+  map_append (&unions, aka, u)
+
+  return t
+}
+
+
 
 type_eq_numeric = (a, b : *TypeNumeric) -> Bool
 {return a.power == b.power and a.signed == b.signed}
@@ -333,6 +382,17 @@ type_eq_record = (a, b : *TypeRecord) -> Bool {
   return list_compare (a.decls, b.decls, check_fields, nil)
 }
 
+type_eq_union = (a, b : *TypeUnion) -> Bool {
+  if a.types.volume != b.types.volume {return false}
+  check_types = ListCompareHandler {
+    t1 = data1 to *Type
+    t2 = data2 to *Type
+    return type_eq (t1, t2)
+  }
+  return list_compare (&a.types, &b.types, check_types, nil)
+}
+
+
 type_eq = (a, b : *Type) -> Bool {
   if a == b {return true}
 
@@ -346,6 +406,7 @@ type_eq = (a, b : *Type) -> Bool {
     #TypeArrayU  => type_eq         (a.array_u.of, b.array_u.of)
     #TypeFunc    => type_eq_func    (&a.func, &b.func)
     #TypeRecord  => type_eq_record  (&a.record, &b.record)
+    #TypeUnion   => type_eq_union   (&a.union, &b.union)
     #TypeEnum    => false
     #TypeBool    => true
     else => false
@@ -356,9 +417,9 @@ type_eq = (a, b : *Type) -> Bool {
 
 // type eq with error_type_error
 type_check = (exp, recv : *Type, ti : *TokenInfo) -> Bool {
-  eq = type_eq (exp, recv)
-  if not eq {error_type_error (ti, recv, exp)}
-  return eq
+  equal = type_eq (exp, recv)
+  if not equal {error_type_error (ti, recv, exp)}
+  return equal
 }
 
 

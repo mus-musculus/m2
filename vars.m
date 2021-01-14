@@ -24,3 +24,8 @@ fctx = nil to Var *FuncContext
 // result assembly
 asm0 = 0 to Var Assembly
 
+
+// типы которые нужно будет распечатать в самом начале
+// ! перенеси в сборку!
+unions = 0 to Var Map
+
