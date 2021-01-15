@@ -120,8 +120,20 @@ typeIsPointerToUnit = (t : *Type) -> Bool {
 }
 
 
+// Is type (*T or Unit) ?
+type_is_maybe_ptr = (t : *Type) -> Bool {
+  if t.kind != #TypeUnion {return false}
+  if t.union.types.volume != 2 {return false}
+  t0 = list_get(&t.union.types, 0) to *Type
+  t1 = list_get(&t.union.types, 1) to *Type
+
+  return t0.kind == #TypePointer and type_eq(t1, typeUnit) or
+         t1.kind == #TypePointer and type_eq(t0, typeUnit)
+}
+
+
 do_type = DoType {
-  return select x.kind {
+  return when x.kind {
     #AstTypeNamed   => do_type_named   (x)
     #AstTypeFunc    => do_type_func    (x)
     #AstTypeVar     => do_type_var     (x)
@@ -196,7 +208,7 @@ do_type_pointer = DoType {
 align = (req_sz : Nat32, align : Nat) -> Nat32 {
   assert (align != 0, "alignment : align=0")
   a = req_sz % align
-  return select a {
+  return when a {
     0 => req_sz
     else => req_sz + (align - a)
   }
@@ -342,7 +354,7 @@ do_type_union = DoType {
     t = do_type (ast_type)
 
     // получаем размер самого большого варианта
-    c.max_size := select true {
+    c.max_size := when true {
       t.size > c.max_size => t.size
       else => c.max_size
     }
@@ -357,20 +369,22 @@ do_type_union = DoType {
   //u = type_new (#TypePointer, cfgPointerSize, x.ti)
   u = typeFreePtr  // пока юнионы только для ?указателей тест
   map_append (&unions, aka, u)
-
   return t
 }
 
 
 
-type_eq_numeric = (a, b : *TypeNumeric) -> Bool
-{return a.power == b.power and a.signed == b.signed}
+type_eq_numeric = (a, b : *TypeNumeric) -> Bool {
+  return a.power == b.power and a.signed == b.signed
+}
 
-type_eq_array = (a, b : *TypeArray) -> Bool
-{return a.volume == b.volume and type_eq (a.of, b.of)}
+type_eq_array = (a, b : *TypeArray) -> Bool {
+  return a.volume == b.volume and type_eq (a.of, b.of)
+}
 
-type_eq_func = (a, b : *TypeFunc) -> Bool
-{return type_eq (a.from, b.from) and type_eq (a.to, b.to)}
+type_eq_func = (a, b : *TypeFunc) -> Bool {
+  return type_eq (a.from, b.from) and type_eq (a.to, b.to)
+}
 
 type_eq_record = (a, b : *TypeRecord) -> Bool {
   check_fields = ListCompareHandler {
@@ -398,7 +412,7 @@ type_eq = (a, b : *Type) -> Bool {
 
   if a.kind != b.kind {return false}
 
-  return select a.kind {
+  return when a.kind {
     #TypeNumeric => type_eq_numeric (&a.num, &b.num)
     #TypeVar     => type_eq         (a.var.of, b.var.of)
     #TypePointer => type_eq         (a.pointer.to, b.pointer.to)
@@ -514,7 +528,7 @@ type_init = () -> () {
   // Тип который получают литеральные константы
   typeNumeric := type_numeric_new ("Numeric",  0, true)
 
-  typeBaseInt := select cfgIntegerSize {
+  typeBaseInt := when cfgIntegerSize {
     2  => typeInt16
     4  => typeInt32
     8  => typeInt64

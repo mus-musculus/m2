@@ -27,7 +27,7 @@ compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
     e = ast_node.entity
-    select ast_node.kind {
+    when ast_node.kind {
       //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
       #AstNodeBindType => do_type_bind (e to *AstNodeBindType)
       #AstNodeBindValue => do_value_bind (e to *AstNodeBindValue)

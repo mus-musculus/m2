@@ -948,7 +948,7 @@ exist parse_value_select : AstValueParser
 
 parse_value_term = AstValueParser {
   token = ctok()
-  return select token.kind {
+  return when token.kind {
     #TokenId  => parse_value_id()
     #TokenNum => parse_value_num()
     #TokenString => parse_value_str()
@@ -963,17 +963,19 @@ parse_value_term = AstValueParser {
 
 
 parse_value_id = AstValueParser {
+
+  ti = &ctok().ti
   if match("func") {
     return parse_value_func()
   } else if match("extern") {
     return parse_value_extern()
   } else if match("array") {
     return parse_value_arr()
-  } else if match("select") {
+  } else if match("when") {
     return parse_value_select()
   }
 
-  ti = &ctok().ti
+
   id = parse_id()
   if id == nil {return nil}
 
@@ -1153,7 +1155,7 @@ parse_stmt = () -> *AstStmt {
     return parse_stmt_expr(&tk.ti)
   }
 
-  return select true {
+  return when true {
     match("let") or is_valdef => parse_stmt_valdef(ti)
     match("{") => parse_stmt_block(ti)
     match("if") => parse_stmt_if(ti)
@@ -1351,7 +1353,7 @@ is_it_type = () -> Bool {
 
   t = start.data to *Token
 
-  if not select t.kind {
+  if not when t.kind {
     #TokenNum => false
     #TokenString => false
     #TokenComment => false
@@ -1370,7 +1372,7 @@ is_it_type = () -> Bool {
     return isUpperCase(c)
   }
 
-  if select c {
+  if when c {
     "("[0] => is_it_type_rec()
     "["[0] => true
     "{"[0] => true

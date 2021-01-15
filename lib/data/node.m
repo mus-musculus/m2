@@ -38,6 +38,20 @@ node_append = (n : *Node, an : *Node) -> () {
 }
 
 
+// возвращает n'ную ноду
+node_get = (node : *Node, n : Nat) -> *Node {
+  i = 0 to Var Nat
+  if node == nil {return nil}
+  x = node to Var *Node
+  while i < n {
+    if x.next == nil {return nil}
+    x := x.next
+    i := i + 1
+  }
+  return x
+}
+
+
 // исключает ноду из цепочки в которой она участвует
 node_exclude = (node : *Node) -> () {
   prev = node.prev

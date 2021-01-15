@@ -137,7 +137,7 @@ getToken = () -> TokenKind {
     /*** SYMBOLS, COMMENTS, STRINGS ***/
     lstate.kind := #TokenSym
 
-    select c {
+    when c {
       "\n"[0] => x_nl   ()
       ":"[0]  => fill   (ass)
       "="[0]  => fill   (eq)
@@ -219,7 +219,7 @@ string = () -> () {
         /* ESACPE-symbols */
         c := getcc ()
 
-        c := select c {
+        c := when c {
           "n"[0] => "\n"[0]
           "r"[0] => "\r"[0]
           "t"[0] => "\t"[0]

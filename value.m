@@ -29,7 +29,7 @@ value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
 
 dold = (x : *Value) -> *Value {
 
-  typ = select x.type.kind {
+  typ = when x.type.kind {
     #TypeVar => x.type.var.of
     else => x.type
   }
@@ -55,13 +55,8 @@ dold = (x : *Value) -> *Value {
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
-  v = select x.kind {
-    #AstValueForbidden => DoValue {
-      show (x.ti)
-      assert (false, "do_value : #AstValueForbidden")
-      return nil
-    } (x)
-
+  //.printf("A %d\n", x.kind)
+  v = when x.kind {
     #AstValueId      => do_value_named   (x)
     #AstValueNum     => do_value_numeric (x)
     #AstValueStr     => do_value_string  (x)
@@ -98,6 +93,7 @@ do_valuex = DoValuex {
     #AstValueSizeof  => do_value_sizeof  (x)
     #AstValueAlignof => do_value_alignof (x)
     #AstValueSelect  => do_value_select  (x)
+    #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
   }
 
@@ -105,10 +101,17 @@ do_valuex = DoValuex {
 
   if v.kind == #ValuePoison {return v}
 
-  return select load {
+  return when load {
     true => dold (v)
     else => v
   }
+}
+
+
+do_value_forbidden = DoValue {
+  error ("do_value_forbidden", x.ti)
+  fatal ("stop.")
+  return value_new_poison (x.ti)
 }
 
 
@@ -137,7 +140,7 @@ do_value_select = DoValue {
 
     // если тип селекта определен,
     // пытаемся неявно привести к нему все варианты
-    val = select kit.v.type {
+    val = when kit.v.type {
       nil => val0
       else => implicit_cast (val0, kit.v.type)
     }
@@ -226,7 +229,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
     goto fail
   }
 
-  typ = select isReletionOpKind (k) {
+  typ = when isReletionOpKind (k) {
     true => typeBool
     else => l.type
   }
@@ -234,7 +237,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
     lv = l.imm
     rv = r.imm
-    imm = select k {
+    imm = when k {
       #ValueAdd => lv + rv
       #ValueSub => lv - rv
       #ValueMul => lv * rv
@@ -270,6 +273,7 @@ fail:
 
 do_value_call = DoValue {
   f = do_value (x.call.func)
+
   if f.kind == #ValuePoison {return f}
 
   args = do_args (f, &x.call.args, x.ti)
@@ -356,11 +360,11 @@ do_value_index = DoValue {
   // тк *[x]X <=> []X
 
   // It expects array or undefined array or pointer to array
-  typ = select a.type.kind {
+  typ = when a.type.kind {
     #TypeArray   => a.type.array.of
     #TypeArrayU  => a.type.array_u.of
     #TypePointer => (_to : *Type) -> *Type {
-      return select _to.kind {
+      return when _to.kind {
         #TypeArray => _to.array.of
         else => nil to *Type
       }
@@ -390,10 +394,10 @@ do_value_access = DoValue {
   if r.kind == #ValuePoison {goto fail}
 
   // It expects record or pointer to record
-  r_typ = select r.type.kind {
+  r_typ = when r.type.kind {
     #TypeRecord  => r.type
     #TypePointer => (_to : *Type) -> *Type {
-      return select _to.kind {
+      return when _to.kind {
         #TypeRecord => _to
         else => nil
       }
@@ -513,7 +517,7 @@ do_value_cast = DoValue {
     }
 
     // выполняем приведение
-    return select v.type.kind {
+    return when v.type.kind {
       #TypeUndefined => nil to *Value
       #TypeVar       => do_value_cast_var  (v, t, ti)
       #TypeBool      => do_value_cast_bool (v, t, ti)
@@ -570,8 +574,60 @@ fail:
 
 
 
-do_value_is = DoValue {error("do_value_is", x.ti); return value_new_poison (x.ti)}
-do_value_as = DoValue {error("do_value_as", x.ti); return value_new_poison (x.ti)}
+do_value_is = DoValue {
+  v = do_value (x.is.value)
+  t = do_type (x.is.type)
+
+  // чекаем если значение имеет unit тип
+  if not type_is_maybe_ptr (v.type) {
+    error ("expected maybe type", v.ti)
+  }
+
+  // чекаем если проверяем на соответствие типу который входит в объединение
+  if not type_present_in_list (&v.type.union.types, t) {
+    error ("type error", v.ti)
+  }
+
+
+  VarCtx = (
+    type    : *Type
+    variant : Nat
+  )
+
+  var_ctx = 0 to Var VarCtx
+  var_ctx.type := t
+
+  find_variant = ListForeachHandler {
+    t = data to *Type
+    ct = ctx to *VarCtx
+    if type_eq (t, ct.type) {ct.variant := index}
+  }
+  list_foreach(&v.type.union.types, find_variant, &var_ctx)
+
+  printf("variant #%d\n", var_ctx.variant)
+
+  //error ("do_value_is", x.ti)
+  vx = value_new(#ValueIs, typeBool, x.ti)
+  vx.is.value := v
+  vx.is.variant := var_ctx.variant
+
+  return vx
+}
+
+
+do_value_as = DoValue {
+  v = do_value (x.as.value)
+  t = do_type (x.as.type)
+
+  if not type_is_maybe_ptr (t) {
+    error("expected maybe type", x.ti)
+  }
+
+  error ("do_value_as", x.ti)
+  return value_new_poison (x.ti)
+}
+
+
 
 do_value_sizeof = DoValue {
   t = do_type (x.of_type)
@@ -702,7 +758,7 @@ do_value_func = DoValue {
   fctx := malloc (sizeof FuncContext) to *FuncContext
   memset (fctx, 0, sizeof FuncContext)
 
-  fctx.id := select old_fctx {
+  fctx.id := when old_fctx {
     nil => uid
     else => cat3 (old_fctx.id, "_", uid)
   }
@@ -793,7 +849,7 @@ do_value_shift = DoValue {
   if l.kind == #ValuePoison {goto fail}
   if r.kind == #ValuePoison {goto fail}
 
-  k = select x.kind {
+  k = when x.kind {
     #AstValueShl => #ValueShl
     else => #ValueShr
   }
@@ -801,7 +857,7 @@ do_value_shift = DoValue {
   // свертка констант
   if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
 
-    d = select k {
+    d = when k {
       #ValueShl => l.imm << r.imm
       else => l.imm >> r.imm
     }
@@ -868,7 +924,6 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
 
 
-
   // приведение подтипа к Union-надтипу
   if t.kind == #TypeUnion {
     goto sact
@@ -895,7 +950,7 @@ sact:
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)
   v.cast.value := vx
-  v.cast.to := t
+  v.cast.type := t
   return v
 
 fail:
@@ -915,7 +970,7 @@ fail:
 // если у v тип GenericNumeric -> приводим его к typeBaseInt
 // used in: [index, call, shift, expr]
 implicit_cast_int = (v : *Value) -> *Value {
-  return select type_eq (v.type, typeNumeric) {
+  return when type_eq (v.type, typeNumeric) {
     true => value_new_imm (typeBaseInt, v.imm, v.ti)
     else => v
   }
@@ -986,14 +1041,7 @@ implicit_cast_possible = (a, b : *Type) -> Bool {
 
   // если неявно приводим подтип к над-объединению
   if bk == #TypeUnion {
-    search_type = ListSearchHandler {
-      xt = data to *Type
-      tt = ctx to *Type
-      return type_eq(xt, tt)
-    }
-    t = list_search (&b.union.types, search_type, a)
-    printf("TU %d\n", t != nil)
-    return t != nil
+    return type_present_in_list(&b.union.types, a)
   }
 
   return false

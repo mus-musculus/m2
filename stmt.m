@@ -22,7 +22,7 @@ stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
 
 
 do_stmt = DoStmt {
-  return select x.kind {
+  return when x.kind {
     #AstStmtAssign   => do_stmt_assign   (x)
     #AstStmtValueDef => do_stmt_valdef   (x)
     #AstStmtBlock    => do_stmt_block    (x)
@@ -52,7 +52,7 @@ do_stmt_assign = DoStmt {
   if rval0.kind == #ValuePoison {return nil}
 
   lx = x.assign.l
-  lval = select lx.kind {
+  lval = when lx.kind {
     #AstValueId => do_value_named      (lx)
     #AstValueDeref => do_value_deref   (lx)
     #AstValueIndex => do_value_index   (lx)
@@ -79,7 +79,7 @@ do_stmt_assign = DoStmt {
     }*/
   }
 
-  ltype = select lval.type.kind {
+  ltype = when lval.type.kind {
     #TypeVar => lval.type.var.of
     else => lval.type
   }
@@ -180,7 +180,7 @@ do_stmt_if = DoStmt {
   cond = do_value (x.if.cond)
   then = do_stmt (x.if.then)
 
-  _else = select x.if._else {
+  _else = when x.if._else {
     nil => nil to *Stmt
     else => do_stmt (x.if._else)
   }
@@ -227,7 +227,7 @@ do_stmt_return = DoStmt {
   func_to = fctx.cfunc.type.func.to
   rv = x.return.value
 
-  retval = select rv {
+  retval = when rv {
     nil => nil to *Value
 
     else => (rv : *AstValue, ft : *Type) -> *Value {

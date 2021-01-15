@@ -380,16 +380,20 @@ ValueKind = {
   #ValueIndex,
   #ValueAccess,
   #ValueCast,
+  #ValueIs,
+  #ValueAs,
   #ValueSelect
 }
 
 
 ValueAccess = (value : *Value, field : Str)
-ValueBin = (l, r : *Value)
-ValueCall = (func : *Value, args : *List)
-ValueCast = (value : *Value, to : *Type)
-ValueIndex = (array, index : *Value)
-ValueUn = (x : *Value)
+ValueBin    = (l, r : *Value)
+ValueCall   = (func : *Value, args : *List)
+ValueCast   = (value : *Value, type : *Type)
+ValueAs     = (value : *Value, type : *Type)
+ValueIs     = (value : *Value, variant : Nat)
+ValueIndex  = (array, index : *Value)
+ValueUn     = (x : *Value)
 
 ValueSelectVariant = (x, y : *Value)
 ValueSelect = (x : *Value, variants : List, other : *Value)
@@ -417,6 +421,8 @@ Value = (
   index  : ValueIndex
   access : ValueAccess
   cast   : ValueCast
+  as     : ValueAs
+  is     : ValueIs
   call   : ValueCall
   szof   : *Type
   select : ValueSelect

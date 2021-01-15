@@ -21,7 +21,7 @@ import "proto"
 asm_init = (a : *Assembly, arch : Arch, name : Str) -> () {
   a.name := name
 
-  select arch {
+  when arch {
     #Arch-x64 => (a : *Assembly) -> () {
       a.datalayout := "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
       a.triple := "x86_64-apple-macosx10.15.0"
@@ -168,7 +168,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   nl ()
 
   ol ("%Bool = type i1")
-  ol ("%Unit = type {}")
+  ol ("%Unit = type i1")
   ol ("%Str = type i8*")
   ol ("%Numeric = type i64")
 
@@ -356,6 +356,7 @@ funcdef = (id : Str, t : *Type, b : *Block) -> () {
 
   if strcmp(id, "xx") == 0 {
     printf("xx : "); prttype(t); printf("\n")
+    printf("Maybe? %d\n", type_is_maybe_ptr(t.func.to))
   }
 
   select_no := 0
@@ -501,26 +502,28 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
 // Имена и адреса нуждаются в дополнительной загрузке функцией load
 // (только если это не lval)
 eval = Eval {
-  return select x.kind {
-    #ValueImmediate => llval_create (#LLVM_ValueImmediate, x.type, x.imm)
+  return when x.kind {
+    #ValueImmediate   => llval_create (#LLVM_ValueImmediate, x.type, x.imm)
 
     #ValueGlobalConst => llval_create_id (#LLVM_ValueGlobalConst, x.type, x.def.id)
-    #ValueGlobalVar => llval_create_id (#LLVM_ValueGlobalVar, x.type, x.def.id)
+    #ValueGlobalVar   => llval_create_id (#LLVM_ValueGlobalVar, x.type, x.def.id)
 
-    #ValueLocalConst => llval_create_reg (x.type, x.expr.reg)
-    #ValueLocalVar => llval_create (#LLVM_ValueLocalVar, x.type, x.vardef.lab to Int64)
-    #ValueParam => llval_create_reg (x.type, x.field.offset to Nat32)
+    #ValueLocalConst  => llval_create_reg (x.type, x.expr.reg)
+    #ValueLocalVar    => llval_create (#LLVM_ValueLocalVar, x.type, x.vardef.lab to Int64)
+    #ValueParam       => llval_create_reg (x.type, x.field.offset to Nat32)
 
-    #ValueLoad   => load (eval (x.load))
-    #ValueCall   => eval_call (x)
-    #ValueIndex  => eval_index (x)
+    #ValueLoad   => load        (eval (x.load))
+    #ValueCall   => eval_call   (x)
+    #ValueIndex  => eval_index  (x)
     #ValueAccess => eval_access (x)
-    #ValueRef    => eval_ref (x)
-    #ValueDeref  => eval_deref (x)
-    #ValueMinus  => eval_minus (x)
-    #ValuePlus   => eval_plus (x)
-    #ValueNot    => eval_not (x)
-    #ValueCast   => eval_cast (x)
+    #ValueRef    => eval_ref    (x)
+    #ValueDeref  => eval_deref  (x)
+    #ValueMinus  => eval_minus  (x)
+    #ValuePlus   => eval_plus   (x)
+    #ValueNot    => eval_not    (x)
+    #ValueCast   => eval_cast   (x)
+    #ValueAs     => eval_as     (x)
+    #ValueIs     => eval_is     (x)
     #ValueSelect => eval_select (x)
 
     #ValueUndefined => Eval {
@@ -623,7 +626,7 @@ eval_index = Eval {
     o ("\n; index array")
     // получаем тип массива (даже если получили указатель на массив)
 
-    atype = select a.type.kind {
+    atype = when a.type.kind {
       #TypeArray => a.type       // is just array
       else => a.type.pointer.to  // is pointer to array
     }
@@ -651,7 +654,7 @@ eval_access = Eval {
 
   byptr = s.type.kind == #TypePointer
 
-  record_type = select byptr {
+  record_type = when byptr {
     true => s.type.pointer.to
     else => s.type
   }
@@ -670,7 +673,7 @@ eval_access = Eval {
   // локальная переменная это указатель
   // локальная переменная "указатель на структуру"
   // это `указатель на указатель на структуру`
-  ss = select byptr {
+  ss = when byptr {
     true => load (s)
     else => s
   }
@@ -744,7 +747,7 @@ EvalCast = (v : LLVM_Value, t : *Type) -> LLVM_Value
 
 
 eval_cast_to_ref = EvalCast {
-  return select v.type.kind {
+  return when v.type.kind {
     #TypeNumeric => llvm_cast ("inttoptr", v, t)  // Int -> Ref
     else => llvm_cast ("bitcast", v, t)  // X -> Ref
   }
@@ -759,10 +762,10 @@ eval_cast_to_bool = EvalCast {
 
 
 eval_cast_basic_to_basic = EvalCast {
-  return select true {
+  return when true {
     v.type.num.power > t.num.power => llvm_cast ("trunc", v, t)    // INT -> int
     v.type.num.power < t.num.power => (v : LLVM_Value, t : *Type) -> LLVM_Value {
-      return select t.num.signed {
+      return when t.num.signed {
         true => llvm_cast ("sext", v, t)   // Int -> SIGNED_INT
         else => llvm_cast ("zext", v, t)   // Int -> UNSIGNED_INT
       }
@@ -773,7 +776,7 @@ eval_cast_basic_to_basic = EvalCast {
 }
 
 eval_cast_enum_to_basic = EvalCast {
-  return select true {
+  return when true {
     cfgEnumSize > t.num.power => llvm_cast ("trunc", v, t)  // power(v) > power(t)
     cfgEnumSize < t.num.power => llvm_cast ("zext", v, t)   // power(v) < power(t)
     else => llvm_cast ("bitcast", v, t)                     // power(v) == power(t)
@@ -781,7 +784,7 @@ eval_cast_enum_to_basic = EvalCast {
 }
 
 eval_cast_to_basic = EvalCast {
-  return select v.type.kind {
+  return when v.type.kind {
     #TypeNumeric => eval_cast_basic_to_basic (v, t)
     #TypePointer => llvm_cast ("ptrtoint", v, t)
     #TypeEnum => eval_cast_enum_to_basic (v, t)
@@ -798,18 +801,55 @@ eval_cast_to_basic = EvalCast {
 }
 
 
+eval_as = Eval {
+  v = eval (x.as.value)
+  t = x.as.type
+
+  res_reg = 0
+
+  return llval_create (#LLVM_ValueEmpty, typeBool, res_reg)
+}
+
+
+
+exist loadImmAs : (x : LLVM_Value, t : *Type) -> LLVM_Value
+eval_is = Eval {
+  v = eval (x.is.value)
+
+  // загружаем селектор (пока просто берем значение указателя как инт)
+  // селктор определяет значение какого типа упаковано в юнион
+  selector = llvm_cast ("ptrtoint", v, typeBaseInt)
+
+  variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
+  variant = loadImmAs(variant_reg, typeBaseInt)
+  // сравниваем селектор с номером варианта
+
+  regno = llvm_binary ("icmp eq", selector, variant, typeBaseInt)
+  return llval_create_reg (typeBool, regno)
+
+  /*res_reg = 0
+
+  return llval_create (#LLVM_ValueEmpty, typeBool, res_reg)*/
+}
+
+
+// U0
 eval_cast_to_union = EvalCast {
-  //return select v.type.kind {}
-  return llvm_cast ("bitcast", v, t)
+  //return when v.type.kind {}
+  return when true {
+    type_eq(v.type, typeUnit) => llvm_cast ("inttoptr", v, t)  // Unit => *Unit
+    v.type.kind == #TypeNumeric => llvm_cast ("inttoptr", v, t)  // i1 0 => *Unit
+    else => llvm_cast ("bitcast", v, t)   // *T => *Unit
+  }
 }
 
 eval_cast = Eval {
   v = eval (x.cast.value)
-  t = x.cast.to
+  t = x.cast.type
 
-  return select true {
-    type_is_ref(t)         => eval_cast_to_ref (v, t)    // cast -> Ref
-    t.kind == #TypeBool    => eval_cast_to_bool (v, t)   // cast -> Bool
+  return when true {
+    type_is_ref(t)         => eval_cast_to_ref   (v, t)  // cast -> Ref
+    t.kind == #TypeBool    => eval_cast_to_bool  (v, t)  // cast -> Bool
     t.kind == #TypeNumeric => eval_cast_to_basic (v, t)  // cast -> Basic
     t.kind == #TypeUnion   => eval_cast_to_union (v, t)  // cast -> Union
     type_eq (t, typeUnit)  => llval_create (#LLVM_ValueEmpty, t, 0)  // cast -> ()
@@ -841,7 +881,7 @@ eval_bin = Eval {
   // берем тип левого а не тип x тк у x может быть Bool тип (в случае отношений)!
   signed = l.type.num.signed
 
-  op = select x.kind {
+  op = when x.kind {
     #ValueAdd => "add" to Str
     #ValueSub => "sub" to Str
     #ValueMul => "mul" to Str
@@ -866,8 +906,8 @@ eval_bin = Eval {
     else => "<unknown-binary-operation>" to Str
   }
 
-  reg = llvm_binary (op, l, r, l.type)
-  return llval_create_reg (x.type, reg)
+  regno = llvm_binary (op, l, r, l.type)
+  return llval_create_reg (x.type, regno)
 }
 
 
@@ -882,7 +922,7 @@ loadImmPtr = (x : LLVM_Value) -> LLVM_Value {
 
 
 loadIfImmAs = (x : LLVM_Value, t : *Type) -> LLVM_Value {
-  return select x.kind {
+  return when x.kind {
     #LLVM_ValueImmediate => llvm_cast ("bitcast", x, t)
     else => x
   }
@@ -890,7 +930,7 @@ loadIfImmAs = (x : LLVM_Value, t : *Type) -> LLVM_Value {
 
 
 /*
-В общем суть проблемы вложенных select ов состоит в том,
+В общем суть проблемы вложенных when ов состоит в том,
 что мы говорим что прыгаем в фи внешнего селекта из ок блока но в него вложены блоки
 внутреннего селекта и прыгаем мы на самом деле из другого блока (из
 блока внутреннего селекта)
@@ -1032,7 +1072,7 @@ load = (x : LLVM_Value) -> LLVM_Value {
   // явной операцией inttoptr. Поэтому если нам попался указатель вида #ValueImmediate
   // то его нужно будет загрузить в регистр функцией inttoptr
   if k == #LLVM_ValueImmediate {
-    return select type_is_ref (x.type) {
+    return when type_is_ref (x.type) {
       true => loadImmPtr (x)
       else => x
     }
@@ -1083,7 +1123,7 @@ print_val_imm = (x : LLVM_Value) -> Int {
 
 // печать значения вычисленного выражения
 print_val = (x : LLVM_Value) -> () {
-  select x.kind {
+  when x.kind {
     #LLVM_ValueImmediate   => print_val_imm (x)
     #LLVM_ValueRegister    => fprintf (fout, "%%%d", x.reg)
     #LLVM_ValueAddress     => fprintf (fout, "%%%d", x.reg)
@@ -1117,7 +1157,7 @@ print_stmt = (s : *Stmt) -> () {
     stmtno := stmtno + 1
   }
 
-  select k {
+  when k {
     #StmtBlock    => print_block         (&s.b)
     #StmtExpr     => print_stmt_expr     (&s.e)
     #StmtAssign   => print_st            (s.a[0], s.a[1])
@@ -1252,7 +1292,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
     return
   }
 
-  select t.kind {
+  when t.kind {
     #TypeNumeric => fprintf (fout, "%%%s", t.aka) to ()
     #TypeVar     => (t : *Type) -> () {printType (t.var.of)} (t)
     #TypeEnum    => fprintf (fout, "i%d", cfgEnumSize * 8) to ()

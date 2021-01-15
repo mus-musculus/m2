@@ -19,6 +19,9 @@ exist type_enum_new : (constructors : *List, ti : *TokenInfo) -> *Type
 exist type_func_new : (from, _to : *Type, arghack : Bool, ti : *TokenInfo) -> *Type
 exist type_record_get_field : (t : *Type, field_id : Str) -> *Decl
 exist type_is_ref : (t : *Type) -> Bool
+
+exist type_is_maybe_ptr : (t : *Type) -> Bool
+
 exist typeIsDefinedArray : (t : *Type) -> Bool
 exist typeIsPointerToDefinedArray : (t : *Type) -> Bool
 exist typeIsUndefinedArray : (t : *Type) -> Bool
@@ -72,6 +75,8 @@ exist do_value_call : DoValue
 
 exist do_args : (f : *Value, a : *List, ti : *TokenInfo) -> *List
 
+
+exist do_value_forbidden : DoValue
 exist do_value_deref : DoValue
 exist do_value_index : DoValue
 exist do_value_access : DoValue
@@ -171,6 +176,8 @@ exist bind_type : (index : *Index, id : Str, t : *Type) -> ()
 exist get_type : (id : Str) -> *Type
 exist get_type_global : (id : Str) -> *Type
 
+exist type_present_in_list : (list : *List, t : *Type) -> Bool
+
 
 exist get_suid : (prefix : Str, uid : Nat32) -> Str
 exist get_suid_type_local : () -> Str
@@ -208,6 +215,9 @@ exist eval_deref : Eval
 exist eval_not : Eval
 exist eval_plus : Eval
 exist eval_minus : Eval
+
+exist eval_as : Eval
+exist eval_is : Eval
 
 
 exist operation_with_type : (op : Str, t : *Type) -> Nat

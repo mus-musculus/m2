@@ -19,7 +19,7 @@ prttype2 = (t, selfptr : *Type) -> () {
 
   if t == selfptr {printf("Self"); return}
 
-  select t.kind {
+  when t.kind {
     #TypeNumeric => printf("<TypeNumeric>") to ()  // just used Type#aka
     #TypeVar => type_print_var(&t.var)
     #TypePointer => type_print_pointer(&t.pointer, selfptr)
@@ -90,7 +90,7 @@ type_print_union = (t : *TypeUnion) -> () {
 
 
 value_print_kind = (k : ValueKind) -> () {
-  kstr = select k {
+  kstr = when k {
     #ValueForbidden => "#ValueForbidden" to Str
 
     #ValuePoison => "#ValuePoison" to Str
@@ -150,7 +150,7 @@ value_print_kind = (k : ValueKind) -> () {
 value_print = (v : *Value) -> () {
   printf("value:")
   printf("type: "); prttype(v.type);
-  select v.kind {
+  when v.kind {
     #ValueForbidden => func () -> () {printf("#ValueForbidden")} ()
 
     #ValuePoison => func () -> () {printf("#ValuePoison")} ()

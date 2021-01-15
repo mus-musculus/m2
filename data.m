@@ -248,3 +248,14 @@ type_uid = 0 to Var Nat32
 get_name_type = () -> Str {return get_name("Type", &type_uid)}
 
 
+
+
+type_present_in_list = (list : *List, t : *Type) -> Bool {
+  finder = ListSearchHandler {
+    t_in = data to *Type
+    t = ctx to *Type
+    return type_eq(t_in, t)
+  }
+  return list_search (list, finder, t) != nil
+}
+

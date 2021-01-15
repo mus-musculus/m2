@@ -76,6 +76,13 @@ list_append_node = (list : *List, node : *Node) -> Bool {
   return true
 }
 
+//node_get : (node : *Node, n : Nat) -> *Node
+
+list_get = (list : *List, n : Nat) -> *Unit {
+  node = node_get(list.first, n)
+  if node == nil {return nil}
+  return node.data
+}
 
 // добавляет объект в конец списка
 list_append = (list : *List, obj : *Unit) -> Bool {
@@ -190,12 +197,12 @@ list_while2_or = (list1, list2 : *List, f : ListWhileHandler2, ctx : *Unit) -> (
   n2 = list2.first to Var *Node
   index = 0 to Var Nat
   while n1 != nil or n2 != nil {
-    data1 = select n1 {
+    data1 = when n1 {
       nil => nil to *Unit
       else => n1.data
     }
 
-    data2 = select n2 {
+    data2 = when n2 {
       nil => nil to *Unit
       else => n2.data
     }
