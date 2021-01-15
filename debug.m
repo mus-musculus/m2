@@ -7,9 +7,14 @@ exist type_print_union : (t : *TypeUnion) -> ()
 
 prttype2 = (t, selfptr : *Type) -> () {
   if t == nil {printf("(nil)"); return}
+
+
   if t.aka != nil {
-    printf("%s", t.aka)
-    return
+    // печатаем не aka а само выражение юниона
+    if t.kind != #TypeUnion {
+      printf("%s", t.aka)
+      return
+    }
   }
 
   if t == selfptr {printf("Self"); return}
@@ -43,7 +48,7 @@ type_print_record = (t : *Type) -> () {
     field = data to *Decl
     selfptr = ctx to *Type
     if index > 0 {printf(", ")}
-    printf("%s : ", field.id); prttype2(field.type, selfptr)
+    printf("%s : ", field.id.str); prttype2(field.type, selfptr)
   }
   list_foreach(t.record.decls, print_fieldx, t)
   printf(")")
@@ -65,14 +70,20 @@ type_print_array_u = (t : *Type, selfptr : *Type) -> ()
 {printf("[]"); prttype2(t.array_u.of, selfptr)}
 
 type_print_func = (t : *TypeFunc) -> ()
-{prttype(t.from); printf(" -> "); prttype(t.to)}
+{
+  prttype(t.from)
+  printf(" -> ")
+  prttype(t.to)
+}
 
 
 type_print_union = (t : *TypeUnion) -> () {
   print_variant = ListForeachHandler {
     t = data to *Type
     prttype(t)
-    printf(" or ")
+    if list_node.next != nil {
+      printf(" or ")
+    }
   }
   list_foreach(&t.types, print_variant, nil)
 }

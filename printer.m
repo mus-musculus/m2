@@ -354,6 +354,10 @@ funcdef = (id : Str, t : *Type, b : *Block) -> () {
   params = t.func.from.record.decls
   firstlab = params.volume + (1 /*entry label*/)
 
+  if strcmp(id, "xx") == 0 {
+    printf("xx : "); prttype(t); printf("\n")
+  }
+
   select_no := 0
 
   lab_reset (firstlab to Nat32)

@@ -138,7 +138,7 @@ ast_id_new = (str : Str, ti : *TokenInfo) -> *AstId {
 parse_id = () -> *AstId {
   tok = ctok()
   if tok.kind != #TokenId {
-    error("expected id", &tok.ti)
+    error("expected id1", &tok.ti)
     return nil
   }
 
@@ -334,66 +334,56 @@ exist parse_type_enum : AstTypeParser
 exist parse_type_array : AstTypeParser
 exist parse_type_rec_func : AstTypeParser
 
-parse_type = AstTypeParser {
+
+parse_type_rec = AstTypeParser {
   tk = ctok()
-  t = ast_type_new(#AstTypeUnknown, &tk.ti) to Var *AstType
+  t = ast_type_new(#AstTypeRecord, &tk.ti)
+  decls = 0 to Var List
+  list_init(&decls)
 
-  if tk.kind == #TokenId {
-    if match("Var") {
-      vt = ast_type_new(#AstTypeVar, &tk.ti)
-      vt.var.of := parse_type()
-      return vt
+  while true {
+    skip_nl()
+    if match(")") {break}
+
+    ti = &ctok().ti
+
+    fd = parse_decl(false)
+
+    if fd == nil {
+      error("dofield error", ti)
     }
 
-    t := ast_type_new(#AstTypeNamed, &tk.ti)
-    t.name := parse_name()
-  } else if tk.kind == #TokenSym {
-    t := select tk.text[0] {
-      "*"[0] => parse_type_pointer()
-      "{"[0] => parse_type_enum()
-      "["[0] => parse_type_array()
-      "("[0] => parse_type_rec_func()
-      else => nil to *AstType
-    }
+    match(",")
+    skip_nl()
+    list_append(&decls, fd)
   }
 
-  // or приоритетнее ->
-  if look("or") {
-    t_union = ast_type_new(#AstTypeUnion, &tk.ti)
-    list_init (&t_union.union.types)
-    list_append(&t_union.union.types, t)
-    while match ("or") {
-      ot = parse_type()
-      list_append(&t_union.union.types, ot)
-    }
-    return t_union
-  }
-
-  tk_func = ctok()
-  if match("->") {
-    from = t
-    _to = parse_type()
-    ft = ast_type_new(#AstTypeFunc, &tk_func.ti)
-    ft.func.from := from
-    ft.func.to := _to
-    t := ft
-  }
+  t.record.decls := decls
 
   return t
 }
 
 
 
-/*parse_type0 = AstTypeParser {
+exist parse_type  : AstTypeParser
+exist parse_type1 : AstTypeParser
+exist parse_type2 : AstTypeParser
+exist parse_type3 : AstTypeParser
+exist parse_type4 : AstTypeParser
+
+parse_type = AstTypeParser {
   t = parse_type1()
+  tk = ctok()
+
   if match("->") {
     from = t
-    _to = parse_type0()
-    ft = ast_type_new(#AstTypeFunc, &tk_func.ti)
+    _to = parse_type()
+    ft = ast_type_new(#AstTypeFunc, &tk.ti)
     ft.func.from := from
     ft.func.to := _to
     return ft
   }
+
   return t
 }
 
@@ -401,10 +391,94 @@ parse_type = AstTypeParser {
 parse_type1 = AstTypeParser {
   t = parse_type2()
 
-  while match("or") {
-    t = parse_type0()
+  tk = ctok()
+  if match("or") {
+    printf("OR!\n")
+    tx = ast_type_new(#AstTypeUnion, &tk.ti)
+    list_init(&tx.union.types)
+
+    list_append(&tx.union.types, t)
+
+    t = parse_type3()
+    list_append(&tx.union.types, t)
+
+    while match("or") {
+      t = parse_type3()
+      list_append(&tx.union.types, t)
+    }
+
+    return tx
   }
-}*/
+
+  return t
+}
+
+parse_type2 = AstTypeParser {
+
+  tk = ctok()
+  if match("*") {
+    t = ast_type_new(#AstTypePointer, &tk.ti)
+    t.pointer.to := parse_type2()
+    return t
+  } else if match("[") {
+
+    if match("]") {
+      t = ast_type_new(#AstTypeArrayU, &tk.ti)
+      of = parse_type2()
+      t.array_u.of := of
+      return t
+    }
+
+    t = ast_type_new(#AstTypeArray, &tk.ti)
+    size = parse_value()
+    need("]")
+    of = parse_type2()
+    t.array.size := size
+    t.array.of := of
+    return t
+  }
+
+  return parse_type3()
+}
+
+
+exist is_it_field : () -> Bool
+
+parse_type3 = AstTypeParser {
+  tk = ctok()
+  if match("(") {
+    if look(")") or is_it_field() {
+      return parse_type_rec()
+    }
+
+    t = parse_type()
+    need(")")
+    return t
+  }
+
+  return parse_type4()
+}
+
+
+parse_type4 = AstTypeParser {
+  if match("{") {
+    return parse_type_enum()
+  }
+
+  tk = ctok()
+
+  if match("Var") {
+    t = ast_type_new(#AstTypeVar, &tk.ti)
+    t.var.of := parse_type()
+    return t
+  }
+
+  t = ast_type_new(#AstTypeNamed, &tk.ti)
+  t.name := parse_name()
+  return t
+}
+
+//*/
 
 
 
@@ -421,7 +495,7 @@ parse_type_pointer = AstTypeParser {
 
 parse_type_enum = AstTypeParser {
   tk = ctok()
-  need("{")
+  //need("{")
   t = ast_type_new(#AstTypeEnum, &tk.ti)
 
   skip_nl()
@@ -464,9 +538,12 @@ parse_type_array = AstTypeParser {
 }
 
 
+
+
 parse_type_rec_func = AstTypeParser {
   tk = ctok()
   need("(")
+
   t = ast_type_new(#AstTypeRecord, &tk.ti)
 
   decls = 0 to Var List
@@ -1273,6 +1350,28 @@ tn2tok = (token_node : *Node) -> *Token
     {return token_node.data to *Token}
 
 
+
+is_it_field = () -> Bool {
+  start = gett()  // сохраняем текущий токен
+
+  skip_nl()
+
+  tok = ctok()
+
+  if tok.kind != #TokenId {goto no}
+  skip()
+  if match(",") {goto yes}
+  if match(":") {goto yes}
+
+no:
+  sett(start)
+  return false
+yes:
+  sett(start)
+  return true
+}
+
+
 is_it_type_rec = () -> Bool {
   skip()  // (
 
@@ -1280,14 +1379,7 @@ is_it_type_rec = () -> Bool {
 
   if match(")") {return true}
 
-  tok = ctok()
-
-  if tok.kind != #TokenId {return false}
-  skip()
-  if match(",") {return true}
-  if match(":") {return true}
-
-  return false
+  return is_it_field ()
 }
 
 // определяет если спереди синтаксическое выражение типа

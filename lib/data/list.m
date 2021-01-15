@@ -23,7 +23,7 @@ List = (first, last : *Node, volume : Nat64, extra : Nat)
  */
 
 // list_foreach handler
-ListForeachHandler = (data, ctx : *Unit, index : Nat) -> ()
+ListForeachHandler = (data, ctx : *Unit, index : Nat, list_node : *Node) -> ()
 
 // list_foreach2 handler
 ListForeachHandler2 = (data1, data2, ctx : *Unit, index : Nat) -> ()
@@ -166,7 +166,7 @@ list_foreach = (list : *List, f : ListForeachHandler, ctx : *Unit) -> () {
   index = 0 to Var Nat
   n = list.first to Var *Node
   while n != nil {
-    f(n.data, ctx, index)
+    f(n.data, ctx, index, n)
     n := n.next
     index := index + 1
   }

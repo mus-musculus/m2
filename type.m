@@ -317,6 +317,7 @@ do_type_enum = DoType {
 union_id = 0 to Var Nat
 
 do_type_union = DoType {
+  printf("ORR!\n")
   xuid = str_new(10)
   sprintf(&xuid[0], "%d", union_id)
   aka = cat("union.", xuid)
