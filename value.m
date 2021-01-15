@@ -992,6 +992,7 @@ implicit_cast_possible = (a, b : *Type) -> Bool {
       return type_eq(xt, tt)
     }
     t = list_search (&b.union.types, search_type, a)
+    printf("TU %d\n", t != nil)
     return t != nil
   }
 

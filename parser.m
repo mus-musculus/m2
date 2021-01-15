@@ -329,41 +329,10 @@ ast_type_new = (kind : AstTypeKind, ti : *TokenInfo) -> *AstType {
 
 AstTypeParser = () -> *AstType
 
-exist parse_type_pointer : AstTypeParser
-exist parse_type_enum : AstTypeParser
+exist parse_type_ptr   : AstTypeParser
+exist parse_type_set   : AstTypeParser
+exist parse_type_rec   : AstTypeParser
 exist parse_type_array : AstTypeParser
-exist parse_type_rec_func : AstTypeParser
-
-
-parse_type_rec = AstTypeParser {
-  tk = ctok()
-  t = ast_type_new(#AstTypeRecord, &tk.ti)
-  decls = 0 to Var List
-  list_init(&decls)
-
-  while true {
-    skip_nl()
-    if match(")") {break}
-
-    ti = &ctok().ti
-
-    fd = parse_decl(false)
-
-    if fd == nil {
-      error("dofield error", ti)
-    }
-
-    match(",")
-    skip_nl()
-    list_append(&decls, fd)
-  }
-
-  t.record.decls := decls
-
-  return t
-}
-
-
 
 exist parse_type  : AstTypeParser
 exist parse_type1 : AstTypeParser
@@ -399,11 +368,11 @@ parse_type1 = AstTypeParser {
 
     list_append(&tx.union.types, t)
 
-    t = parse_type3()
+    t = parse_type2()
     list_append(&tx.union.types, t)
 
     while match("or") {
-      t = parse_type3()
+      t = parse_type2()
       list_append(&tx.union.types, t)
     }
 
@@ -462,7 +431,7 @@ parse_type3 = AstTypeParser {
 
 parse_type4 = AstTypeParser {
   if match("{") {
-    return parse_type_enum()
+    return parse_type_set()
   }
 
   tk = ctok()
@@ -482,18 +451,7 @@ parse_type4 = AstTypeParser {
 
 
 
-
-
-parse_type_pointer = AstTypeParser {
-  tk = ctok()
-  need("*")
-  t = ast_type_new(#AstTypePointer, &tk.ti)
-  t.pointer.to := parse_type()
-  return t
-}
-
-
-parse_type_enum = AstTypeParser {
+parse_type_set = AstTypeParser {
   tk = ctok()
   //need("{")
   t = ast_type_new(#AstTypeEnum, &tk.ti)
@@ -518,34 +476,9 @@ parse_type_enum = AstTypeParser {
 }
 
 
-parse_type_array = AstTypeParser {
+parse_type_rec = AstTypeParser {
   tk = ctok()
-  need("[")
-  if match("]") {
-    t = ast_type_new(#AstTypeArrayU, &tk.ti)
-    of = parse_type()
-    t.array_u.of := of
-    return t
-  }
-
-  t = ast_type_new(#AstTypeArray, &tk.ti)
-  size = parse_value()
-  need("]")
-  of = parse_type()
-  t.array.size := size
-  t.array.of := of
-  return t
-}
-
-
-
-
-parse_type_rec_func = AstTypeParser {
-  tk = ctok()
-  need("(")
-
   t = ast_type_new(#AstTypeRecord, &tk.ti)
-
   decls = 0 to Var List
   list_init(&decls)
 
@@ -570,6 +503,36 @@ parse_type_rec_func = AstTypeParser {
 
   return t
 }
+
+
+parse_type_ptr = AstTypeParser {
+  tk = ctok()
+  need("*")
+  t = ast_type_new(#AstTypePointer, &tk.ti)
+  t.pointer.to := parse_type()
+  return t
+}
+
+
+parse_type_array = AstTypeParser {
+  tk = ctok()
+  need("[")
+  if match("]") {
+    t = ast_type_new(#AstTypeArrayU, &tk.ti)
+    of = parse_type()
+    t.array_u.of := of
+    return t
+  }
+
+  t = ast_type_new(#AstTypeArray, &tk.ti)
+  size = parse_value()
+  need("]")
+  of = parse_type()
+  t.array.size := size
+  t.array.of := of
+  return t
+}
+
 
 
 // syntax: <id> [,<id>] ':' <type>
