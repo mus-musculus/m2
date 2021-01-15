@@ -12,6 +12,8 @@ import "data/map"
 import "types"
 import "proto"
 
+exist loadImmAs : (x : LLVM_Value, t : *Type) -> LLVM_Value
+
 
 /*****************************************************************************/
 /*                               Assembly                                    */
@@ -811,8 +813,6 @@ eval_as = Eval {
 }
 
 
-
-exist loadImmAs : (x : LLVM_Value, t : *Type) -> LLVM_Value
 eval_is = Eval {
   v = eval (x.is.value)
 
@@ -820,16 +820,13 @@ eval_is = Eval {
   // селктор определяет значение какого типа упаковано в юнион
   selector = llvm_cast ("ptrtoint", v, typeBaseInt)
 
+  // загружаем вариант
   variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
-  // сравниваем селектор с номером варианта
 
+  // возвращаем результат сравнения селектора с вариантом
   regno = llvm_binary ("icmp eq", selector, variant, typeBaseInt)
   return llval_create_reg (typeBool, regno)
-
-  /*res_reg = 0
-
-  return llval_create (#LLVM_ValueEmpty, typeBool, res_reg)*/
 }
 
 
