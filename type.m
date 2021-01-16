@@ -363,7 +363,8 @@ do_type_union = DoType {
   }
   list_foreach(&x.union.types, do_variant, &ctx)
 
-
+  t.size := ctx.max_size
+  t.align := ctx.max_size
   //u = type_new (#TypeRecord, ctx.max_size + cfgEnumSize, x.ti)
   //u.record.decls := list_new ()
   //u = type_new (#TypePointer, cfgPointerSize, x.ti)

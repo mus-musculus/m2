@@ -13173,12 +13173,22 @@ define %Type* @func406 (%AstType*) {
   %25 = bitcast %func406.type5* %24 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %23, %ListForeachHandler @func407, %Unit* %25)
 ;stmt10:
-  %26 = load %Type*, %Type** @typeFreePtr
+  %26 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 2
+  %27 = getelementptr inbounds %func406.type5, %func406.type5* %16, i1 0, i32 1
+  %28 = load %Nat32, %Nat32* %27
+  store %Nat32 %28, %Nat32* %26, align 4
 ;stmt11:
-  %27 = getelementptr inbounds %List, %List* @unions, i1 0
-  %28 = bitcast %Type* %26 to %Unit*
-  %29 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %27, %Str %9, %Unit* %28)
+  %29 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 3
+  %30 = getelementptr inbounds %func406.type5, %func406.type5* %16, i1 0, i32 1
+  %31 = load %Nat32, %Nat32* %30
+  store %Nat32 %31, %Nat32* %29, align 4
 ;stmt12:
+  %32 = load %Type*, %Type** @typeFreePtr
+;stmt13:
+  %33 = getelementptr inbounds %List, %List* @unions, i1 0
+  %34 = bitcast %Type* %32 to %Unit*
+  %35 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %33, %Str %9, %Unit* %34)
+;stmt14:
   ret %Type* %14
 }
 
