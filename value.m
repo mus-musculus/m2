@@ -2,6 +2,15 @@
 /*                                Value                                      */
 /*****************************************************************************/
 
+smalloc = (size : Nat) -> *Unit or Unit {
+  p = malloc(size)
+  if p == nil {return unit}
+  return p
+  /*return when p {
+    nil => unit
+    else => p
+  }*/
+}
 
 value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
@@ -499,6 +508,11 @@ do_value_cast_uarr = DoValueCast {
   return cast (v, t, ti)
 }
 
+
+do_value_cast_union = DoValueCast {
+  return cast (v, t, ti)
+}
+
 do_value_cast = DoValue {
   v = do_value (x.cast.value)
   t = do_type (x.cast.type)
@@ -519,16 +533,17 @@ do_value_cast = DoValue {
     // выполняем приведение
     return when v.type.kind {
       #TypeUndefined => nil to *Value
-      #TypeVar       => do_value_cast_var  (v, t, ti)
-      #TypeBool      => do_value_cast_bool (v, t, ti)
+      #TypeVar       => do_value_cast_var   (v, t, ti)
+      #TypeBool      => do_value_cast_bool  (v, t, ti)
       #TypeGenericReference => do_value_cast_ref (v, t, ti)
-      #TypeNumeric   => do_value_cast_num  (v, t, ti)
-      #TypeFunc      => do_value_cast_func (v, t, ti)
-      #TypeEnum      => do_value_cast_set  (v, t, ti)
-      #TypeRecord    => do_value_cast_rec  (v, t, ti)
-      #TypePointer   => do_value_cast_ptr  (v, t, ti)
-      #TypeArray     => do_value_cast_arr  (v, t, ti)
-      #TypeArrayU    => do_value_cast_uarr (v, t, ti)
+      #TypeNumeric   => do_value_cast_num   (v, t, ti)
+      #TypeFunc      => do_value_cast_func  (v, t, ti)
+      #TypeEnum      => do_value_cast_set   (v, t, ti)
+      #TypeRecord    => do_value_cast_rec   (v, t, ti)
+      #TypePointer   => do_value_cast_ptr   (v, t, ti)
+      #TypeArray     => do_value_cast_arr   (v, t, ti)
+      #TypeArrayU    => do_value_cast_uarr  (v, t, ti)
+      #TypeUnion     => do_value_cast_union (v, t, ti)
       else => DoValueCast {
         fatal ("do_value_cast unk")
         return nil to *Value
@@ -604,7 +619,7 @@ do_value_is = DoValue {
   }
   list_foreach(&v.type.union.types, find_variant, &var_ctx)
 
-  printf("variant #%d\n", var_ctx.variant)
+  //printf("variant #%d\n", var_ctx.variant)
 
   //error ("do_value_is", x.ti)
   vx = value_new(#ValueIs, typeBool, x.ti)
@@ -619,11 +634,20 @@ do_value_as = DoValue {
   v = do_value (x.as.value)
   t = do_type (x.as.type)
 
-  if not type_is_maybe_ptr (t) {
-    error("expected maybe type", x.ti)
+  if not type_is_maybe_ptr (v.type) {
+    error("expected maybe value", v.ti)
+    goto fail
   }
 
-  error ("do_value_as", x.ti)
+  // чекаем если приводим к типу который входит в объединение
+  if not type_present_in_list (&v.type.union.types, t) {
+    error ("type error", v.ti)
+    goto fail
+  }
+
+  return cast (v, t, x.ti)
+
+fail:
   return value_new_poison (x.ti)
 }
 

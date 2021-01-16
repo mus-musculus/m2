@@ -791,6 +791,7 @@ eval_cast_to_basic = EvalCast {
     #TypePointer => llvm_cast ("ptrtoint", v, t)
     #TypeEnum => eval_cast_enum_to_basic (v, t)
     #TypeBool => llvm_cast ("zext", v, t)
+    #TypeUnion => llvm_cast ("bitcast", v, t)
 
     else => EvalCast {
       k = v.type.kind

@@ -332,7 +332,7 @@ do_type_union = DoType {
   xuid = str_new(10)
   sprintf(&xuid[0], "%d", union_id)
   aka = cat("union.", xuid)
-  union_id = union_id + 1
+  union_id := union_id + 1
 
   t = type_new (#TypeUnion, 0, x.ti)
   t.aka := aka

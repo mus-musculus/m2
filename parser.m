@@ -362,7 +362,6 @@ parse_type1 = AstTypeParser {
 
   tk = ctok()
   if match("or") {
-    printf("OR!\n")
     tx = ast_type_new(#AstTypeUnion, &tk.ti)
     list_init(&tx.union.types)
 
