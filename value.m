@@ -12,6 +12,16 @@ smalloc = (size : Nat) -> *Unit or Unit {
   }*/
 }
 
+// я не умею приводить указатель к мейби типу поэтому пишу пока через функцию
+vn = () -> *Value or Unit  {
+  x = malloc (sizeof Value) to *Value
+  if x == nil {
+    assert (false, "value_new : v != nil")
+    return unit
+  }
+  return x
+}
+
 value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")

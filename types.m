@@ -479,7 +479,7 @@ Block = (
 Expr = (v : *Value, reg : Nat32)
 
 
-If = (cond : *Value, then, else : *Stmt)
+If = (cond : *Value, then : *Stmt, else : *Stmt)
 
 While = (cond : *Value, stmt : *Stmt)
 
