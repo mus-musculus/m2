@@ -821,11 +821,19 @@ eval_is = Eval {
   selector = llvm_cast ("ptrtoint", v, typeBaseInt)
 
   // загружаем вариант
-  variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
+  //variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
+  variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, 0) // Maybe
   variant = loadImmAs(variant_reg, typeBaseInt)
 
+  // Для `Maybe Pointer`
+  regno = when x.is.variant {
+    0 => llvm_binary ("icmp ne", selector, variant, typeBaseInt)
+    1 => llvm_binary ("icmp eq", selector, variant, typeBaseInt)
+    else => 0
+  }
+
   // возвращаем результат сравнения селектора с вариантом
-  regno = llvm_binary ("icmp eq", selector, variant, typeBaseInt)
+
   return llval_create_reg (typeBool, regno)
 }
 
