@@ -479,7 +479,7 @@ Block = (
 Expr = (v : *Value, reg : Nat32)
 
 
-If = (cond : *Value, then : *Stmt, else : *Stmt)
+If = (cond : *Value, then : *Stmt, else : *Stmt or Unit)
 
 While = (cond : *Value, stmt : *Stmt)
 
@@ -637,7 +637,8 @@ DoValue = (x : *AstValue) -> *Value
 DoValuex = (x : *AstValue, load : Bool) -> *Value
 
 DoType = (x : *AstType) -> *Type
-DoStmt = (x : *AstStmt) -> *Stmt
+
+DoStmt = (x : *AstStmt) -> *Stmt or Unit
 
 
 Eval = (x : *Value) -> LLVM_Value

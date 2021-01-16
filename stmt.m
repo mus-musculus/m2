@@ -36,7 +36,7 @@ do_stmt = DoStmt {
     #AstStmtContinue => do_stmt_continue (x)
     #AstStmtGoto     => do_stmt_goto     (x)
     #AstStmtLabel    => do_stmt_label    (x)
-    else => nil
+    else => unit
   }
 }
 
@@ -49,7 +49,7 @@ lval - означающий что не нужно загружать значе
 do_stmt_assign = DoStmt {
   rval0 = do_value (x.assign.r)
 
-  if rval0.kind == #ValuePoison {return nil}
+  if rval0.kind == #ValuePoison {return unit}
 
   lx = x.assign.l
   lval = when lx.kind {
@@ -62,12 +62,12 @@ do_stmt_assign = DoStmt {
 
   if lval == nil {
     error ("expected lvalue", lx.ti)
-    return nil
+    return unit
   }
 
   if value_is_readonly (lval) {
     error ("invalid lval", x.ti)
-    return nil
+    return unit
   }
 
   if lx.kind != #AstValueAccess and
@@ -87,7 +87,7 @@ do_stmt_assign = DoStmt {
   rval = implicit_cast (rval0, ltype)
 
   if not type_check (ltype, rval.type, x.ti) {
-    return nil
+    return unit
   }
 
   return stmt_assign_new (lval, rval, x.ti)
@@ -119,7 +119,7 @@ do_stmt_valdef = DoStmt {
   }
 
   bind_value_in_block (fctx.cblock, id.str, v)
-  return nil
+  return unit
 }
 
 
@@ -149,9 +149,9 @@ do_stmt_block = DoStmt {
     ast_stmt = data to *AstStmt
     stmt = do_stmt (ast_stmt)
     // just skip broken statements
-    if stmt == nil {return}
+    if stmt is Unit {return}
     stmts = ctx to *List
-    list_append (stmts, stmt)
+    list_append (stmts, stmt as *Stmt)
   }
   list_foreach (&x.block.stmts, hstmt, &b.stmts)
 
@@ -164,7 +164,7 @@ do_stmt_block = DoStmt {
 do_stmt_expr = DoStmt {
   v = do_value (x.expr.expr)
 
-  if v.kind == #ValuePoison {return nil}
+  if v.kind == #ValuePoison {return unit}
 
   if not type_eq (v.type, typeUnit) {
     //warning("ignoring value", x.ti)
@@ -180,22 +180,31 @@ do_stmt_if = DoStmt {
   cond = do_value (x.if.cond)
   then = do_stmt (x.if.then)
 
-  _else = when x.if._else {
-    nil => nil to *Stmt
-    else => do_stmt (x.if._else)
+  _else = unit to Var *Stmt or Unit
+
+  if x.if._else != nil {
+    els = do_stmt (x.if._else)
+    if not (els is Unit) {
+      _else := els as *Stmt
+    }
   }
 
-  if cond.kind == #ValuePoison {return nil}
+//  _else = when x.if._else {
+//    nil => nil to *Stmt
+//    else => do_stmt (x.if._else)
+//  }
+
+  if cond.kind == #ValuePoison {return unit}
 
   if not type_check (typeBool, cond.type, cond.ti) {
-    return nil
+    return unit
   }
 
-  if then == nil {return nil}
+  if then is Unit {return unit}
 
   s = stmt_new (#StmtIf, x.ti)
   s.i.cond := cond
-  s.i.then := then
+  s.i.then := then as *Stmt
   s.i.else := _else
   return s
 }
@@ -208,17 +217,17 @@ do_stmt_while = DoStmt {
   block = do_stmt (x.while.block)
   fctx.loop := fctx.loop - 1
 
-  if cond.kind == #ValuePoison {return nil}
+  if cond.kind == #ValuePoison {return unit}
 
   if not type_check (typeBool, cond.type, cond.ti) {
-    return nil
+    return unit
   }
 
-  if block == nil {return nil}
+  if block is Unit {return unit}
 
   s = stmt_new (#StmtWhile, x.ti)
   s.w.cond := cond
-  s.w.stmt := block
+  s.w.stmt := block as *Stmt
   return s
 }
 
@@ -262,7 +271,7 @@ do_stmt_vardef = DoStmt {
   }
   list_foreach(&x.vardef.ids, add_var, type)
   */
-  return nil
+  return unit
 }
 
 
@@ -281,7 +290,7 @@ do_stmt_typedef = DoStmt {
   // creating data for printer
   asmTypedefAdd (&asm0, uid, _type)
 
-  return nil
+  return unit
 }
 
 

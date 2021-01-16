@@ -801,9 +801,10 @@ do_value_func = DoValue {
   fctx.cblock := param_block
   fctx.cfunc := fv
 
-  bx = do_stmt (x.func.block_stmt)
+  bx0 = do_stmt (x.func.block_stmt)
 
-  if bx == nil {goto fail}
+  if bx0 is Unit {goto fail}
+  bx = bx0 as *Stmt
 
   fv.def := asmFuncAdd (&asm0, uid, t, &bx.b)
 

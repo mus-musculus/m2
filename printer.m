@@ -1219,7 +1219,7 @@ print_stmt_if = (x : *If) -> () {
   print_stmt (x.then)
   fprintf (fout, "\n  br label %%endif_%d", if_id)
   fprintf (fout, "\nelse_%d:", if_id)
-  if x.else != nil {print_stmt (x.else)}
+  if not (x.else is Unit) {print_stmt (x.else as *Stmt)}
   fprintf (fout, "\n  br label %%endif_%d", if_id)
   fprintf (fout, "\nendif_%d:", if_id)
 }
