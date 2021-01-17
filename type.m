@@ -365,11 +365,47 @@ do_type_union = DoType {
 
   t.size := ctx.max_size
   t.align := ctx.max_size
-  //u = type_new (#TypeRecord, ctx.max_size + cfgEnumSize, x.ti)
-  //u.record.decls := list_new ()
-  //u = type_new (#TypePointer, cfgPointerSize, x.ti)
-  u = typeFreePtr  // пока юнионы только для ?указателей тест
-  map_append (&unions, aka, u)
+
+  list_append (&unions, t)
+
+  if type_is_maybe_ptr (t) {
+    // если это мейби указатель то нам подойдет простой указатель
+    u = typeFreePtr  // пока юнионы только для ?указателей тест
+    t.union.impl := u
+
+  } else {
+    printf("Not maybe\n")
+    // это не мейби указатель следовательно нам нужна структура
+    u = type_new (#TypeRecord, ctx.max_size + cfgEnumSize, x.ti)
+    t.union.impl := u
+
+    decls_list = list_new ()
+
+    // variant field
+    variant_field = malloc (sizeof Decl) to *Decl
+    assert (variant_field != nil, "field_new")
+    variant_field.id := nil to *AstId
+    variant_field.type := get_type ("Nat16")
+    variant_field.offset := 0
+    variant_field.align := t.align
+    variant_field.ti := nil
+    list_append(decls_list, variant_field)
+
+    // data field
+    type_char = get_type ("Nat8")
+    data_type = type_array_new (type_char, t.size, nil)
+
+    data_field = malloc (sizeof Decl) to *Decl
+    assert (data_field != nil, "field_new")
+    data_field.id := nil to *AstId
+    data_field.type := data_type
+    data_field.offset := 1
+    data_field.align := t.align
+    data_field.ti := nil
+    list_append(decls_list, data_field)
+
+    u.record.decls := decls_list
+  }
   return t
 }
 

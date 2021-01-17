@@ -250,7 +250,8 @@ TypeEnum = (
   uid  : Nat32  // unical id
 )
 
-TypeUnion = (types : List)
+
+TypeUnion = (types : List, impl : *Type)
 
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 

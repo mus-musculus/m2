@@ -186,12 +186,11 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
 
   ol ("\n; aliases:")
   // печатаем алиасы типов (пока только юнионы)
-  prt_alias = MapForeachHandler {
-    tid = k to Str
-    t = v to *Type
-    fprintf (fout, "\n%%%s = type ", tid); printType(t); o("\n")
+  prt_alias = ListForeachHandler {
+    t = data to *Type
+    fprintf (fout, "\n%%%s = type ", t.aka); printType(t.union.impl); o("\n")
   }
-  map_foreach (&unions, prt_alias, nil)
+  list_foreach (&unions, prt_alias, nil)
 
   nl ()
 
