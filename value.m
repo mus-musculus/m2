@@ -604,9 +604,9 @@ do_value_is = DoValue {
   t = do_type (x.is.type)
 
   // чекаем если значение имеет unit тип
-  if not type_is_maybe_ptr (v.type) {
+  /*if not type_is_maybe_ptr (v.type) {
     error ("expected maybe type", v.ti)
-  }
+  }*/
 
   // чекаем если проверяем на соответствие типу который входит в объединение
   if not type_present_in_list (&v.type.union.types, t) {
@@ -644,10 +644,10 @@ do_value_as = DoValue {
   v = do_value (x.as.value)
   t = do_type (x.as.type)
 
-  if not type_is_maybe_ptr (v.type) {
+  /*if not type_is_maybe_ptr (v.type) {
     error("expected maybe value", v.ti)
     goto fail
-  }
+  }*/
 
   // чекаем если приводим к типу который входит в объединение
   if not type_present_in_list (&v.type.union.types, t) {
@@ -655,7 +655,17 @@ do_value_as = DoValue {
     goto fail
   }
 
-  return cast (v, t, x.ti)
+  // если юнион реализован как указатель
+  if v.type.union.impl.kind == #TypePointer {
+    return cast (v, t, x.ti)
+  }
+
+  // это полноценный юнион
+  // сперва извлекаем
+  vx = value_new (#ValueAs, t, x.ti)
+  vx.as.value := v
+  vx.as.type := t
+  return vx
 
 fail:
   return value_new_poison (x.ti)
