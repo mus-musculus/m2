@@ -626,6 +626,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func325_str1 = private unnamed_addr constant [9 x i8] c"ptrtoint\00", align 1
 @func325_str2 = private unnamed_addr constant [8 x i8] c"icmp ne\00", align 1
 @func325_str3 = private unnamed_addr constant [8 x i8] c"icmp eq\00", align 1
+@func325_str4 = private unnamed_addr constant [8 x i8] c"icmp eq\00", align 1
 @func326_str1 = private unnamed_addr constant [9 x i8] c"inttoptr\00", align 1
 @func326_str2 = private unnamed_addr constant [9 x i8] c"inttoptr\00", align 1
 @func326_str3 = private unnamed_addr constant [8 x i8] c"bitcast\00", align 1
@@ -10637,35 +10638,57 @@ define %LLVM_Value @func325 (%Value*) {
   %11 = load %Type*, %Type** @typeBaseInt
   %12 = call %LLVM_Value (%LLVM_Value, %Type*) @func338 (%LLVM_Value %10, %Type* %11)
 ;stmt4:
-  %13 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 14
-  %14 = getelementptr inbounds %ValueIs, %ValueIs* %13, i1 0, i32 1
-  %15 = load %Nat32, %Nat32* %14
+  %13 = extractvalue %LLVM_Value %5, 1
+  %14 = getelementptr inbounds %Type, %Type* %13, i1 0, i32 12
+  %15 = getelementptr inbounds %TypeUnion, %TypeUnion* %14, i1 0, i32 1
+  %16 = load %Type*, %Type** %15
+  %17 = getelementptr inbounds %Type, %Type* %16, i1 0, i32 0
+  %18 = load %TypeKind, %TypeKind* %17
+  %19 = icmp eq %TypeKind %18, 10
+  br i1 %19, label %then_0, label %else_0
+then_0:
+;stmt5:
+  %20 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 14
+  %21 = getelementptr inbounds %ValueIs, %ValueIs* %20, i1 0, i32 1
+  %22 = load %Nat32, %Nat32* %21
   br label %select_1_0
 select_1_0:
-  %16 = icmp eq %Nat32 %15, 0
-  br i1 %16, label %select_1_0_ok, label %select_1_1
+  %23 = icmp eq %Nat32 %22, 0
+  br i1 %23, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %17 = bitcast [8 x %Nat8]* @func325_str2 to %Str
-  %18 = load %Type*, %Type** @typeBaseInt
-  %19 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func329 (%Str %17, %LLVM_Value %8, %LLVM_Value %12, %Type* %18)
+  %24 = bitcast [8 x %Nat8]* @func325_str2 to %Str
+  %25 = load %Type*, %Type** @typeBaseInt
+  %26 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func329 (%Str %24, %LLVM_Value %8, %LLVM_Value %12, %Type* %25)
   br label %select_1_end
 select_1_1:
-  %20 = icmp eq %Nat32 %15, 1
-  br i1 %20, label %select_1_1_ok, label %select_1_2
+  %27 = icmp eq %Nat32 %22, 1
+  br i1 %27, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
-  %21 = bitcast [8 x %Nat8]* @func325_str3 to %Str
-  %22 = load %Type*, %Type** @typeBaseInt
-  %23 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func329 (%Str %21, %LLVM_Value %8, %LLVM_Value %12, %Type* %22)
+  %28 = bitcast [8 x %Nat8]* @func325_str3 to %Str
+  %29 = load %Type*, %Type** @typeBaseInt
+  %30 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func329 (%Str %28, %LLVM_Value %8, %LLVM_Value %12, %Type* %29)
   br label %select_1_end
 select_1_2:
-  %24 = bitcast %Nat32 0 to %Nat32
+  %31 = bitcast %Nat32 0 to %Nat32
   br label %select_1_end
 select_1_end:
-  %25 = phi %Nat32 [ %19, %select_1_0_ok ], [ %23, %select_1_1_ok ], [ %24, %select_1_2 ]
-;stmt5:
-  %26 = load %Type*, %Type** @typeBool
-  %27 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %26, %Nat32 %25)
-  ret %LLVM_Value %27
+  %32 = phi %Nat32 [ %26, %select_1_0_ok ], [ %30, %select_1_1_ok ], [ %31, %select_1_2 ]
+;stmt6:
+  %33 = load %Type*, %Type** @typeBool
+  %34 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %33, %Nat32 %32)
+  ret %LLVM_Value %34
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+;stmt7:
+  %36 = bitcast [8 x %Nat8]* @func325_str4 to %Str
+  %37 = load %Type*, %Type** @typeBaseInt
+  %38 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func329 (%Str %36, %LLVM_Value %8, %LLVM_Value %12, %Type* %37)
+;stmt8:
+  %39 = load %Type*, %Type** @typeBool
+  %40 = call %LLVM_Value (%Type*, %Nat32) @llval_create_reg (%Type* %39, %Nat32 %38)
+  ret %LLVM_Value %40
 }
 
 define %LLVM_Value @eval_cast_to_union (%LLVM_Value, %Type*) {
