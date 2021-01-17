@@ -182,8 +182,8 @@ do_stmt_if = DoStmt {
 
   _else = unit to Var *Stmt or Unit
 
-  if not (x.if._else is Unit) {
-    els = do_stmt (x.if._else as *AstStmt)
+  if not (x.if.else is Unit) {
+    els = do_stmt (x.if.else as *AstStmt)
     if not (els is Unit) {
       _else := els as *Stmt
     }

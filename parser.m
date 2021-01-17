@@ -1281,7 +1281,7 @@ parse_stmt_if = AstStmtParser {
   s = ast_stmt_new(#AstStmtIf, ti)
   s.if.cond := cond
   s.if.then := then as *AstStmt
-  s.if._else := els
+  s.if.else := els
   return s
 }
 
