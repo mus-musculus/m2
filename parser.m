@@ -1057,7 +1057,7 @@ parse_value_arr = AstValueParser {
     return nil
 }
 
-AstStmtParser = (ti : *TokenInfo) -> *AstStmt
+AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
 
 
 exist parse_stmt_block : AstStmtParser
@@ -1068,10 +1068,12 @@ parse_value_func = AstValueParser {
   skip_nl()
   block_ti = &ctok().ti
   need("{")
+
   b = parse_stmt_block(block_ti)
+
   v = ast_value_new(#AstValueFunc, func_ti)
   v.func.type := t
-  v.func.block_stmt := b
+  v.func.block_stmt := b as *AstStmt
   return v
 }
 
@@ -1125,7 +1127,14 @@ exist parse_stmt_vardef : AstStmtParser
 exist parse_stmt_typedef : AstStmtParser
 exist parse_stmt_expr : AstStmtParser
 
-parse_stmt = () -> *AstStmt {
+parse_stmt_break = AstStmtParser {
+  return ast_stmt_new(#AstStmtBreak, ti)
+}
+parse_stmt_continue = AstStmtParser {
+  return ast_stmt_new(#AstStmtContinue, ti)
+}
+
+parse_stmt = () -> *AstStmt or Unit {
   tk = ctok()
   nt = nextok()
   ti = &tk.ti
@@ -1136,7 +1145,7 @@ parse_stmt = () -> *AstStmt {
   is_typdef = is_def and isUpperCase(tk.text[0])
 
 
-  lab_or_expr = () -> *AstStmt {
+  lab_or_expr = () -> *AstStmt or Unit{
     tk = ctok()
     if tk.kind == #TokenId {
       // Maybe Label?
@@ -1160,14 +1169,16 @@ parse_stmt = () -> *AstStmt {
     match("if") => parse_stmt_if(ti)
     match("while") => parse_stmt_while(ti)
     match("return") => parse_stmt_return(ti)
-    match("break") => ast_stmt_new(#AstStmtBreak, ti)
-    match("continue") => ast_stmt_new(#AstStmtContinue, ti)
+    match("break") => parse_stmt_break(ti)
+    match("continue") => parse_stmt_continue(ti)
     //match("var") => parse_stmt_vardef(ti)
     match("type") or is_typdef => parse_stmt_typedef(ti)
     match("goto") => parse_stmt_goto(ti)
     else => lab_or_expr()
   }
 }
+
+
 
 
 parse_stmt_expr = AstStmtParser {
@@ -1192,7 +1203,9 @@ parse_stmt_valdef = AstStmtParser {
   id = parse_id()
   need("=")
   v = parse_value()
-  if id == nil or v == nil {return nil}
+
+  if id == nil or v == nil {return unit}
+
   s = ast_stmt_new(#AstStmtValueDef, ti)
   s.valdef.id := id
   s.valdef.expr := v
@@ -1206,7 +1219,9 @@ parse_stmt_typedef = AstStmtParser {
   id = parse_id()
   need("=")
   t = parse_type()
-  if id == nil or t == nil {return nil}
+
+  if id == nil or t == nil {return unit}
+
   s = ast_stmt_new(#AstStmtTypeDef, ti)
   s.typedef.id := id
   s.typedef.type := t
@@ -1228,9 +1243,9 @@ parse_stmt_block = AstStmtParser {
     if match("}") {break}
 
     s = parse_stmt()
-    if s != nil {
+    if not (s is Unit) {
       sep()
-      list_append(&sb.block.stmts, s)
+      list_append(&sb.block.stmts, s as *AstStmt)
     }
   }
 
@@ -1239,54 +1254,68 @@ parse_stmt_block = AstStmtParser {
 
 
 parse_stmt_if = AstStmtParser {
-  s = ast_stmt_new(#AstStmtIf, ti)
-  s.if.cond := parse_value()
+
+  cond = parse_value()
   match("\n")
   ti_then_block = &ctok().ti
   need("{")
-  s.if.then := parse_stmt_block(ti_then_block)
+  then = parse_stmt_block(ti_then_block)
+
+  // parse else (if present)
+  els = unit to Var (*AstStmt or Unit)
   if match("else") {
     match("\n")
     ti_else_branch = &ctok().ti
     if match("if") {
-      s.if._else := parse_stmt_if(ti_else_branch)
+      els := parse_stmt_if(ti_else_branch)
     } else {
       need("{")
-      s.if._else := parse_stmt_block(ti_else_branch)
+      els := parse_stmt_block(ti_else_branch)
     }
-  } else {
-    s.if._else := nil
   }
 
-  if s.if.cond == nil or s.if.then == nil {return nil}
+  if cond == nil {return unit}
+  if then is Unit {return unit}
+
+  s = ast_stmt_new(#AstStmtIf, ti)
+  s.if.cond := cond
+  s.if.then := then as *AstStmt
+  s.if._else := els
   return s
 }
 
 
 parse_stmt_while = AstStmtParser {
-  s = ast_stmt_new(#AstStmtWhile, ti)
-  s.while.cond := parse_value()
+  cond = parse_value()
   match("\n")
   ti_block = &ctok().ti
   need("{")
-  s.while.block := parse_stmt_block(ti_block)
-  if s.while.cond == nil or s.while.block == nil {return nil}
+  block =  parse_stmt_block(ti_block)
+
+  if cond == nil {return unit}
+  if block is Unit {return unit}
+
+  s = ast_stmt_new(#AstStmtWhile, ti)
+  s.while.cond := cond
+  s.while.block := block as *AstStmt
   return s
 }
 
 
 parse_stmt_return = AstStmtParser {
-  s = ast_stmt_new(#AstStmtReturn, ti)
 
-  if separator() {return s}
+  if separator() {
+    return ast_stmt_new(#AstStmtReturn, ti)
+  }
 
   ti = &ctok().ti
   v = parse_value()
   if v == nil {
     error("expected return expression", ti)
   }
-  s.return.value := v
 
+  s = ast_stmt_new(#AstStmtReturn, ti)
+  s.return.value := v
   return s
 }
 
