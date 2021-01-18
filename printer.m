@@ -188,7 +188,11 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // печатаем алиасы типов (пока только юнионы)
   prt_alias = ListForeachHandler {
     t = data to *Type
-    fprintf (fout, "\n%%%s = type ", t.aka); printType(t.union.impl); o("\n")
+    if t.union.impl != nil {
+      fprintf (fout, "\n%%%s = type ", t.aka); printType(t.union.impl); o("\n")
+    } else {
+      fprintf (fout, "\n%%%s = type {i16, <%d x i8>}", t.aka, t.union.data_size); o("\n")
+    }
   }
   list_foreach (&unions, prt_alias, nil)
 
@@ -807,26 +811,28 @@ eval_as = Eval {
   v = eval (x.as.value)
   t = x.as.type
 
-  res_reg = 0
-
-  return llval_create (#LLVM_ValueEmpty, typeBool, res_reg)
+  return llvm_cast ("bitcast", v, t)
 }
 
 
 eval_is = Eval {
   v = eval (x.is.value)
 
-  // загружаем селектор (пока просто берем значение указателя как инт)
-  // селктор определяет значение какого типа упаковано в юнион
-  selector = llvm_cast ("ptrtoint", v, typeBaseInt)
-
   // загружаем вариант
   //variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
-  variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, 0) // Maybe
-  variant = loadImmAs(variant_reg, typeBaseInt)
 
-  if v.type.union.impl.kind == #TypePointer {
-    // Для `Maybe Pointer`
+  // Maybe Ptr
+  if v.type.union.impl != nil {
+
+    variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, 0) // Maybe
+    variant = loadImmAs(variant_reg, typeBaseInt)
+
+    // загружаем селектор (пока просто берем значение указателя как инт)
+    // селктор определяет значение какого типа упаковано в юнион
+    selector = llvm_cast ("ptrtoint", v, typeBaseInt)
+
+
+    // Для `Maybe Pointer
     regno = when x.is.variant {
       0 => llvm_binary ("icmp ne", selector, variant, typeBaseInt)
       1 => llvm_binary ("icmp eq", selector, variant, typeBaseInt)
@@ -837,20 +843,91 @@ eval_is = Eval {
     return llval_create_reg (typeBool, regno)
   }
 
-  regno = llvm_binary ("icmp eq", selector, variant, typeBaseInt)
+  // Regular Union
+  // по идее юнион должен быть в регистре
+  if v.kind != #LLVM_ValueRegister {
+    fatal("eval_is :: union is not in reg")
+  }
+
+  reg = lab_get ()
+  fprintf (fout, "\n  %%%d = extractvalue %%%s ", reg, v.type.aka)
+  print_val (v)
+  o(", 0")
+
+  selector = llval_create_reg (x.type, reg)
+
+
+  t16 = getIntByPower(2)
+
+  variant_reg = llval_create (#LLVM_ValueImmediate, t16, x.is.variant to Int64) // Maybe
+  variant = loadImmAs(variant_reg, typeBaseInt)
+
+  regno = llvm_binary ("icmp eq", selector, variant, t16)
   return llval_create_reg (typeBool, regno)
 }
 
 
+
+
+
+//%agg1 = insertvalue {i32, float} undef, i32 1, 0 ; yields {i32 1, float undef}
+//%agg2 = insertvalue {i32, float} %agg1, float %val, 1
+
 // U0
 eval_cast_to_union = EvalCast {
-  //return when v.type.kind {}
+
+  // приводим некоторое значение с типом a к union-типу b
+  // при этом тип a содержится в b
+
+  /* получаем номер варианта для данного типа */
+  variant = type_union_get_variant (t, v.type)
+
+  // cast to Regular Union
+  if not type_is_maybe_ptr (t) {
+    // приводим наши данные к типу вектора <n x i8>
+    size = t.union.data_size
+
+    // сперва приводим данные к интеджеру длины равной длине вектора
+    vz = eval_cast_to_basic(v, getIntByPower(size))
+
+    // и только потом сможем привести интеджер к вектору
+    reg = operation_with_type ("bitcast", vz.type)
+    space ()
+    print_val (vz)
+    fprintf (fout, " to <%d x i8>", size)
+
+    data = llval_create_reg (t, reg)
+
+
+    // pack variant before
+    reg0 = operation_with_type ("insertvalue", t);
+    fprintf (fout, " undef, i16 %d, 0", variant)
+    v0 = llval_create_reg (t, reg0)
+    // pack data after
+    reg1 = operation_with_type ("insertvalue", t); space()
+    print_val(v0); fprintf(fout, ", <%d x i8> ", size); print_val(data); o(", 1")
+    v1 = llval_create_reg (t, reg1)
+
+    return v1
+  }
+
+  // cast `maybe ptr`
   return when true {
     type_eq(v.type, typeUnit) => llvm_cast ("inttoptr", v, t)  // Unit => *Unit
     v.type.kind == #TypeNumeric => llvm_cast ("inttoptr", v, t)  // i1 0 => *Unit
     else => llvm_cast ("bitcast", v, t)   // *T => *Unit
   }
 }
+
+
+/*    // если приводим к юнион но не мейби поинтер
+    // то нужно особое приведение -
+    if t.kind == #TypeUnion {
+      if not type_is_maybe_ptr (t) {
+        printf("UU not mabe\n")
+      }
+    }*/
+
 
 eval_cast = Eval {
   v = eval (x.cast.value)

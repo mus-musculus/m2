@@ -251,7 +251,7 @@ TypeEnum = (
 )
 
 
-TypeUnion = (types : List, impl : *Type)
+TypeUnion = (types : List, impl : *Type, data_size : Nat)
 
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 

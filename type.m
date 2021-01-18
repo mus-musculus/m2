@@ -366,6 +366,9 @@ do_type_union = DoType {
   t.size := ctx.max_size
   t.align := ctx.max_size
 
+  t.union.data_size := ctx.max_size
+  printf("SZ = %d\n", ctx.max_size)
+
   list_append (&unions, t)
 
   if type_is_maybe_ptr (t) {
@@ -374,38 +377,9 @@ do_type_union = DoType {
     t.union.impl := u
 
   } else {
-    printf("Not maybe\n")
-    // это не мейби указатель следовательно нам нужна структура
-    u = type_new (#TypeRecord, ctx.max_size + cfgEnumSize, x.ti)
-    t.union.impl := u
-
-    decls_list = list_new ()
-
-    // variant field
-    variant_field = malloc (sizeof Decl) to *Decl
-    assert (variant_field != nil, "field_new")
-    variant_field.id := nil to *AstId
-    variant_field.type := get_type ("Nat16")
-    variant_field.offset := 0
-    variant_field.align := t.align
-    variant_field.ti := nil
-    list_append(decls_list, variant_field)
-
-    // data field
-    type_char = get_type ("Nat8")
-    data_type = type_array_new (type_char, t.size, nil)
-
-    data_field = malloc (sizeof Decl) to *Decl
-    assert (data_field != nil, "field_new")
-    data_field.id := nil to *AstId
-    data_field.type := data_type
-    data_field.offset := 1
-    data_field.align := t.align
-    data_field.ti := nil
-    list_append(decls_list, data_field)
-
-    u.record.decls := decls_list
+    t.union.impl := nil  // классический юнион
   }
+
   return t
 }
 
@@ -565,14 +539,46 @@ type_init = () -> () {
   // Тип который получают литеральные константы
   typeNumeric := type_numeric_new ("Numeric",  0, true)
 
-  typeBaseInt := when cfgIntegerSize {
-    2  => typeInt16
-    4  => typeInt32
-    8  => typeInt64
-    16 => typeInt128
-    32 => typeInt256
+  typeBaseInt := getIntByPower(cfgIntegerSize)
+}
+
+
+getIntByPower = (size : Nat) -> *Type {
+  return when size {
+    1    => get_type("Int8")
+    2    => get_type("Int16")
+    4    => get_type("Int32")
+    8    => get_type("Int64")
+    16   => get_type("Int128")
+    32   => get_type("Int256")
+    64   => get_type("Int512")
+    128  => get_type("Int1024")
     else => () -> *Type {fatal ("unsupported cfgIntegerSize"); return nil} ()
   }
+}
+
+
+
+
+// получает тип-юнион (union) и тип который в нем должен быть (type)
+// возвращает номер варианта для этого типа в этом юнионе
+type_union_get_variant = (union, type : *Type) -> Nat {
+  VarCtx2 = (
+    type    : *Type
+    variant : Nat
+  )
+
+  var_ctx = 0 to Var VarCtx2
+  var_ctx.type := type
+
+  find_variant = ListForeachHandler {
+    t = data to *Type
+    ct = ctx to *VarCtx2
+    if type_eq (t, ct.type) {ct.variant := index}
+  }
+  list_foreach(&union.union.types, find_variant, &var_ctx)
+
+  return var_ctx.variant
 }
 
 

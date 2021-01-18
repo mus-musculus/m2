@@ -604,37 +604,20 @@ do_value_is = DoValue {
   t = do_type (x.is.type)
 
   // чекаем если значение имеет unit тип
-  /*if not type_is_maybe_ptr (v.type) {
-    error ("expected maybe type", v.ti)
-  }*/
+  if v.type.kind != #TypeUnion {
+    error ("expected union type", v.ti)
+  }
 
   // чекаем если проверяем на соответствие типу который входит в объединение
   if not type_present_in_list (&v.type.union.types, t) {
     error ("type error", v.ti)
   }
 
+  variant = type_union_get_variant (v.type, t)
 
-  VarCtx = (
-    type    : *Type
-    variant : Nat
-  )
-
-  var_ctx = 0 to Var VarCtx
-  var_ctx.type := t
-
-  find_variant = ListForeachHandler {
-    t = data to *Type
-    ct = ctx to *VarCtx
-    if type_eq (t, ct.type) {ct.variant := index}
-  }
-  list_foreach(&v.type.union.types, find_variant, &var_ctx)
-
-  //printf("variant #%d\n", var_ctx.variant)
-
-  //error ("do_value_is", x.ti)
   vx = value_new(#ValueIs, typeBool, x.ti)
   vx.is.value := v
-  vx.is.variant := var_ctx.variant
+  vx.is.variant := variant
 
   return vx
 }
@@ -656,12 +639,11 @@ do_value_as = DoValue {
   }
 
   // если юнион реализован как указатель
-  if v.type.union.impl.kind == #TypePointer {
+  if v.type.union.impl != nil {
     return cast (v, t, x.ti)
   }
 
   // это полноценный юнион
-  // сперва извлекаем
   vx = value_new (#ValueAs, t, x.ti)
   vx.as.value := v
   vx.as.type := t
