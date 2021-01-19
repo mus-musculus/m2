@@ -919,9 +919,10 @@ eval_cast_to_union = EvalCast {
 
     // приводим указатель на Union#data к указателю на пакуемый тип
     p = llvm_cast("bitcast", ptr_to_data_field, type_pointer_new (v.type, nil))
+
     llvm_st (p, v)
 
-    return load (lvar)
+    return llval_create (#LLVM_ValueLocalVar, t, var_reg to Int64) //load (lvar)
   }
 
   // cast `maybe ptr`

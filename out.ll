@@ -11028,8 +11028,9 @@ then_0:
 ;stmt20:
   call void (%LLVM_Value, %LLVM_Value) @func346 (%LLVM_Value %38, %LLVM_Value %0)
 ;stmt21:
-  %39 = call %LLVM_Value (%LLVM_Value) @func347 (%LLVM_Value %10)
-  ret %LLVM_Value %39
+  %39 = sext %Nat32 %8 to %Int64
+  %40 = call %LLVM_Value (%LLVM_ValueKind, %Type*, %Int64) @llval_create (%LLVM_ValueKind 4, %Type* %1, %Int64 %39)
+  ret %LLVM_Value %40
   br label %endif_0
 else_0:
   br label %endif_0
@@ -11037,33 +11038,33 @@ endif_0:
 ;stmt22:
   br label %select_1_0
 select_1_0:
-  %41 = extractvalue %LLVM_Value %0, 1
-  %42 = load %Type*, %Type** @typeUnit
-  %43 = call i1 (%Type*, %Type*) @func419 (%Type* %41, %Type* %42)
-  %44 = icmp eq i1 1, %43
-  br i1 %44, label %select_1_0_ok, label %select_1_1
+  %42 = extractvalue %LLVM_Value %0, 1
+  %43 = load %Type*, %Type** @typeUnit
+  %44 = call i1 (%Type*, %Type*) @func419 (%Type* %42, %Type* %43)
+  %45 = icmp eq i1 1, %44
+  br i1 %45, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %45 = bitcast [9 x %Nat8]* @func327_str7 to %Str
-  %46 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %45, %LLVM_Value %0, %Type* %1)
+  %46 = bitcast [9 x %Nat8]* @func327_str7 to %Str
+  %47 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %46, %LLVM_Value %0, %Type* %1)
   br label %select_1_end
 select_1_1:
-  %47 = extractvalue %LLVM_Value %0, 1
-  %48 = getelementptr inbounds %Type, %Type* %47, i1 0, i32 0
-  %49 = load %TypeKind, %TypeKind* %48
-  %50 = icmp eq %TypeKind %49, 4
-  %51 = icmp eq i1 1, %50
-  br i1 %51, label %select_1_1_ok, label %select_1_2
+  %48 = extractvalue %LLVM_Value %0, 1
+  %49 = getelementptr inbounds %Type, %Type* %48, i1 0, i32 0
+  %50 = load %TypeKind, %TypeKind* %49
+  %51 = icmp eq %TypeKind %50, 4
+  %52 = icmp eq i1 1, %51
+  br i1 %52, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
-  %52 = bitcast [9 x %Nat8]* @func327_str8 to %Str
-  %53 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %52, %LLVM_Value %0, %Type* %1)
+  %53 = bitcast [9 x %Nat8]* @func327_str8 to %Str
+  %54 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %53, %LLVM_Value %0, %Type* %1)
   br label %select_1_end
 select_1_2:
-  %54 = bitcast [8 x %Nat8]* @func327_str9 to %Str
-  %55 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %54, %LLVM_Value %0, %Type* %1)
+  %55 = bitcast [8 x %Nat8]* @func327_str9 to %Str
+  %56 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %55, %LLVM_Value %0, %Type* %1)
   br label %select_1_end
 select_1_end:
-  %56 = phi %LLVM_Value [ %46, %select_1_0_ok ], [ %53, %select_1_1_ok ], [ %55, %select_1_2 ]
-  ret %LLVM_Value %56
+  %57 = phi %LLVM_Value [ %47, %select_1_0_ok ], [ %54, %select_1_1_ok ], [ %56, %select_1_2 ]
+  ret %LLVM_Value %57
 }
 
 define %LLVM_Value @eval_cast_union_to (%LLVM_Value, %Type*) {
