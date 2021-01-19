@@ -300,7 +300,7 @@ arraydef = (id : Str, t : *Type, items : *List) -> () {
   print_array_item = ListForeachHandler {
     if index > 0 {comma ()}
     v = data to *Value
-    ev = eval (v)
+    ev = reval (v)
     print_val_with_type (ev)
   }
   list_foreach (items, print_array_item, nil)
@@ -344,7 +344,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
   // print initial value
   if v == nil {o ("zeroinitializer"); return}
 
-  ev = eval (v)
+  ev = reval (v)
   if ev.kind != #LLVM_ValueImmediate {
     error ("expected constant init value", v.ti)
     o ("zeroinitializer")
@@ -517,7 +517,7 @@ eval = Eval {
     #ValueLocalVar    => llval_create (#LLVM_ValueLocalVar, x.type, x.vardef.lab to Int64)
     #ValueParam       => llval_create_reg (x.type, x.field.offset to Nat32)
 
-    #ValueLoad   => load        (eval (x.load))
+    //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x)
     #ValueIndex  => eval_index  (x)
     #ValueAccess => eval_access (x)
@@ -540,6 +540,7 @@ eval = Eval {
   }
 }
 
+// right eval
 reval = Eval {return load(eval(x))}
 
 
@@ -557,14 +558,14 @@ eval_call = Eval {
   eval_args = ListForeachHandler {
     arg = data to *Value
     args = ctx to *Arguments
-    args.args[args.cnt] := eval (arg)
+    args.args[args.cnt] := reval (arg)
     args.cnt := args.cnt + 1
   }
   list_foreach (x.call.args, eval_args, &args)
 
 
   // eval & load function value
-  f = eval (x.call.func)
+  f = reval (x.call.func)
 
   // print call
 
@@ -610,7 +611,7 @@ eval_index_uarray = (a, i : LLVM_Value) -> LLVM_Value {
 
 eval_index = Eval {
   a = eval (x.index.array)
-  i = eval (x.index.index)
+  i = reval (x.index.index)
 
   if typeIsUndefinedArray (a.type) {
     return eval_index_uarray (a, i)
@@ -708,7 +709,7 @@ eval_ref = Eval {
 
 eval_deref = Eval {
   // eval & load pointer
-  vx = eval (x.un.x)
+  vx = reval (x.un.x)
 
   // return loaded pointer as #Address
   return llval_create_adr (x.type, vx.reg)
@@ -716,7 +717,7 @@ eval_deref = Eval {
 
 
 eval_not = Eval {
-  vx = eval (x.un.x)
+  vx = reval (x.un.x)
 
   //"%s = xor %s, -1"
   reg = operation_with_type ("xor", vx.type)
@@ -728,14 +729,14 @@ eval_not = Eval {
 
 
 eval_minus = Eval {
-  vx = eval (x.un.x)
+  vx = reval (x.un.x)
   z = llval_create (#LLVM_ValueImmediate, typeBaseInt, 0)
   reg = llvm_binary ("sub nsw", z, vx, vx.type)
   return llval_create_reg (vx.type, reg)
 }
 
 
-eval_plus = Eval {return eval (x.un.x)}
+eval_plus = Eval {return reval (x.un.x)}
 
 
 
@@ -812,7 +813,7 @@ eval_cast_to_basic = EvalCast {
 
 
 eval_as = Eval {
-  v = eval (x.as.value)
+  v = reval (x.as.value)
   t = x.as.type
 
   return llvm_cast ("bitcast", v, t)
@@ -820,7 +821,7 @@ eval_as = Eval {
 
 
 eval_is = Eval {
-  v = eval (x.is.value)
+  v = reval (x.is.value)
 
   // загружаем вариант
   //variant_reg = llval_create (#LLVM_ValueImmediate, typeBaseInt, x.is.variant to Int64)
@@ -999,8 +1000,8 @@ llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
 
 
 eval_bin = Eval {
-  l = eval (x.bin.l)
-  r = eval (x.bin.r)
+  l = reval (x.bin.l)
+  r = reval (x.bin.r)
 
   // берем тип левого а не тип x тк у x может быть Bool тип (в случае отношений)!
   signed = l.type.num.signed
@@ -1041,7 +1042,12 @@ loadImmAs = (x : LLVM_Value, t : *Type) -> LLVM_Value {
 }
 
 loadImmPtr = (x : LLVM_Value) -> LLVM_Value {
-  return llvm_cast ("inttoptr", x, x.type)
+  o("; loadImmPtr")
+  //return llvm_cast ("inttoptr", x, x.type)
+  reg = lab_get ()
+  fprintf (fout, "\n  %%%d = inttoptr i64 %d to", reg, x.imm)
+  printType (x.type)
+  return llval_create_reg (x.type, reg)
 }
 
 
@@ -1081,7 +1087,7 @@ cond_next:
   %X.2 = phi i32 [ %X.1, %cond_false ], [ %X.0, %cond_true ]
 */
 eval_select = Eval {
-  sel = eval (x.select.x)
+  sel = reval (x.select.x)
 
   select_no := select_no + 1
   sno = select_no
@@ -1112,7 +1118,7 @@ eval_select = Eval {
     c = ctx to *Ctx
     fprintf (fout, "\nselect_%d_%d:", c.sno, c.case)
 
-    s0 = eval (va.x)
+    s0 = reval (va.x)
 
     reg = operation_with_type ("icmp eq", s0.type)
     space ()
@@ -1126,7 +1132,7 @@ eval_select = Eval {
 
     fprintf (fout, "\nselect_%d_%d_ok:", c.sno, c.case)
 
-    e = eval (va.y)
+    e = reval (va.y)
     s1 = loadIfImmAs(e, c.type)
 
     fprintf (fout, "\n  br label %%select_%d_end", c.sno)
@@ -1137,7 +1143,7 @@ eval_select = Eval {
   list_foreach (&x.select.variants, print_select_case, &ctx)
 
   fprintf (fout, "\nselect_%d_%d:", sno, ctx.case) // else ->
-  otherwise = loadIfImmAs(eval (x.select.other), ctx.type)
+  otherwise = loadIfImmAs(reval (x.select.other), ctx.type)
   fprintf (fout, "\n  br label %%select_%d_end", sno)
   fprintf (fout, "\nselect_%d_end:", sno)
 
@@ -1166,7 +1172,7 @@ eval_select = Eval {
 
 print_st = (l, r : *Value) -> () {
   lx = eval (l)
-  rx = eval (r)
+  rx = reval (r)
   llvm_st (lx, rx)
 }
 
@@ -1310,7 +1316,7 @@ print_stmt_var = (v : *Decl) -> () {
   // initialization
   iv = v.init_value
   if iv != nil {
-    init_value = eval (iv)
+    init_value = reval (iv)
     lo = llval_create (#LLVM_ValueLocalVar, v.type, reg to Int64)
     llvm_st (lo, init_value)
   }
@@ -1318,7 +1324,7 @@ print_stmt_var = (v : *Decl) -> () {
 
 
 print_stmt_expr = (x : *Expr) -> () {
-  o = eval (x.v)
+  o = reval (x.v)
   // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
   // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)
   // могло быть связано с результатом этого значения через Value#expr.reg
@@ -1329,7 +1335,7 @@ print_stmt_expr = (x : *Expr) -> () {
 print_stmt_if = (x : *If) -> () {
   if_id = global_if_id
   global_if_id := global_if_id + 1
-  c = eval (x.cond)
+  c = reval (x.cond)
   fprintf (fout, "\n  br i1 ")
   print_val (c)
   fprintf (fout, ", label %%then_%d, label %%else_%d", if_id, if_id)
@@ -1349,7 +1355,7 @@ print_stmt_while = (x : *While) -> () {
   global_while_id := global_while_id + 1
   fprintf (fout, "\n  br label %%continue_%d", while_id)
   fprintf (fout, "\ncontinue_%d:", while_id)
-  c = eval (x.cond)
+  c = reval (x.cond)
   fprintf (fout, "\n  br i1 ")
   print_val (c)
   fprintf (fout, ", label %%body_%d, label %%break_%d", while_id, while_id)
@@ -1367,7 +1373,7 @@ print_stmt_return = (v : *Value) -> () {
     o ("\nret void")
     return
   }
-  vx = eval (v)
+  vx = reval (v)
   fprintf (fout, "\n  ret ")
   print_val_with_type (vx)
   lab_get ()  // for LLVM

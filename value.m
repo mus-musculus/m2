@@ -46,7 +46,7 @@ value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
 }
 
 
-dold = (x : *Value) -> *Value {
+dold2 = (x : *Value) -> *Value {
 
   typ = when x.type.kind {
     #TypeVar => x.type.var.of
@@ -70,11 +70,34 @@ dold = (x : *Value) -> *Value {
 }
 
 
+dold = (x : *Value) -> *Value {
+
+  x.type := when x.type.kind {
+    #TypeVar => x.type.var.of
+    else => x.type
+  }
+
+  /*k = x.kind
+  if x.type.kind == #TypeVar or
+  k == #ValueGlobalVar or // это плохо
+  k == #ValueLocalVar or  // и это плохо
+  k == #ValueDeref or
+  k == #ValueIndex or
+  k == #ValueAccess
+  {
+    ldval = value_new (#ValueLoad, typ, x.ti)
+    ldval.load := x
+    return ldval
+  }*/
+
+  return x
+}
+
+
 
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
-  //.printf("A %d\n", x.kind)
   v = when x.kind {
     #AstValueId      => do_value_named   (x)
     #AstValueNum     => do_value_numeric (x)
@@ -119,6 +142,8 @@ do_valuex = DoValuex {
   assert(v != nil, "do_value : v == nil")
 
   if v.kind == #ValuePoison {return v}
+
+  //return v
 
   return when load {
     true => dold (v)
