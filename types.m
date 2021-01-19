@@ -305,6 +305,19 @@ TypeKind = {
 }
 
 
+/*Type = TypePoison or
+       TypeGenericReference or
+       TypeNumeric or
+       TypeVar or
+       TypeBool or
+       TypeFunc or
+       TypeEnum or
+       TypeRecord or
+       TypePointer or
+       TypeArray or
+       TypeArrayU or
+       TypeUnion*/
+
 /*
  * Type Structure
  */

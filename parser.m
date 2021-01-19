@@ -371,6 +371,7 @@ parse_type1 = AstTypeParser {
     list_append(&tx.union.types, t)
 
     while match("or") {
+      skip_nl()
       t = parse_type2()
       list_append(&tx.union.types, t)
     }

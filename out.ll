@@ -6237,21 +6237,23 @@ continue_0:
   br i1 %19, label %body_0, label %break_0
 body_0:
 ;stmt9:
-  %20 = call %AstType* () @func210 ()
+  call void () @skip_nl ()
 ;stmt10:
+  %20 = call %AstType* () @func210 ()
+;stmt11:
   %21 = getelementptr inbounds %AstType, %AstType* %6, i1 0, i32 9
   %22 = getelementptr inbounds %AstTypeUnion, %AstTypeUnion* %21, i1 0, i32 0
   %23 = bitcast %AstType* %20 to %Unit*
   %24 = call i1 (%List*, %Unit*) @list_append (%List* %22, %Unit* %23)
   br label %continue_0
 break_0:
-;stmt11:
+;stmt12:
   ret %AstType* %6
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt12:
+;stmt13:
   ret %AstType* %1
 }
 
