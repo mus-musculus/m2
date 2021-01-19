@@ -520,6 +520,7 @@ do_value_cast_uarr = DoValueCast {
 
 
 do_value_cast_union = DoValueCast {
+  printf("do_value_cast_union\n")
   return cast (v, t, ti)
 }
 
@@ -527,6 +528,8 @@ do_value_cast = DoValue {
   v = do_value (x.cast.value)
   t = do_type (x.cast.type)
   ti = x.ti
+
+  //printf("CAST: "); prttype(v.type); printf("\n")
 
   if v.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
@@ -541,8 +544,8 @@ do_value_cast = DoValue {
     }
 
     // выполняем приведение
-    return when v.type.kind {
-      #TypeUndefined => nil to *Value
+    xx = when v.type.kind {
+      //#TypeUndefined => nil to *Value
       #TypeVar       => do_value_cast_var   (v, t, ti)
       #TypeBool      => do_value_cast_bool  (v, t, ti)
       #TypeGenericReference => do_value_cast_ref (v, t, ti)
@@ -559,6 +562,9 @@ do_value_cast = DoValue {
         return nil to *Value
       } (v, t, ti)
     }
+
+    //printf(">> "); value_print_kind(v.kind); /*prttype(xx.cast.type);*/ printf("\n")
+    return xx
   }
 
   // если приводим к переменной - конструируем переменную
@@ -953,15 +959,12 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   if type_eq (vx.type, t) {return vx}
 
 
-
-
   // приведение подтипа к Union-надтипу
   if t.kind == #TypeUnion {
     goto sact
     error("приведение юнион", ti)
     return value_new_poison (ti)
   }
-
 
 
   // можем ли мы приводить непосредственно значение v к типу t ?
@@ -977,6 +980,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
 sact:
 
+  //printf("OOPS: "); prttype(vx.type); printf("\n")
 
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)

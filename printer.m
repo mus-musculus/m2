@@ -540,6 +540,8 @@ eval = Eval {
   }
 }
 
+reval = Eval {return load(eval(x))}
+
 
 eval_call = Eval {
   // evaluate arguments values before printing call
@@ -800,8 +802,8 @@ eval_cast_to_basic = EvalCast {
 
     else => EvalCast {
       k = v.type.kind
-      fprintf (fout, "\n<invalid k %d in cast>", k)
-      printf ("e.type.kind = %d\n", k)
+      fprintf (fout, "\n<invalid k = %d in cast>", k)
+      printf("cast "); prttype(v.type); printf(" to "); prttype(t); printf("\n")
       assert (false, "eval_cast_to_basic")
       return llval_create (#LLVM_ValueInvalid, nil, 0)
     } (v, t)
@@ -896,6 +898,7 @@ eval_cast_to_union = EvalCast {
     variant_type = getIntByPower(2)
     variant_ptr_type = type_pointer_new (variant_type, nil)
 
+    fprintf (fout, "\n; write variant %d", variant)
     // %5 = getelementptr inbounds <ot>, <ot>* @by,
     preg = llvm_getelementptr (t, lvar); o("i1 0, i32 0");
     ptr_to_variant = llval_create_reg (variant_ptr_type, preg)
@@ -903,6 +906,8 @@ eval_cast_to_union = EvalCast {
     variant_imm = llval_create (#LLVM_ValueImmediate, variant_type, variant to Int64)
 
     llvm_st (ptr_to_variant, variant_imm)
+
+    ol ("; write data")
 
     // получаем указатель на поле data в union
     rr = llvm_getelementptr (t, lvar); o("i1 0, i32 1");
@@ -953,8 +958,12 @@ eval_cast_union_to = EvalCast {
 
 
 eval_cast = Eval {
-  v = eval (x.cast.value)
+  v = reval (x.cast.value)
   t = x.cast.type
+
+  if v.type.kind == #TypeVar {
+    printf("CAST VAR!\n")
+  }
 
   if v.type.kind == #TypeUnion {
     if v.type.union.impl == nil {
