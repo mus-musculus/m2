@@ -894,53 +894,28 @@ eval_cast_to_union = EvalCast {
     lvar = llval_create (#LLVM_ValueLocalVar, t, var_reg to Int64)
 
     variant_type = getIntByPower(2)
-    variant_ptr_type = type_pointer_new(variant_type, nil)
+    variant_ptr_type = type_pointer_new (variant_type, nil)
 
     // %5 = getelementptr inbounds <ot>, <ot>* @by,
-    preg = llvm_getelementptr(t, lvar); o("i1 0, i32 0");
-    ptr_to_variant = llval_create_reg(variant_ptr_type, preg)
+    preg = llvm_getelementptr (t, lvar); o("i1 0, i32 0");
+    ptr_to_variant = llval_create_reg (variant_ptr_type, preg)
 
     variant_imm = llval_create (#LLVM_ValueImmediate, variant_type, variant to Int64)
-    //loadImmAs(variant
 
-    llvm_st(ptr_to_variant, variant_imm)
+    llvm_st (ptr_to_variant, variant_imm)
 
     // получаем указатель на поле data в union
-    rr = llvm_getelementptr(t, lvar); o("i1 0, i32 1");
+    rr = llvm_getelementptr (t, lvar); o("i1 0, i32 1");
     size = t.union.data_size
     ta = type_array_new (typeChar, size, nil)
-    data_field_type = type_pointer_new(ta, nil)
-    ptr_to_data_field = llval_create_reg(data_field_type, rr)
+    data_field_type = type_pointer_new (ta, nil)
+    ptr_to_data_field = llval_create_reg (data_field_type, rr)
 
     // приводим указатель на Union#data к указателю на пакуемый тип
-    p = llvm_cast("bitcast", ptr_to_data_field, type_pointer_new(v.type, nil))
-    llvm_st(p, v)
+    p = llvm_cast("bitcast", ptr_to_data_field, type_pointer_new (v.type, nil))
+    llvm_st (p, v)
 
-    vo = load(lvar)
-
-
-    // сперва приводим данные к интеджеру длины равной длине вектора
-    /*vz = eval_cast_to_basic(v, getIntByPower(size))
-
-    // и только потом сможем привести интеджер к вектору
-    reg = operation_with_type ("bitcast", vz.type)
-    space ()
-    print_val (vz)
-    fprintf (fout, " to <%d x i8>", size)
-
-    data = llval_create_reg (t, reg)
-
-
-    // pack variant before
-    reg0 = operation_with_type ("insertvalue", t);
-    fprintf (fout, " undef, i16 %d, 0", variant)
-    v0 = llval_create_reg (t, reg0)
-    // pack data after
-    reg1 = operation_with_type ("insertvalue", t); space()
-    print_val(v0); fprintf(fout, ", <%d x i8> ", size); print_val(data); o(", 1")
-    v1 = llval_create_reg (t, reg1)
-*/
-    return vo
+    return load (lvar)
   }
 
   // cast `maybe ptr`
@@ -951,19 +926,41 @@ eval_cast_to_union = EvalCast {
   }
 }
 
-
-/*    // если приводим к юнион но не мейби поинтер
-    // то нужно особое приведение -
-    if t.kind == #TypeUnion {
-      if not type_is_maybe_ptr (t) {
-        printf("UU not mabe\n")
-      }
-    }*/
+// приведение юниона к типу - по сути распаковка юниона
+eval_cast_union_to = EvalCast {
+  // 1. загружаем юнион в память
+  var_reg = operation_with_type ("alloca", v.type)
+  lvar = llval_create (#LLVM_ValueLocalVar, v.type, var_reg to Int64)
+  llvm_st (lvar, v)
+  // 2. получаем указатель на его поле data
+  size = v.type.union.data_size
+  ta = type_array_new (typeChar, size, nil)
+  data_field_type = type_pointer_new (ta, nil)
+  preg = llvm_getelementptr (v.type, lvar); o ("i1 0, i32 1");
+  data_field_ptr_reg = llval_create_reg (data_field_type, preg)
+  // 3. приводим указатель к требуемому типу
+  tx = type_pointer_new (t, nil)
+  p = llvm_cast ("bitcast", data_field_ptr_reg, tx)
+  // 4. загружаем его в регистр
+  reg_res = operation_with_type ("load", t)
+  comma ()
+  printType (t)
+  o ("* ")
+  print_val (p)
+  return llval_create_reg (t, reg_res)
+  // 5. profit
+}
 
 
 eval_cast = Eval {
   v = eval (x.cast.value)
   t = x.cast.type
+
+  if v.type.kind == #TypeUnion {
+    if v.type.union.impl == nil {
+      return eval_cast_union_to (v, t)
+    }
+  }
 
   return when true {
     type_is_ref(t)         => eval_cast_to_ref   (v, t)  // cast -> Ref
