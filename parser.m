@@ -946,7 +946,7 @@ exist parse_value_extern : AstValueParser
 exist parse_value_arr : AstValueParser
 exist parse_value_num : AstValueParser
 exist parse_value_str : AstValueParser
-exist parse_value_select : AstValueParser
+exist parse_value_when : AstValueParser
 
 parse_value_term = AstValueParser {
   token = ctok()
@@ -974,7 +974,7 @@ parse_value_id = AstValueParser {
   } else if match("array") {
     return parse_value_arr()
   } else if match("when") {
-    return parse_value_select()
+    return parse_value_when()
   }
 
 
@@ -990,7 +990,7 @@ fail:
   return nil
 }
 
-parse_value_select = AstValueParser {
+parse_value_when = AstValueParser {
   token = ctok()
   v = ast_value_new(#AstValueSelect, &token.ti)
   list_init(&v.select.variants)
@@ -1010,6 +1010,10 @@ parse_value_select = AstValueParser {
 
     // parse each variant
     va = malloc(sizeof AstValueSelectVariant) to *AstValueSelectVariant
+
+    // check if is type when
+    is_type = is_it_type ()
+
     va.x := parse_value()
     need("=>")
     va.y := parse_value()
