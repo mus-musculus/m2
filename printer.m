@@ -35,8 +35,8 @@ asm_init = (a : *Assembly, arch : Arch, name : Str) -> () {
     } (a)
 
     else => (a : *Assembly) -> () {
-      a.datalayout := nil;
-      a.triple := nil
+      a.datalayout := ""
+      a.triple := ""
     } (a)
   }
 }
@@ -164,8 +164,8 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
 
   nl ()
 
-  if a.datalayout != nil {fprintf (fout, "target datalayout = \"%s\"\n", a.datalayout)}
-  if a.triple != nil {fprintf (fout, "target triple = \"%s\"\n", a.triple)}
+  fprintf (fout, "target datalayout = \"%s\"\n", a.datalayout)
+  fprintf (fout, "target triple = \"%s\"\n", a.triple)
 
   nl ()
 
