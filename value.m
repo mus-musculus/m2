@@ -661,11 +661,11 @@ fail:
 do_value_as = DoValue {
   v = do_value (x.as.value)
   t = do_type (x.as.type)
+  ti = x.ti
 
-  /*if not type_is_maybe_ptr (v.type) {
-    error("expected maybe value", v.ti)
-    goto fail
-  }*/
+  if v.kind == #ValuePoison {goto fail}
+  if t.kind == #TypePoison {goto fail}
+
 
   // чекаем если приводим к типу который входит в объединение
   if not type_present_in_list (&v.type.union.types, t) {
@@ -679,10 +679,12 @@ do_value_as = DoValue {
   }
 
   // это полноценный юнион
-  vx = value_new (#ValueAs, t, x.ti)
+  return cast (v, t, ti)
+
+  /*vx = value_new (#ValueAs, t, x.ti)
   vx.as.value := v
   vx.as.type := t
-  return vx
+  return vx*/
 
 fail:
   return value_new_poison (x.ti)
