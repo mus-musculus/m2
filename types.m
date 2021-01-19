@@ -499,6 +499,33 @@ While = (cond : *Value, stmt : *Stmt)
 
 
 
+
+// StmtForbidden = () // его просто нельзя создать!
+StmtExpr = (v : *Value, reg : Nat32, ti : *TokenInfo)
+StmtBlock = Block
+StmtAssign = (l, r : *Value, ti : *TokenInfo)
+StmtIf = (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
+StmtWhile = (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
+StmtReturn = (retval : *Value or Unit, ti : *TokenInfo)
+StmtBreak = (ti : *TokenInfo)
+StmtContinue = (ti : *TokenInfo)
+StmtGoto = (label : Str, ti : *TokenInfo)
+StmtLabel = (label : Str, ti : *TokenInfo)
+
+
+Stmt2 = StmtExpr or
+        StmtBlock or
+        StmtAssign or
+        StmtIf or
+        StmtWhile or
+        StmtReturn or
+        StmtBreak or
+        StmtContinue or
+        StmtGoto or
+        StmtLabel
+
+
+
 Stmt = (
   kind : StmtKind
 

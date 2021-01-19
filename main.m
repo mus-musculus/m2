@@ -49,8 +49,9 @@ main = (argc : Nat, argv : []Str) -> Int32 {
 
   /*printf ("sizeof Token %d\n", sizeof Token)
   printf ("sizeof AstValue %d\n", sizeof AstValue)
-  printf ("sizeof Type %d\n", sizeof Type)
-  printf ("sizeof Value %d\n", sizeof Value)*/
+  printf ("sizeof Type %d\n", sizeof Type)*/
+  printf ("sizeof Stmt %d\n", sizeof Stmt)
+  printf ("sizeof Stmt2 %d\n", sizeof Stmt2)
 
   m = parse ("main.m")
 

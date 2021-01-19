@@ -367,6 +367,8 @@ parse_type1 = AstTypeParser {
 
     list_append(&tx.union.types, t)
 
+    skip_nl()
+
     t = parse_type2()
     list_append(&tx.union.types, t)
 
