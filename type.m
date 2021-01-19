@@ -328,6 +328,9 @@ do_type_enum = DoType {
 
 union_id = 0 to Var Nat
 
+
+
+
 do_type_union = DoType {
   xuid = str_new(10)
   sprintf(&xuid[0], "%d", union_id)
@@ -335,6 +338,7 @@ do_type_union = DoType {
   union_id := union_id + 1
 
   t = type_new (#TypeUnion, 0, x.ti)
+  list_init (&t.union.types)
   t.aka := aka
 
   CtxUnion = (
@@ -345,7 +349,6 @@ do_type_union = DoType {
   ctx = 0 to Var CtxUnion
   ctx.tlist := &t.union.types
 
-  list_init (&t.union.types)
   do_variant = ListForeachHandler {
     ast_type = data to *AstType
     c = ctx to *CtxUnion
@@ -363,11 +366,12 @@ do_type_union = DoType {
   }
   list_foreach(&x.union.types, do_variant, &ctx)
 
-  t.size := ctx.max_size
-  t.align := ctx.max_size
+  size = align(ctx.max_size + 2, 8)
+
+  t.size := size
+  t.align := size
 
   t.union.data_size := ctx.max_size
-  printf("SZ = %d\n", ctx.max_size)
 
   list_append (&unions, t)
 

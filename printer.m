@@ -191,7 +191,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
     if t.union.impl != nil {
       fprintf (fout, "\n%%%s = type ", t.aka); printType(t.union.impl); o("\n")
     } else {
-      fprintf (fout, "\n%%%s = type {i16, <%d x i8>}", t.aka, t.union.data_size); o("\n")
+      fprintf (fout, "\n%%%s = type {i16, [%d x i8]}", t.aka, t.union.data_size); o("\n")
     }
   }
   list_foreach (&unions, prt_alias, nil)
@@ -796,6 +796,8 @@ eval_cast_to_basic = EvalCast {
     #TypeBool => llvm_cast ("zext", v, t)
     #TypeUnion => llvm_cast ("bitcast", v, t)
 
+    #TypeRecord => llvm_cast ("bitcast", v, t)
+
     else => EvalCast {
       k = v.type.kind
       fprintf (fout, "\n<invalid k %d in cast>", k)
@@ -884,11 +886,41 @@ eval_cast_to_union = EvalCast {
 
   // cast to Regular Union
   if not type_is_maybe_ptr (t) {
-    // приводим наши данные к типу вектора <n x i8>
+    // суть в том что нельзя никак увы в LLVM
+    // преобразовать произвольные данные к массиву
+    // поэтому приходится создавать переменную и в нее писать
+    // посредством указателей. А вот указатели приводить можно как угодно
+    var_reg = operation_with_type ("alloca", t)
+    lvar = llval_create (#LLVM_ValueLocalVar, t, var_reg to Int64)
+
+    variant_type = getIntByPower(2)
+    variant_ptr_type = type_pointer_new(variant_type, nil)
+
+    // %5 = getelementptr inbounds <ot>, <ot>* @by,
+    preg = llvm_getelementptr(t, lvar); o("i1 0, i32 0");
+    ptr_to_variant = llval_create_reg(variant_ptr_type, preg)
+
+    variant_imm = llval_create (#LLVM_ValueImmediate, variant_type, variant to Int64)
+    //loadImmAs(variant
+
+    llvm_st(ptr_to_variant, variant_imm)
+
+    // получаем указатель на поле data в union
+    rr = llvm_getelementptr(t, lvar); o("i1 0, i32 1");
     size = t.union.data_size
+    ta = type_array_new (typeChar, size, nil)
+    data_field_type = type_pointer_new(ta, nil)
+    ptr_to_data_field = llval_create_reg(data_field_type, rr)
+
+    // приводим указатель на Union#data к указателю на пакуемый тип
+    p = llvm_cast("bitcast", ptr_to_data_field, type_pointer_new(v.type, nil))
+    llvm_st(p, v)
+
+    vo = load(lvar)
+
 
     // сперва приводим данные к интеджеру длины равной длине вектора
-    vz = eval_cast_to_basic(v, getIntByPower(size))
+    /*vz = eval_cast_to_basic(v, getIntByPower(size))
 
     // и только потом сможем привести интеджер к вектору
     reg = operation_with_type ("bitcast", vz.type)
@@ -907,8 +939,8 @@ eval_cast_to_union = EvalCast {
     reg1 = operation_with_type ("insertvalue", t); space()
     print_val(v0); fprintf(fout, ", <%d x i8> ", size); print_val(data); o(", 1")
     v1 = llval_create_reg (t, reg1)
-
-    return v1
+*/
+    return vo
   }
 
   // cast `maybe ptr`

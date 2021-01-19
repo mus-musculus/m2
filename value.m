@@ -611,6 +611,7 @@ do_value_is = DoValue {
   // чекаем если проверяем на соответствие типу который входит в объединение
   if not type_present_in_list (&v.type.union.types, t) {
     error ("type error", v.ti)
+    goto fail
   }
 
   variant = type_union_get_variant (v.type, t)
@@ -620,6 +621,9 @@ do_value_is = DoValue {
   vx.is.variant := variant
 
   return vx
+
+fail:
+  return value_new_poison (x.ti)
 }
 
 
