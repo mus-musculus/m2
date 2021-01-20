@@ -851,7 +851,11 @@ do_value_func = DoValue {
   }
   list_foreach (t.func.from.record.decls, getparam, param_block)
 
-  fv = value_new (#ValueGlobalConst, t, x.func.block_stmt.ti)
+  block = x.func.block_stmt
+
+  if block is Unit {goto fail}
+
+  fv = value_new (#ValueGlobalConst, t, (block as *AstStmt).ti)
 
   // we're in func?
   // add current func to parant func local_funcs list
@@ -875,7 +879,7 @@ do_value_func = DoValue {
   fctx.cblock := param_block
   fctx.cfunc := fv
 
-  bx0 = do_stmt (x.func.block_stmt)
+  bx0 = do_stmt (block as *AstStmt)
 
   if bx0 is Unit {goto fail}
   bx = bx0 as *Stmt

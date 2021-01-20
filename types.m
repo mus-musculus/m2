@@ -151,7 +151,7 @@ AstValueKind = {
   #AstValueSizeof, #AstValueAlignof, #AstValueWhen
 }
 
-AstValueFunc = (type : *AstType, block_stmt : *AstStmt)
+AstValueFunc = (type : *AstType, block_stmt : *AstStmt or Unit)
 AstValueCall = (func : *AstValue, args : List)
 AstValueIndex = (array, index : *AstValue)
 AstValueAccess = (rec : *AstValue, field_id : *AstId)
