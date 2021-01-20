@@ -214,12 +214,12 @@ AstStmtLabel    = (label : *AstId, ti : *TokenInfo)
 AstStmtBreak    = (ti : *TokenInfo)
 AstStmtContinue = (ti : *TokenInfo)
 
+//AstStmt = AstStmtAssign or
 
 AstStmt = (
   kind    : AstStmtKind
 
   assign   : AstStmtAssign
-  vardef   : AstDecl     // #AstStmtVarDef
   valdef   : AstStmtValueDef
   typedef  : AstStmtTypeDef
   expr     : AstStmtExpr

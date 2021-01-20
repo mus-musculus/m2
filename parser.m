@@ -1134,7 +1134,7 @@ exist parse_stmt_if : AstStmtParser
 exist parse_stmt_while : AstStmtParser
 exist parse_stmt_return : AstStmtParser
 exist parse_stmt_goto : AstStmtParser
-exist parse_stmt_vardef : AstStmtParser
+//exist parse_stmt_vardef : AstStmtParser
 exist parse_stmt_typedef : AstStmtParser
 exist parse_stmt_expr : AstStmtParser
 
@@ -1338,12 +1338,12 @@ parse_stmt_goto = AstStmtParser {
 }
 
 
-parse_stmt_vardef = AstStmtParser {
+/*parse_stmt_vardef = AstStmtParser {
   s = ast_stmt_new(#AstStmtVarDef, ti)
   fieldsdef = parse_decl(false)
   s.vardef := *fieldsdef
   return s
-}
+}*/
 
 
 
