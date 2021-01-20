@@ -275,41 +275,32 @@ parse_import = () -> *AstNode {
   i.ti := &tk.ti
   skip()
   return ast_node_new(#AstNodeImport, i)
-  //old_lstate = lstate
-  //parse(filename)
-  //lstate = old_lstate
 }
 
+
 parse_bind_type = () -> *AstNodeBindType {
-  bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
   id = parse_id()
   ti = &ctok().ti
   need("=")
-  /*ist = is_it_type()
-  if not ist {
-    printf("%s is type? %d\n", id.str, ist)
-  }*/
   t = parse_type()
-  //printf("type bind: %s\n", id.str)
+
+  bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
   bt.id := id
   bt.type := t
   bt.ti := ti
   return bt
 }
 
+
 parse_bind_value = () -> *AstNodeBindValue {
-  bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
   id = parse_id()
   ti = &ctok().ti
   need("=")
-  /*ist = is_it_type()
-  if ist {
-    printf("%s is type? %d\n", id.str, ist)
-  }*/
+  v = parse_value()
 
-  //printf("value bind: %s\n", id.str)
+  bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
   bv.id := id
-  bv.value := parse_value()
+  bv.value := v
   bv.ti := ti
   return bv
 }
@@ -335,18 +326,22 @@ exist parse_type_rec   : AstTypeParser
 exist parse_type_array : AstTypeParser
 
 exist parse_type  : AstTypeParser
+exist parse_type0  : AstTypeParser
 exist parse_type1 : AstTypeParser
 exist parse_type2 : AstTypeParser
 exist parse_type3 : AstTypeParser
 exist parse_type4 : AstTypeParser
 
-parse_type = AstTypeParser {
-  t = parse_type1()
-  tk = ctok()
 
+
+parse_type0 = AstTypeParser {
+  t = parse_type1()
+
+  tk = ctok()
   if match("->") {
     from = t
     _to = parse_type()
+
     ft = ast_type_new(#AstTypeFunc, &tk.ti)
     ft.func.from := from
     ft.func.to := _to
@@ -355,7 +350,6 @@ parse_type = AstTypeParser {
 
   return t
 }
-
 
 parse_type1 = AstTypeParser {
   t = parse_type2()
@@ -412,7 +406,6 @@ parse_type2 = AstTypeParser {
   return parse_type3()
 }
 
-
 exist is_it_field : () -> Bool
 
 parse_type3 = AstTypeParser {
@@ -429,7 +422,6 @@ parse_type3 = AstTypeParser {
 
   return parse_type4()
 }
-
 
 parse_type4 = AstTypeParser {
   if match("{") {
@@ -448,6 +440,10 @@ parse_type4 = AstTypeParser {
   t.name := parse_name()
   return t
 }
+
+
+parse_type = parse_type0
+
 
 //*/
 
@@ -480,7 +476,7 @@ parse_type_set = AstTypeParser {
 
 parse_type_rec = AstTypeParser {
   tk = ctok()
-  t = ast_type_new(#AstTypeRecord, &tk.ti)
+
   decls = 0 to Var List
   list_init(&decls)
 
@@ -501,8 +497,8 @@ parse_type_rec = AstTypeParser {
     list_append(&decls, fd)
   }
 
+  t = ast_type_new(#AstTypeRecord, &tk.ti)
   t.record.decls := decls
-
   return t
 }
 
@@ -510,9 +506,11 @@ parse_type_rec = AstTypeParser {
 parse_type_ptr = AstTypeParser {
   tk = ctok()
   need("*")
-  t = ast_type_new(#AstTypePointer, &tk.ti)
-  t.pointer.to := parse_type()
-  return t
+  t = parse_type()
+
+  pt = ast_type_new(#AstTypePointer, &tk.ti)
+  pt.pointer.to := t
+  return pt
 }
 
 
@@ -526,10 +524,11 @@ parse_type_array = AstTypeParser {
     return t
   }
 
-  t = ast_type_new(#AstTypeArray, &tk.ti)
   size = parse_value()
   need("]")
   of = parse_type()
+
+  t = ast_type_new(#AstTypeArray, &tk.ti)
   t.array.size := size
   t.array.of := of
   return t
@@ -541,7 +540,6 @@ parse_type_array = AstTypeParser {
 // *AstDecl
 parse_decl = (arghack : Bool) -> *AstDecl {
   afd = malloc(sizeof AstDecl) to *AstDecl
-
   // get id's
   list_init(&afd.ids)
   while true {
@@ -551,15 +549,16 @@ parse_decl = (arghack : Bool) -> *AstDecl {
     skip_nl()
   }
 
-  afd.ti := &ctok().ti
+  ti = &ctok().ti
   need(":")
 
   t = parse_type()
 
+
+  afd.ti := ti
   afd.type := t
   afd.extern := external
   afd.arghack := xarghack
-
   return afd
 }
 
