@@ -21,36 +21,35 @@ stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
 }
 
 
-exist do_stmt_assign   : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_valdef   : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_block    : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_expr     : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_if       : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_while    : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_return   : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_vardef   : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_typedef  : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_break    : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_continue : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_goto     : (x : *AstStmt) -> *Stmt or Unit
-exist do_stmt_label    : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_assign   : (x : *AstStmtAssign) -> *Stmt or Unit
+exist do_stmt_valdef   : (x : *AstStmtValueDef) -> *Stmt or Unit
+exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
+exist do_stmt_expr     : (x : *AstStmtExpr) -> *Stmt or Unit
+exist do_stmt_if       : (x : *AstStmtIf) -> *Stmt or Unit
+exist do_stmt_while    : (x : *AstStmtWhile) -> *Stmt or Unit
+exist do_stmt_return   : (x : *AstStmtReturn) -> *Stmt or Unit
+exist do_stmt_typedef  : (x : *AstStmtTypeDef) -> *Stmt or Unit
+exist do_stmt_break    : (x : *AstStmtBreak) -> *Stmt or Unit
+exist do_stmt_continue : (x : *AstStmtContinue) -> *Stmt or Unit
+exist do_stmt_goto     : (x : *AstStmtGoto) -> *Stmt or Unit
+exist do_stmt_label    : (x : *AstStmtLabel) -> *Stmt or Unit
 
 
 do_stmt = DoStmt {
   return when x.kind {
-    #AstStmtAssign   => do_stmt_assign   (x)
-    #AstStmtValueDef => do_stmt_valdef   (x)
-    #AstStmtBlock    => do_stmt_block    (x)
-    #AstStmtExpr     => do_stmt_expr     (x)
-    #AstStmtIf       => do_stmt_if       (x)
-    #AstStmtWhile    => do_stmt_while    (x)
-    #AstStmtReturn   => do_stmt_return   (x)
+    #AstStmtAssign   => do_stmt_assign   (&x.assign)
+    #AstStmtValueDef => do_stmt_valdef   (&x.valdef)
+    #AstStmtBlock    => do_stmt_block    (&x.block)
+    #AstStmtExpr     => do_stmt_expr     (&x.expr)
+    #AstStmtIf       => do_stmt_if       (&x.if)
+    #AstStmtWhile    => do_stmt_while    (&x.while)
+    #AstStmtReturn   => do_stmt_return   (&x.return)
     //#AstStmtVarDef   => do_stmt_vardef (x)
-    #AstStmtTypeDef  => do_stmt_typedef  (x)
-    #AstStmtBreak    => do_stmt_break    (x)
-    #AstStmtContinue => do_stmt_continue (x)
-    #AstStmtGoto     => do_stmt_goto     (x)
-    #AstStmtLabel    => do_stmt_label    (x)
+    #AstStmtTypeDef  => do_stmt_typedef  (&x.typedef)
+    #AstStmtBreak    => do_stmt_break    (&x.break)
+    #AstStmtContinue => do_stmt_continue (&x.continue)
+    #AstStmtGoto     => do_stmt_goto     (&x.goto)
+    #AstStmtLabel    => do_stmt_label    (&x.label)
     else => unit
   }
 }
@@ -61,12 +60,12 @@ do_stmt = DoStmt {
 Значит мне придется явно передавать во все функции семейства do_value флаг
 lval - означающий что не нужно загружать значение окончательно.
 */
-do_stmt_assign = (x : *AstStmt) -> *Stmt or Unit {
-  rval0 = do_value (x.assign.r)
+do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
+  rval0 = do_value (x.r)
 
   if rval0.kind == #ValuePoison {return unit}
 
-  lx = x.assign.l
+  lx = x.l
   lval = when lx.kind {
     #AstValueId => do_value_named      (lx)
     #AstValueDeref => do_value_deref   (lx)
@@ -81,7 +80,7 @@ do_stmt_assign = (x : *AstStmt) -> *Stmt or Unit {
   }
 
   if value_is_readonly (lval) {
-    error ("invalid lval", x.assign.ti)
+    error ("invalid lval", x.ti)
     return unit
   }
 
@@ -101,17 +100,17 @@ do_stmt_assign = (x : *AstStmt) -> *Stmt or Unit {
 
   rval = implicit_cast (rval0, ltype)
 
-  if not type_check (ltype, rval.type, x.assign.ti) {
+  if not type_check (ltype, rval.type, x.ti) {
     return unit
   }
 
-  return stmt_assign_new (lval, rval, x.assign.ti)
+  return stmt_assign_new (lval, rval, x.ti)
 }
 
 
-do_stmt_valdef = (x : *AstStmt) -> *Stmt or Unit {
-  id = x.valdef.id
-  v = do_valuex (x.valdef.expr, false)
+do_stmt_valdef = (x : *AstStmtValueDef) -> *Stmt or Unit {
+  id = x.id
+  v = do_valuex (x.expr, false)
 
   // Local
   // важно чтобы undef переменные попадали сюда так как иначе
@@ -123,10 +122,10 @@ do_stmt_valdef = (x : *AstStmt) -> *Stmt or Unit {
        k != #ValueImmediate or
        k == #ValueUndefined {
 
-      v0 = value_new (#ValueLocalConst, v.type, x.valdef.ti)
+      v0 = value_new (#ValueLocalConst, v.type, x.ti)
       bind_value_local (id.str, v0)
 
-      se = stmt_new (#StmtExpr, x.valdef.ti)
+      se = stmt_new (#StmtExpr, x.ti)
       se.e.v := dold (v)
       v0.expr := &se.e
       return se
@@ -153,8 +152,8 @@ stmt_block_new = (b, parent : *Block) -> *Block {
 }
 
 
-do_stmt_block = (x : *AstStmt) -> *Stmt or Unit {
-  s = stmt_new (#StmtBlock, x.block.ti)
+do_stmt_block = (x : *AstStmtBlock) -> *Stmt or Unit {
+  s = stmt_new (#StmtBlock, x.ti)
 
   b = stmt_block_new (&s.b, fctx.cblock)
 
@@ -168,7 +167,7 @@ do_stmt_block = (x : *AstStmt) -> *Stmt or Unit {
     stmts = ctx to *List
     list_append (stmts, stmt as *Stmt)
   }
-  list_foreach (&x.block.stmts, hstmt, &b.stmts)
+  list_foreach (&x.stmts, hstmt, &b.stmts)
 
   fctx.cblock := b.parent  // restore old cblock value
 
@@ -176,8 +175,8 @@ do_stmt_block = (x : *AstStmt) -> *Stmt or Unit {
 }
 
 
-do_stmt_expr = (x : *AstStmt) -> *Stmt or Unit {
-  v = do_value (x.expr.expr)
+do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
+  v = do_value (x.expr)
 
   if v.kind == #ValuePoison {return unit}
 
@@ -185,20 +184,20 @@ do_stmt_expr = (x : *AstStmt) -> *Stmt or Unit {
     //warning("ignoring value", x.ti)
   }
 
-  s = stmt_new (#StmtExpr, x.expr.ti)
+  s = stmt_new (#StmtExpr, x.ti)
   s.e.v := v
   return s
 }
 
 
-do_stmt_if = (x : *AstStmt) -> *Stmt or Unit {
-  cond = do_value (x.if.cond)
-  then = do_stmt (x.if.then)
+do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
+  cond = do_value (x.cond)
+  then = do_stmt (x.then)
 
   _else = unit to Var *Stmt or Unit
 
-  if not (x.if.else is Unit) {
-    els = do_stmt (x.if.else as *AstStmt)
+  if not (x.else is Unit) {
+    els = do_stmt (x.else as *AstStmt)
     if not (els is Unit) {
       _else := els as *Stmt
     }
@@ -217,7 +216,7 @@ do_stmt_if = (x : *AstStmt) -> *Stmt or Unit {
 
   if then is Unit {return unit}
 
-  s = stmt_new (#StmtIf, x.if.ti)
+  s = stmt_new (#StmtIf, x.ti)
   s.i.cond := cond
   s.i.then := then as *Stmt
   s.i.else := _else
@@ -225,11 +224,11 @@ do_stmt_if = (x : *AstStmt) -> *Stmt or Unit {
 }
 
 
-do_stmt_while = (x : *AstStmt) -> *Stmt or Unit {
-  cond = do_value (x.while.cond)
+do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
+  cond = do_value (x.cond)
 
   fctx.loop := fctx.loop + 1
-  block = do_stmt (x.while.block)
+  block = do_stmt (x.block)
   fctx.loop := fctx.loop - 1
 
   if cond.kind == #ValuePoison {return unit}
@@ -240,16 +239,16 @@ do_stmt_while = (x : *AstStmt) -> *Stmt or Unit {
 
   if block is Unit {return unit}
 
-  s = stmt_new (#StmtWhile, x.while.ti)
+  s = stmt_new (#StmtWhile, x.ti)
   s.w.cond := cond
   s.w.stmt := block as *Stmt
   return s
 }
 
 
-do_stmt_return = (x : *AstStmt) -> *Stmt or Unit {
+do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   func_to = fctx.cfunc.type.func.to
-  rv = x.return.value
+  rv = x.value
 
   retval = when rv {
     nil => nil to *Value
@@ -266,18 +265,18 @@ do_stmt_return = (x : *AstStmt) -> *Stmt or Unit {
   // missing return value
   if retval == nil {
     if not type_eq (func_to, typeUnit) {
-      error("missing return value", x.return.ti)
+      error("missing return value", x.ti)
     }
   }
 
-  s = stmt_new (#StmtReturn, x.return.ti)
+  s = stmt_new (#StmtReturn, x.ti)
   s.a[0] := retval
   return s
 }
 
 
-do_stmt_vardef = (x : *AstStmt) -> *Stmt or Unit {
-  /*type = do_type(x.vardef.type)
+/*do_stmt_vardef = (x : *AstStmtVarDef) -> *Stmt or Unit {
+  type = do_type(x.vardef.type)
   ti = x.vardef.ti
   add_var = ListForeachHandler {
     ast_id = data to *AstId
@@ -285,14 +284,14 @@ do_stmt_vardef = (x : *AstStmt) -> *Stmt or Unit {
     create_local_var(ast_id, type, nil, ast_id.ti)
   }
   list_foreach(&x.vardef.ids, add_var, type)
-  */
+
   return unit
-}
+}*/
 
 
-do_stmt_typedef = (x : *AstStmt) -> *Stmt or Unit {
-  id = x.typedef.id.str
-  _type = do_type (x.typedef.type)
+do_stmt_typedef = (x : *AstStmtTypeDef) -> *Stmt or Unit {
+  id = x.id.str
+  _type = do_type (x.type)
 
   uid = get_suid_type_local ()
   if _type.aka == nil {_type.aka := uid}
@@ -309,28 +308,28 @@ do_stmt_typedef = (x : *AstStmt) -> *Stmt or Unit {
 }
 
 
-do_stmt_break = (x : *AstStmt) -> *Stmt or Unit {
+do_stmt_break = (x : *AstStmtBreak) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new (#StmtBreak, x.break.ti)
+  return stmt_new (#StmtBreak, x.ti)
 }
 
 
-do_stmt_continue = (x : *AstStmt) -> *Stmt or Unit {
+do_stmt_continue = (x : *AstStmtContinue) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new (#StmtContinue, x.continue.ti)
+  return stmt_new (#StmtContinue, x.ti)
 }
 
 
-do_stmt_goto = (x : *AstStmt) -> *Stmt or Unit {
-  s = stmt_new (#StmtGoto, x.goto.ti)
-  s.l := x.goto.label.str
+do_stmt_goto = (x : *AstStmtGoto) -> *Stmt or Unit {
+  s = stmt_new (#StmtGoto, x.ti)
+  s.l := x.label.str
   return s
 }
 
 
-do_stmt_label = (x : *AstStmt) -> *Stmt or Unit {
-  s = stmt_new (#StmtLabel, x.label.ti)
-  s.l := x.label.label.str
+do_stmt_label = (x : *AstStmtLabel) -> *Stmt or Unit {
+  s = stmt_new (#StmtLabel, x.ti)
+  s.l := x.label.str
   return s
 }
 
