@@ -897,7 +897,10 @@ fail:
 
 
 do_value_array = DoValue {return value_new_poison (x.ti)}
-do_value_record = DoValue {return value_new_poison (x.ti)}
+
+do_value_record = DoValue {
+  return value_new_poison (x.ti)
+}
 
 
 do_value_plus = DoValue {

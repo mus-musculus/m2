@@ -162,6 +162,8 @@ AstValueAs = (value : *AstValue, type : *AstType)
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue)
 AstValueWhen = (x : *AstValue, variants : List, other : *AstValue)
 
+AstValuerecord = (type : *AstType, items : Map)
+
 AstValue = (
   kind : AstValueKind
 
@@ -169,6 +171,8 @@ AstValue = (
   name    : AstName       // #AstValueName
   operand : [2]*AstValue  // un, bin, shl & shr operands
   of_type : *AstType      // sizeof, alignof
+
+  rec     : AstValuerecord  // for #AstValueRec
 
   func    : AstValueFunc
   call    : AstValueCall

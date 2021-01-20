@@ -81,6 +81,13 @@ separator = () -> Bool {
   return false
 }
 
+need_comma_or_nl = () -> () {
+  ti = &ctok().ti
+  if match(",") {return}
+  if match("\n") {return}
+  error("expected comma or new line", ti)
+}
+
 
 skipto = (s : Str) -> () {
   error("lex::skipto not implemented\n", nil)
@@ -325,12 +332,12 @@ exist parse_type_set   : AstTypeParser
 exist parse_type_rec   : AstTypeParser
 exist parse_type_array : AstTypeParser
 
-exist parse_type  : AstTypeParser
+exist parse_type   : AstTypeParser
 exist parse_type0  : AstTypeParser
-exist parse_type1 : AstTypeParser
-exist parse_type2 : AstTypeParser
-exist parse_type3 : AstTypeParser
-exist parse_type4 : AstTypeParser
+exist parse_type1  : AstTypeParser
+exist parse_type2  : AstTypeParser
+exist parse_type3  : AstTypeParser
+exist parse_type4  : AstTypeParser
 
 
 
@@ -362,8 +369,8 @@ parse_type1 = AstTypeParser {
     list_append(&tx.union.types, t)
 
     skip_nl()
-
     t = parse_type2()
+
     list_append(&tx.union.types, t)
 
     while match("or") {
@@ -379,7 +386,6 @@ parse_type1 = AstTypeParser {
 }
 
 parse_type2 = AstTypeParser {
-
   tk = ctok()
   if match("*") {
     t = ast_type_new(#AstTypePointer, &tk.ti)
@@ -455,7 +461,7 @@ parse_type_set = AstTypeParser {
   t = ast_type_new(#AstTypeEnum, &tk.ti)
 
   skip_nl()
-  while not match("}") {
+  while true {
     skip_nl()
 
     ti = &ctok().ti
@@ -463,11 +469,16 @@ parse_type_set = AstTypeParser {
 
     list_append(&t.enum.constructors, cons to *Unit)
 
-    if not match(",") {
+    if match("\n") {
       skip_nl()
-      need("}")
-      break
+      if match ("}") {break;}
+      continue
     }
+
+    if match ("}") {break;}
+
+    need(",")
+    skip_nl()
   }
 
   return t
@@ -553,7 +564,6 @@ parse_decl = (arghack : Bool) -> *AstDecl {
   need(":")
 
   t = parse_type()
-
 
   afd.ti := ti
   afd.type := t
@@ -946,6 +956,7 @@ exist parse_value_arr : AstValueParser
 exist parse_value_num : AstValueParser
 exist parse_value_str : AstValueParser
 exist parse_value_when : AstValueParser
+exist parse_value_rec : AstValueParser
 
 parse_value_term = AstValueParser {
   token = ctok()
@@ -970,6 +981,8 @@ parse_value_id = AstValueParser {
     return parse_value_func()
   } else if match("extern") {
     return parse_value_extern()
+  } else if match("rec") {
+    return parse_value_rec()
   } else if match("array") {
     return parse_value_arr()
   } else if match("when") {
@@ -1035,6 +1048,33 @@ parse_value_str = AstValueParser {
 
   v = ast_value_new(#AstValueStr, &token.ti)
   v.str := str
+  return v
+}
+
+
+parse_value_rec = AstValueParser {
+  ti = &ctok().ti
+  t = parse_type()
+  need("(")
+
+  fields = 0 to Var Map  // id -> *Value
+
+  len = 0 to Var Nat32
+  while true {
+    id = parse_id()
+    need("=")
+    v = parse_value()
+
+    map_append(&fields, id.str, v)
+    len := len + 1
+
+    if match(")") {break}
+    need(",")
+  }
+
+  v = ast_value_new (#AstValueRec, ti)
+  v.rec.type := t
+  v.rec.items := fields
   return v
 }
 
