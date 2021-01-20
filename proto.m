@@ -129,19 +129,6 @@ exist stmt_block_new : (b, parent : *Block) -> *Block
 
 
 exist do_stmt : DoStmt
-exist do_stmt_assign : DoStmt
-exist do_stmt_valdef : DoStmt
-exist do_stmt_block : DoStmt
-exist do_stmt_expr : DoStmt
-exist do_stmt_if : DoStmt
-exist do_stmt_while : DoStmt
-exist do_stmt_return : DoStmt
-exist do_stmt_vardef : DoStmt
-exist do_stmt_typedef : DoStmt
-exist do_stmt_break : DoStmt
-exist do_stmt_continue : DoStmt
-exist do_stmt_goto : DoStmt
-exist do_stmt_label : DoStmt
 
 
 exist create_global_var : (id : Str, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value

@@ -21,6 +21,21 @@ stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
 }
 
 
+exist do_stmt_assign   : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_valdef   : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_block    : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_expr     : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_if       : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_while    : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_return   : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_vardef   : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_typedef  : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_break    : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_continue : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_goto     : (x : *AstStmt) -> *Stmt or Unit
+exist do_stmt_label    : (x : *AstStmt) -> *Stmt or Unit
+
+
 do_stmt = DoStmt {
   return when x.kind {
     #AstStmtAssign   => do_stmt_assign   (x)
@@ -46,7 +61,7 @@ do_stmt = DoStmt {
 Значит мне придется явно передавать во все функции семейства do_value флаг
 lval - означающий что не нужно загружать значение окончательно.
 */
-do_stmt_assign = DoStmt {
+do_stmt_assign = (x : *AstStmt) -> *Stmt or Unit {
   rval0 = do_value (x.assign.r)
 
   if rval0.kind == #ValuePoison {return unit}
@@ -94,7 +109,7 @@ do_stmt_assign = DoStmt {
 }
 
 
-do_stmt_valdef = DoStmt {
+do_stmt_valdef = (x : *AstStmt) -> *Stmt or Unit {
   id = x.valdef.id
   v = do_valuex (x.valdef.expr, false)
 
@@ -138,7 +153,7 @@ stmt_block_new = (b, parent : *Block) -> *Block {
 }
 
 
-do_stmt_block = DoStmt {
+do_stmt_block = (x : *AstStmt) -> *Stmt or Unit {
   s = stmt_new (#StmtBlock, x.block.ti)
 
   b = stmt_block_new (&s.b, fctx.cblock)
@@ -161,7 +176,7 @@ do_stmt_block = DoStmt {
 }
 
 
-do_stmt_expr = DoStmt {
+do_stmt_expr = (x : *AstStmt) -> *Stmt or Unit {
   v = do_value (x.expr.expr)
 
   if v.kind == #ValuePoison {return unit}
@@ -176,7 +191,7 @@ do_stmt_expr = DoStmt {
 }
 
 
-do_stmt_if = DoStmt {
+do_stmt_if = (x : *AstStmt) -> *Stmt or Unit {
   cond = do_value (x.if.cond)
   then = do_stmt (x.if.then)
 
@@ -210,7 +225,7 @@ do_stmt_if = DoStmt {
 }
 
 
-do_stmt_while = DoStmt {
+do_stmt_while = (x : *AstStmt) -> *Stmt or Unit {
   cond = do_value (x.while.cond)
 
   fctx.loop := fctx.loop + 1
@@ -232,7 +247,7 @@ do_stmt_while = DoStmt {
 }
 
 
-do_stmt_return = DoStmt {
+do_stmt_return = (x : *AstStmt) -> *Stmt or Unit {
   func_to = fctx.cfunc.type.func.to
   rv = x.return.value
 
@@ -261,7 +276,7 @@ do_stmt_return = DoStmt {
 }
 
 
-do_stmt_vardef = DoStmt {
+do_stmt_vardef = (x : *AstStmt) -> *Stmt or Unit {
   /*type = do_type(x.vardef.type)
   ti = x.vardef.ti
   add_var = ListForeachHandler {
@@ -275,7 +290,7 @@ do_stmt_vardef = DoStmt {
 }
 
 
-do_stmt_typedef = DoStmt {
+do_stmt_typedef = (x : *AstStmt) -> *Stmt or Unit {
   id = x.typedef.id.str
   _type = do_type (x.typedef.type)
 
@@ -294,26 +309,26 @@ do_stmt_typedef = DoStmt {
 }
 
 
-do_stmt_break = DoStmt {
+do_stmt_break = (x : *AstStmt) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
   return stmt_new (#StmtBreak, x.break.ti)
 }
 
 
-do_stmt_continue = DoStmt {
+do_stmt_continue = (x : *AstStmt) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
   return stmt_new (#StmtContinue, x.continue.ti)
 }
 
 
-do_stmt_goto = DoStmt {
+do_stmt_goto = (x : *AstStmt) -> *Stmt or Unit {
   s = stmt_new (#StmtGoto, x.goto.ti)
   s.l := x.goto.label.str
   return s
 }
 
 
-do_stmt_label = DoStmt {
+do_stmt_label = (x : *AstStmt) -> *Stmt or Unit {
   s = stmt_new (#StmtLabel, x.label.ti)
   s.l := x.label.label.str
   return s
