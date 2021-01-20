@@ -1316,7 +1316,10 @@ parse_stmt_while = AstStmtParser {
 parse_stmt_return = AstStmtParser {
 
   if separator() {
-    return ast_stmt_new(#AstStmtReturn, ti)
+    //return ast_stmt_new(#AstStmtReturn, ti)
+    s = ast_stmt_new(#AstStmtReturn, ti)
+    s.return.value := unit
+    return s
   }
 
   ti = &ctok().ti

@@ -251,7 +251,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   rv = x.value
 
   retval = when rv {
-    nil => nil to *Value
+    unit => nil to *Value
 
     else => (rv : *AstValue, ft : *Type) -> *Value {
       v0 = do_value (rv)
@@ -259,7 +259,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
       v = implicit_cast (v0, ft)
       if not type_check (ft, v.type, rv.ti) {}
       return v
-    } (rv, func_to)
+    } (rv as *AstValue, func_to)
   }
 
   // missing return value
