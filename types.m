@@ -66,15 +66,15 @@ AstName = (id, namespace : *AstId, ti : *TokenInfo)
 
 
 AstTypeKind = {
-  #AstTypeUnknown,
-  #AstTypeNamed,
-  #AstTypeEnum,
-  #AstTypeRecord,
-  #AstTypeArray,
-  #AstTypeArrayU,
-  #AstTypeFunc,
-  #AstTypePointer,
-  #AstTypeVar,
+  #AstTypeUnknown
+  #AstTypeNamed
+  #AstTypeEnum
+  #AstTypeRecord
+  #AstTypeArray
+  #AstTypeArrayU
+  #AstTypeFunc
+  #AstTypePointer
+  #AstTypeVar
   #AstTypeUnion
 }
 
@@ -291,34 +291,34 @@ Decl = (
 TypeKind = {
   // #TypeForbidden - запрещенный вид типа
   // используемый только для отладки компилятора
-  #TypeForbidden,
+  #TypeForbidden
 
   // неопределенный (но задекларированный) тип
-  #TypeUndefined,
+  #TypeUndefined
 
   // #TypePoison - тип который по каким то причинам не был распознан.
   // ошибку по этому поводу уже выдали, дальше он просто едет по конвейеру
   // заражая все к чему прикасается (типы зависящие от него превращаются в #TypePoison,
   // а значения этого типа сразу же становятся #ValuePoison
-  #TypePoison,
+  #TypePoison
 
   // Специальный тип для универсального указателя nil
-  #TypeGenericReference,
+  #TypeGenericReference
 
   // Nat8, Nat16, Int8, Int16, etc.
   // see TypeNumeric (TypeNumeric#power, TypeNumeric#signed)
   // when TypeNumeric#power == 0 => it is GeneicNumeric
-  #TypeNumeric,
+  #TypeNumeric
 
-  #TypeVar,
+  #TypeVar
 
-  #TypeBool,
-  #TypeFunc,
-  #TypeEnum,
-  #TypeRecord,
-  #TypePointer,
-  #TypeArray,
-  #TypeArrayU,
+  #TypeBool
+  #TypeFunc
+  #TypeEnum
+  #TypeRecord
+  #TypePointer
+  #TypeArray
+  #TypeArrayU
 
   #TypeUnion
 }
@@ -479,17 +479,17 @@ Value = (
 /*****************************************************************************/
 
 StmtKind = {
-  #StmtForbidden,
-  #StmtExpr,
-  #StmtBlock,
-  #StmtVarDef,
-  #StmtAssign,
-  #StmtIf,
-  #StmtWhile,
-  #StmtReturn,
-  #StmtBreak,
-  #StmtContinue,
-  #StmtGoto,
+  #StmtForbidden
+  #StmtExpr
+  #StmtBlock
+  #StmtVarDef
+  #StmtAssign
+  #StmtIf
+  #StmtWhile
+  #StmtReturn
+  #StmtBreak
+  #StmtContinue
+  #StmtGoto
   #StmtLabel
 }
 
@@ -650,25 +650,25 @@ Arch = {#Arch_Unknown, #Arch-x64, #Arch-ARM-CM3}
 
 
 LLVM_ValueKind = {
-  #LLVM_ValueInvalid,    // An error occurred while evaluation
+  #LLVM_ValueInvalid    // An error occurred while evaluation
 
-  #LLVM_ValueEmpty,      // Unit () 'value'
+  #LLVM_ValueEmpty      // Unit () 'value'
 
-  #LLVM_ValueImmediate,  // Numeric value in imm field
+  #LLVM_ValueImmediate  // Numeric value in imm field
 
   /*
    * Global Immutable LLVM_Valueect used by name
    * such as funcs, strings, literal arrays & records
    */
-  #LLVM_ValueGlobalConst,
+  #LLVM_ValueGlobalConst
 
   // variables
-  #LLVM_ValueLocalVar,
-  #LLVM_ValueGlobalVar,
+  #LLVM_ValueLocalVar
+  #LLVM_ValueGlobalVar
 
   // register
-  #LLVM_ValueAddress,    // address of value in register
-  #LLVM_ValueRegister    // value in register
+  #LLVM_ValueAddress    // address of value in register
+  #LLVM_ValueRegister   // value in register
 }
 
 

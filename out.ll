@@ -493,10 +493,10 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func212_str3 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func213_str1 = private unnamed_addr constant [2 x i8] c"{\00", align 1
 @func213_str2 = private unnamed_addr constant [4 x i8] c"Var\00", align 1
-@func214_str1 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
-@func214_str2 = private unnamed_addr constant [2 x i8] c"}\00", align 1
+@func214_str1 = private unnamed_addr constant [2 x i8] c",\00", align 1
+@func214_str2 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @func214_str3 = private unnamed_addr constant [2 x i8] c"}\00", align 1
-@func214_str4 = private unnamed_addr constant [2 x i8] c",\00", align 1
+@func214_str4 = private unnamed_addr constant [37 x i8] c"expected comma or new-line separator\00", align 1
 @func215_str1 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func215_str2 = private unnamed_addr constant [14 x i8] c"dofield error\00", align 1
 @func215_str3 = private unnamed_addr constant [2 x i8] c",\00", align 1
@@ -889,7 +889,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func423_str37 = private unnamed_addr constant [7 x i8] c"Nat256\00", align 1
 @func423_str38 = private unnamed_addr constant [7 x i8] c"Nat512\00", align 1
 @func423_str39 = private unnamed_addr constant [8 x i8] c"Nat1024\00", align 1
-@func423_str40 = private unnamed_addr constant [9 x i8] c"Numeric@\00", align 1
+@func423_str40 = private unnamed_addr constant [8 x i8] c"Numeric\00", align 1
 @func425_str1 = private unnamed_addr constant [5 x i8] c"Int8\00", align 1
 @func425_str2 = private unnamed_addr constant [6 x i8] c"Int16\00", align 1
 @func425_str3 = private unnamed_addr constant [6 x i8] c"Int32\00", align 1
@@ -6603,45 +6603,46 @@ body_0:
   %9 = bitcast %AstId* %6 to %Unit*
   %10 = call i1 (%List*, %Unit*) @list_append (%List* %8, %Unit* %9)
 ;stmt8:
-  %11 = bitcast [2 x %Nat8]* @func214_str1 to %Str
-  %12 = call i1 (%Str) @func198 (%Str %11)
-  br i1 %12, label %then_0, label %else_0
-then_0:
+  %11 = call %Token* () @func190 ()
+  %12 = getelementptr inbounds %Token, %Token* %11, i1 0, i32 1
 ;stmt9:
-  call void () @skip_nl ()
-;stmt10:
-  %13 = bitcast [2 x %Nat8]* @func214_str2 to %Str
+  %13 = bitcast [2 x %Nat8]* @func214_str1 to %Str
   %14 = call i1 (%Str) @func198 (%Str %13)
-  br i1 %14, label %then_1, label %else_1
-then_1:
-;stmt11:
-  br label %break_0
-  br label %endif_1
-else_1:
-  br label %endif_1
-endif_1:
-;stmt12:
+  br i1 %14, label %then_0, label %else_0
+then_0:
+;stmt10:
   br label %continue_0
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
+;stmt11:
+  %16 = bitcast [2 x %Nat8]* @func214_str2 to %Str
+  %17 = call i1 (%Str) @func198 (%Str %16)
+;stmt12:
+  call void () @skip_nl ()
 ;stmt13:
-  %17 = bitcast [2 x %Nat8]* @func214_str3 to %Str
-  %18 = call i1 (%Str) @func198 (%Str %17)
-  br i1 %18, label %then_2, label %else_2
-then_2:
+  %18 = bitcast [2 x %Nat8]* @func214_str3 to %Str
+  %19 = call i1 (%Str) @func198 (%Str %18)
+  br i1 %19, label %then_1, label %else_1
+then_1:
 ;stmt14:
   br label %break_0
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
+;stmt15:
+  %21 = xor i1 %17, 1
+  br i1 %21, label %then_2, label %else_2
+then_2:
+;stmt16:
+  %22 = bitcast [37 x %Nat8]* @func214_str4 to %Str
+  call void (%Str, %TokenInfo*) @error (%Str %22, %TokenInfo* %12)
   br label %endif_2
 else_2:
   br label %endif_2
 endif_2:
-;stmt15:
-  %20 = bitcast [2 x %Nat8]* @func214_str4 to %Str
-  %21 = call i1 (%Str) @need (%Str %20)
-;stmt16:
-  call void () @skip_nl ()
   br label %continue_0
 break_0:
 ;stmt17:
@@ -14621,7 +14622,7 @@ define void @func423 () {
   %82 = call %Type* (%Type*, %TokenInfo*) @func378 (%Type* %80, %TokenInfo* %81)
   store %Type* %82, %Type** @typeFreePtr, align 8
 ;stmt46:
-  %83 = bitcast [9 x %Nat8]* @func423_str40 to %Str
+  %83 = bitcast [8 x %Nat8]* @func423_str40 to %Str
   %84 = call %Type* (%Str, %Nat32, i1) @func424 (%Str %83, %Nat32 0, i1 1)
   store %Type* %84, %Type** @typeNumeric, align 8
 ;stmt47:

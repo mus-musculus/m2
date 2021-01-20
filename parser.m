@@ -469,16 +469,17 @@ parse_type_set = AstTypeParser {
 
     list_append(&t.enum.constructors, cons to *Unit)
 
-    if match("\n") {
-      skip_nl()
-      if match ("}") {break;}
-      continue
-    }
+    ti_sep = &ctok().ti
+    if match(",") {continue}
 
+    nl_sep_present = match("\n")
+
+    skip_nl()
     if match ("}") {break;}
 
-    need(",")
-    skip_nl()
+    if not nl_sep_present {
+      error("expected comma or new-line separator", ti_sep)
+    }
   }
 
   return t
