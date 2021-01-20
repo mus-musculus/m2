@@ -230,6 +230,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func82_str8 = private unnamed_addr constant [14 x i8] c"<TypeUnknown>\00", align 1
 @func83_str1 = private unnamed_addr constant [5 x i8] c"Var \00", align 1
 @func84_str1 = private unnamed_addr constant [2 x i8] c"*\00", align 1
+@func84_str2 = private unnamed_addr constant [2 x i8] c"(\00", align 1
+@func84_str3 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func85_str1 = private unnamed_addr constant [2 x i8] c"(\00", align 1
 @func85_func86_str1 = private unnamed_addr constant [3 x i8] c", \00", align 1
 @func85_func86_str2 = private unnamed_addr constant [6 x i8] c"%s : \00", align 1
@@ -2666,7 +2668,39 @@ define void @func84 (%TypePointer*, %Type*) {
 ;stmt1:
   %5 = getelementptr inbounds %TypePointer, %TypePointer* %0, i1 0, i32 0
   %6 = load %Type*, %Type** %5
-  call void (%Type*, %Type*) @func82 (%Type* %6, %Type* %1)
+  %7 = getelementptr inbounds %Type, %Type* %6, i1 0, i32 0
+  %8 = load %TypeKind, %TypeKind* %7
+  %9 = icmp eq %TypeKind %8, 13
+  %10 = getelementptr inbounds %TypePointer, %TypePointer* %0, i1 0, i32 0
+  %11 = load %Type*, %Type** %10
+  %12 = getelementptr inbounds %Type, %Type* %11, i1 0, i32 0
+  %13 = load %TypeKind, %TypeKind* %12
+  %14 = icmp eq %TypeKind %13, 7
+  %15 = or i1 %9, %14
+;stmt2:
+  br i1 %15, label %then_0, label %else_0
+then_0:
+;stmt3:
+  %16 = bitcast [2 x %Nat8]* @func84_str2 to %Str
+  %17 = call %Int32 (%Str, ...) @printf (%Str %16)
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+;stmt4:
+  %18 = getelementptr inbounds %TypePointer, %TypePointer* %0, i1 0, i32 0
+  %19 = load %Type*, %Type** %18
+  call void (%Type*, %Type*) @func82 (%Type* %19, %Type* %1)
+;stmt5:
+  br i1 %15, label %then_1, label %else_1
+then_1:
+;stmt6:
+  %20 = bitcast [2 x %Nat8]* @func84_str3 to %Str
+  %21 = call %Int32 (%Str, ...) @printf (%Str %20)
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
   ret void
 }
 

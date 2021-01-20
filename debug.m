@@ -38,8 +38,13 @@ prttype2 = (t, selfptr : *Type) -> () {
 
 type_print_var = (x : *TypeVar) -> () {printf("Var "); prttype(x.of)}
 
-type_print_pointer = (x : *TypePointer, selfptr : *Type) -> ()
-{printf("*"); prttype2(x.to, selfptr)}
+type_print_pointer = (x : *TypePointer, selfptr : *Type) -> () {
+  printf("*")
+  need_brackets = x.to.kind == #TypeUnion or x.to.kind == #TypeFunc
+  if need_brackets {printf("(")}
+  prttype2(x.to, selfptr)
+  if need_brackets {printf(")")}
+}
 
 
 type_print_record = (t : *Type) -> () {

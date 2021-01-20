@@ -209,12 +209,23 @@ AstStmtWhile    = (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
 AstStmtReturn   = (value : *AstValue, ti : *TokenInfo)
 AstStmtGoto     = (label : *AstId, ti : *TokenInfo)
 AstStmtLabel    = (label : *AstId, ti : *TokenInfo)
-
-
 AstStmtBreak    = (ti : *TokenInfo)
 AstStmtContinue = (ti : *TokenInfo)
 
-//AstStmt = AstStmtAssign or
+
+/*AstStmt = AstStmtAssign or
+          AstStmtValueDef or
+          AstStmtTypeDef or
+          AstStmtExpr or
+          AstStmtBlock or
+          AstStmtIf or
+          AstStmtWhile or
+          AstStmtReturn or
+          AstStmtGoto or
+          AstStmtLabel or
+          AstStmtBreak or
+          AstStmtContinue*/
+
 
 AstStmt = (
   kind    : AstStmtKind
