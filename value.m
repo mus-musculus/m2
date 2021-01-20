@@ -200,10 +200,22 @@ do_value_when = DoValue {
       v.y := val
 
       list_append (&kit.v.select.variants, v)
+
     } else {
+
       // это when x is {}
       tx = do_type(variant.is_t)
 
+
+      if kit.selector.type.kind != #TypeUnion {
+        error ("expected value with union type", kit.selector.ti)
+      }
+
+
+      // чекаем если проверяем на соответствие типу который входит в объединение
+      if not type_present_in_list (&kit.selector.type.union.types, tx) {
+        error ("type error", tx.ti)
+      }
 
       val0 = do_value (variant.y)
 
@@ -219,8 +231,6 @@ do_value_when = DoValue {
         nil => val0
         else => implicit_cast (val0, kit.v.type)
       }
-
-      printf("SECOND!\n")
 
       // Создаю локальное выражение is
       vx = value_new(#ValueIs, typeBool, tx.ti)
@@ -581,7 +591,6 @@ do_value_cast_uarr = DoValueCast {
 
 
 do_value_cast_union = DoValueCast {
-  printf("do_value_cast_union\n")
   return cast (v, t, ti)
 }
 
