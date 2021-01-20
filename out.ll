@@ -138,7 +138,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %TypePointer = type {%Type*}
 %TypeRecord = type {%List*, %Nat32}
 %TypeVar = type {%Type*}
-%TypeEnum = type {%List*, %Nat32}
+%TypeEnum = type {%List*}
 %TypeUnion = type {%List, %Type*, %Nat32}
 %EnumConstructor = type {%AstId*, %Nat32, %TokenInfo*}
 %Decl = type {%AstId*, %Type*, %Nat32, %Nat16, %Nat32, %Value*, %TokenInfo*}
@@ -12779,7 +12779,7 @@ endif_2:
 
 define %Type* @func375 (%TypeKind, %Nat32, %TokenInfo*) {
 ;stmt0:
-  %4 = call %Unit* (%Nat32) @malloc (%Nat32 184)
+  %4 = call %Unit* (%Nat32) @malloc (%Nat32 176)
   %5 = bitcast %Unit* %4 to %Type*
 ;stmt1:; loadImmPtr
   %6 = inttoptr i64 0 to%Type*
@@ -12788,7 +12788,7 @@ define %Type* @func375 (%TypeKind, %Nat32, %TokenInfo*) {
   call void (i1, %Str) @assert (i1 %7, %Str %8)
 ;stmt2:
   %9 = bitcast %Type* %5 to %Unit*
-  %10 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %9, %Nat8 0, %Nat32 184)
+  %10 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %9, %Nat8 0, %Nat32 176)
 ;stmt3:
   %11 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 0
   store %TypeKind %0, %TypeKind* %11, align 2
@@ -19217,7 +19217,7 @@ endif_2:
 ;stmt9:
   %24 = bitcast %Type* %9 to %Unit*
   %25 = bitcast %Type* %8 to %Unit*
-  %26 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %24, %Unit* %25, %Nat32 184)
+  %26 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %24, %Unit* %25, %Nat32 176)
 ;stmt10:
   %27 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
   %28 = call %Definition* (%Assembly*, %Str, %Type*) @func266 (%Assembly* %27, %Str %5, %Type* %9)

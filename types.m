@@ -243,24 +243,18 @@ TypeArrayU  = (of : *Type)
 TypeFunc    = (from, to : *Type, arghack : Bool)
 TypePointer = (to : *Type)
 TypeRecord  = (decls : *List, end : Nat)
-TypeVar = (of : *Type)
-
-TypeEnum = (
-  cons : *List  // of Entity (EntityConst)
-  uid  : Nat32  // unical id
-)
-
-
-TypeUnion = (types : List, impl : *Type, data_size : Nat)
+TypeVar     = (of : *Type)
+TypeEnum    = (cons : *List)
+TypeUnion   = (types : List, impl : *Type, data_size : Nat)
 
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 
 Decl = (
-  id     : *AstId  // тк хранит еще и ti идентификатора этого поля
+  id     : *AstId     // тк хранит еще и ti идентификатора этого поля
   type   : *Type
-  align  : Nat     // выравнивание поля
-  offset : Nat16   // field offset
-  lab  : Nat32     // локальная переменная юзается через lab
+  align  : Nat        // выравнивание поля
+  offset : Nat16      // field offset
+  lab    : Nat32      // локальная переменная юзается через lab
   init_value : *Value
   ti     : *TokenInfo
 )
@@ -324,10 +318,9 @@ TypeKind = {
 Type = (
   kind  : TypeKind
 
-  aka   : Str    // type alias (used by printer)
+  aka   : Str         // type alias (used by printer)
 
-  size  : Nat32  // размер типа в байтах
-  align : Nat    // значение выравнивания (по умолчанию для этого типа)
+  size, align  : Nat  // размер и выравнивание в байтах
 
 //union (
     num      : TypeNumeric
