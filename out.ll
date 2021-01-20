@@ -3698,7 +3698,7 @@ body_1:
   br i1 %17, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  br label %exit
+  br label %exit
   br label %endif_2
 else_2:
   br label %endif_2
@@ -3722,7 +3722,7 @@ endif_2:
   br i1 %27, label %then_3, label %else_3
 then_3:
 ;stmt15:
-  br label %exit
+  br label %exit
   br label %endif_3
 else_3:
   br label %endif_3
@@ -8420,30 +8420,31 @@ define %union.8 @func247 (%TokenInfo*) {
   br i1 %4, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  %5 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 5, %TokenInfo* %0)
+  %5 = call %AstValue* () @func221 ()
 ;stmt3:
-  %6 = getelementptr inbounds %AstStmt, %AstStmt* %5, i1 0, i32 1
-  %7 = getelementptr inbounds %AstStmtAssign, %AstStmtAssign* %6, i1 0, i32 0
-  store %AstValue* %2, %AstValue** %7, align 8
+  %6 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 5, %TokenInfo* %0)
 ;stmt4:
-  %8 = getelementptr inbounds %AstStmt, %AstStmt* %5, i1 0, i32 1
-  %9 = getelementptr inbounds %AstStmtAssign, %AstStmtAssign* %8, i1 0, i32 1
-  %10 = call %AstValue* () @func221 ()
-  store %AstValue* %10, %AstValue** %9, align 8
+  %7 = getelementptr inbounds %AstStmt, %AstStmt* %6, i1 0, i32 1
+  %8 = getelementptr inbounds %AstStmtAssign, %AstStmtAssign* %7, i1 0, i32 0
+  store %AstValue* %2, %AstValue** %8, align 8
 ;stmt5:
-  %11 = bitcast %AstStmt* %5 to %union.8
+  %9 = getelementptr inbounds %AstStmt, %AstStmt* %6, i1 0, i32 1
+  %10 = getelementptr inbounds %AstStmtAssign, %AstStmtAssign* %9, i1 0, i32 1
+  store %AstValue* %5, %AstValue** %10, align 8
+;stmt6:
+  %11 = bitcast %AstStmt* %6 to %union.8
   ret %union.8 %11
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt6:
-  %13 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 4, %TokenInfo* %0)
 ;stmt7:
+  %13 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 4, %TokenInfo* %0)
+;stmt8:
   %14 = getelementptr inbounds %AstStmt, %AstStmt* %13, i1 0, i32 4
   %15 = getelementptr inbounds %AstStmtExpr, %AstStmtExpr* %14, i1 0, i32 0
   store %AstValue* %2, %AstValue** %15, align 8
-;stmt8:
+;stmt9:
   %16 = bitcast %AstStmt* %13 to %union.8
   ret %union.8 %16
 }
@@ -8532,28 +8533,28 @@ endif_0:
 
 define %union.8 @func250 (%TokenInfo*) {
 ;stmt0:
-  %2 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 6, %TokenInfo* %0)
+  %2 = alloca %List
+  store %List zeroinitializer, %List* %2, align 8
 ;stmt1:
-  %3 = getelementptr inbounds %AstStmt, %AstStmt* %2, i1 0, i32 5
-  %4 = getelementptr inbounds %AstStmtBlock, %AstStmtBlock* %3, i1 0, i32 0
-  call void (%List*) @map_init (%List* %4)
+  %3 = getelementptr inbounds %List, %List* %2, i1 0
+  call void (%List*) @map_init (%List* %3)
 ;stmt2:
   br label %continue_0
 continue_0:
-  %5 = bitcast [2 x %Nat8]* @func250_str1 to %Str
-  %6 = call i1 (%Str) @func197 (%Str %5)
-  %7 = xor i1 %6, 1
-  br i1 %7, label %body_0, label %break_0
+  %4 = bitcast [2 x %Nat8]* @func250_str1 to %Str
+  %5 = call i1 (%Str) @func197 (%Str %4)
+  %6 = xor i1 %5, 1
+  br i1 %6, label %body_0, label %break_0
 body_0:
 ;stmt3:
   call void () @skip_nl ()
 ;stmt4:
-  %8 = call i1 () @eof ()
-  br i1 %8, label %then_0, label %else_0
+  %7 = call i1 () @eof ()
+  br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt5:
-  %9 = bitcast [23 x %Nat8]* @func250_str2 to %Str
-  call void (%Str) @fatal (%Str %9)
+  %8 = bitcast [23 x %Nat8]* @func250_str2 to %Str
+  call void (%Str) @fatal (%Str %8)
 ;stmt6:
   br label %break_0
   br label %endif_0
@@ -8561,9 +8562,9 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt7:
-  %11 = bitcast [2 x %Nat8]* @func250_str3 to %Str
-  %12 = call i1 (%Str) @func197 (%Str %11)
-  br i1 %12, label %then_1, label %else_1
+  %10 = bitcast [2 x %Nat8]* @func250_str3 to %Str
+  %11 = call i1 (%Str) @func197 (%Str %10)
+  br i1 %11, label %then_1, label %else_1
 then_1:
 ;stmt8:
   br label %break_0
@@ -8572,22 +8573,21 @@ else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %14 = call %union.9 () @parse_stmt ()
+  %13 = call %union.9 () @parse_stmt ()
 ;stmt10:
-  %15 = bitcast %Int64 0 to %Int64
-  %16 = ptrtoint %union.9 %14 to %Int64
-  %17 = icmp eq %Int64 %16, %15
-  %18 = xor i1 %17, 1
-  br i1 %18, label %then_2, label %else_2
+  %14 = bitcast %Int64 0 to %Int64
+  %15 = ptrtoint %union.9 %13 to %Int64
+  %16 = icmp eq %Int64 %15, %14
+  %17 = xor i1 %16, 1
+  br i1 %17, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  %19 = call i1 () @sep ()
+  %18 = call i1 () @sep ()
 ;stmt12:
-  %20 = getelementptr inbounds %AstStmt, %AstStmt* %2, i1 0, i32 5
-  %21 = getelementptr inbounds %AstStmtBlock, %AstStmtBlock* %20, i1 0, i32 0
-  %22 = bitcast %union.9 %14 to %AstStmt*
-  %23 = bitcast %AstStmt* %22 to %Unit*
-  %24 = call i1 (%List*, %Unit*) @list_append (%List* %21, %Unit* %23)
+  %19 = getelementptr inbounds %List, %List* %2, i1 0
+  %20 = bitcast %union.9 %13 to %AstStmt*
+  %21 = bitcast %AstStmt* %20 to %Unit*
+  %22 = call i1 (%List*, %Unit*) @list_append (%List* %19, %Unit* %21)
   br label %endif_2
 else_2:
   br label %endif_2
@@ -8595,8 +8595,15 @@ endif_2:
   br label %continue_0
 break_0:
 ;stmt13:
-  %25 = bitcast %AstStmt* %2 to %union.8
-  ret %union.8 %25
+  %23 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 6, %TokenInfo* %0)
+;stmt14:
+  %24 = getelementptr inbounds %AstStmt, %AstStmt* %23, i1 0, i32 5
+  %25 = getelementptr inbounds %AstStmtBlock, %AstStmtBlock* %24, i1 0, i32 0
+  %26 = load %List, %List* %2
+  store %List %26, %List* %25, align 8
+;stmt15:
+  %27 = bitcast %AstStmt* %23 to %union.8
+  ret %union.8 %27
 }
 
 define %union.8 @func251 (%TokenInfo*) {
@@ -8834,7 +8841,7 @@ define i1 @func256 () {
   br i1 %5, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %no
+  br label %no
   br label %endif_0
 else_0:
   br label %endif_0
@@ -8847,7 +8854,7 @@ endif_0:
   br i1 %8, label %then_1, label %else_1
 then_1:
 ;stmt7:
-  br label %yes
+  br label %yes
   br label %endif_1
 else_1:
   br label %endif_1
@@ -8858,7 +8865,7 @@ endif_1:
   br i1 %11, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  br label %yes
+  br label %yes
   br label %endif_2
 else_2:
   br label %endif_2
@@ -9027,7 +9034,7 @@ select_2_end:
   br i1 %45, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  br label %yes
+  br label %yes
   br label %endif_2
 else_2:
   br label %endif_2
@@ -15586,7 +15593,7 @@ endif_1:
   br i1 %32, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -15604,7 +15611,7 @@ then_3:
   %40 = load %TokenInfo*, %TokenInfo** %39
   call void (%Str, %TokenInfo*) @error (%Str %38, %TokenInfo* %40)
 ;stmt12:
-  br label %fail
+  br label %fail
   br label %endif_3
 else_3:
   br label %endif_3
@@ -16001,7 +16008,7 @@ define %Value* @func445 (%AstValue*) {
   br i1 %15, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16013,7 +16020,7 @@ endif_0:
   br i1 %19, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16079,7 +16086,7 @@ then_2:
   %58 = inttoptr i64 0 to%Type*
   call void (%TokenInfo*, %Type*, %Type*) @error_type_error (%TokenInfo* %54, %Type* %57, %Type* %58)
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16151,7 +16158,7 @@ define %Value* @func447 (%AstValue*) {
   br i1 %16, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16203,7 +16210,7 @@ then_1:
   %45 = inttoptr i64 0 to%Type*
   call void (%TokenInfo*, %Type*, %Type*) @error_type_error (%TokenInfo* %41, %Type* %44, %Type* %45)
 ;stmt7:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16224,7 +16231,7 @@ then_2:
   %55 = load %TokenInfo*, %TokenInfo** %54
   call void (%Str, %TokenInfo*) @error (%Str %50, %TokenInfo* %55)
 ;stmt11:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16441,7 +16448,7 @@ define %Value* @func460 (%AstValue*) {
   br i1 %14, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16453,7 +16460,7 @@ endif_0:
   br i1 %18, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16665,7 +16672,7 @@ then_1:
   %26 = load %TokenInfo*, %TokenInfo** %25
   call void (%Str, %TokenInfo*) @error (%Str %24, %TokenInfo* %26)
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16720,7 +16727,7 @@ define %Value* @func463 (%AstValue*) {
   br i1 %14, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16732,7 +16739,7 @@ endif_0:
   br i1 %18, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16752,7 +16759,7 @@ then_2:
   %28 = load %TokenInfo*, %TokenInfo** %27
   call void (%Str, %TokenInfo*) @error (%Str %26, %TokenInfo* %28)
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16801,7 +16808,7 @@ define %Value* @func464 (%AstValue*) {
   br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16859,7 +16866,7 @@ define %Value* @func465 (%AstValue*) {
   br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17059,7 +17066,7 @@ define %Value* @func469 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17118,7 +17125,7 @@ endif_1:
   br i1 %41, label %then_2, label %else_2
 then_2:
 ;stmt13:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -17193,7 +17200,7 @@ select_1_end:
   br i1 %80, label %then_4, label %else_4
 then_4:
 ;stmt25:
-  br label %fail
+  br label %fail
   br label %endif_4
 else_4:
   br label %endif_4
@@ -17252,7 +17259,7 @@ define %Value* @func473 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17312,7 +17319,7 @@ define %Value* @func474 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17373,7 +17380,7 @@ define %Value* @func475 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17440,7 +17447,7 @@ define %Value* @func476 (%AstValue*) {
   br i1 %12, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17452,7 +17459,7 @@ endif_0:
   br i1 %16, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -17646,7 +17653,7 @@ define %Value* @func478 (%Value*, %Type*, %TokenInfo*) {
   br i1 %6, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17658,7 +17665,7 @@ endif_0:
   br i1 %10, label %then_1, label %else_1
 then_1:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -17682,7 +17689,7 @@ endif_2:
   br i1 %18, label %then_3, label %else_3
 then_3:
 ;stmt7:
-  br label %sact
+  br label %sact
 ;stmt8:
   %20 = bitcast [32 x %Nat8]* @func478_str1 to %Str
   call void (%Str, %TokenInfo*) @error (%Str %20, %TokenInfo* %2)
@@ -17786,7 +17793,7 @@ endif_0:
   br i1 %17, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1

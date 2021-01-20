@@ -1091,6 +1091,7 @@ parse_value_func = AstValueParser {
 parse_value_extern = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
+
   v = ast_value_new(#AstValueFunc, ti)
   v.func.type := t
   v.extern := true
@@ -1195,9 +1196,11 @@ parse_stmt_expr = AstStmtParser {
   x = parse_value()
 
   if match(":=") {
+    v = parse_value()
+
     s = ast_stmt_new(#AstStmtAssign, ti)
     s.assign.l := x
-    s.assign.r := parse_value()
+    s.assign.r := v
     return s
   }
 
@@ -1240,8 +1243,8 @@ parse_stmt_typedef = AstStmtParser {
 
 
 parse_stmt_block = AstStmtParser {
-  sb = ast_stmt_new(#AstStmtBlock, ti)
-  list_init(&sb.block.stmts)
+  stmts = 0 to Var List
+  list_init(&stmts)
   while not match("}") {
     skip_nl()
 
@@ -1255,16 +1258,17 @@ parse_stmt_block = AstStmtParser {
     s = parse_stmt()
     if not (s is Unit) {
       sep()
-      list_append(&sb.block.stmts, s as *AstStmt)
+      list_append(&stmts, s as *AstStmt)
     }
   }
 
+  sb = ast_stmt_new(#AstStmtBlock, ti)
+  sb.block.stmts := stmts
   return sb
 }
 
 
 parse_stmt_if = AstStmtParser {
-
   cond = parse_value()
   match("\n")
   ti_then_block = &ctok().ti
