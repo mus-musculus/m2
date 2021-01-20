@@ -61,7 +61,7 @@ nextok = () -> *Token {
  * Если все ок и разделитель присутствует - возвращает 1
  * Если разделителя нет - выводит ошибку и возвращает 0
  */
-sep = () -> Bool {
+need_sep = () -> Bool {
   ct = ctok()
   s = separator()
 
@@ -1257,7 +1257,7 @@ parse_stmt_block = AstStmtParser {
 
     s = parse_stmt()
     if not (s is Unit) {
-      sep()
+      need_sep()
       list_append(&stmts, s as *AstStmt)
     }
   }
@@ -1317,9 +1317,7 @@ parse_stmt_while = AstStmtParser {
 
 
 parse_stmt_return = AstStmtParser {
-
   if separator() {
-    //return ast_stmt_new(#AstStmtReturn, ti)
     s = ast_stmt_new(#AstStmtReturn, ti)
     s.return.value := unit
     return s
@@ -1356,8 +1354,9 @@ parse_stmt_goto = AstStmtParser {
 
 // IS IT?
 
-tn2tok = (token_node : *Node) -> *Token
-    {return token_node.data to *Token}
+tn2tok = (token_node : *Node) -> *Token {
+  return token_node.data to *Token
+}
 
 
 

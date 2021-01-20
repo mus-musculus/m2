@@ -3698,7 +3698,7 @@ body_1:
   br i1 %17, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  br label %exit
+  br label %exit
   br label %endif_2
 else_2:
   br label %endif_2
@@ -3722,7 +3722,7 @@ endif_2:
   br i1 %27, label %then_3, label %else_3
 then_3:
 ;stmt15:
-  br label %exit
+  br label %exit
   br label %endif_3
 else_3:
   br label %endif_3
@@ -5616,7 +5616,7 @@ endif_0:
   ret %Token* %13
 }
 
-define i1 @sep () {
+define i1 @need_sep () {
 ;stmt0:
   %1 = call %Token* () @func190 ()
 ;stmt1:
@@ -8582,7 +8582,7 @@ endif_1:
   br i1 %17, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  %18 = call i1 () @sep ()
+  %18 = call i1 () @need_sep ()
 ;stmt12:
   %19 = getelementptr inbounds %List, %List* %2, i1 0
   %20 = bitcast %union.9 %13 to %AstStmt*
@@ -8841,7 +8841,7 @@ define i1 @func256 () {
   br i1 %5, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %no
+  br label %no
   br label %endif_0
 else_0:
   br label %endif_0
@@ -8854,7 +8854,7 @@ endif_0:
   br i1 %8, label %then_1, label %else_1
 then_1:
 ;stmt7:
-  br label %yes
+  br label %yes
   br label %endif_1
 else_1:
   br label %endif_1
@@ -8865,7 +8865,7 @@ endif_1:
   br i1 %11, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  br label %yes
+  br label %yes
   br label %endif_2
 else_2:
   br label %endif_2
@@ -9034,7 +9034,7 @@ select_2_end:
   br i1 %45, label %then_2, label %else_2
 then_2:
 ;stmt11:
-  br label %yes
+  br label %yes
   br label %endif_2
 else_2:
   br label %endif_2
@@ -15593,7 +15593,7 @@ endif_1:
   br i1 %32, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -15611,7 +15611,7 @@ then_3:
   %40 = load %TokenInfo*, %TokenInfo** %39
   call void (%Str, %TokenInfo*) @error (%Str %38, %TokenInfo* %40)
 ;stmt12:
-  br label %fail
+  br label %fail
   br label %endif_3
 else_3:
   br label %endif_3
@@ -16008,7 +16008,7 @@ define %Value* @func445 (%AstValue*) {
   br i1 %15, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16020,7 +16020,7 @@ endif_0:
   br i1 %19, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16086,7 +16086,7 @@ then_2:
   %58 = inttoptr i64 0 to%Type*
   call void (%TokenInfo*, %Type*, %Type*) @error_type_error (%TokenInfo* %54, %Type* %57, %Type* %58)
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16158,7 +16158,7 @@ define %Value* @func447 (%AstValue*) {
   br i1 %16, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16210,7 +16210,7 @@ then_1:
   %45 = inttoptr i64 0 to%Type*
   call void (%TokenInfo*, %Type*, %Type*) @error_type_error (%TokenInfo* %41, %Type* %44, %Type* %45)
 ;stmt7:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16231,7 +16231,7 @@ then_2:
   %55 = load %TokenInfo*, %TokenInfo** %54
   call void (%Str, %TokenInfo*) @error (%Str %50, %TokenInfo* %55)
 ;stmt11:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16448,7 +16448,7 @@ define %Value* @func460 (%AstValue*) {
   br i1 %14, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16460,7 +16460,7 @@ endif_0:
   br i1 %18, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16672,7 +16672,7 @@ then_1:
   %26 = load %TokenInfo*, %TokenInfo** %25
   call void (%Str, %TokenInfo*) @error (%Str %24, %TokenInfo* %26)
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16727,7 +16727,7 @@ define %Value* @func463 (%AstValue*) {
   br i1 %14, label %then_0, label %else_0
 then_0:
 ;stmt4:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16739,7 +16739,7 @@ endif_0:
   br i1 %18, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -16759,7 +16759,7 @@ then_2:
   %28 = load %TokenInfo*, %TokenInfo** %27
   call void (%Str, %TokenInfo*) @error (%Str %26, %TokenInfo* %28)
 ;stmt9:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -16808,7 +16808,7 @@ define %Value* @func464 (%AstValue*) {
   br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -16866,7 +16866,7 @@ define %Value* @func465 (%AstValue*) {
   br i1 %7, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17066,7 +17066,7 @@ define %Value* @func469 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17125,7 +17125,7 @@ endif_1:
   br i1 %41, label %then_2, label %else_2
 then_2:
 ;stmt13:
-  br label %fail
+  br label %fail
   br label %endif_2
 else_2:
   br label %endif_2
@@ -17200,7 +17200,7 @@ select_1_end:
   br i1 %80, label %then_4, label %else_4
 then_4:
 ;stmt25:
-  br label %fail
+  br label %fail
   br label %endif_4
 else_4:
   br label %endif_4
@@ -17259,7 +17259,7 @@ define %Value* @func473 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17319,7 +17319,7 @@ define %Value* @func474 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17380,7 +17380,7 @@ define %Value* @func475 (%AstValue*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt2:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17447,7 +17447,7 @@ define %Value* @func476 (%AstValue*) {
   br i1 %12, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17459,7 +17459,7 @@ endif_0:
   br i1 %16, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -17653,7 +17653,7 @@ define %Value* @func478 (%Value*, %Type*, %TokenInfo*) {
   br i1 %6, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  br label %fail
+  br label %fail
   br label %endif_0
 else_0:
   br label %endif_0
@@ -17665,7 +17665,7 @@ endif_0:
   br i1 %10, label %then_1, label %else_1
 then_1:
 ;stmt3:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
@@ -17689,7 +17689,7 @@ endif_2:
   br i1 %18, label %then_3, label %else_3
 then_3:
 ;stmt7:
-  br label %sact
+  br label %sact
 ;stmt8:
   %20 = bitcast [32 x %Nat8]* @func478_str1 to %Str
   call void (%Str, %TokenInfo*) @error (%Str %20, %TokenInfo* %2)
@@ -17793,7 +17793,7 @@ endif_0:
   br i1 %17, label %then_1, label %else_1
 then_1:
 ;stmt5:
-  br label %fail
+  br label %fail
   br label %endif_1
 else_1:
   br label %endif_1
