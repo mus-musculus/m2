@@ -513,16 +513,16 @@ StmtGoto = (label : Str, ti : *TokenInfo)
 StmtLabel = (label : Str, ti : *TokenInfo)
 
 
-Stmt2 = StmtExpr or
-        StmtBlock or
-        StmtAssign or
-        StmtIf or
-        StmtWhile or
-        StmtReturn or
-        StmtBreak or
-        StmtContinue or
-        StmtGoto or
-        StmtLabel
+Stmt2 = *StmtExpr or
+        *StmtBlock or
+        *StmtAssign or
+        *StmtIf or
+        *StmtWhile or
+        *StmtReturn or
+        *StmtBreak or
+        *StmtContinue or
+        *StmtGoto or
+        *StmtLabel
 
 
 

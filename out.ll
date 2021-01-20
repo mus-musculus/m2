@@ -36,7 +36,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 %union.3 = type %Unit*
 
-%union.4 = type {i16, [144 x i8]}
+%union.4 = type {i16, [8 x i8]}
 
 %union.5 = type %Unit*
 
@@ -19393,46 +19393,62 @@ define %Int32 @main (%Nat32, %Str*) {
   %6 = call %Int32 (%Str, ...) @printf (%Str %5, %Int64 256)
 ;stmt2:
   %7 = bitcast [17 x %Nat8]* @func525_str3 to %Str
-  %8 = call %Int32 (%Str, ...) @printf (%Str %7, %Int64 152)
+  %8 = call %Int32 (%Str, ...) @printf (%Str %7, %Int64 16)
 ;stmt3:
-  %9 = bitcast [7 x %Nat8]* @func525_str4 to %Str
-  %10 = call %AstModule* (%Str) @parse (%Str %9)
+  %9 = alloca %StmtIf
+  store %StmtIf zeroinitializer, %StmtIf* %9, align 16
 ;stmt4:
-  %11 = load %Int32, %Int32* @errcnt
+  %10 = alloca %union.4
+  %11 = load %StmtIf, %StmtIf* %9
+  %12 = alloca %union.4
+; write variant 0
+  %13 = getelementptr inbounds %union.4, %union.4* %12, i1 0, i32 0
+  store %Int16 0, %Int16* %13, align 2
+; write data
+  %14 = getelementptr inbounds %union.4, %union.4* %12, i1 0, i32 1
+  %15 = bitcast [8 x %Nat8]* %14 to %StmtIf*
+  store %StmtIf %11, %StmtIf* %15, align 16
+  %16 = load %union.4, %union.4* %12
+  store %union.4 %16, %union.4* %10, align 16
 ;stmt5:
-  %12 = icmp sgt %Int32 %11, 0
-  br i1 %12, label %then_0, label %else_0
-then_0:
+  %17 = bitcast [7 x %Nat8]* @func525_str4 to %Str
+  %18 = call %AstModule* (%Str) @parse (%Str %17)
 ;stmt6:
-  ret %Int32 %11
+  %19 = load %Int32, %Int32* @errcnt
+;stmt7:
+  %20 = icmp sgt %Int32 %19, 0
+  br i1 %20, label %then_0, label %else_0
+then_0:
+;stmt8:
+  ret %Int32 %19
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt7:
+;stmt9:
   call void () @compiler_init ()
-;stmt8:
-  %14 = call %Assembly* (%AstModule*) @func511 (%AstModule* %10)
-;stmt9:; loadImmPtr
-  %15 = inttoptr i64 0 to%Assembly*
-  %16 = icmp ne %Assembly* %14, %15
-  br i1 %16, label %then_1, label %else_1
-then_1:
 ;stmt10:
-  %17 = bitcast [11 x %Nat8]* @func525_str5 to %Str
-  %18 = load %Nat32, %Nat32* @lines
-  %19 = call %Int32 (%Str, ...) @printf (%Str %17, %Nat32 %18)
-;stmt11:
-  %20 = bitcast [7 x %Nat8]* @func525_str6 to %Str
-  call void (%Assembly*, %Str) @func279 (%Assembly* %14, %Str %20)
+  %22 = call %Assembly* (%AstModule*) @func511 (%AstModule* %18)
+;stmt11:; loadImmPtr
+  %23 = inttoptr i64 0 to%Assembly*
+  %24 = icmp ne %Assembly* %22, %23
+  br i1 %24, label %then_1, label %else_1
+then_1:
+;stmt12:
+  %25 = bitcast [11 x %Nat8]* @func525_str5 to %Str
+  %26 = load %Nat32, %Nat32* @lines
+  %27 = call %Int32 (%Str, ...) @printf (%Str %25, %Nat32 %26)
+;stmt13:
+  %28 = bitcast [7 x %Nat8]* @func525_str6 to %Str
+  call void (%Assembly*, %Str) @func279 (%Assembly* %22, %Str %28)
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-;stmt12:
-  %21 = load %Int32, %Int32* @errcnt
-;stmt13:
-  ret %Int32 %21
+;stmt14:
+  %29 = load %Int32, %Int32* @errcnt
+;stmt15:
+  ret %Int32 %29
 }
 
 ;aliases:
