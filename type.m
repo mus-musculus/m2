@@ -329,7 +329,25 @@ do_type_enum = DoType {
 union_id = 0 to Var Nat
 
 
-
+// тупое как топор выравнивание до ближайшей степени двойки
+// потом надо придумать алгоритм а сечас как всегда мне некогда!!
+propagation = (x : Nat) -> Nat {
+  return when true {
+    x <= 2 => 2 to Nat
+    x <= 4 => 4 to Nat
+    x <= 8 => 8 to Nat
+    x <= 16 => 16 to Nat
+    x <= 32 => 32 to Nat
+    x <= 64 => 64 to Nat
+    x <= 128 => 128 to Nat
+    x <= 256 => 256 to Nat
+    x <= 512 => 512 to Nat
+    x <= 1024 => 1024 to Nat
+    x <= 2048 => 2048 to Nat
+    x <= 4096 => 4096 to Nat
+    else => x
+  }
+}
 
 do_type_union = DoType {
   xuid = str_new(10)
@@ -366,7 +384,9 @@ do_type_union = DoType {
   }
   list_foreach(&x.union.types, do_variant, &ctx)
 
-  size = align(ctx.max_size + 2, 8)
+  size = propagation(align(ctx.max_size + 2, 4))
+
+
 
   t.size := size
   t.align := size
