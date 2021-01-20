@@ -44,12 +44,12 @@ do_stmt = DoStmt {
     #AstStmtIf       => do_stmt_if       (&x.if)
     #AstStmtWhile    => do_stmt_while    (&x.while)
     #AstStmtReturn   => do_stmt_return   (&x.return)
-    //#AstStmtVarDef   => do_stmt_vardef (x)
     #AstStmtTypeDef  => do_stmt_typedef  (&x.typedef)
     #AstStmtBreak    => do_stmt_break    (&x.break)
     #AstStmtContinue => do_stmt_continue (&x.continue)
     #AstStmtGoto     => do_stmt_goto     (&x.goto)
     #AstStmtLabel    => do_stmt_label    (&x.label)
+    //#AstStmtVarDef => do_stmt_vardef (x)
     else => unit
   }
 }
