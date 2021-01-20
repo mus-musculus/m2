@@ -90,7 +90,7 @@ exist do_value_sizeof : DoValue
 exist do_value_alignof : DoValue
 exist do_value_named : DoValue
 
-exist do_value_select : DoValue
+exist do_value_when : DoValue
 exist do_value_numeric : DoValue
 exist do_value_string : DoValue
 exist do_value_func : DoValue
@@ -238,7 +238,7 @@ exist eval_cast_to_bool : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast_to_basic : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast : Eval
 exist eval_bin : Eval
-exist eval_select : Eval
+exist eval_when : Eval
 
 exist print_st : (l, r : *Value) -> ()
 exist load : (x : LLVM_Value) -> LLVM_Value

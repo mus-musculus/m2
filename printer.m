@@ -529,7 +529,7 @@ eval = Eval {
     #ValueCast   => eval_cast   (x)
     #ValueAs     => eval_as     (x)
     #ValueIs     => eval_is     (x)
-    #ValueSelect => eval_select (x)
+    #ValueWhen   => eval_when   (x)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
@@ -1087,7 +1087,7 @@ default:
 cond_next:
   %X.2 = phi i32 [ %X.1, %cond_false ], [ %X.0, %cond_true ]
 */
-eval_select = Eval {
+eval_when = Eval {
   sel = reval (x.select.x)
 
   select_no := select_no + 1
@@ -1115,7 +1115,7 @@ eval_select = Eval {
   fprintf (fout, "\n  br label %%select_%d_0", sno)
 
   print_select_case = ListForeachHandler {
-    va = data to *ValueSelectVariant
+    va = data to *ValueWhenVariant
     c = ctx to *Ctx
     fprintf (fout, "\nselect_%d_%d:", c.sno, c.case)
 

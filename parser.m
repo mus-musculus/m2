@@ -992,7 +992,7 @@ fail:
 
 parse_value_when = AstValueParser {
   token = ctok()
-  v = ast_value_new(#AstValueSelect, &token.ti)
+  v = ast_value_new(#AstValueWhen, &token.ti)
   list_init(&v.select.variants)
   v.select.x := parse_value()
   skip_nl()
@@ -1009,12 +1009,15 @@ parse_value_when = AstValueParser {
     }
 
     // parse each variant
-    va = malloc(sizeof AstValueSelectVariant) to *AstValueSelectVariant
+    va = malloc(sizeof AstValueWhenVariant) to *AstValueWhenVariant
+    memset (va, 0, sizeof AstValueWhenVariant)
 
     // check if is type when
-    is_type = is_it_type ()
-
-    va.x := parse_value()
+    if is_it_type () {
+      va.is_t := parse_type()
+    } else {
+      va.x := parse_value()
+    }
     need("=>")
     va.y := parse_value()
     skip_nl()

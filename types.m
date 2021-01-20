@@ -148,7 +148,7 @@ AstValueKind = {
   #AstValueShl, #AstValueShr,
   #AstValueCall, #AstValueIndex, #AstValueAccess,
   #AstValueCast, #AstValueIs, #AstValueAs,
-  #AstValueSizeof, #AstValueAlignof, #AstValueSelect
+  #AstValueSizeof, #AstValueAlignof, #AstValueWhen
 }
 
 AstValueFunc = (type : *AstType, block_stmt : *AstStmt)
@@ -159,8 +159,8 @@ AstValueCast = (value : *AstValue, type : *AstType)
 AstValueIs = (value : *AstValue, type : *AstType)
 AstValueAs = (value : *AstValue, type : *AstType)
 
-AstValueSelectVariant = (x, y : *AstValue)
-AstValueSelect = (x : *AstValue, variants : List, other : *AstValue)
+AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue)
+AstValueWhen = (x : *AstValue, variants : List, other : *AstValue)
 
 AstValue = (
   kind : AstValueKind
@@ -177,7 +177,7 @@ AstValue = (
   cast    : AstValueCast
   is      : AstValueIs
   as      : AstValueAs
-  select  : AstValueSelect
+  select  : AstValueWhen
 
   extern  : Bool
 
@@ -396,7 +396,7 @@ ValueKind = {
   #ValueCast,
   #ValueIs,
   #ValueAs,
-  #ValueSelect
+  #ValueWhen
 }
 
 
@@ -409,8 +409,8 @@ ValueIs     = (value : *Value, variant : Nat)
 ValueIndex  = (array, index : *Value)
 ValueUn     = (x : *Value)
 
-ValueSelectVariant = (x, y : *Value)
-ValueSelect = (x : *Value, variants : List, other : *Value)
+ValueWhenVariant = (x, y : *Value)
+ValueWhen = (x : *Value, variants : List, other : *Value)
 
 
 Value = (
@@ -439,7 +439,7 @@ Value = (
   is     : ValueIs
   call   : ValueCall
   szof   : *Type
-  select : ValueSelect
+  select : ValueWhen
   load   : *Value  // #ValueLoad
 //)
 

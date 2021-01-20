@@ -138,7 +138,7 @@ value_print_kind = (k : ValueKind) -> () {
     #ValueIndex => "#ValueIndex" to Str
     #ValueAccess => "#ValueAccess" to Str
     #ValueCast => "#ValueCast" to Str
-    #ValueSelect => "#ValueSelect" to Str
+    #ValueWhen => "#ValueWhen" to Str
     else => "<unknown-value-kind>" to Str
   }
 
@@ -197,7 +197,7 @@ value_print = (v : *Value) -> () {
     #ValueIndex => value_print_index (v)
     #ValueAccess => value_print_access (v)
     #ValueCast => value_print_cast (v)
-    #ValueSelect => value_print_select (v)
+    #ValueWhen => value_print_select (v)
     else => () -> ()  {} ()
   }
 }

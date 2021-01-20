@@ -134,7 +134,7 @@ do_valuex = DoValuex {
     #AstValueAs      => do_value_as      (x)
     #AstValueSizeof  => do_value_sizeof  (x)
     #AstValueAlignof => do_value_alignof (x)
-    #AstValueSelect  => do_value_select  (x)
+    #AstValueWhen    => do_value_when    (x)
     #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
   }
@@ -159,8 +159,8 @@ do_value_forbidden = DoValue {
 }
 
 
-do_value_select = DoValue {
-  v = value_new (#ValueSelect, nil, x.ti)
+do_value_when = DoValue {
+  v = value_new (#ValueWhen, nil, x.ti)
   selector = do_value (x.select.x)
   v.select.x := selector
 
@@ -171,7 +171,7 @@ do_value_select = DoValue {
   kit.v := v
 
   do_variants = ListForeachHandler {
-    variant = data to *AstValueSelectVariant
+    variant = data to *AstValueWhenVariant
     kit = ctx to *Kit
     key = implicit_cast (do_value (variant.x), kit.selector.type)
     val0 = do_value (variant.y)
@@ -189,7 +189,7 @@ do_value_select = DoValue {
       else => implicit_cast (val0, kit.v.type)
     }
 
-    v = malloc(sizeof ValueSelectVariant) to *ValueSelectVariant
+    v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
 
     if not type_check (kit.selector.type, key.type, key.ti) {}
 
