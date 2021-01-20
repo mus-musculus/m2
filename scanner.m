@@ -58,6 +58,7 @@ fill = (rule : Rule) -> () {
   while true {
     c = getcc ()
     if c == symEOF {
+      printf("file: %s\n", lstate.ti.file)
       fatal ("unexpected end-of-file")
       exit (1)
     }

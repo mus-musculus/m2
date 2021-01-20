@@ -341,8 +341,9 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func160_str1 = private unnamed_addr constant [2 x i8] c"/\00", align 1
 @func163_str1 = private unnamed_addr constant [11 x i8] c"module=%s\0A\00", align 1
 @func163_str2 = private unnamed_addr constant [17 x i8] c"module not exist\00", align 1
-@func165_str1 = private unnamed_addr constant [23 x i8] c"unexpected end-of-file\00", align 1
-@func165_str2 = private unnamed_addr constant [16 x i8] c"too long token\0A\00", align 1
+@func165_str1 = private unnamed_addr constant [10 x i8] c"file: %s\0A\00", align 1
+@func165_str2 = private unnamed_addr constant [23 x i8] c"unexpected end-of-file\00", align 1
+@func165_str3 = private unnamed_addr constant [16 x i8] c"too long token\0A\00", align 1
 @func166_str1 = private unnamed_addr constant [2 x i8] c" \00", align 1
 @func166_str2 = private unnamed_addr constant [2 x i8] c"\09\00", align 1
 @func167_str1 = private unnamed_addr constant [2 x i8] c">\00", align 1
@@ -4525,61 +4526,67 @@ body_0:
   br i1 %3, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  %4 = bitcast [23 x %Nat8]* @func165_str1 to %Str
-  call void (%Str) @fatal (%Str %4)
+  %4 = bitcast [10 x %Nat8]* @func165_str1 to %Str
+  %5 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %6 = getelementptr inbounds %TokenInfo, %TokenInfo* %5, i1 0, i32 0
+  %7 = load %Str, %Str* %6
+  %8 = call %Int32 (%Str, ...) @printf (%Str %4, %Str %7)
 ;stmt4:
+  %9 = bitcast [23 x %Nat8]* @func165_str2 to %Str
+  call void (%Str) @fatal (%Str %9)
+;stmt5:
   call void (%Int32) @exit (%Int32 1)
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt5:
-  %5 = call i1 (%Nat8) %0 (%Nat8 %2)
-  br i1 %5, label %then_1, label %else_1
-then_1:
 ;stmt6:
-  %6 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
-  %7 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %8 = getelementptr inbounds %TokenInfo, %TokenInfo* %7, i1 0, i32 2
-  %9 = load %Nat16, %Nat16* %8
-; index array
-  %10 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %6, i1 0, %Nat16 %9
-  store %Nat8 %2, %Nat8* %10, align 1
+  %10 = call i1 (%Nat8) %0 (%Nat8 %2)
+  br i1 %10, label %then_1, label %else_1
+then_1:
 ;stmt7:
-  %11 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %12 = getelementptr inbounds %TokenInfo, %TokenInfo* %11, i1 0, i32 2
-  %13 = load %Nat16, %Nat16* %12
-  %14 = icmp uge %Nat16 %13, 254
-  br i1 %14, label %then_2, label %else_2
-then_2:
+  %11 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
+  %12 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %13 = getelementptr inbounds %TokenInfo, %TokenInfo* %12, i1 0, i32 2
+  %14 = load %Nat16, %Nat16* %13
+; index array
+  %15 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %11, i1 0, %Nat16 %14
+  store %Nat8 %2, %Nat8* %15, align 1
 ;stmt8:
-  %15 = bitcast [16 x %Nat8]* @func165_str2 to %Str
-  call void (%Str) @fatal (%Str %15)
+  %16 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %17 = getelementptr inbounds %TokenInfo, %TokenInfo* %16, i1 0, i32 2
+  %18 = load %Nat16, %Nat16* %17
+  %19 = icmp uge %Nat16 %18, 254
+  br i1 %19, label %then_2, label %else_2
+then_2:
+;stmt9:
+  %20 = bitcast [16 x %Nat8]* @func165_str3 to %Str
+  call void (%Str) @fatal (%Str %20)
   br label %endif_2
 else_2:
   br label %endif_2
 endif_2:
-;stmt9:
-  %16 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %17 = getelementptr inbounds %TokenInfo, %TokenInfo* %16, i1 0, i32 2
-  %18 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %19 = getelementptr inbounds %TokenInfo, %TokenInfo* %18, i1 0, i32 2
-  %20 = load %Nat16, %Nat16* %19
-  %21 = add %Nat16 %20, 1
-  store %Nat16 %21, %Nat16* %17, align 2
-  br label %endif_1
-else_1:
 ;stmt10:
-  call void (%Nat8) @func185 (%Nat8 %2)
-;stmt11:
-  %22 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
+  %21 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %22 = getelementptr inbounds %TokenInfo, %TokenInfo* %21, i1 0, i32 2
   %23 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
   %24 = getelementptr inbounds %TokenInfo, %TokenInfo* %23, i1 0, i32 2
   %25 = load %Nat16, %Nat16* %24
-; index array
-  %26 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %22, i1 0, %Nat16 %25
-  store %Nat8 0, %Nat8* %26, align 1
+  %26 = add %Nat16 %25, 1
+  store %Nat16 %26, %Nat16* %22, align 2
+  br label %endif_1
+else_1:
+;stmt11:
+  call void (%Nat8) @func185 (%Nat8 %2)
 ;stmt12:
+  %27 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
+  %28 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %29 = getelementptr inbounds %TokenInfo, %TokenInfo* %28, i1 0, i32 2
+  %30 = load %Nat16, %Nat16* %29
+; index array
+  %31 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %27, i1 0, %Nat16 %30
+  store %Nat8 0, %Nat8* %31, align 1
+;stmt13:
   br label %break_0
   br label %endif_1
 endif_1:
