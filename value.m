@@ -173,30 +173,66 @@ do_value_when = DoValue {
   do_variants = ListForeachHandler {
     variant = data to *AstValueWhenVariant
     kit = ctx to *Kit
-    key = implicit_cast (do_value (variant.x), kit.selector.type)
-    val0 = do_value (variant.y)
 
-    if kit.v.type == nil {
-      kit.v.type := val0.type
+    if variant.x != nil {
+      key = implicit_cast (do_value (variant.x), kit.selector.type)
+
+      val0 = do_value (variant.y)
+
+      if kit.v.type == nil {
+        kit.v.type := val0.type
+      } else {
+        if not type_check (val0.type, kit.v.type, val0.ti) {}
+      }
+
+      // если тип селекта определен,
+      // пытаемся неявно привести к нему все варианты
+      val = when kit.v.type {
+        nil => val0
+        else => implicit_cast (val0, kit.v.type)
+      }
+
+
+      if not type_check (kit.selector.type, key.type, key.ti) {}
+
+      v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
+      v.x := key
+      v.y := val
+
+      list_append (&kit.v.select.variants, v)
     } else {
-      if not type_check (val0.type, kit.v.type, val0.ti) {}
+      // это when x is {}
+      tx = do_type(variant.is_t)
+
+
+      val0 = do_value (variant.y)
+
+      if kit.v.type == nil {
+        kit.v.type := val0.type
+      } else {
+        if not type_check (val0.type, kit.v.type, val0.ti) {}
+      }
+
+      // если тип селекта определен,
+      // пытаемся неявно привести к нему все варианты
+      val = when kit.v.type {
+        nil => val0
+        else => implicit_cast (val0, kit.v.type)
+      }
+
+      printf("SECOND!\n")
+
+      // Создаю локальное выражение is
+      vx = value_new(#ValueIs, typeBool, tx.ti)
+      vx.is.value := kit.selector
+      vx.is.variant := type_union_get_variant (kit.v.type, tx)
+
+      v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
+      v.x := vx
+      v.y := val
+
+      list_append (&kit.v.select.variants, v)
     }
-
-    // если тип селекта определен,
-    // пытаемся неявно привести к нему все варианты
-    val = when kit.v.type {
-      nil => val0
-      else => implicit_cast (val0, kit.v.type)
-    }
-
-    v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-
-    if not type_check (kit.selector.type, key.type, key.ti) {}
-
-    v.x := key
-    v.y := val
-
-    list_append (&kit.v.select.variants, v)
   }
   list_foreach (&x.select.variants, do_variants, &kit)
 

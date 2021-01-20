@@ -409,7 +409,7 @@ ValueIs     = (value : *Value, variant : Nat)
 ValueIndex  = (array, index : *Value)
 ValueUn     = (x : *Value)
 
-ValueWhenVariant = (x, y : *Value)
+ValueWhenVariant = (tx : *Type, x, y : *Value)
 ValueWhen = (x : *Value, variants : List, other : *Value)
 
 

@@ -1121,13 +1121,19 @@ eval_when = Eval {
 
     s0 = reval (va.x)
 
-    reg = operation_with_type ("icmp eq", s0.type)
-    space ()
-    print_val (c.sel)
-    comma ()
-    print_val (s0)
-
-    fprintf (fout, "\n  br i1 %%%d", reg)
+    if va.x.kind != #ValueIs {
+      reg = operation_with_type ("icmp eq", s0.type)
+      space ()
+      print_val (c.sel)
+      comma ()
+      print_val (s0)
+      fprintf (fout, "\n  br i1 %%%d", reg)
+    } else {
+      // если это сравнение с типом то не нужно сравнивать значение
+      // is операции (WhenVariant#x) со значением селектора when
+      // оно булево и уже несет всю инфу
+      fprintf (fout, "\n  br i1 %%%d", s0.reg)
+    }
 
     fprintf (fout, ", label %%select_%d_%d_ok, label %%select_%d_%d", c.sno, c.case, c.sno, c.case + 1)
 
