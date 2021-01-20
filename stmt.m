@@ -66,7 +66,7 @@ do_stmt_assign = DoStmt {
   }
 
   if value_is_readonly (lval) {
-    error ("invalid lval", x.ti)
+    error ("invalid lval", x.assign.ti)
     return unit
   }
 
@@ -86,11 +86,11 @@ do_stmt_assign = DoStmt {
 
   rval = implicit_cast (rval0, ltype)
 
-  if not type_check (ltype, rval.type, x.ti) {
+  if not type_check (ltype, rval.type, x.assign.ti) {
     return unit
   }
 
-  return stmt_assign_new (lval, rval, x.ti)
+  return stmt_assign_new (lval, rval, x.assign.ti)
 }
 
 
@@ -108,10 +108,10 @@ do_stmt_valdef = DoStmt {
        k != #ValueImmediate or
        k == #ValueUndefined {
 
-      v0 = value_new (#ValueLocalConst, v.type, x.ti)
+      v0 = value_new (#ValueLocalConst, v.type, x.valdef.ti)
       bind_value_local (id.str, v0)
 
-      se = stmt_new (#StmtExpr, x.ti)
+      se = stmt_new (#StmtExpr, x.valdef.ti)
       se.e.v := dold (v)
       v0.expr := &se.e
       return se
@@ -139,7 +139,7 @@ stmt_block_new = (b, parent : *Block) -> *Block {
 
 
 do_stmt_block = DoStmt {
-  s = stmt_new (#StmtBlock, x.ti)
+  s = stmt_new (#StmtBlock, x.block.ti)
 
   b = stmt_block_new (&s.b, fctx.cblock)
 
@@ -170,7 +170,7 @@ do_stmt_expr = DoStmt {
     //warning("ignoring value", x.ti)
   }
 
-  s = stmt_new (#StmtExpr, x.ti)
+  s = stmt_new (#StmtExpr, x.expr.ti)
   s.e.v := v
   return s
 }
@@ -202,7 +202,7 @@ do_stmt_if = DoStmt {
 
   if then is Unit {return unit}
 
-  s = stmt_new (#StmtIf, x.ti)
+  s = stmt_new (#StmtIf, x.if.ti)
   s.i.cond := cond
   s.i.then := then as *Stmt
   s.i.else := _else
@@ -225,7 +225,7 @@ do_stmt_while = DoStmt {
 
   if block is Unit {return unit}
 
-  s = stmt_new (#StmtWhile, x.ti)
+  s = stmt_new (#StmtWhile, x.while.ti)
   s.w.cond := cond
   s.w.stmt := block as *Stmt
   return s
@@ -251,11 +251,11 @@ do_stmt_return = DoStmt {
   // missing return value
   if retval == nil {
     if not type_eq (func_to, typeUnit) {
-      error("missing return value", x.ti)
+      error("missing return value", x.return.ti)
     }
   }
 
-  s = stmt_new (#StmtReturn, x.ti)
+  s = stmt_new (#StmtReturn, x.return.ti)
   s.a[0] := retval
   return s
 }
@@ -296,25 +296,25 @@ do_stmt_typedef = DoStmt {
 
 do_stmt_break = DoStmt {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new (#StmtBreak, x.ti)
+  return stmt_new (#StmtBreak, x.break.ti)
 }
 
 
 do_stmt_continue = DoStmt {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new (#StmtContinue, x.ti)
+  return stmt_new (#StmtContinue, x.continue.ti)
 }
 
 
 do_stmt_goto = DoStmt {
-  s = stmt_new (#StmtGoto, x.ti)
+  s = stmt_new (#StmtGoto, x.goto.ti)
   s.l := x.goto.label.str
   return s
 }
 
 
 do_stmt_label = DoStmt {
-  s = stmt_new (#StmtLabel, x.ti)
+  s = stmt_new (#StmtLabel, x.label.ti)
   s.l := x.label.label.str
   return s
 }

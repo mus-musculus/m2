@@ -194,33 +194,43 @@ AstStmtKind = {
   #AstStmtGoto, #AstStmtLabel
 }
 
-AstStmtValueDef = (id : *AstId, expr : *AstValue)
-AstStmtTypeDef = (id : *AstId, type : *AstType)
-AstStmtExpr = (expr : *AstValue)
-AstStmtAssign = (l, r : *AstValue)
-AstStmtBlock = (stmts : List)
-AstStmtIf = (cond : *AstValue, then : *AstStmt, else : *AstStmt or Unit)
-AstStmtWhile = (cond : *AstValue, block : *AstStmt)
-AstStmtReturn = (value : *AstValue)
-AstStmtGoto = (label : *AstId)
-AstStmtLabel = (label : *AstId)
+AstStmtValueDef = (id : *AstId, expr : *AstValue, ti : *TokenInfo)
+AstStmtTypeDef  = (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstStmtExpr     = (expr : *AstValue, ti : *TokenInfo)
+AstStmtAssign   = (l, r : *AstValue, ti : *TokenInfo)
+AstStmtBlock    = (stmts : List, ti : *TokenInfo)
+AstStmtIf = (
+  cond : *AstValue
+  then : *AstStmt
+  else : *AstStmt or Unit
+  ti : *TokenInfo
+)
+AstStmtWhile    = (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
+AstStmtReturn   = (value : *AstValue, ti : *TokenInfo)
+AstStmtGoto     = (label : *AstId, ti : *TokenInfo)
+AstStmtLabel    = (label : *AstId, ti : *TokenInfo)
+
+
+AstStmtBreak    = (ti : *TokenInfo)
+AstStmtContinue = (ti : *TokenInfo)
+
 
 AstStmt = (
   kind    : AstStmtKind
 
-  assign  : AstStmtAssign
-  vardef  : AstDecl     // #AstStmtVarDef
-  valdef  : AstStmtValueDef
-  typedef : AstStmtTypeDef
-  expr    : AstStmtExpr
-  block   : AstStmtBlock
-  if      : AstStmtIf
-  while   : AstStmtWhile
-  return  : AstStmtReturn
-  goto    : AstStmtGoto
-  label   : AstStmtLabel
-
-  ti      : *TokenInfo
+  assign   : AstStmtAssign
+  vardef   : AstDecl     // #AstStmtVarDef
+  valdef   : AstStmtValueDef
+  typedef  : AstStmtTypeDef
+  expr     : AstStmtExpr
+  block    : AstStmtBlock
+  if       : AstStmtIf
+  while    : AstStmtWhile
+  return   : AstStmtReturn
+  goto     : AstStmtGoto
+  label    : AstStmtLabel
+  break    : AstStmtBreak
+  continue : AstStmtContinue
 )
 
 

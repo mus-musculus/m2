@@ -1123,7 +1123,7 @@ ast_stmt_new = (k : AstStmtKind, ti : *TokenInfo) -> *AstStmt {
   assert(s != nil, "ast_value_new malloc")
   memset(s, 0, sizeof AstStmt)
   s.kind := k
-  s.ti := ti
+  /*s.ti := ti*/
   return s
 }
 
