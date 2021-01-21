@@ -614,6 +614,14 @@ DefFunc  = (id : Str, type : *Type, block : *Block)
 DefVar   = (id : Str, type : *Type, init_value : *Value)
 DefAlias = (id : Str, type : *Type, org : Str)
 
+/*Definition = DefType or
+             DefConst or
+             DefStr or
+             DefArray or
+             DefFunc or
+             DefVar or
+             DefAlias*/
+
 
 Definition = (
   kind : DefinitionKind
