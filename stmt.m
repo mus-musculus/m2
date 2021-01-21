@@ -152,7 +152,7 @@ stmt_block_new = (b, parent : *Block) -> *Block {
 do_stmt_block = (x : *AstStmtBlock) -> *Stmt or Unit {
   s = stmt_new (#StmtBlock, x.ti)
 
-  b = stmt_block_new (&s.b, fctx.cblock)
+  b = stmt_block_new (&s.block, fctx.cblock)
 
   fctx.cblock := b
 

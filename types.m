@@ -553,7 +553,7 @@ Stmt = (
 
 //union (
     a : [2]*Value  // assign & return statements
-    b : Block      // block statement
+    block : Block      // block statement
     e : Expr       // StmtExpr
     v : *Decl    // var definition
     w : While      // while statement

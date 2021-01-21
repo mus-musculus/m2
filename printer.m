@@ -1345,7 +1345,7 @@ print_stmt = (s : *Stmt) -> () {
   }
 
   when k {
-    #StmtBlock    => print_block         (&s.b)
+    #StmtBlock    => print_block         (&s.block)
     #StmtExpr     => print_stmt_expr     (&s.e)
     #StmtAssign   => print_stmt_assign   (&s.assign)
     #StmtVarDef   => print_stmt_var      (s.v)

@@ -876,7 +876,7 @@ do_value_func = DoValue {
   if bx0 is Unit {goto fail}
   bx = bx0 as *Stmt
 
-  fv.def := asmFuncAdd (&asm0, uid, t, &bx.b)
+  fv.def := asmFuncAdd (&asm0, uid, t, &bx.block)
 
   fctx := old_fctx  // restore func context before exit
 
