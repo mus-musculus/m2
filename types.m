@@ -686,6 +686,46 @@ LLVM_ValueKind = {
 }
 
 
+LLVM_ValueSpecialKind = {
+  #LLVM_ValueUndef2      // for llvm `undef` value
+  #LLVM_ValueZero2       // for llvm `zeroinitializer` value
+  #LLVM_ValueEmpty2      // Unit () 'value'
+}
+LLVM_ValueSpecial = (
+  kind : LLVM_ValueSpecialKind
+)
+
+LLVM_ValueImmediate = (
+  type : *Type
+  imm  : Int64
+)
+
+LLVM_ValueNamedKind = {
+  #LLVM_ValueGlobalConst2,
+  #LLVM_ValueLocalVar2,
+  #LLVM_ValueGlobalVar2
+}
+LLVM_ValueNamed = (
+  type : *Type
+  id   : Str
+)
+
+LLVM_ValueRegKind = {
+  #LLVM_ValueRegister2,
+  #LLVM_ValueAddress2
+}
+LLVM_ValueReg = (
+  kind : LLVM_ValueRegKind
+  type : *Type
+  reg  : Nat32
+)
+
+/*LLVM_Value = LLVM_ValueSpecial or
+             LLVM_ValueImmediate or
+             LLVM_ValueNamed or
+             LLVM_ValueReg*/
+
+
 // Операнд - тип значения и его местоположение
 // Является результатом вычисления
 // Операнды Global, Local & Address нуждаются в загрузке (load)
