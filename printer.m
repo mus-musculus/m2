@@ -1427,13 +1427,13 @@ print_stmt_while = (x : *While) -> () {
 
 print_stmt_return = (x : *StmtReturn) -> () {
   v = x.value
-  if v == nil {
+  if v is Unit {
     lab_get ()  // for LLVM
     o ("\nret void")
     return
   }
 
-  vx = reval (v)
+  vx = reval (v as *Value)
   fprintf (fout, "\n  ret ")
   print_val_with_type (vx)
   lab_get ()  // for LLVM

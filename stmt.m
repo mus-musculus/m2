@@ -244,28 +244,24 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   func_to = fctx.cfunc.type.func.to
   rv = x.value
 
-  retval = when rv {
-    unit => nil to *Value
-
-    else => (rv : *AstValue, ft : *Type) -> *Value {
-      v0 = do_value (rv)
-      if v0.kind == #ValuePoison {return nil}
-      v = implicit_cast (v0, ft)
-      if not type_check (ft, v.type, rv.ti) {}
-      return v
-    } (rv as *AstValue, func_to)
-  }
-
-  // missing return value
-  if retval == nil {
+  if rv is Unit {
     if not type_eq (func_to, typeUnit) {
       error("missing return value", x.ti)
+      return unit
     }
+
+    s = stmt_new (#StmtReturn, x.ti)
+    s.return := !StmtReturn (value=unit, ti=x.ti)
+    return s
   }
 
+  v0 = do_value (rv as *AstValue)
+  if v0.kind == #ValuePoison {return unit}
+  v = implicit_cast (v0, func_to)
+  if not type_check (func_to, v.type, v0.ti) {}
+
   s = stmt_new (#StmtReturn, x.ti)
-  s.a[0] := retval
-  s.return.value := retval
+  s.return := !StmtReturn (value=v, ti=x.ti)
   return s
 }
 
