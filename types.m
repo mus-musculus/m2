@@ -604,8 +604,6 @@ FuncContext = (
 DefinitionKind = {#DefType, #DefConst, #DefStr, #DefArray, #DefFunc, #DefVar, #DefAlias}
 
 
-
-// id должно идти первым полем! Грязный хак для asm_rename2!
 DefType  = (id : Str, type : *Type)
 DefConst = (id : Str, type : *Type, value : *Value)
 DefStr   = (id : Str, type : *Type, data : Str, len : Nat)
