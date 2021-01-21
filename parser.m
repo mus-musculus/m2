@@ -258,13 +258,13 @@ parse = (filename : Str) -> *AstModule {
     }
 
 
-    if isAlpha(tok.text[0]) {
-      if isUpperCase(tok.text[0]) {
-        bt = parse_bind_type()
-        list_append(&m.nodes, ast_node_new(#AstNodeBindType, bt))
+    if isAlpha (tok.text[0]) {
+      if isUpperCase (tok.text[0]) {
+        bt = parse_bind_type ()
+        list_append (&m.nodes, ast_node_new(#AstNodeBindType, bt))
       } else {
-        bv = parse_bind_value()
-        list_append(&m.nodes, ast_node_new(#AstNodeBindValue, bv))
+        bv = parse_bind_value ()
+        list_append (&m.nodes, ast_node_new(#AstNodeBindValue, bv))
       }
     }
 
