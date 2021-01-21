@@ -16031,30 +16031,27 @@ endif_4:
   %101 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind %0, %Type* %47, %TokenInfo* %100)
 ;stmt20:
   %102 = getelementptr inbounds %Value, %Value* %101, i1 0, i32 9
-  %103 = getelementptr inbounds %ValueBin, %ValueBin* %102, i1 0, i32 0
-  store %Value* %21, %Value** %103, align 8
+  %103 = insertvalue %ValueBin zeroinitializer, %Value* %21, 0
+  %104 = insertvalue %ValueBin %103, %Value* %24, 1
+  store %ValueBin %104, %ValueBin* %102, align 8
 ;stmt21:
-  %104 = getelementptr inbounds %Value, %Value* %101, i1 0, i32 9
-  %105 = getelementptr inbounds %ValueBin, %ValueBin* %104, i1 0, i32 1
-  store %Value* %24, %Value** %105, align 8
+  %105 = getelementptr inbounds %Value, %Value* %101, i1 0, i32 20
+  %106 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 20
+  %107 = load i1, i1* %106
+  %108 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 20
+  %109 = load i1, i1* %108
+  %110 = or i1 %107, %109
+  store i1 %110, i1* %105, align 1
 ;stmt22:
-  %106 = getelementptr inbounds %Value, %Value* %101, i1 0, i32 20
-  %107 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 20
-  %108 = load i1, i1* %107
-  %109 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 20
-  %110 = load i1, i1* %109
-  %111 = or i1 %108, %110
-  store i1 %111, i1* %106, align 1
-;stmt23:
   ret %Value* %101
-;stmt24:
+;stmt23:
   br label %fail
 fail:
-;stmt25:
-  %113 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 15
-  %114 = load %TokenInfo*, %TokenInfo** %113
-  %115 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %114)
-  ret %Value* %115
+;stmt24:
+  %112 = getelementptr inbounds %AstValue, %AstValue* %1, i1 0, i32 15
+  %113 = load %TokenInfo*, %TokenInfo** %112
+  %114 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %113)
+  ret %Value* %114
 }
 
 define %Value* @func443 (%AstValue*) {
@@ -16092,22 +16089,19 @@ endif_0:
   %22 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 32, %Type* %19, %TokenInfo* %21)
 ;stmt5:
   %23 = getelementptr inbounds %Value, %Value* %22, i1 0, i32 15
-  %24 = getelementptr inbounds %ValueCall, %ValueCall* %23, i1 0, i32 0
-  store %Value* %5, %Value** %24, align 8
+  %24 = insertvalue %ValueCall zeroinitializer, %Value* %5, 0
+  %25 = insertvalue %ValueCall %24, %List* %14, 1
+  store %ValueCall %25, %ValueCall* %23, align 8
 ;stmt6:
-  %25 = getelementptr inbounds %Value, %Value* %22, i1 0, i32 15
-  %26 = getelementptr inbounds %ValueCall, %ValueCall* %25, i1 0, i32 1
-  store %List* %14, %List** %26, align 8
-;stmt7:
   ret %Value* %22
-;stmt8:
+;stmt7:
   br label %fail
 fail:
-;stmt9:
-  %28 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %29 = load %TokenInfo*, %TokenInfo** %28
-  %30 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %29)
-  ret %Value* %30
+;stmt8:
+  %27 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %28 = load %TokenInfo*, %TokenInfo** %27
+  %29 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %28)
+  ret %Value* %29
 }
 
 define i1 @func445 (%Unit*, %Unit*, %Unit*, %Nat32) {
@@ -16369,24 +16363,21 @@ endif_2:
   %62 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 33, %Type* %49, %TokenInfo* %61)
 ;stmt11:
   %63 = getelementptr inbounds %Value, %Value* %62, i1 0, i32 10
-  %64 = getelementptr inbounds %ValueIndex, %ValueIndex* %63, i1 0, i32 0
-  %65 = load %Value*, %Value** %2
-  store %Value* %65, %Value** %64, align 8
+  %64 = load %Value*, %Value** %2
+  %65 = insertvalue %ValueIndex zeroinitializer, %Value* %64, 0
+  %66 = call %Value* (%Value*) @func482 (%Value* %11)
+  %67 = insertvalue %ValueIndex %65, %Value* %66, 1
+  store %ValueIndex %67, %ValueIndex* %63, align 8
 ;stmt12:
-  %66 = getelementptr inbounds %Value, %Value* %62, i1 0, i32 10
-  %67 = getelementptr inbounds %ValueIndex, %ValueIndex* %66, i1 0, i32 1
-  %68 = call %Value* (%Value*) @func482 (%Value* %11)
-  store %Value* %68, %Value** %67, align 8
-;stmt13:
   ret %Value* %62
-;stmt14:
+;stmt13:
   br label %fail
 fail:
-;stmt15:
-  %70 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %71 = load %TokenInfo*, %TokenInfo** %70
-  %72 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %71)
-  ret %Value* %72
+;stmt14:
+  %69 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %70 = load %TokenInfo*, %TokenInfo** %69
+  %71 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %70)
+  ret %Value* %71
 }
 
 define %Type* @func449 (%Type*) {
@@ -16516,23 +16507,20 @@ endif_2:
   %61 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 34, %Type* %58, %TokenInfo* %60)
 ;stmt13:
   %62 = getelementptr inbounds %Value, %Value* %61, i1 0, i32 11
-  %63 = getelementptr inbounds %ValueAccess, %ValueAccess* %62, i1 0, i32 0
-  %64 = load %Value*, %Value** %2
-  store %Value* %64, %Value** %63, align 8
+  %63 = load %Value*, %Value** %2
+  %64 = insertvalue %ValueAccess zeroinitializer, %Value* %63, 0
+  %65 = insertvalue %ValueAccess %64, %Str %12, 1
+  store %ValueAccess %65, %ValueAccess* %62, align 8
 ;stmt14:
-  %65 = getelementptr inbounds %Value, %Value* %61, i1 0, i32 11
-  %66 = getelementptr inbounds %ValueAccess, %ValueAccess* %65, i1 0, i32 1
-  store %Str %12, %Str* %66, align 8
-;stmt15:
   ret %Value* %61
-;stmt16:
+;stmt15:
   br label %fail
 fail:
-;stmt17:
-  %68 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %69 = load %TokenInfo*, %TokenInfo** %68
-  %70 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %69)
-  ret %Value* %70
+;stmt16:
+  %67 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %68 = load %TokenInfo*, %TokenInfo** %67
+  %69 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %68)
+  ret %Value* %69
 }
 
 define %Value* @do_value_cast_var (%Value*, %Type*, %TokenInfo*) {
@@ -16960,22 +16948,19 @@ endif_1:
   %34 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 36, %Type* %31, %TokenInfo* %33)
 ;stmt9:
   %35 = getelementptr inbounds %Value, %Value* %34, i1 0, i32 14
-  %36 = getelementptr inbounds %ValueIs, %ValueIs* %35, i1 0, i32 0
-  store %Value* %5, %Value** %36, align 8
+  %36 = insertvalue %ValueIs zeroinitializer, %Value* %5, 0
+  %37 = insertvalue %ValueIs %36, %Nat32 %30, 1
+  store %ValueIs %37, %ValueIs* %35, align 8
 ;stmt10:
-  %37 = getelementptr inbounds %Value, %Value* %34, i1 0, i32 14
-  %38 = getelementptr inbounds %ValueIs, %ValueIs* %37, i1 0, i32 1
-  store %Nat32 %30, %Nat32* %38, align 4
-;stmt11:
   ret %Value* %34
-;stmt12:
+;stmt11:
   br label %fail
 fail:
-;stmt13:
-  %40 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %41 = load %TokenInfo*, %TokenInfo** %40
-  %42 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %41)
-  ret %Value* %42
+;stmt12:
+  %39 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %40 = load %TokenInfo*, %TokenInfo** %39
+  %41 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %40)
+  ret %Value* %41
 }
 
 define %Value* @func464 (%AstValue*) {
@@ -17565,24 +17550,21 @@ define %Value* @func473 (%AstValue*) {
   %14 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 7, %Type* %5, %TokenInfo* %13)
 ;stmt5:
   %15 = getelementptr inbounds %Value, %Value* %14, i1 0, i32 19
-  %16 = getelementptr inbounds %ValueRecord, %ValueRecord* %15, i1 0, i32 0
-  store %Type* %5, %Type** %16, align 8
+  %16 = insertvalue %ValueRecord zeroinitializer, %Type* %5, 0
+  %17 = getelementptr inbounds %func473.type10, %func473.type10* %6, i1 0, i32 1
+  %18 = load %List, %List* %17
+  %19 = insertvalue %ValueRecord %16, %List %18, 1
+  store %ValueRecord %19, %ValueRecord* %15, align 8
 ;stmt6:
-  %17 = getelementptr inbounds %Value, %Value* %14, i1 0, i32 19
-  %18 = getelementptr inbounds %ValueRecord, %ValueRecord* %17, i1 0, i32 1
-  %19 = getelementptr inbounds %func473.type10, %func473.type10* %6, i1 0, i32 1
-  %20 = load %List, %List* %19
-  store %List %20, %List* %18, align 8
-;stmt7:
   ret %Value* %14
-;stmt8:
+;stmt7:
   br label %fail
 fail:
-;stmt9:
-  %22 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %23 = load %TokenInfo*, %TokenInfo** %22
-  %24 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %23)
-  ret %Value* %24
+;stmt8:
+  %21 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %22 = load %TokenInfo*, %TokenInfo** %21
+  %23 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %22)
+  ret %Value* %23
 }
 
 define %Value* @func475 (%AstValue*) {
@@ -17631,8 +17613,8 @@ endif_1:
   %25 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 14, %Type* %22, %TokenInfo* %24)
 ;stmt6:
   %26 = getelementptr inbounds %Value, %Value* %25, i1 0, i32 8
-  %27 = getelementptr inbounds %ValueUn, %ValueUn* %26, i1 0, i32 0
-  store %Value* %5, %Value** %27, align 8
+  %27 = insertvalue %ValueUn zeroinitializer, %Value* %5, 0
+  store %ValueUn %27, %ValueUn* %26, align 8
 ;stmt7:
   ret %Value* %25
 ;stmt8:
@@ -17692,8 +17674,8 @@ endif_1:
   %26 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 13, %Type* %23, %TokenInfo* %25)
 ;stmt6:
   %27 = getelementptr inbounds %Value, %Value* %26, i1 0, i32 8
-  %28 = getelementptr inbounds %ValueUn, %ValueUn* %27, i1 0, i32 0
-  store %Value* %5, %Value** %28, align 8
+  %28 = insertvalue %ValueUn zeroinitializer, %Value* %5, 0
+  store %ValueUn %28, %ValueUn* %27, align 8
 ;stmt7:
   ret %Value* %26
 ;stmt8:
@@ -17753,8 +17735,8 @@ endif_1:
   %26 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 12, %Type* %23, %TokenInfo* %25)
 ;stmt6:
   %27 = getelementptr inbounds %Value, %Value* %26, i1 0, i32 8
-  %28 = getelementptr inbounds %ValueUn, %ValueUn* %27, i1 0, i32 0
-  store %Value* %5, %Value** %28, align 8
+  %28 = insertvalue %ValueUn zeroinitializer, %Value* %5, 0
+  store %ValueUn %28, %ValueUn* %27, align 8
 ;stmt7:
   ret %Value* %26
 ;stmt8:
@@ -17877,22 +17859,19 @@ endif_2:
   %59 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind %23, %Type* %56, %TokenInfo* %58)
 ;stmt13:
   %60 = getelementptr inbounds %Value, %Value* %59, i1 0, i32 9
-  %61 = getelementptr inbounds %ValueBin, %ValueBin* %60, i1 0, i32 0
-  store %Value* %49, %Value** %61, align 8
+  %61 = insertvalue %ValueBin zeroinitializer, %Value* %49, 0
+  %62 = insertvalue %ValueBin %61, %Value* %54, 1
+  store %ValueBin %62, %ValueBin* %60, align 8
 ;stmt14:
-  %62 = getelementptr inbounds %Value, %Value* %59, i1 0, i32 9
-  %63 = getelementptr inbounds %ValueBin, %ValueBin* %62, i1 0, i32 1
-  store %Value* %54, %Value** %63, align 8
-;stmt15:
   ret %Value* %59
-;stmt16:
+;stmt15:
   br label %fail
 fail:
-;stmt17:
-  %65 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
-  %66 = load %TokenInfo*, %TokenInfo** %65
-  %67 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %66)
-  ret %Value* %67
+;stmt16:
+  %64 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 15
+  %65 = load %TokenInfo*, %TokenInfo** %64
+  %66 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %65)
+  ret %Value* %66
 }
 
 define i1 @func479 (%ValueKind, %Type*) {
@@ -18060,20 +18039,17 @@ sact:
   %28 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func430 (%ValueKind 35, %Type* %1, %TokenInfo* %2)
 ;stmt14:
   %29 = getelementptr inbounds %Value, %Value* %28, i1 0, i32 12
-  %30 = getelementptr inbounds %ValueCast, %ValueCast* %29, i1 0, i32 0
-  store %Value* %0, %Value** %30, align 8
+  %30 = insertvalue %ValueCast zeroinitializer, %Value* %0, 0
+  %31 = insertvalue %ValueCast %30, %Type* %1, 1
+  store %ValueCast %31, %ValueCast* %29, align 8
 ;stmt15:
-  %31 = getelementptr inbounds %Value, %Value* %28, i1 0, i32 12
-  %32 = getelementptr inbounds %ValueCast, %ValueCast* %31, i1 0, i32 1
-  store %Type* %1, %Type** %32, align 8
-;stmt16:
   ret %Value* %28
-;stmt17:
+;stmt16:
   br label %fail
 fail:
-;stmt18:
-  %34 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %2)
-  ret %Value* %34
+;stmt17:
+  %33 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %2)
+  ret %Value* %33
 }
 
 define %Value* @func482 (%Value*) {

@@ -349,8 +349,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin.l := l
-  v.bin.r := r
+  v.bin := !ValueBin (l=l, r=r)
   v.dirty := l.dirty or r.dirty
   return v
 
@@ -369,8 +368,7 @@ do_value_call = DoValue {
   args = do_args (f, &x.call.args, x.ti)
 
   v = value_new (#ValueCall, f.type.func.to, x.ti)
-  v.call.func := f
-  v.call.args := args
+  v.call := !ValueCall (func=f, args=args)
   return v
 
 fail:
@@ -468,8 +466,7 @@ do_value_index = DoValue {
   }
 
   v = value_new (#ValueIndex, typ, x.ti)
-  v.index.array := a
-  v.index.index := implicit_cast_int (i)
+  v.index := !ValueIndex (array=a, index=implicit_cast_int (i))
   return v
 
 fail:
@@ -508,8 +505,7 @@ do_value_access = DoValue {
   }
 
   v = value_new (#ValueAccess, field.type, x.ti)
-  v.access.value := r
-  v.access.field := field_id
+  v.access := !ValueAccess (value=r, field=field_id)
   return v
 
 fail:
@@ -693,9 +689,7 @@ do_value_is = DoValue {
   variant = type_union_get_variant (v.type, t)
 
   vx = value_new(#ValueIs, typeBool, x.ti)
-  vx.is.value := v
-  vx.is.variant := variant
-
+  vx.is := !ValueIs (value=v, variant=variant)
   return vx
 
 fail:
@@ -929,8 +923,7 @@ do_value_record = DoValue {
   map_foreach(&x.rec.values, field_value_handle, &ctx)
 
   vx = value_new (#ValueRecord, t, x.ti)
-  vx.rec.type := t
-  vx.rec.values := ctx.vl
+  vx.rec := !ValueRecord (type=t, values=ctx.vl)
   return vx
 
 fail:
@@ -948,7 +941,7 @@ do_value_plus = DoValue {
   }
 
   vx = value_new (#ValuePlus, v.type, x.ti)
-  vx.un.x := v
+  vx.un := !ValueUn (x=v)
   return vx
 
 fail:
@@ -966,7 +959,7 @@ do_value_minus = DoValue {
   }
 
   vx = value_new (#ValueMinus, v.type, x.ti)
-  vx.un.x := v
+  vx.un := !ValueUn (x=v)
   return vx
 
 fail:
@@ -984,7 +977,7 @@ do_value_not = DoValue {
   }
 
   vx = value_new (#ValueNot, v.type, x.ti)
-  vx.un.x := v
+  vx.un := !ValueUn (x=v)
   return vx
 
 fail:
@@ -1023,8 +1016,7 @@ do_value_shift = DoValue {
   r2 = cast (r, l.type, r.ti)
 
   v = value_new (k, l.type, x.ti)
-  v.bin.l := l2
-  v.bin.r := r2
+  v.bin := !ValueBin (l=l2, r=r2)
   return v
 
 fail:
@@ -1098,8 +1090,7 @@ sact:
 
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)
-  v.cast.value := vx
-  v.cast.type := t
+  v.cast := !ValueCast (value=vx, type=t)
   return v
 
 fail:
