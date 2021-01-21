@@ -9578,9 +9578,8 @@ endif_0:
 define void @func284 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefType, %DefType* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefType, %DefType* %6, i1 0, i32 1
@@ -9592,9 +9591,8 @@ define void @func284 (%Unit*, %Unit*, %Nat32, %Node*) {
 define void @func285 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 3
@@ -9608,9 +9606,8 @@ define void @func285 (%Unit*, %Unit*, %Nat32, %Node*) {
 define void @func286 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 1
@@ -9624,9 +9621,8 @@ define void @func286 (%Unit*, %Unit*, %Nat32, %Node*) {
 define void @func287 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 1
@@ -9640,9 +9636,8 @@ define void @func287 (%Unit*, %Unit*, %Nat32, %Node*) {
 define void @func288 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 1
@@ -9656,9 +9651,8 @@ define void @func288 (%Unit*, %Unit*, %Nat32, %Node*) {
 define void @func289 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
-;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
-;stmt2:
+;stmt1:
   %7 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 1

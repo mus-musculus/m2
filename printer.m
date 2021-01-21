@@ -208,8 +208,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Types
   o ("\n\n;types:\n")
   foreach_typedef = ListForeachHandler {
-    ai = data to *Definition
-    td = &ai.typedef
+    td = &(data to *Definition).typedef
     typedef (td.id, td.type)
   }
   list_foreach (&a.types, foreach_typedef, nil)
@@ -217,8 +216,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Strings
   o ("\n\n;strings:\n")
   foreach_stringdef = ListForeachHandler {
-    ai = data to *Definition
-    sd = &ai.stringdef
+    sd = &(data to *Definition).stringdef
     stringdef (sd.id, sd.len, sd.data)
   }
   list_foreach (&a.strings, foreach_stringdef, nil)
@@ -226,8 +224,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Arrays
   o ("\n\n;arrays:\n")
   foreach_arraydef = ListForeachHandler {
-    ai = data to *Definition
-    ad = &ai.arraydef
+    ad = &(data to *Definition).arraydef
     arraydef (ad.id, ad.type, ad.values)
   }
   list_foreach (&a.arrays, foreach_arraydef, nil)
@@ -235,8 +232,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Variables
   o ("\n\n;vars:\n")
   foreach_vardef = ListForeachHandler {
-    ai = data to *Definition
-    vd = &ai.vardef
+    vd = &(data to *Definition).vardef
     vardef (vd.id, vd.type, vd.init_value)
   }
   list_foreach (&a.vars, foreach_vardef, nil)
@@ -244,8 +240,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Functions
   o ("\n\n;funcs:\n")
   foreach_funcdef = ListForeachHandler {
-    ai = data to *Definition
-    fd = &ai.funcdef
+    fd = &(data to *Definition).funcdef
     funcdef (fd.id, fd.type, fd.block)
   }
   list_foreach (&a.funcs, foreach_funcdef, nil)
@@ -253,8 +248,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   // print Aliases
   o ("\n\n;aliases:\n")
   foreach_aliasdef = ListForeachHandler {
-    ai = data to *Definition
-    ad = &ai.aliasdef
+    ad = &(data to *Definition).aliasdef
     aliasdef (ad.id, ad.type, ad.org)
   }
   list_foreach (&a.aliases, foreach_aliasdef, nil)
