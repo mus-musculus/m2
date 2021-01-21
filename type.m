@@ -6,11 +6,8 @@
 type_new = (k : TypeKind, size : Nat, ti : *TokenInfo) -> *Type {
   t = malloc (sizeof Type) to *Type
   assert (t != nil, "type_new")
-  memset (t, 0, sizeof Type)
-  t.kind := k
-  t.size := size
-  t.align := size
-  t.ti := ti
+
+  *t := !Type (kind=k, size=size, align=size, ti=ti)
   return t
 }
 

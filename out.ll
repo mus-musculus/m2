@@ -13145,21 +13145,12 @@ define %Type* @func375 (%TypeKind, %Nat32, %TokenInfo*) {
   %8 = bitcast [9 x %Nat8]* @func375_str1 to %Str
   call void (i1, %Str) @assert (i1 %7, %Str %8)
 ;stmt2:
-  %9 = bitcast %Type* %5 to %Unit*
-  %10 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %9, %Nat8 0, %Nat32 176)
+  %9 = insertvalue %Type zeroinitializer, %TypeKind %0, 0
+  %10 = insertvalue %Type %9, %Nat32 %1, 2
+  %11 = insertvalue %Type %10, %Nat32 %1, 3
+  %12 = insertvalue %Type %11, %TokenInfo* %2, 13
+  store %Type %12, %Type* %5, align 8
 ;stmt3:
-  %11 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 0
-  store %TypeKind %0, %TypeKind* %11, align 2
-;stmt4:
-  %12 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 2
-  store %Nat32 %1, %Nat32* %12, align 4
-;stmt5:
-  %13 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 3
-  store %Nat32 %1, %Nat32* %13, align 4
-;stmt6:
-  %14 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 13
-  store %TokenInfo* %2, %TokenInfo** %14, align 8
-;stmt7:
   ret %Type* %5
 }
 
@@ -14930,18 +14921,11 @@ define %Value* @func430 (%ValueKind, %Type*, %TokenInfo*) {
   %8 = bitcast [21 x %Nat8]* @func430_str1 to %Str
   call void (i1, %Str) @assert (i1 %7, %Str %8)
 ;stmt2:
-  %9 = bitcast %Value* %5 to %Unit*
-  %10 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %9, %Nat8 0, %Nat32 336)
+  %9 = insertvalue %Value zeroinitializer, %ValueKind %0, 0
+  %10 = insertvalue %Value %9, %Type* %1, 1
+  %11 = insertvalue %Value %10, %TokenInfo* %2, 22
+  store %Value %11, %Value* %5, align 8
 ;stmt3:
-  %11 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 0
-  store %ValueKind %0, %ValueKind* %11, align 2
-;stmt4:
-  %12 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
-  store %Type* %1, %Type** %12, align 8
-;stmt5:
-  %13 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 22
-  store %TokenInfo* %2, %TokenInfo** %13, align 8
-;stmt6:
   ret %Value* %5
 }
 

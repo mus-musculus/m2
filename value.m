@@ -25,10 +25,8 @@ vn = () -> *Value or Unit  {
 value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
-  memset (v, 0, sizeof Value)
-  v.kind := k
-  v.type := t
-  v.ti := ti
+
+  *v := !Value (kind=k, type=t, ti=ti)
   return v
 }
 
