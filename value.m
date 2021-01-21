@@ -943,16 +943,29 @@ do_value_record = DoValue {
 
     // обрабатываем значение
     v0 = do_value (field_ast_val)
-    // получаем тип поля для неявного приведения значения к нему и проверки типа
-    field = type_record_get_field (c.type, field_id)
-    // приводим значение поля к типу поля в записи
-    v = implicit_cast(v0, field.type)
-    // проверяем тип
-    type_check(v.type, field.type, field.ti)
-    // и сохраняем
-    map_append(&c.vl, field_id, v)
+
+    if c.type != nil {
+      // получаем тип поля для неявного приведения значения к нему и проверки типа
+      field = type_record_get_field (c.type, field_id)
+      // приводим значение поля к типу поля в записи
+      v = implicit_cast(v0, field.type)
+      // проверяем тип
+      type_check(v.type, field.type, field.ti)
+      // и сохраняем
+      map_append(&c.vl, field_id, v)
+    } else {
+
+      map_append(&c.vl, field_id, v0)
+    }
+
   }
   map_foreach(&x.rec.values, field_value_handle, &ctx)
+
+  if t == nil {
+    vx = value_new (#ValueGenericRecord, t, x.ti)
+    vx.rec := !ValueRecord (values=ctx.vl)
+    return vx
+  }
 
   vx = value_new (#ValueRecord, t, x.ti)
   vx.rec := !ValueRecord (type=t, values=ctx.vl)

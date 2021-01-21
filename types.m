@@ -387,6 +387,7 @@ ValueKind = {
 
   #ValueParam,        // Value#reg
   #ValueRecord,       // Value#reg
+  #ValueGenericRecord // #type=nil, need cast
   #ValueArray,        // Value#reg
 
   #ValueLocalConst,   // Value#expr (reg)
