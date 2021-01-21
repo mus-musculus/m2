@@ -162,7 +162,7 @@ AstValueAs = (value : *AstValue, type : *AstType)
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue)
 AstValueWhen = (x : *AstValue, variants : List, other : *AstValue)
 
-AstValuerecord = (type : *AstType, items : Map)
+AstValuerecord = (type : *AstType, values : Map)
 
 AstValue = (
   kind : AstValueKind
@@ -207,8 +207,9 @@ AstStmtIf = (
   cond : *AstValue
   then : *AstStmt
   else : *AstStmt or Unit
-  ti : *TokenInfo
+  ti   : *TokenInfo
 )
+
 AstStmtWhile    = (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
 AstStmtReturn   = (value : *AstValue or Unit, ti : *TokenInfo)
 AstStmtGoto     = (label : *AstId, ti : *TokenInfo)
@@ -232,7 +233,7 @@ AstStmtContinue = (ti : *TokenInfo)
 
 
 AstStmt = (
-  kind    : AstStmtKind
+  kind     : AstStmtKind
 
   assign   : AstStmtAssign
   valdef   : AstStmtValueDef
@@ -383,6 +384,7 @@ ValueKind = {
   #ValueGlobalVar,    // Value#assembly_item (id)
 
   #ValueParam,        // Value#reg
+  #ValueRecord,       // Value#reg
 
   #ValueLocalConst,   // Value#expr (reg)
   #ValueLocalVar,     // Value#vardef (reg)
@@ -430,6 +432,7 @@ ValueUn     = (x : *Value)
 ValueWhenVariant = (tx : *Type, x, y : *Value)
 ValueWhen = (x : *Value, variants : List, other : *Value)
 
+ValueRecord = (type : *Type, values : Map)
 
 Value = (
   kind : ValueKind
@@ -459,6 +462,7 @@ Value = (
   szof   : *Type
   select : ValueWhen
   load   : *Value  // #ValueLoad
+  rec    : ValueRecord
 //)
 
   //need_load : Bool

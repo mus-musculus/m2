@@ -1075,7 +1075,7 @@ parse_value_rec = AstValueParser {
 
   v = ast_value_new (#AstValueRec, ti)
   v.rec.type := t
-  v.rec.items := fields
+  v.rec.values := fields
   return v
 }
 

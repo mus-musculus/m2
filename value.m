@@ -899,6 +899,37 @@ fail:
 do_value_array = DoValue {return value_new_poison (x.ti)}
 
 do_value_record = DoValue {
+  t = do_type(x.rec.type)
+
+  Ctx5 = (
+    type : *Type
+    vl   : Map
+  )
+
+  ctx = 0 to Var Ctx5
+  ctx.type := t
+
+  // обрабатываем все поля
+  field_value_handle = MapForeachHandler {
+    field_id = k to Str
+    field_val = v to *Value
+    c = ctx to *Ctx5
+    field = type_record_get_field (c.type, field_id)
+    // приводим значение поля к типу поля в записи
+    v = implicit_cast(field_val, field.type)
+    // проверяем тип
+    type_check(v.type, field.type, field.ti)
+    // и сохраняем
+    map_append(&c.vl, field_id, v)
+  }
+  map_foreach(&x.rec.values, field_value_handle, &ctx)
+
+  vx = value_new (#ValueRecord, t, x.ti)
+  vx.rec.type := t
+  vx.rec.values := ctx.vl
+  return vx
+
+fail:
   return value_new_poison (x.ti)
 }
 
