@@ -504,8 +504,15 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => !LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm)
 
-    #ValueGlobalConst => !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=x.def.id)
-    #ValueGlobalVar   => !LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.id)
+    #ValueGlobalConst => Eval {
+      if x.type.kind == #TypeFunc {
+        return !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=x.def.funcdef.id)
+      }
+
+      return !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=x.def.id)
+    } (x)
+
+    #ValueGlobalVar   => !LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
     #ValueLocalConst  => !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
     #ValueLocalVar    => !LLVM_Value (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)

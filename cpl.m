@@ -22,6 +22,19 @@ compiler_init = () -> () {
 }
 
 
+def_rename = (d : *Definition, id : Str) -> () {
+  when d.kind {
+    #DefType  => (d : *Definition, id : Str) -> () {d.typedef.id := id} (d, id)
+    #DefConst => (d : *Definition, id : Str) -> () {d.constdef.id := id} (d, id)
+    #DefStr   => (d : *Definition, id : Str) -> () {d.stringdef.id := id} (d, id)
+    #DefArray => (d : *Definition, id : Str) -> () {d.arraydef.id := id} (d, id)
+    #DefFunc  => (d : *Definition, id : Str) -> () {d.funcdef.id := id} (d, id)
+    #DefVar   => (d : *Definition, id : Str) -> () {d.vardef.id := id} (d, id)
+    #DefAlias => (d : *Definition, id : Str) -> () {d.aliasdef.id := id} (d, id)
+    else => () -> () {} ()
+  }
+}
+
 
 compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
@@ -163,7 +176,10 @@ do_value_bind = (x : *AstNodeBindValue) -> () {
       strcmp("sprintf", id) == 0 or
       strcmp("fprintf", id) == 0
 
-  if v.def != nil {v.def.id := id}
+  if v.def != nil {
+    v.def.id := id
+    def_rename(v.def, id)
+  }
 }
 
 
