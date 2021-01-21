@@ -217,9 +217,7 @@ do_type_record = DoType {
   ctype := t
 
   Ctx0 = (fields : *List, undef_field : Bool)
-  ctx0 = 0 to Var Ctx0
-  ctx0.fields := list_new ()
-  ctx0.undef_field := false
+  ctx0 = !Ctx0 (fields=list_new (), undef_field=false) to Var Ctx0
 
   process_decl = ListForeachHandler {
     fieldsdef = data to *AstDecl
@@ -232,9 +230,8 @@ do_type_record = DoType {
     }
 
     Ctx1 = (fields : *List, type : *Type)
-    ctx = 0 to Var Ctx1
-    ctx.fields := ctx0.fields
-    ctx.type := type
+    ctx = !Ctx1 (fields=ctx0.fields, type=type) to Var Ctx1
+
     process_field_in_decl = ListForeachHandler {
       id = data to *AstId
       context = ctx to *Ctx1
@@ -361,8 +358,7 @@ do_type_union = DoType {
     max_size : Nat
   )
 
-  ctx = 0 to Var CtxUnion
-  ctx.tlist := &t.union.types
+  ctx = !CtxUnion (tlist=&t.union.types) to Var CtxUnion
 
   do_variant = ListForeachHandler {
     ast_type = data to *AstType
@@ -589,8 +585,7 @@ type_union_get_variant = (union, type : *Type) -> Nat {
     variant : Nat
   )
 
-  var_ctx = 0 to Var VarCtx2
-  var_ctx.type := type
+  var_ctx = !VarCtx2 (type=type) to Var VarCtx2
 
   find_variant = ListForeachHandler {
     t = data to *Type

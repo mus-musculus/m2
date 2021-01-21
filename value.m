@@ -384,11 +384,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     call_ti : *TokenInfo
   )
 
-  ctx = 0 to Var Ctx3
-  ctx.f := f
-  ctx.paramlist := plist
-  ctx.arglist := list_new ()
-  ctx.call_ti := ti
+  ctx = !Ctx3 (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
 
   chk = ListWhileHandler2 {
     p = data1 to *Decl   // param
@@ -888,7 +884,9 @@ fail:
 }
 
 
-do_value_array = DoValue {return value_new_poison (x.ti)}
+do_value_array = DoValue {
+  return value_new_poison (x.ti)
+}
 
 do_value_record = DoValue {
   t = do_type(x.rec.type)
@@ -898,8 +896,7 @@ do_value_record = DoValue {
     vl   : Map
   )
 
-  ctx = 0 to Var Ctx5
-  ctx.type := t
+  ctx = !Ctx5 (type=t) to Var Ctx5
 
   // обрабатываем все поля
   field_value_handle = MapForeachHandler {

@@ -1094,17 +1094,14 @@ eval_when = Eval {
     sno : Nat
     case : Nat
     regs : [maxSelectorEntry]Nat32
+    // тип возврата оператора select
+    // нужно для правильного приведения imm-констант значений селектора
     type : *Type
   )
 
-  ctx = 0 to Var Ctx
-  ctx.sel := sel
-  ctx.case := 0
-  ctx.sno := sno
   typ = x.type
-  // тип возврата оператора select
-  // нужно для правильного приведения imm-констант значений селектора
-  ctx.type := typ
+
+  ctx = !Ctx (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
 
   fprintf (fout, "\n  br label %%select_%d_0", sno)
 
@@ -1182,9 +1179,7 @@ eval_rec = Eval {
     v : LLVM_Value  // значение итеративно формируемой структуры
   )
 
-  ctx = 0 to Var Ctx6
-  ctx.type := x.rec.type
-  ctx.v := !LLVM_Value (kind=#LLVM_ValueZero)
+  ctx = !Ctx6 (type=x.rec.type, v=!LLVM_Value (kind=#LLVM_ValueZero)) to Var Ctx6
 
   // итеративно формируем структуру
   pack = MapForeachHandler {

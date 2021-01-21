@@ -12053,100 +12053,92 @@ define %LLVM_Value @func341 (%Value*) {
   %11 = getelementptr inbounds %List, %List* %10, i1 0, i32 2
   %12 = load %Nat64, %Nat64* %11
 ;stmt4:
-  %13 = alloca %func341.type2
-  store %func341.type2 zeroinitializer, %func341.type2* %13, align 8
+  %13 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %14 = load %Type*, %Type** %13
 ;stmt5:
-  %14 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 0
-  store %LLVM_Value %5, %LLVM_Value* %14, align 8
+  %15 = alloca %func341.type2
+  %16 = insertvalue %func341.type2 zeroinitializer, %LLVM_Value %5, 0
+  %17 = insertvalue %func341.type2 %16, %Nat32 0, 2
+  %18 = insertvalue %func341.type2 %17, %Nat32 %8, 1
+  %19 = insertvalue %func341.type2 %18, %Type* %14, 4
+  store %func341.type2 %19, %func341.type2* %15, align 8
 ;stmt6:
-  %15 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 2
-  store %Nat32 0, %Nat32* %15, align 4
-;stmt7:
-  %16 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 1
-  store %Nat32 %8, %Nat32* %16, align 4
-;stmt8:
-  %17 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %18 = load %Type*, %Type** %17
-;stmt9:
-  %19 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 4
-  store %Type* %18, %Type** %19, align 8
-;stmt10:
   %20 = load %FILE*, %FILE** @fout
   %21 = bitcast [26 x %Nat8]* @func341_str1 to %Str
   %22 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %20, %Str %21, %Nat32 %8)
-;stmt11:
+;stmt7:
   %23 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 17
   %24 = getelementptr inbounds %ValueWhen, %ValueWhen* %23, i1 0, i32 1
-  %25 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0
+  %25 = getelementptr inbounds %func341.type2, %func341.type2* %15, i1 0
   %26 = bitcast %func341.type2* %25 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %24, %ListForeachHandler @func342, %Unit* %26)
-;stmt12:
+;stmt8:
   %27 = load %FILE*, %FILE** @fout
   %28 = bitcast [15 x %Nat8]* @func341_str2 to %Str
-  %29 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 2
+  %29 = getelementptr inbounds %func341.type2, %func341.type2* %15, i1 0, i32 2
   %30 = load %Nat32, %Nat32* %29
   %31 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %27, %Str %28, %Nat32 %8, %Nat32 %30)
-;stmt13:
+;stmt9:
   %32 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 17
   %33 = getelementptr inbounds %ValueWhen, %ValueWhen* %32, i1 0, i32 2
   %34 = load %Value*, %Value** %33
   %35 = call %LLVM_Value (%Value*) @func303 (%Value* %34)
-  %36 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 4
+  %36 = getelementptr inbounds %func341.type2, %func341.type2* %15, i1 0, i32 4
   %37 = load %Type*, %Type** %36
   %38 = call %LLVM_Value (%LLVM_Value, %Type*) @loadIfImmAs (%LLVM_Value %35, %Type* %37)
-;stmt14:
+;stmt10:
   %39 = load %FILE*, %FILE** @fout
   %40 = bitcast [28 x %Nat8]* @func341_str3 to %Str
   %41 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %39, %Str %40, %Nat32 %8)
-;stmt15:
+;stmt11:
   %42 = load %FILE*, %FILE** @fout
   %43 = bitcast [16 x %Nat8]* @func341_str4 to %Str
   %44 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %42, %Str %43, %Nat32 %8)
-;stmt16:
+;stmt12:
   %45 = load %Type*, %Type** @typeUnit
-  %46 = call i1 (%Type*, %Type*) @func421 (%Type* %18, %Type* %45)
+  %46 = call i1 (%Type*, %Type*) @func421 (%Type* %14, %Type* %45)
   %47 = xor i1 %46, 1
   br i1 %47, label %then_0, label %else_0
 then_0:
-;stmt17:
+;stmt13:
   %48 = bitcast [4 x %Nat8]* @func341_str5 to %Str
-  %49 = call %Nat32 (%Str, %Type*) @func298 (%Str %48, %Type* %18)
-;stmt18:
+  %49 = call %Nat32 (%Str, %Type*) @func298 (%Str %48, %Type* %14)
+;stmt14:
   call void () @space ()
-;stmt19:
+;stmt15:
   %50 = alloca %Nat64
   store %Nat64 0, %Nat64* %50, align 8
-;stmt20:
+;stmt16:
   br label %continue_0
 continue_0:
   %51 = load %Nat64, %Nat64* %50
   %52 = icmp ult %Nat64 %51, %12
   br i1 %52, label %body_0, label %break_0
 body_0:
-;stmt21:
+;stmt17:
   %53 = load %FILE*, %FILE** @fout
   %54 = bitcast [30 x %Nat8]* @func341_str6 to %Str
-  %55 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 3
+  %55 = getelementptr inbounds %func341.type2, %func341.type2* %15, i1 0, i32 3
   %56 = load %Nat64, %Nat64* %50
 ; index array
   %57 = getelementptr inbounds [256 x %Nat32], [256 x %Nat32]* %55, i1 0, %Nat64 %56
   %58 = load %Nat32, %Nat32* %57
   %59 = load %Nat64, %Nat64* %50
   %60 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %53, %Str %54, %Nat32 %58, %Nat32 %8, %Nat64 %59)
-;stmt22:
+;stmt18:
   %61 = load %Nat64, %Nat64* %50
   %62 = add %Nat64 %61, 1
   store %Nat64 %62, %Nat64* %50, align 8
   br label %continue_0
 break_0:
-;stmt23:
+;stmt19:
   %63 = load %FILE*, %FILE** @fout
   %64 = bitcast [25 x %Nat8]* @func341_str7 to %Str
   %65 = extractvalue %LLVM_Value %38, 4
-  %66 = getelementptr inbounds %func341.type2, %func341.type2* %13, i1 0, i32 2
+  %66 = getelementptr inbounds %func341.type2, %func341.type2* %15, i1 0, i32 2
   %67 = load %Nat32, %Nat32* %66
   %68 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %63, %Str %64, %Nat32 %65, %Nat32 %8, %Nat32 %67)
-;stmt24:
+;stmt20:
   %69 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
   %70 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %71 = load %Type*, %Type** %70
@@ -12157,7 +12149,7 @@ break_0:
 else_0:
   br label %endif_0
 endif_0:
-;stmt25:
+;stmt21:
   %75 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 0, 0
   %76 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %77 = load %Type*, %Type** %76
@@ -12216,24 +12208,20 @@ define void @func344 (%Unit*, %Unit*, %Unit*) {
 define %LLVM_Value @func343 (%Value*) {
 ;stmt0:
   %2 = alloca %func343.type3
-  store %func343.type3 zeroinitializer, %func343.type3* %2, align 8
+  %3 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 19
+  %4 = getelementptr inbounds %ValueRecord, %ValueRecord* %3, i1 0, i32 0
+  %5 = load %Type*, %Type** %4
+  %6 = insertvalue %func343.type3 zeroinitializer, %Type* %5, 0
+  %7 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 2, 0
+  %8 = insertvalue %func343.type3 %6, %LLVM_Value %7, 1
+  store %func343.type3 %8, %func343.type3* %2, align 8
 ;stmt1:
-  %3 = getelementptr inbounds %func343.type3, %func343.type3* %2, i1 0, i32 0
-  %4 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 19
-  %5 = getelementptr inbounds %ValueRecord, %ValueRecord* %4, i1 0, i32 0
-  %6 = load %Type*, %Type** %5
-  store %Type* %6, %Type** %3, align 8
-;stmt2:
-  %7 = getelementptr inbounds %func343.type3, %func343.type3* %2, i1 0, i32 1
-  %8 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 2, 0
-  store %LLVM_Value %8, %LLVM_Value* %7, align 8
-;stmt3:
   %9 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 19
   %10 = getelementptr inbounds %ValueRecord, %ValueRecord* %9, i1 0, i32 1
   %11 = getelementptr inbounds %func343.type3, %func343.type3* %2, i1 0
   %12 = bitcast %func343.type3* %11 to %Unit*
   call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %10, %MapForeachHandler @func344, %Unit* %12)
-;stmt4:
+;stmt2:
   %13 = getelementptr inbounds %func343.type3, %func343.type3* %2, i1 0, i32 1
   %14 = load %LLVM_Value, %LLVM_Value* %13
   ret %LLVM_Value %14
@@ -13935,16 +13923,12 @@ else_0:
 endif_0:
 ;stmt7:
   %18 = alloca %func404_func405.type5
-  store %func404_func405.type5 zeroinitializer, %func404_func405.type5* %18, align 8
+  %19 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0, i32 0
+  %20 = load %List*, %List** %19
+  %21 = insertvalue %func404_func405.type5 zeroinitializer, %List* %20, 0
+  %22 = insertvalue %func404_func405.type5 %21, %Type* %9, 1
+  store %func404_func405.type5 %22, %func404_func405.type5* %18, align 8
 ;stmt8:
-  %19 = getelementptr inbounds %func404_func405.type5, %func404_func405.type5* %18, i1 0, i32 0
-  %20 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0, i32 0
-  %21 = load %List*, %List** %20
-  store %List* %21, %List** %19, align 8
-;stmt9:
-  %22 = getelementptr inbounds %func404_func405.type5, %func404_func405.type5* %18, i1 0, i32 1
-  store %Type* %9, %Type** %22, align 8
-;stmt10:
   %23 = getelementptr inbounds %AstDecl, %AstDecl* %5, i1 0, i32 0
   %24 = getelementptr inbounds %func404_func405.type5, %func404_func405.type5* %18, i1 0
   %25 = bitcast %func404_func405.type5* %24 to %Unit*
@@ -14078,35 +14062,31 @@ define %Type* @func404 (%AstType*) {
   store %Type* %5, %Type** @ctype, align 8
 ;stmt3:
   %6 = alloca %func404.type4
-  store %func404.type4 zeroinitializer, %func404.type4* %6, align 8
+  %7 = call %List* () @map_new ()
+  %8 = insertvalue %func404.type4 zeroinitializer, %List* %7, 0
+  %9 = insertvalue %func404.type4 %8, i1 0, 1
+  store %func404.type4 %9, %func404.type4* %6, align 8
 ;stmt4:
-  %7 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0, i32 0
-  %8 = call %List* () @map_new ()
-  store %List* %8, %List** %7, align 8
-;stmt5:
-  %9 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0, i32 1
-  store i1 0, i1* %9, align 1
-;stmt6:
   %10 = getelementptr inbounds %AstType, %AstType* %0, i1 0, i32 6
   %11 = getelementptr inbounds %AstTypeRecord, %AstTypeRecord* %10, i1 0, i32 0
   %12 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0
   %13 = bitcast %func404.type4* %12 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %11, %ListForeachHandler @func405, %Unit* %13)
-;stmt7:
+;stmt5:
   store %Type* %2, %Type** @ctype, align 8
-;stmt8:
+;stmt6:
   %14 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 9
   %15 = getelementptr inbounds %TypeRecord, %TypeRecord* %14, i1 0, i32 0
   %16 = getelementptr inbounds %func404.type4, %func404.type4* %6, i1 0, i32 0
   %17 = load %List*, %List** %16
   store %List* %17, %List** %15, align 8
-;stmt9:
+;stmt7:
   %18 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 9
   %19 = getelementptr inbounds %TypeRecord, %TypeRecord* %18, i1 0, i32 0
   %20 = load %List*, %List** %19
   %21 = bitcast %Type* %5 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %20, %ListForeachHandler @func408, %Unit* %21)
-;stmt10:
+;stmt8:
   ret %Type* %5
 }
 
@@ -14312,60 +14292,58 @@ define %Type* @func412 (%AstType*) {
   store %Str %9, %Str* %17, align 8
 ;stmt7:
   %18 = alloca %func412.type6
-  store %func412.type6 zeroinitializer, %func412.type6* %18, align 8
+  %19 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 12
+  %20 = getelementptr inbounds %TypeUnion, %TypeUnion* %19, i1 0, i32 0
+  %21 = insertvalue %func412.type6 zeroinitializer, %List* %20, 0
+  store %func412.type6 %21, %func412.type6* %18, align 8
 ;stmt8:
-  %19 = getelementptr inbounds %func412.type6, %func412.type6* %18, i1 0, i32 0
-  %20 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 12
-  %21 = getelementptr inbounds %TypeUnion, %TypeUnion* %20, i1 0, i32 0
-  store %List* %21, %List** %19, align 8
-;stmt9:
   %22 = getelementptr inbounds %AstType, %AstType* %0, i1 0, i32 9
   %23 = getelementptr inbounds %AstTypeUnion, %AstTypeUnion* %22, i1 0, i32 0
   %24 = getelementptr inbounds %func412.type6, %func412.type6* %18, i1 0
   %25 = bitcast %func412.type6* %24 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %23, %ListForeachHandler @func413, %Unit* %25)
-;stmt10:
+;stmt9:
   %26 = getelementptr inbounds %func412.type6, %func412.type6* %18, i1 0, i32 1
   %27 = load %Nat32, %Nat32* %26
   %28 = add %Nat32 %27, 2
   %29 = call %Nat32 (%Nat32, %Nat32) @align (%Nat32 %28, %Nat32 4)
   %30 = call %Nat32 (%Nat32) @propagation (%Nat32 %29)
-;stmt11:
+;stmt10:
   %31 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 2
   store %Nat32 %30, %Nat32* %31, align 4
-;stmt12:
+;stmt11:
   %32 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 3
   store %Nat32 %30, %Nat32* %32, align 4
-;stmt13:
+;stmt12:
   %33 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 12
   %34 = getelementptr inbounds %TypeUnion, %TypeUnion* %33, i1 0, i32 2
   %35 = getelementptr inbounds %func412.type6, %func412.type6* %18, i1 0, i32 1
   %36 = load %Nat32, %Nat32* %35
   store %Nat32 %36, %Nat32* %34, align 4
-;stmt14:
+;stmt13:
   %37 = getelementptr inbounds %List, %List* @unions, i1 0
   %38 = bitcast %Type* %14 to %Unit*
   %39 = call i1 (%List*, %Unit*) @list_append (%List* %37, %Unit* %38)
-;stmt15:
+;stmt14:
   %40 = call i1 (%Type*) @func395 (%Type* %14)
   br i1 %40, label %then_0, label %else_0
 then_0:
-;stmt16:
+;stmt15:
   %41 = load %Type*, %Type** @typeFreePtr
-;stmt17:
+;stmt16:
   %42 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 12
   %43 = getelementptr inbounds %TypeUnion, %TypeUnion* %42, i1 0, i32 1
   store %Type* %41, %Type** %43, align 8
   br label %endif_0
 else_0:
-;stmt18:
+;stmt17:
   %44 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 12
   %45 = getelementptr inbounds %TypeUnion, %TypeUnion* %44, i1 0, i32 1; loadImmPtr
   %46 = inttoptr i64 0 to%Type*
   store %Type* %46, %Type** %45, align 8
   br label %endif_0
 endif_0:
-;stmt19:
+;stmt18:
   ret %Type* %14
 }
 
@@ -14928,17 +14906,15 @@ endif_0:
 define %Nat32 @func427 (%Type*, %Type*) {
 ;stmt0:
   %3 = alloca %func427.type7
-  store %func427.type7 zeroinitializer, %func427.type7* %3, align 8
+  %4 = insertvalue %func427.type7 zeroinitializer, %Type* %1, 0
+  store %func427.type7 %4, %func427.type7* %3, align 8
 ;stmt1:
-  %4 = getelementptr inbounds %func427.type7, %func427.type7* %3, i1 0, i32 0
-  store %Type* %1, %Type** %4, align 8
-;stmt2:
   %5 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 12
   %6 = getelementptr inbounds %TypeUnion, %TypeUnion* %5, i1 0, i32 0
   %7 = getelementptr inbounds %func427.type7, %func427.type7* %3, i1 0
   %8 = bitcast %func427.type7* %7 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %6, %ListForeachHandler @func428, %Unit* %8)
-;stmt3:
+;stmt2:
   %9 = getelementptr inbounds %func427.type7, %func427.type7* %3, i1 0, i32 1
   %10 = load %Nat32, %Nat32* %9
   ret %Nat32 %10
@@ -16268,25 +16244,17 @@ define %List* @func445 (%Value*, %List*, %TokenInfo*) {
   %11 = load %List*, %List** %10
 ;stmt1:
   %12 = alloca %func445.type9
-  store %func445.type9 zeroinitializer, %func445.type9* %12, align 8
+  %13 = insertvalue %func445.type9 zeroinitializer, %Value* %0, 0
+  %14 = insertvalue %func445.type9 %13, %List* %11, 1
+  %15 = call %List* () @map_new ()
+  %16 = insertvalue %func445.type9 %14, %List* %15, 2
+  %17 = insertvalue %func445.type9 %16, %TokenInfo* %2, 3
+  store %func445.type9 %17, %func445.type9* %12, align 8
 ;stmt2:
-  %13 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0, i32 0
-  store %Value* %0, %Value** %13, align 8
-;stmt3:
-  %14 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0, i32 1
-  store %List* %11, %List** %14, align 8
-;stmt4:
-  %15 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0, i32 2
-  %16 = call %List* () @map_new ()
-  store %List* %16, %List** %15, align 8
-;stmt5:
-  %17 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0, i32 3
-  store %TokenInfo* %2, %TokenInfo** %17, align 8
-;stmt6:
   %18 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0
   %19 = bitcast %func445.type9* %18 to %Unit*
   call void (%List*, %List*, %ListWhileHandler2, %Unit*) @list_while2_or (%List* %11, %List* %1, %ListWhileHandler2 @func446, %Unit* %19)
-;stmt7:
+;stmt3:
   %20 = getelementptr inbounds %func445.type9, %func445.type9* %12, i1 0, i32 2
   %21 = load %List*, %List** %20
   ret %List* %21
@@ -17595,33 +17563,31 @@ define %Value* @func474 (%AstValue*) {
   %5 = call %Type* (%AstType*) @func396 (%AstType* %4)
 ;stmt1:
   %6 = alloca %func474.type10
-  store %func474.type10 zeroinitializer, %func474.type10* %6, align 8
+  %7 = insertvalue %func474.type10 zeroinitializer, %Type* %5, 0
+  store %func474.type10 %7, %func474.type10* %6, align 8
 ;stmt2:
-  %7 = getelementptr inbounds %func474.type10, %func474.type10* %6, i1 0, i32 0
-  store %Type* %5, %Type** %7, align 8
-;stmt3:
   %8 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 5
   %9 = getelementptr inbounds %AstValueRecord, %AstValueRecord* %8, i1 0, i32 1
   %10 = getelementptr inbounds %func474.type10, %func474.type10* %6, i1 0
   %11 = bitcast %func474.type10* %10 to %Unit*
   call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %9, %MapForeachHandler @func475, %Unit* %11)
-;stmt4:
+;stmt3:
   %12 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
   %13 = load %TokenInfo*, %TokenInfo** %12
   %14 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func431 (%ValueKind 7, %Type* %5, %TokenInfo* %13)
-;stmt5:
+;stmt4:
   %15 = getelementptr inbounds %Value, %Value* %14, i1 0, i32 19
   %16 = insertvalue %ValueRecord zeroinitializer, %Type* %5, 0
   %17 = getelementptr inbounds %func474.type10, %func474.type10* %6, i1 0, i32 1
   %18 = load %List, %List* %17
   %19 = insertvalue %ValueRecord %16, %List %18, 1
   store %ValueRecord %19, %ValueRecord* %15, align 8
-;stmt6:
+;stmt5:
   ret %Value* %14
-;stmt7:
+;stmt6:
   br label %fail
 fail:
-;stmt8:
+;stmt7:
   %21 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
   %22 = load %TokenInfo*, %TokenInfo** %21
   %23 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %22)
