@@ -1,5 +1,5 @@
 ; assembly: <name>
-
+ê@ˇﬂc™
 ; clang out2.ll && ./a.out
 ; llc out2.ll ; for create .s file from .ll
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
@@ -10156,38 +10156,18 @@ define %LLVM_Value @llval_create (%LLVM_ValueKind, %Type*, %Int64) {
 
 define %LLVM_Value @llval_create_id (%LLVM_ValueKind, %Type*, %Str) {
 ;stmt0:
-  %4 = alloca %LLVM_Value
-  store %LLVM_Value zeroinitializer, %LLVM_Value* %4, align 8
-;stmt1:
-  %5 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %4, i1 0, i32 1
-  store %Type* %1, %Type** %5, align 8
-;stmt2:
-  %6 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %4, i1 0, i32 0
-  store %LLVM_ValueKind %0, %LLVM_ValueKind* %6, align 2
-;stmt3:
-  %7 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %4, i1 0, i32 3
-  store %Str %2, %Str* %7, align 8
-;stmt4:
-  %8 = load %LLVM_Value, %LLVM_Value* %4
-  ret %LLVM_Value %8
+  %4 = insertvalue %LLVM_Value undef, %LLVM_ValueKind %0, 0
+  %5 = insertvalue %LLVM_Value %4, %Type* %1, 1
+  %6 = insertvalue %LLVM_Value %5, %Str %2, 3
+  ret %LLVM_Value %6
 }
 
 define %LLVM_Value @llval_create_reg (%Type*, %Nat32) {
 ;stmt0:
-  %3 = alloca %LLVM_Value
-  store %LLVM_Value zeroinitializer, %LLVM_Value* %3, align 8
-;stmt1:
-  %4 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %3, i1 0, i32 0
-  store %LLVM_ValueKind 9, %LLVM_ValueKind* %4, align 2
-;stmt2:
-  %5 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %3, i1 0, i32 1
-  store %Type* %0, %Type** %5, align 8
-;stmt3:
-  %6 = getelementptr inbounds %LLVM_Value, %LLVM_Value* %3, i1 0, i32 4
-  store %Nat32 %1, %Nat32* %6, align 4
-;stmt4:
-  %7 = load %LLVM_Value, %LLVM_Value* %3
-  ret %LLVM_Value %7
+  %3 = insertvalue %LLVM_Value undef, %LLVM_ValueKind 9, 0
+  %4 = insertvalue %LLVM_Value %3, %Type* %0, 1
+  %5 = insertvalue %LLVM_Value %4, %Nat32 %1, 4
+  ret %LLVM_Value %5
 }
 
 define %LLVM_Value @llval_create_adr (%Type*, %Nat32) {
