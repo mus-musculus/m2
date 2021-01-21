@@ -607,8 +607,8 @@ DefinitionKind = {#DefType, #DefConst, #DefStr, #DefArray, #DefFunc, #DefVar, #D
 
 // id должно идти первым полем! Грязный хак для asm_rename2!
 DefType  = (id : Str, type : *Type)
-DefConst = (id : Str, value : *Value)
-DefStr   = (id : Str, data : Str, len : Nat)
+DefConst = (id : Str, type : *Type, value : *Value)
+DefStr   = (id : Str, type : *Type, data : Str, len : Nat)
 DefArray = (id : Str, type : *Type, len : Nat, values : *List)
 DefFunc  = (id : Str, type : *Type, block : *Block)
 DefVar   = (id : Str, type : *Type, init_value : *Value)

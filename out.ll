@@ -232,8 +232,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 %FuncContext = type {%Str, %Value*, %Block*, %Nat32, %Nat32, %Nat32, %Nat32, %Nat32}
 %DefinitionKind = type i16
 %DefType = type {%Str, %Type*}
-%DefConst = type {%Str, %Value*}
-%DefStr = type {%Str, %Str, %Nat32}
+%DefConst = type {%Str, %Type*, %Value*}
+%DefStr = type {%Str, %Type*, %Str, %Nat32}
 %DefArray = type {%Str, %Type*, %Nat32, %List*}
 %DefFunc = type {%Str, %Type*, %Block*}
 %DefVar = type {%Str, %Type*, %Value*}
@@ -9303,7 +9303,7 @@ select_1_end:
 
 define %Definition* @func267 (%DefinitionKind, %Str) {
 ;stmt0:
-  %3 = call %Unit* (%Nat32) @malloc (%Nat32 168)
+  %3 = call %Unit* (%Nat32) @malloc (%Nat32 184)
   %4 = bitcast %Unit* %3 to %Definition*
 ;stmt1:; loadImmPtr
   %5 = inttoptr i64 0 to%Definition*
@@ -9312,7 +9312,7 @@ define %Definition* @func267 (%DefinitionKind, %Str) {
   call void (i1, %Str) @assert (i1 %6, %Str %7)
 ;stmt2:
   %8 = bitcast %Definition* %4 to %Unit*
-  %9 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %8, %Nat8 0, %Nat32 168)
+  %9 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %8, %Nat8 0, %Nat32 184)
 ;stmt3:
   %10 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 0
   store %DefinitionKind %0, %DefinitionKind* %10, align 2
@@ -9348,11 +9348,11 @@ define %Definition* @func269 (%Assembly*, %Str, %Str, %Nat32) {
   store %Str %1, %Str* %7, align 8
 ;stmt2:
   %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-  %9 = getelementptr inbounds %DefStr, %DefStr* %8, i1 0, i32 1
+  %9 = getelementptr inbounds %DefStr, %DefStr* %8, i1 0, i32 2
   store %Str %2, %Str* %9, align 8
 ;stmt3:
   %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-  %11 = getelementptr inbounds %DefStr, %DefStr* %10, i1 0, i32 2
+  %11 = getelementptr inbounds %DefStr, %DefStr* %10, i1 0, i32 3
   store %Nat32 %3, %Nat32* %11, align 4
 ;stmt4:
   %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 6
@@ -9597,9 +9597,9 @@ define void @func285 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt2:
   %7 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
-  %9 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 2
+  %9 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 3
   %10 = load %Nat32, %Nat32* %9
-  %11 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 1
+  %11 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 2
   %12 = load %Str, %Str* %11
   call void (%Str, %Nat32, %Str) @func293 (%Str %8, %Nat32 %10, %Str %12)
   ret void
