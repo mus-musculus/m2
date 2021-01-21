@@ -885,7 +885,7 @@ fail:
 
 
 do_value_array = DoValue {
-  t = do_type(x.rec.type)
+  t = do_type(x.array.type)
 
   if t.kind == #TypePoison {goto fail}
 
@@ -921,7 +921,13 @@ fail:
 
 
 do_value_record = DoValue {
-  t = do_type(x.rec.type)
+  // тип будет nil если это generic запись
+  t = when x.rec.type {
+    nil => nil to *Type
+    else => do_type(x.rec.type)
+  }
+
+  if t == nil {goto fail}
 
   if t.kind == #TypePoison {goto fail}
 

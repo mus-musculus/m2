@@ -1045,7 +1045,12 @@ parse_value_str = AstValueParser {
 
 parse_value_rec = AstValueParser {
   ti = &ctok().ti
-  t = parse_type()
+
+  // типа может и не быть, тогда это Generic запись
+  t = nil to Var *AstType
+  if is_it_type() {
+    t := parse_type()
+  }
 
   need("(")
 
