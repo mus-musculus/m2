@@ -220,17 +220,6 @@ exist print_val : (op : LLVM_Value) -> ()
 
 exist create_array : (x : LLVM_Value) -> LLVM_Value
 
-exist print_stmt : (s : *Stmt) -> ()
-exist print_stmt_var : (v : *Decl) -> ()
-exist print_stmt_expr : (e : *Expr) -> ()
-exist print_stmt_if : (i : *If) -> ()
-exist print_stmt_while : (w : *While) -> ()
-
-exist print_stmt_return : (rv : *Value) -> ()
-exist print_stmt_break : () -> ()
-exist print_stmt_continue : () -> ()
-exist print_stmt_goto : (l : Str) -> ()
-exist print_stmt_label : (l : Str) -> ()
 exist print_block : (b : *Block) -> ()
 
 exist printTypeSpec : (t : *Type, print_alias, func_as_ptr : Bool) -> ()

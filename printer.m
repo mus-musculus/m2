@@ -1322,6 +1322,18 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 }
 
 
+exist print_stmt_assign : (x : *StmtAssign) -> ()
+exist print_stmt : (s : *Stmt) -> ()
+exist print_stmt_var : (v : *Decl) -> ()
+exist print_stmt_expr : (e : *Expr) -> ()
+exist print_stmt_if : (i : *If) -> ()
+exist print_stmt_while : (w : *While) -> ()
+
+exist print_stmt_return : (x : *StmtReturn) -> ()
+exist print_stmt_break : () -> ()
+exist print_stmt_continue : () -> ()
+exist print_stmt_goto : (l : Str) -> ()
+exist print_stmt_label : (l : Str) -> ()
 
 
 print_stmt = (s : *Stmt) -> () {
@@ -1335,11 +1347,11 @@ print_stmt = (s : *Stmt) -> () {
   when k {
     #StmtBlock    => print_block         (&s.b)
     #StmtExpr     => print_stmt_expr     (&s.e)
-    #StmtAssign   => print_st            (s.a[0], s.a[1])
+    #StmtAssign   => print_stmt_assign   (&s.assign)
     #StmtVarDef   => print_stmt_var      (s.v)
     #StmtIf       => print_stmt_if       (&s.i)
     #StmtWhile    => print_stmt_while    (&s.w)
-    #StmtReturn   => print_stmt_return   (s.a[0])
+    #StmtReturn   => print_stmt_return   (&s.return)
     #StmtBreak    => print_stmt_break    ()
     #StmtContinue => print_stmt_continue ()
     #StmtGoto     => print_stmt_goto     (s.l)
@@ -1348,6 +1360,7 @@ print_stmt = (s : *Stmt) -> () {
   }
 }
 
+print_stmt_assign = (x : *StmtAssign) -> () {print_st (x.l, x.r)}
 
 // Печать значения происходит в два этапа
 // 1. eval - распечатывается алгоритм вычисления значения
@@ -1412,12 +1425,14 @@ print_stmt_while = (x : *While) -> () {
 }
 
 
-print_stmt_return = (v : *Value) -> () {
+print_stmt_return = (x : *StmtReturn) -> () {
+  v = x.value
   if v == nil {
     lab_get ()  // for LLVM
     o ("\nret void")
     return
   }
+
   vx = reval (v)
   fprintf (fout, "\n  ret ")
   print_val_with_type (vx)

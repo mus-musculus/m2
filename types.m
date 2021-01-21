@@ -528,7 +528,7 @@ StmtBlock = Block
 StmtAssign = (l, r : *Value, ti : *TokenInfo)
 StmtIf = (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile = (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
-StmtReturn = (retval : *Value or Unit, ti : *TokenInfo)
+StmtReturn = (value : *Value, ti : *TokenInfo)
 StmtBreak = (ti : *TokenInfo)
 StmtContinue = (ti : *TokenInfo)
 StmtGoto = (label : Str, ti : *TokenInfo)
@@ -559,6 +559,8 @@ Stmt = (
     w : While      // while statement
     i : If         // if statement
     l : Str        // goto & label statement
+  assign : StmtAssign
+  return : StmtReturn
 //)
 
   ti : *TokenInfo

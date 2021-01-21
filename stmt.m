@@ -13,8 +13,7 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
   s = stmt_new (#StmtAssign, ti)
-  s.a[0] := l
-  s.a[1] := r
+  s.assign := !StmtAssign (l=l, r=r, ti=ti)
   return s
 }
 
@@ -266,6 +265,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
 
   s = stmt_new (#StmtReturn, x.ti)
   s.a[0] := retval
+  s.return.value := retval
   return s
 }
 
