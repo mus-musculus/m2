@@ -285,6 +285,10 @@ print_value_index = (index : *Map) -> () {
 */
 
 
+exist eval : Eval
+exist reval : Eval
+
+
 typedef = (id : Str, t : *Type) -> () {
   fprintf (fout, "\n%%%s = type ", id)
   printTypeSpec (t, false /*print_alias*/, true /*func_as_ptr*/)
@@ -335,6 +339,8 @@ stringdef = (id : Str, len : Nat, s : Str) -> () {
   }
   fprintf (fout, "\\%02d\", align 1", 0)
 }
+
+
 
 
 vardef = (id : Str, t : *Type, v : *Value) -> () {
@@ -464,6 +470,25 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
   fprintf (fout, ", %u", index)
   return reg
 }
+
+
+
+
+
+exist eval_call : Eval
+exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
+exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
+exist eval_index : Eval
+exist eval_access : Eval
+exist eval_ref : Eval
+exist eval_deref : Eval
+exist eval_not : Eval
+exist eval_plus : Eval
+exist eval_minus : Eval
+exist eval_rec : Eval
+
+exist eval_as : Eval
+exist eval_is : Eval
 
 // value evaluation
 // Принимает на вход значение. Возвращает объект принтера

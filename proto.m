@@ -194,22 +194,6 @@ exist operand : (t : *Type, k : LLVM_ValueKind, reg : Nat32) -> LLVM_Value
 
 
 
-exist eval : Eval
-exist reval : Eval
-exist eval_call : Eval
-exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index : Eval
-exist eval_access : Eval
-exist eval_ref : Eval
-exist eval_deref : Eval
-exist eval_not : Eval
-exist eval_plus : Eval
-exist eval_minus : Eval
-exist eval_rec : Eval
-
-exist eval_as : Eval
-exist eval_is : Eval
 
 
 exist operation_with_type : (op : Str, t : *Type) -> Nat
