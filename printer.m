@@ -55,6 +55,7 @@ definition_new = (kind : DefinitionKind, id : Str) -> *Definition {
 asmTypedefAdd = (a : *Assembly, id : Str, t : *Type) -> *Definition {
   x = definition_new (#DefType, id)
   x.typedef.type := t
+  x.typedef.id := id
   list_append (&a.types, x)
   return x
 }
@@ -62,6 +63,7 @@ asmTypedefAdd = (a : *Assembly, id : Str, t : *Type) -> *Definition {
 
 asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
   x = definition_new (#DefStr, id)
+  x.stringdef.id := id
   x.stringdef.data := s
   x.stringdef.len := len
   list_append (&a.strings, x)
@@ -71,6 +73,7 @@ asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
 
 asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definition {
   x = definition_new (#DefArray, id)
+  x.arraydef.id := id
   x.arraydef.type := t
   x.arraydef.values := values
   list_append (&a.arrays, x)
@@ -80,6 +83,7 @@ asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definitio
 
 asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition {
   x = definition_new (#DefFunc, id)
+  x.funcdef.id := id
   x.funcdef.type := t
   x.funcdef.block := b
   list_append (&a.funcs, x)
@@ -89,8 +93,9 @@ asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition {
 
 asmVarAdd = (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *Definition {
   x = definition_new (#DefVar, id)
-  x.vardef.init_value := init_value
+  x.vardef.id := id
   x.vardef.type := t
+  x.vardef.init_value := init_value
   list_append (&a.vars, x)
   return x
 }
@@ -205,7 +210,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_typedef = ListForeachHandler {
     ai = data to *Definition
     td = &ai.typedef
-    typedef (ai.id, td.type)
+    typedef (td.id, td.type)
   }
   list_foreach (&a.types, foreach_typedef, nil)
 
@@ -1346,11 +1351,11 @@ print_stmt = (s : *Stmt) -> () {
 
   when k {
     #StmtBlock    => print_block         (&s.block)
-    #StmtExpr     => print_stmt_expr     (&s.e)
+    #StmtExpr     => print_stmt_expr     (&s.expr)
     #StmtAssign   => print_stmt_assign   (&s.assign)
     #StmtVarDef   => print_stmt_var      (s.v)
-    #StmtIf       => print_stmt_if       (&s.i)
-    #StmtWhile    => print_stmt_while    (&s.w)
+    #StmtIf       => print_stmt_if       (&s.if)
+    #StmtWhile    => print_stmt_while    (&s.while)
     #StmtReturn   => print_stmt_return   (&s.return)
     #StmtBreak    => print_stmt_break    ()
     #StmtContinue => print_stmt_continue ()

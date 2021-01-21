@@ -123,8 +123,8 @@ do_stmt_valdef = (x : *AstStmtValueDef) -> *Stmt or Unit {
       bind_value_local (id.str, v0)
 
       se = stmt_new (#StmtExpr, x.ti)
-      se.e.v := dold (v)
-      v0.expr := &se.e
+      se.expr.v := dold (v)
+      v0.expr := &se.expr
       return se
     }
   }
@@ -182,7 +182,7 @@ do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
   }
 
   s = stmt_new (#StmtExpr, x.ti)
-  s.e := !Expr(v=v)
+  s.expr := !Expr(v=v)
   return s
 }
 
@@ -214,7 +214,7 @@ do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
   if then is Unit {return unit}
 
   s = stmt_new (#StmtIf, x.ti)
-  s.i := !If (cond=cond, then=then as *Stmt, else=_else)
+  s.if := !If (cond=cond, then=then as *Stmt, else=_else)
   return s
 }
 
@@ -235,7 +235,7 @@ do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
   if block is Unit {return unit}
 
   s = stmt_new (#StmtWhile, x.ti)
-  s.w := !While (cond=cond, stmt=block as *Stmt)
+  s.while := !While (cond=cond, stmt=block as *Stmt)
   return s
 }
 

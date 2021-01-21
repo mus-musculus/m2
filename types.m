@@ -547,20 +547,25 @@ Stmt2 = StmtExpr or
         StmtLabel
 
 
-
 Stmt = (
   kind : StmtKind
 
 //union (
-    a : [2]*Value  // assign & return statements
-    block : Block      // block statement
-    e : Expr       // StmtExpr
-    v : *Decl    // var definition
-    w : While      // while statement
-    i : If         // if statement
-    l : Str        // goto & label statement
+  expr : Expr       // StmtExpr
   assign : StmtAssign
+  block : Block      // block statement
+
+  v : *Decl    // var definition
+  if : If         // if statement
+  while : While      // while statement
   return : StmtReturn
+  goto : StmtGoto
+  label : StmtLabel
+  break : StmtBreak
+  continue : StmtContinue
+
+  l : Str        // goto & label statement
+
 //)
 
   ti : *TokenInfo
@@ -570,17 +575,14 @@ Stmt = (
 
 
 
-
-Module = (
-  public, private, undef : Index
-)
+Module = (public, private, undef : Index)
 
 
 // parsing function context
 FuncContext = (
   id     : Str     // for local strings prefix
 
-  cfunc : *Value
+  cfunc  : *Value
   cblock : *Block
 
   loop   : Nat32   // `we're in cycle` semaphore (used by break/continue)
@@ -604,14 +606,13 @@ DefinitionKind = {#DefType, #DefConst, #DefStr, #DefArray, #DefFunc, #DefVar, #D
 
 
 // id должно идти первым полем! Грязный хак для asm_rename2!
-DefType  = (type : *Type)
-DefConst = (value : *Value)
-DefStr = (data : Str, len : Nat)
-DefArray = (type : *Type, len : Nat, values : *List)
-DefFunc  = (type : *Type, block : *Block)
-DefVar = (type : *Type, init_value : *Value)
+DefType  = (id : Str, type : *Type)
+DefConst = (id : Str, value : *Value)
+DefStr   = (id : Str, data : Str, len : Nat)
+DefArray = (id : Str, type : *Type, len : Nat, values : *List)
+DefFunc  = (id : Str, type : *Type, block : *Block)
+DefVar   = (id : Str, type : *Type, init_value : *Value)
 DefAlias = (id : Str, type : *Type, org : Str)
-
 
 
 Definition = (
