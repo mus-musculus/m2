@@ -136,8 +136,7 @@ need = (s : Str) -> Bool {
 ast_id_new = (str : Str, ti : *TokenInfo) -> *AstId {
   id = malloc(sizeof AstId) to *AstId
   assert(id != nil, "ast_id_new")
-  id.str := str
-  id.ti := ti
+  *id := !AstId (str=str, ti=ti)
   return id
 }
 
@@ -180,8 +179,7 @@ parse_name = () -> AstName {
 ast_node_new = (kind : AstNodeKind, entity : *Unit) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
   assert(n != nil, "ast_node_new")
-  n.kind := kind
-  n.entity := entity
+  *n := !AstNode (kind=kind, entity=entity)
   return n
 }
 
@@ -292,9 +290,7 @@ parse_bind_type = () -> *AstNodeBindType {
   t = parse_type()
 
   bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
-  bt.id := id
-  bt.type := t
-  bt.ti := ti
+  *bt := !AstNodeBindType (id=id, type=t, ti=ti)
   return bt
 }
 
@@ -306,9 +302,7 @@ parse_bind_value = () -> *AstNodeBindValue {
   v = parse_value()
 
   bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
-  bv.id := id
-  bv.value := v
-  bv.ti := ti
+  *bv := !AstNodeBindValue (id=id, value=v, ti=ti)
   return bv
 }
 
@@ -320,8 +314,7 @@ parse_bind_value = () -> *AstNodeBindValue {
 ast_type_new = (kind : AstTypeKind, ti : *TokenInfo) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  t.kind := kind
-  t.ti := ti
+  *t := !AstType (kind=kind, ti=ti)
   return t
 }
 
@@ -350,8 +343,7 @@ parse_type0 = AstTypeParser {
     _to = parse_type()
 
     ft = ast_type_new(#AstTypeFunc, &tk.ti)
-    ft.func.from := from
-    ft.func.to := _to
+    ft.func := !AstTypeFunc (from=from, to=_to, ti=&tk.ti)
     return ft
   }
 
@@ -388,15 +380,17 @@ parse_type1 = AstTypeParser {
 parse_type2 = AstTypeParser {
   tk = ctok()
   if match("*") {
+    pointer_to = parse_type2()
+
     t = ast_type_new(#AstTypePointer, &tk.ti)
-    t.pointer.to := parse_type2()
+    t.pointer := !AstTypePointer (to=pointer_to, ti=&tk.ti)
     return t
   } else if match("[") {
 
     if match("]") {
       t = ast_type_new(#AstTypeArrayU, &tk.ti)
       of = parse_type2()
-      t.array_u.of := of
+      t.array_u := !AstTypeArrayU (of=of, ti=&tk.ti)
       return t
     }
 
@@ -404,8 +398,7 @@ parse_type2 = AstTypeParser {
     size = parse_value()
     need("]")
     of = parse_type2()
-    t.array.size := size
-    t.array.of := of
+    t.array := !AstTypeArray (of=of, size=size, ti=&tk.ti)
     return t
   }
 
@@ -437,8 +430,10 @@ parse_type4 = AstTypeParser {
   tk = ctok()
 
   if match("Var") {
+    var_type = parse_type()
+
     t = ast_type_new(#AstTypeVar, &tk.ti)
-    t.var.of := parse_type()
+    t.var := !AstTypeVar(of=var_type)
     return t
   }
 
@@ -510,7 +505,7 @@ parse_type_rec = AstTypeParser {
   }
 
   t = ast_type_new(#AstTypeRecord, &tk.ti)
-  t.record.decls := decls
+  t.record := !AstTypeRecord (decls=decls, ti=&tk.ti)
   return t
 }
 
@@ -521,7 +516,7 @@ parse_type_ptr = AstTypeParser {
   t = parse_type()
 
   pt = ast_type_new(#AstTypePointer, &tk.ti)
-  pt.pointer.to := t
+  pt.pointer := !AstTypePointer (to=t, ti=&tk.ti)
   return pt
 }
 
@@ -532,7 +527,7 @@ parse_type_array = AstTypeParser {
   if match("]") {
     t = ast_type_new(#AstTypeArrayU, &tk.ti)
     of = parse_type()
-    t.array_u.of := of
+    t.array_u := !AstTypeArrayU (of=of, ti=&tk.ti)
     return t
   }
 
@@ -541,8 +536,7 @@ parse_type_array = AstTypeParser {
   of = parse_type()
 
   t = ast_type_new(#AstTypeArray, &tk.ti)
-  t.array.size := size
-  t.array.of := of
+  t.array := !AstTypeArray (size=size, of=of, ti=&tk.ti)
   return t
 }
 
@@ -551,25 +545,22 @@ parse_type_array = AstTypeParser {
 // syntax: <id> [,<id>] ':' <type>
 // *AstDecl
 parse_decl = (arghack : Bool) -> *AstDecl {
-  afd = malloc(sizeof AstDecl) to *AstDecl
   // get id's
-  list_init(&afd.ids)
+  ids = 0 to Var List
+  list_init(&ids)
   while true {
     id = parse_id()
-    list_append(&afd.ids, id)
+    list_append(&ids, id)
     if not match(",") {break}
     skip_nl()
   }
 
   ti = &ctok().ti
   need(":")
-
   t = parse_type()
 
-  afd.ti := ti
-  afd.type := t
-  afd.extern := external
-  afd.arghack := xarghack
+  afd = malloc(sizeof AstDecl) to *AstDecl
+  *afd := !AstDecl (ids=ids, type=t, extern=external, arghack=xarghack, ti=ti)
   return afd
 }
 
@@ -586,9 +577,7 @@ AstValueParser = () -> *AstValue
 ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
   assert(v != nil, "ast_value_new malloc")
-  memset(v, 0, sizeof AstValue)
-  v.kind := k
-  v.ti := ti
+  *v := !AstValue (kind=k, ti=ti)
   return v
 }
 
@@ -807,22 +796,19 @@ parse_value9 = AstValueParser {
   if v == nil {return nil}
   ti = &ctok().ti
   if match("to") {
-    t = parse_type()
-    nv = ast_value_new(#AstValueCast, ti)
-    nv.cast.value := v
-    nv.cast.type := t
+    t = parse_type ()
+    nv = ast_value_new (#AstValueCast, ti)
+    nv.cast := !AstValueCast (value=v, type=t, ti=ti)
     v := nv
   } else if match("is") {
-    t = parse_type()
-    nv = ast_value_new(#AstValueIs, ti)
-    nv.is.value := v
-    nv.is.type := t
+    t = parse_type ()
+    nv = ast_value_new (#AstValueIs, ti)
+    nv.is := !AstValueIs (value=v, type=t, ti=ti)
     v := nv
   } else if match("as") {
-    t = parse_type()
-    nv = ast_value_new(#AstValueAs, ti)
-    nv.as.value := v
-    nv.as.type := t
+    t = parse_type ()
+    nv = ast_value_new (#AstValueAs, ti)
+    nv.as := !AstValueAs (value=v, type=t, ti=ti)
     v := nv
   }
   return v
@@ -905,18 +891,18 @@ parse_value11 = AstValueParser {
       }
 
       nv = ast_value_new(#AstValueCall, ti)
-      nv.call := !AstValueCall (func=v, args=*arglist)
+      nv.call := !AstValueCall (func=v, args=*arglist, ti=ti)
       v := nv
     } else if match("[") {
       i = parse_value()
       match("]")
       nv = ast_value_new(#AstValueIndex, ti)
-      nv.index := !AstValueIndex (array=v, index=i)
+      nv.index := !AstValueIndex (array=v, index=i, ti=ti)
       v := nv
     } else if match(".") {
-      field_id = parse_id()
+      fid = parse_id()
       nv = ast_value_new(#AstValueAccess, ti)
-      nv.access := !AstValueAccess (rec=v, field_id=field_id)
+      nv.access := !AstValueAccess (rec=v, field_id=fid, ti=ti)
       v := nv
     } else {
       break
@@ -1000,7 +986,7 @@ parse_value_id = AstValueParser {
   if id == nil {return nil}
 
   v = ast_value_new(#AstValueId, ti)
-  v.name := !AstName (id=id, ti=ti)
+  v.name := !AstName (id=id, ti=ti, ti=ti)
   return v
 
 fail:
@@ -1060,6 +1046,7 @@ parse_value_str = AstValueParser {
 parse_value_rec = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
+
   need("(")
 
   fields = 0 to Var Map  // id -> *Value
@@ -1078,7 +1065,7 @@ parse_value_rec = AstValueParser {
   }
 
   v = ast_value_new (#AstValueRec, ti)
-  v.rec := !AstValueRecord (type=t, values=fields)
+  v.rec := !AstValueRecord (type=t, values=fields, ti=ti)
   return v
 }
 
@@ -1102,7 +1089,7 @@ parse_value_array = AstValueParser {
   }
 
   v = ast_value_new (#AstValueArr, ti)
-  v.array := !AstValueArray (type=t, items=items)
+  v.array := !AstValueArray (type=t, items=items, ti=ti)
   return v
 }
 
@@ -1122,7 +1109,7 @@ parse_value_func = AstValueParser {
   b = parse_stmt_block(block_ti)
 
   v = ast_value_new(#AstValueFunc, func_ti)
-  v.func := !AstValueFunc (type=t, block_stmt=b as *AstStmt)
+  v.func := !AstValueFunc (type=t, block_stmt=b as *AstStmt, ti=block_ti)
   return v
 }
 
@@ -1132,7 +1119,7 @@ parse_value_extern = AstValueParser {
   t = parse_type()
 
   v = ast_value_new(#AstValueFunc, ti)
-  v.func := !AstValueFunc (type=t, block_stmt=unit)
+  v.func := !AstValueFunc (type=t, block_stmt=unit, ti=ti)
   v.extern := true
   return v
 }

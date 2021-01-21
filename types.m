@@ -78,14 +78,14 @@ AstTypeKind = {
   #AstTypeUnion
 }
 
-AstTypeEnum = (constructors : List)
-AstTypeRecord = (decls : List /* of *AstDecl */)
-AstTypeArray = (of : *AstType, size : *AstValue)
-AstTypeArrayU = (of : *AstType)
-AstTypePointer = (to : *AstType)
-AstTypeFunc = (from, to : *AstType, arghack : Bool)
-AstTypeVar = (of : *AstType)
-AstTypeUnion = (types : List /* of *AstType */)
+AstTypeEnum = (constructors : List, ti : *TokenInfo)
+AstTypeRecord = (decls : List /* of *AstDecl */, ti : *TokenInfo)
+AstTypeArray = (of : *AstType, size : *AstValue, ti : *TokenInfo)
+AstTypeArrayU = (of : *AstType, ti : *TokenInfo)
+AstTypePointer = (to : *AstType, ti : *TokenInfo)
+AstTypeFunc = (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
+AstTypeVar = (of : *AstType, ti : *TokenInfo)
+AstTypeUnion = (types : List /* of *AstType */, ti : *TokenInfo)
 
 AstType = (
   kind : AstTypeKind
@@ -151,19 +151,19 @@ AstValueKind = {
   #AstValueSizeof, #AstValueAlignof, #AstValueWhen
 }
 
-AstValueFunc = (type : *AstType, block_stmt : *AstStmt or Unit)
-AstValueCall = (func : *AstValue, args : List)
-AstValueIndex = (array, index : *AstValue)
-AstValueAccess = (rec : *AstValue, field_id : *AstId)
-AstValueCast = (value : *AstValue, type : *AstType)
-AstValueIs = (value : *AstValue, type : *AstType)
-AstValueAs = (value : *AstValue, type : *AstType)
+AstValueFunc = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
+AstValueCall = (func : *AstValue, args : List, ti : *TokenInfo)
+AstValueIndex = (array, index : *AstValue, ti : *TokenInfo)
+AstValueAccess = (rec : *AstValue, field_id : *AstId, ti : *TokenInfo)
+AstValueCast = (value : *AstValue, type : *AstType, ti : *TokenInfo)
+AstValueIs = (value : *AstValue, type : *AstType, ti : *TokenInfo)
+AstValueAs = (value : *AstValue, type : *AstType, ti : *TokenInfo)
 
-AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue)
-AstValueWhen = (x : *AstValue, variants : List, other : *AstValue)
+AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue, ti : *TokenInfo)
+AstValueWhen = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenInfo)
 
-AstValueRecord = (type : *AstType, values : Map)
-AstValueArray = (type : *AstType, items : List)
+AstValueRecord = (type : *AstType, values : Map, ti : *TokenInfo)
+AstValueArray = (type : *AstType, items : List, ti : *TokenInfo)
 
 AstValue = (
   kind : AstValueKind

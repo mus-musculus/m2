@@ -887,6 +887,8 @@ fail:
 do_value_array = DoValue {
   t = do_type(x.rec.type)
 
+  if t.kind == #TypePoison {goto fail}
+
   Ctx7 = (type : *Type, vl : List)
 
   ctx = !Ctx7 (type=t) to Var Ctx7
@@ -920,6 +922,8 @@ fail:
 
 do_value_record = DoValue {
   t = do_type(x.rec.type)
+
+  if t.kind == #TypePoison {goto fail}
 
   Ctx5 = (type : *Type, vl : Map)
 
