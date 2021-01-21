@@ -464,13 +464,6 @@ llval_create_reg = (t : *Type, reg : Nat32) -> LLVM_Value {
   return !LLVM_Value (kind=#LLVM_ValueRegister, type=t, reg=reg)
 }
 
-llval_create_adr = (t : *Type, reg : Nat32) -> LLVM_Value {
-  o = 0 to Var LLVM_Value
-  o.kind := #LLVM_ValueAddress
-  o.type := t
-  o.reg := reg
-  return o
-}
 
 operation_with_type = (op : Str, t : *Type) -> Nat {
   reg = lab_get ()
@@ -597,7 +590,7 @@ eval_call = Eval {
   }
   o (")")
 
-  return llval_create_reg (x.type, retval_reg)
+  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=retval_reg)
 }
 
 
@@ -609,7 +602,7 @@ eval_index_uarray = (a, i : LLVM_Value) -> LLVM_Value {
   reg = llvm_getelementptr (item_type, a)
   print_val_with_type (i)
 
-  return llval_create_adr (item_type, reg)
+  return !LLVM_Value (kind=#LLVM_ValueAddress, type=item_type, reg=reg)
 }
 
 
@@ -629,7 +622,8 @@ eval_index = Eval {
   index_is_imm = true
   if is_def_array_in_register and index_is_imm {
     reg = llvm_extractvalue (a.type, a, i.imm to Nat)
-    return llval_create_reg (x.type, reg)
+
+    return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
   }
 
   // оперделенный массив или указатель на определенный массив
@@ -648,7 +642,8 @@ eval_index = Eval {
     o ("i1 0, "); print_val_with_type (i)
 
     item_type = atype.array.of
-    return llval_create_adr (item_type, reg)
+
+    return !LLVM_Value (kind=#LLVM_ValueAddress, type=item_type, reg=reg)
   }
 
   return eval_index_array (a, i)
@@ -693,7 +688,8 @@ eval_access = Eval {
 
   reg = llvm_getelementptr (record_type, ss)
   fprintf (fout, "i1 0, i32 %u", fieldno)
-  return llval_create_adr (x.type, reg)
+
+  return !LLVM_Value (kind=#LLVM_ValueAddress, type=x.type, reg=reg)
 }
 
 
@@ -717,7 +713,7 @@ eval_deref = Eval {
   vx = reval (x.un.x)
 
   // return loaded pointer as #Address
-  return llval_create_adr (x.type, vx.reg)
+  return !LLVM_Value (kind=#LLVM_ValueAddress, type=x.type, reg=vx.reg)
 }
 
 
@@ -1194,7 +1190,7 @@ eval_rec = Eval {
 
   ctx = 0 to Var Ctx6
   ctx.type := x.rec.type
-  ctx.v := llval_create (#LLVM_ValueUndef, nil, 0) to Var LLVM_Value
+  ctx.v := llval_create (#LLVM_ValueZero, nil, 0) to Var LLVM_Value
 
   // итеративно формируем структуру
   pack = MapForeachHandler {
@@ -1202,7 +1198,7 @@ eval_rec = Eval {
     val = v to *Value
     c = ctx to *Ctx6
 
-    vx = eval (val)
+    vx = reval (val)
 
     // get target field offset
     field = type_record_get_field (c.type, fid)
@@ -1315,6 +1311,7 @@ print_val = (x : LLVM_Value) -> () {
     #LLVM_ValueGlobalVar   => fprintf (fout, "@%s", x.id)
     #LLVM_ValueGlobalConst => fprintf (fout, "@%s", x.id)
     #LLVM_ValueLocalVar    => fprintf (fout, "%%%d", x.reg)
+    #LLVM_ValueZero        => fprintf (fout, "zeroinitializer")
     #LLVM_ValueUndef       => fprintf (fout, "undef")
     else => fprintf (fout, "<LLVM_ValueInvalid x.kind = %d>", x.kind)
   }
