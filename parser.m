@@ -905,21 +905,18 @@ parse_value11 = AstValueParser {
       }
 
       nv = ast_value_new(#AstValueCall, ti)
-      nv.call.func := v
-      nv.call.args := *arglist
+      nv.call := !AstValueCall (func=v, args=*arglist)
       v := nv
     } else if match("[") {
       i = parse_value()
       match("]")
       nv = ast_value_new(#AstValueIndex, ti)
-      nv.index.array := v
-      nv.index.index := i
+      nv.index := !AstValueIndex (array=v, index=i)
       v := nv
     } else if match(".") {
       field_id = parse_id()
       nv = ast_value_new(#AstValueAccess, ti)
-      nv.access.rec := v
-      nv.access.field_id := field_id
+      nv.access := !AstValueAccess (rec=v, field_id=field_id)
       v := nv
     } else {
       break
@@ -933,7 +930,6 @@ parse_value11 = AstValueParser {
 exist parse_value_func : AstValueParser
 
 parse_value12 = AstValueParser {
-
   if is_it_type() {
     return parse_value_func()
   }
@@ -1000,13 +996,11 @@ parse_value_id = AstValueParser {
     return parse_value_when()
   }
 
-
   id = parse_id()
   if id == nil {return nil}
 
   v = ast_value_new(#AstValueId, ti)
-  v.name.id := id
-  v.name.ti := ti
+  v.name := !AstName (id=id, ti=ti)
   return v
 
 fail:
@@ -1181,6 +1175,7 @@ exist parse_stmt_goto : AstStmtParser
 //exist parse_stmt_vardef : AstStmtParser
 exist parse_stmt_typedef : AstStmtParser
 exist parse_stmt_expr : AstStmtParser
+
 
 parse_stmt_break = AstStmtParser {
   s = ast_stmt_new(#AstStmtBreak, ti)
