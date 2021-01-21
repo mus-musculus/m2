@@ -387,6 +387,7 @@ ValueKind = {
 
   #ValueParam,        // Value#reg
   #ValueRecord,       // Value#reg
+  #ValueArray,        // Value#reg
 
   #ValueLocalConst,   // Value#expr (reg)
   #ValueLocalVar,     // Value#vardef (reg)

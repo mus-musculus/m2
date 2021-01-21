@@ -885,16 +885,43 @@ fail:
 
 
 do_value_array = DoValue {
+  t = do_type(x.rec.type)
+
+  Ctx7 = (type : *Type, vl : List)
+
+  ctx = !Ctx7 (type=t) to Var Ctx7
+
+  // обрабатываем все поля
+  item_value_handle = ListForeachHandler {
+    av = data to *AstValue
+    c = ctx  to *Ctx7
+
+    arr_item_type = c.type.array.of
+
+    // обрабатываем значение
+    v0 = do_value (av)
+    // неявно пытаемся привести значение к типу элемента массива
+    v = implicit_cast(v0, arr_item_type)
+    // проверяем тип
+    type_check(v.type, arr_item_type, av.ti)
+    // и сохраняем
+    list_append(&c.vl, v)
+  }
+  list_foreach(&x.array.items, item_value_handle, &ctx)
+
+  vx = value_new (#ValueArray, t, x.ti)
+  vx.array := !ValueArray (type=t, items=ctx.vl)
+  return vx
+
+fail:
   return value_new_poison (x.ti)
 }
+
 
 do_value_record = DoValue {
   t = do_type(x.rec.type)
 
-  Ctx5 = (
-    type : *Type
-    vl   : Map
-  )
+  Ctx5 = (type : *Type, vl : Map)
 
   ctx = !Ctx5 (type=t) to Var Ctx5
 
@@ -924,6 +951,7 @@ do_value_record = DoValue {
 fail:
   return value_new_poison (x.ti)
 }
+
 
 
 do_value_plus = DoValue {
