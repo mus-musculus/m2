@@ -953,11 +953,11 @@ parse_value12 = AstValueParser {
 exist parse_value_id : AstValueParser
 
 exist parse_value_extern : AstValueParser
-exist parse_value_arr : AstValueParser
 exist parse_value_num : AstValueParser
 exist parse_value_str : AstValueParser
 exist parse_value_when : AstValueParser
 exist parse_value_rec : AstValueParser
+exist parse_value_arr : AstValueParser
 
 parse_value_term = AstValueParser {
   token = ctok()
@@ -1091,30 +1091,27 @@ parse_value_rec = AstValueParser {
 
 
 parse_value_arr = AstValueParser {
-//  ti = &ctok().ti
-//  of = parse_type()
-//  need("[")
-//
-//  data = list_new()  // of *AstValue
-//
-//  var len : Nat32
-//  len = 0
-//  while not match("]") {
-//    item = parse_value()
-//    if item == nil {match(","); continue}
-//    item2 = castIfGenericTo(item, typeBaseInt)
-//    len = len + 1
-//    list_append(data, item2)
-//    match(",")
-//  }
-//
-//  t = type_array_new(of, len)
-//  v = valueNew(#AstValueGlobalConst, ti)
-//  id = get_name_arr()
-//  v.def = asmArrayAdd(&asm0, id, t, data)
-//  v.type = t
-//  return v
-    return nil
+  ti = &ctok().ti
+  t = parse_type()
+  need("[")
+
+  items = 0 to Var List  // of *Value
+
+  len = 0 to Var Nat32
+  while true {
+    v = parse_value()
+
+    list_append(&items, v)
+    len := len + 1
+
+    if match("]") {break}
+    need(",")
+  }
+
+  v = ast_value_new (#AstValueArr, ti)
+  v.array.type := t
+  v.array.items := items
+  return v
 }
 
 

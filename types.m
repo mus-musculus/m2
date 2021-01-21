@@ -162,7 +162,8 @@ AstValueAs = (value : *AstValue, type : *AstType)
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue)
 AstValueWhen = (x : *AstValue, variants : List, other : *AstValue)
 
-AstValuerecord = (type : *AstType, values : Map)
+AstValueRecord = (type : *AstType, values : Map)
+AstValueArray = (type : *AstType, items : List)
 
 AstValue = (
   kind : AstValueKind
@@ -172,7 +173,8 @@ AstValue = (
   operand : [2]*AstValue  // un, bin, shl & shr operands
   of_type : *AstType      // sizeof, alignof
 
-  rec     : AstValuerecord  // for #AstValueRec
+  rec     : AstValueRecord
+  array   : AstValueArray
 
   func    : AstValueFunc
   call    : AstValueCall
@@ -433,6 +435,7 @@ ValueWhenVariant = (tx : *Type, x, y : *Value)
 ValueWhen = (x : *Value, variants : List, other : *Value)
 
 ValueRecord = (type : *Type, values : Map)
+ValueArray = (type : *Type, items : List)
 
 Value = (
   kind : ValueKind
@@ -463,6 +466,7 @@ Value = (
   select : ValueWhen
   load   : *Value  // #ValueLoad
   rec    : ValueRecord
+  array  : ValueArray
 //)
 
   //need_load : Bool
