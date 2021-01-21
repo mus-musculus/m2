@@ -6,9 +6,7 @@
 stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
   s = malloc (sizeof Stmt) to *Stmt
   assert (s != nil, "stmt_new")
-  memset (s, 0, sizeof Stmt)
-  s.kind := kind
-  s.ti := ti
+  *s := !Stmt (kind=kind, ti=ti)
   return s
 }
 
@@ -185,7 +183,7 @@ do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
   }
 
   s = stmt_new (#StmtExpr, x.ti)
-  s.e.v := v
+  s.e := !Expr(v=v)
   return s
 }
 
@@ -217,9 +215,7 @@ do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
   if then is Unit {return unit}
 
   s = stmt_new (#StmtIf, x.ti)
-  s.i.cond := cond
-  s.i.then := then as *Stmt
-  s.i.else := _else
+  s.i := !If (cond=cond, then=then as *Stmt, else=_else)
   return s
 }
 
@@ -240,8 +236,7 @@ do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
   if block is Unit {return unit}
 
   s = stmt_new (#StmtWhile, x.ti)
-  s.w.cond := cond
-  s.w.stmt := block as *Stmt
+  s.w := !While (cond=cond, stmt=block as *Stmt)
   return s
 }
 

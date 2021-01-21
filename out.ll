@@ -18478,15 +18478,10 @@ define %Stmt* @func492 (%StmtKind, %TokenInfo*) {
   %7 = bitcast [9 x %Nat8]* @func492_str1 to %Str
   call void (i1, %Str) @assert (i1 %6, %Str %7)
 ;stmt2:
-  %8 = bitcast %Stmt* %4 to %Unit*
-  %9 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %8, %Nat8 0, %Nat32 256)
+  %8 = insertvalue %Stmt zeroinitializer, %StmtKind %0, 0
+  %9 = insertvalue %Stmt %8, %TokenInfo* %1, 8
+  store %Stmt %9, %Stmt* %4, align 16
 ;stmt3:
-  %10 = getelementptr inbounds %Stmt, %Stmt* %4, i1 0, i32 0
-  store %StmtKind %0, %StmtKind* %10, align 2
-;stmt4:
-  %11 = getelementptr inbounds %Stmt, %Stmt* %4, i1 0, i32 8
-  store %TokenInfo* %1, %TokenInfo** %11, align 8
-;stmt5:
   ret %Stmt* %4
 }
 
@@ -18943,8 +18938,8 @@ endif_1:
   %17 = call %Stmt* (%StmtKind, %TokenInfo*) @func492 (%StmtKind 1, %TokenInfo* %16)
 ;stmt5:
   %18 = getelementptr inbounds %Stmt, %Stmt* %17, i1 0, i32 3
-  %19 = getelementptr inbounds %Expr, %Expr* %18, i1 0, i32 0
-  store %Value* %4, %Value** %19, align 8
+  %19 = insertvalue %Expr zeroinitializer, %Value* %4, 0
+  store %Expr %19, %Expr* %18, align 8
 ;stmt6:
   %20 = bitcast %Stmt* %17 to %union.29
   ret %union.29 %20
@@ -19045,21 +19040,15 @@ endif_4:
   %47 = call %Stmt* (%StmtKind, %TokenInfo*) @func492 (%StmtKind 5, %TokenInfo* %46)
 ;stmt14:
   %48 = getelementptr inbounds %Stmt, %Stmt* %47, i1 0, i32 6
-  %49 = getelementptr inbounds %If, %If* %48, i1 0, i32 0
-  store %Value* %4, %Value** %49, align 8
+  %49 = insertvalue %If zeroinitializer, %Value* %4, 0
+  %50 = bitcast %union.7 %7 to %Stmt*
+  %51 = insertvalue %If %49, %Stmt* %50, 1
+  %52 = load %union.31, %union.31* %8
+  %53 = insertvalue %If %51, %union.31 %52, 2
+  store %If %53, %If* %48, align 16
 ;stmt15:
-  %50 = getelementptr inbounds %Stmt, %Stmt* %47, i1 0, i32 6
-  %51 = getelementptr inbounds %If, %If* %50, i1 0, i32 1
-  %52 = bitcast %union.7 %7 to %Stmt*
-  store %Stmt* %52, %Stmt** %51, align 8
-;stmt16:
-  %53 = getelementptr inbounds %Stmt, %Stmt* %47, i1 0, i32 6
-  %54 = getelementptr inbounds %If, %If* %53, i1 0, i32 2
-  %55 = load %union.31, %union.31* %8
-  store %union.31 %55, %union.31* %54, align 16
-;stmt17:
-  %56 = bitcast %Stmt* %47 to %union.30
-  ret %union.30 %56
+  %54 = bitcast %Stmt* %47 to %union.30
+  ret %union.30 %54
 }
 
 define %union.32 @func502 (%AstStmtWhile*) {
@@ -19136,16 +19125,13 @@ endif_2:
   %41 = call %Stmt* (%StmtKind, %TokenInfo*) @func492 (%StmtKind 6, %TokenInfo* %40)
 ;stmt11:
   %42 = getelementptr inbounds %Stmt, %Stmt* %41, i1 0, i32 5
-  %43 = getelementptr inbounds %While, %While* %42, i1 0, i32 0
-  store %Value* %4, %Value** %43, align 8
+  %43 = insertvalue %While zeroinitializer, %Value* %4, 0
+  %44 = bitcast %union.7 %13 to %Stmt*
+  %45 = insertvalue %While %43, %Stmt* %44, 1
+  store %While %45, %While* %42, align 8
 ;stmt12:
-  %44 = getelementptr inbounds %Stmt, %Stmt* %41, i1 0, i32 5
-  %45 = getelementptr inbounds %While, %While* %44, i1 0, i32 1
-  %46 = bitcast %union.7 %13 to %Stmt*
-  store %Stmt* %46, %Stmt** %45, align 8
-;stmt13:
-  %47 = bitcast %Stmt* %41 to %union.32
-  ret %union.32 %47
+  %46 = bitcast %Stmt* %41 to %union.32
+  ret %union.32 %46
 }
 
 define %Value* @func504 (%AstValue*, %Type*) {
