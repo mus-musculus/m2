@@ -686,7 +686,7 @@ LLVM_ValueKind = {
 }
 
 
-LLVM_ValueSpecialKind = {
+/*LLVM_ValueSpecialKind = {
   #LLVM_ValueUndef2      // for llvm `undef` value
   #LLVM_ValueZero2       // for llvm `zeroinitializer` value
   #LLVM_ValueEmpty2      // Unit () 'value'
@@ -718,7 +718,7 @@ LLVM_ValueReg = (
   kind : LLVM_ValueRegKind
   type : *Type
   reg  : Nat32
-)
+)*/
 
 /*LLVM_Value = LLVM_ValueSpecial or
              LLVM_ValueImmediate or
