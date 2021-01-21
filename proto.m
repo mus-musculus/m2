@@ -206,6 +206,7 @@ exist eval_deref : Eval
 exist eval_not : Eval
 exist eval_plus : Eval
 exist eval_minus : Eval
+exist eval_rec : Eval
 
 exist eval_as : Eval
 exist eval_is : Eval

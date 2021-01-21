@@ -912,11 +912,15 @@ do_value_record = DoValue {
   // обрабатываем все поля
   field_value_handle = MapForeachHandler {
     field_id = k to Str
-    field_val = v to *Value
+    field_ast_val = v to *AstValue
     c = ctx to *Ctx5
+
+    // обрабатываем значение
+    v0 = do_value (field_ast_val)
+    // получаем тип поля для неявного приведения значения к нему и проверки типа
     field = type_record_get_field (c.type, field_id)
     // приводим значение поля к типу поля в записи
-    v = implicit_cast(field_val, field.type)
+    v = implicit_cast(v0, field.type)
     // проверяем тип
     type_check(v.type, field.type, field.ti)
     // и сохраняем

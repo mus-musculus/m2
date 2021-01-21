@@ -530,6 +530,7 @@ eval = Eval {
     #ValueAs     => eval_as     (x)
     #ValueIs     => eval_is     (x)
     #ValueWhen   => eval_when   (x)
+    #ValueRecord => eval_rec    (x)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
@@ -1174,6 +1175,18 @@ eval_when = Eval {
 
   return llval_create (#LLVM_ValueInvalid, x.type, 0)
 }
+
+
+
+
+eval_rec = Eval {
+
+  return llval_create (#LLVM_ValueInvalid, x.type, 0)
+}
+
+
+
+
 
 
 
