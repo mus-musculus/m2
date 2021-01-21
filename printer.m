@@ -47,7 +47,7 @@ definition_new = (kind : DefinitionKind, id : Str) -> *Definition {
   assert (x != nil, "assembly::definition_new : x != nil")
   memset (x, 0, sizeof Definition)
   x.kind := kind
-  x.id := id
+  //x.id := id
   return x
 }
 
@@ -219,7 +219,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_stringdef = ListForeachHandler {
     ai = data to *Definition
     sd = &ai.stringdef
-    stringdef (ai.id, sd.len, sd.data)
+    stringdef (sd.id, sd.len, sd.data)
   }
   list_foreach (&a.strings, foreach_stringdef, nil)
 
@@ -228,7 +228,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_arraydef = ListForeachHandler {
     ai = data to *Definition
     ad = &ai.arraydef
-    arraydef (ai.id, ad.type, ad.values)
+    arraydef (ad.id, ad.type, ad.values)
   }
   list_foreach (&a.arrays, foreach_arraydef, nil)
 
@@ -237,7 +237,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_vardef = ListForeachHandler {
     ai = data to *Definition
     vd = &ai.vardef
-    vardef (ai.id, vd.type, vd.init_value)
+    vardef (vd.id, vd.type, vd.init_value)
   }
   list_foreach (&a.vars, foreach_vardef, nil)
 
@@ -246,7 +246,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_funcdef = ListForeachHandler {
     ai = data to *Definition
     fd = &ai.funcdef
-    funcdef (ai.id, fd.type, fd.block)
+    funcdef (fd.id, fd.type, fd.block)
   }
   list_foreach (&a.funcs, foreach_funcdef, nil)
 
@@ -255,7 +255,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   foreach_aliasdef = ListForeachHandler {
     ai = data to *Definition
     ad = &ai.aliasdef
-    aliasdef (ai.id, ad.type, ad.org)
+    aliasdef (ad.id, ad.type, ad.org)
   }
   list_foreach (&a.aliases, foreach_aliasdef, nil)
 

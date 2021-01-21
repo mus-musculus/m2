@@ -238,7 +238,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %DefFunc = type {%Str, %Type*, %Block*}
 %DefVar = type {%Str, %Type*, %Value*}
 %DefAlias = type {%Str, %Type*, %Str}
-%Definition = type {%DefinitionKind, %Str, %DefStr, %DefType, %DefConst, %DefArray, %DefFunc, %DefVar, %DefAlias}
+%Definition = type {%DefinitionKind, %DefStr, %DefType, %DefConst, %DefArray, %DefFunc, %DefVar, %DefAlias}
 %Assembly = type {%Str, %Str, %Str, %List, %List, %List, %List, %List, %List}
 %Arch = type i16
 %LLVM_ValueKind = type i16
@@ -9303,7 +9303,7 @@ select_1_end:
 
 define %Definition* @func267 (%DefinitionKind, %Str) {
 ;stmt0:
-  %3 = call %Unit* (%Nat32) @malloc (%Nat32 176)
+  %3 = call %Unit* (%Nat32) @malloc (%Nat32 168)
   %4 = bitcast %Unit* %3 to %Definition*
 ;stmt1:; loadImmPtr
   %5 = inttoptr i64 0 to%Definition*
@@ -9312,14 +9312,11 @@ define %Definition* @func267 (%DefinitionKind, %Str) {
   call void (i1, %Str) @assert (i1 %6, %Str %7)
 ;stmt2:
   %8 = bitcast %Definition* %4 to %Unit*
-  %9 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %8, %Nat8 0, %Nat32 176)
+  %9 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %8, %Nat8 0, %Nat32 168)
 ;stmt3:
   %10 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 0
   store %DefinitionKind %0, %DefinitionKind* %10, align 2
 ;stmt4:
-  %11 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 1
-  store %Str %1, %Str* %11, align 8
-;stmt5:
   ret %Definition* %4
 }
 
@@ -9327,11 +9324,11 @@ define %Definition* @func268 (%Assembly*, %Str, %Type*) {
 ;stmt0:
   %4 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 0, %Str %1)
 ;stmt1:
-  %5 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 3
+  %5 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 2
   %6 = getelementptr inbounds %DefType, %DefType* %5, i1 0, i32 1
   store %Type* %2, %Type** %6, align 8
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 3
+  %7 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 2
   %8 = getelementptr inbounds %DefType, %DefType* %7, i1 0, i32 0
   store %Str %1, %Str* %8, align 8
 ;stmt3:
@@ -9346,15 +9343,15 @@ define %Definition* @func269 (%Assembly*, %Str, %Str, %Nat32) {
 ;stmt0:
   %5 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 2, %Str %1)
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
   %7 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 0
   store %Str %1, %Str* %7, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
+  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
   %9 = getelementptr inbounds %DefStr, %DefStr* %8, i1 0, i32 1
   store %Str %2, %Str* %9, align 8
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
+  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
   %11 = getelementptr inbounds %DefStr, %DefStr* %10, i1 0, i32 2
   store %Nat32 %3, %Nat32* %11, align 4
 ;stmt4:
@@ -9369,15 +9366,15 @@ define %Definition* @func270 (%Assembly*, %Str, %Type*, %List*) {
 ;stmt0:
   %5 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 3, %Str %1)
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
   %7 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 0
   store %Str %1, %Str* %7, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
+  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
   %9 = getelementptr inbounds %DefArray, %DefArray* %8, i1 0, i32 1
   store %Type* %2, %Type** %9, align 8
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
+  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
   %11 = getelementptr inbounds %DefArray, %DefArray* %10, i1 0, i32 3
   store %List* %3, %List** %11, align 8
 ;stmt4:
@@ -9392,15 +9389,15 @@ define %Definition* @func271 (%Assembly*, %Str, %Type*, %Block*) {
 ;stmt0:
   %5 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 4, %Str %1)
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
   %7 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
   store %Str %1, %Str* %7, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
+  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
   %9 = getelementptr inbounds %DefFunc, %DefFunc* %8, i1 0, i32 1
   store %Type* %2, %Type** %9, align 8
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
+  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
   %11 = getelementptr inbounds %DefFunc, %DefFunc* %10, i1 0, i32 2
   store %Block* %3, %Block** %11, align 8
 ;stmt4:
@@ -9415,15 +9412,15 @@ define %Definition* @func272 (%Assembly*, %Str, %Type*, %Value*) {
 ;stmt0:
   %5 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 5, %Str %1)
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
   %7 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 0
   store %Str %1, %Str* %7, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
+  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
   %9 = getelementptr inbounds %DefVar, %DefVar* %8, i1 0, i32 1
   store %Type* %2, %Type** %9, align 8
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
+  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
   %11 = getelementptr inbounds %DefVar, %DefVar* %10, i1 0, i32 2
   store %Value* %3, %Value** %11, align 8
 ;stmt4:
@@ -9438,15 +9435,15 @@ define %Definition* @func273 (%Assembly*, %Str, %Type*, %Str) {
 ;stmt0:
   %5 = call %Definition* (%DefinitionKind, %Str) @func267 (%DefinitionKind 6, %Str %1)
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 8
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
   %7 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 0
   store %Str %1, %Str* %7, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 8
+  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
   %9 = getelementptr inbounds %DefAlias, %DefAlias* %8, i1 0, i32 1
   store %Type* %2, %Type** %9, align 8
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 8
+  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
   %11 = getelementptr inbounds %DefAlias, %DefAlias* %10, i1 0, i32 2
   store %Str %3, %Str* %11, align 8
 ;stmt4:
@@ -9582,7 +9579,7 @@ define void @func284 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 3
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
 ;stmt2:
   %7 = getelementptr inbounds %DefType, %DefType* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
@@ -9596,9 +9593,9 @@ define void @func285 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 2
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
+  %7 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 2
   %10 = load %Nat32, %Nat32* %9
@@ -9612,9 +9609,9 @@ define void @func286 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
+  %7 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 1
   %10 = load %Type*, %Type** %9
@@ -9628,9 +9625,9 @@ define void @func287 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
+  %7 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 1
   %10 = load %Type*, %Type** %9
@@ -9644,9 +9641,9 @@ define void @func288 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
+  %7 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 1
   %10 = load %Type*, %Type** %9
@@ -9660,9 +9657,9 @@ define void @func289 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt0:
   %5 = bitcast %Unit* %0 to %Definition*
 ;stmt1:
-  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 8
+  %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
+  %7 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 0
   %8 = load %Str, %Str* %7
   %9 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 1
   %10 = load %Type*, %Type** %9
@@ -10281,7 +10278,7 @@ select_1_2_ok:
   %25 = insertvalue %LLVM_Value %22, %Type* %24, 1
   %26 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 4
   %27 = load %Definition*, %Definition** %26
-  %28 = getelementptr inbounds %Definition, %Definition* %27, i1 0, i32 7
+  %28 = getelementptr inbounds %Definition, %Definition* %27, i1 0, i32 6
   %29 = getelementptr inbounds %DefVar, %DefVar* %28, i1 0, i32 0
   %30 = load %Str, %Str* %29
   %31 = insertvalue %LLVM_Value %25, %Str %30, 3
@@ -19417,7 +19414,7 @@ define void @compiler_init () {
 
 define void @func513 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 3
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 2
   %4 = getelementptr inbounds %DefType, %DefType* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19425,7 +19422,7 @@ define void @func513 (%Definition*, %Str) {
 
 define void @func514 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 4
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 3
   %4 = getelementptr inbounds %DefConst, %DefConst* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19433,7 +19430,7 @@ define void @func514 (%Definition*, %Str) {
 
 define void @func515 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 2
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 1
   %4 = getelementptr inbounds %DefStr, %DefStr* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19441,7 +19438,7 @@ define void @func515 (%Definition*, %Str) {
 
 define void @func516 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 5
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 4
   %4 = getelementptr inbounds %DefArray, %DefArray* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19449,7 +19446,7 @@ define void @func516 (%Definition*, %Str) {
 
 define void @func517 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 6
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 5
   %4 = getelementptr inbounds %DefFunc, %DefFunc* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19457,7 +19454,7 @@ define void @func517 (%Definition*, %Str) {
 
 define void @func518 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 7
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 6
   %4 = getelementptr inbounds %DefVar, %DefVar* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19465,7 +19462,7 @@ define void @func518 (%Definition*, %Str) {
 
 define void @func519 (%Definition*, %Str) {
 ;stmt0:
-  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 8
+  %3 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 7
   %4 = getelementptr inbounds %DefAlias, %DefAlias* %3, i1 0, i32 0
   store %Str %1, %Str* %4, align 8
   ret void
@@ -19531,7 +19528,7 @@ select_1_end:
 
 define %Str @func522 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 3
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 2
   %3 = getelementptr inbounds %DefType, %DefType* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19539,7 +19536,7 @@ define %Str @func522 (%Definition*) {
 
 define %Str @func523 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 4
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 3
   %3 = getelementptr inbounds %DefConst, %DefConst* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19547,7 +19544,7 @@ define %Str @func523 (%Definition*) {
 
 define %Str @func524 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 2
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 1
   %3 = getelementptr inbounds %DefStr, %DefStr* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19555,7 +19552,7 @@ define %Str @func524 (%Definition*) {
 
 define %Str @func525 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 5
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 4
   %3 = getelementptr inbounds %DefArray, %DefArray* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19563,7 +19560,7 @@ define %Str @func525 (%Definition*) {
 
 define %Str @func526 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 6
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 5
   %3 = getelementptr inbounds %DefFunc, %DefFunc* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19571,7 +19568,7 @@ define %Str @func526 (%Definition*) {
 
 define %Str @func527 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 7
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 6
   %3 = getelementptr inbounds %DefVar, %DefVar* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19579,7 +19576,7 @@ define %Str @func527 (%Definition*) {
 
 define %Str @func528 (%Definition*) {
 ;stmt0:
-  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 8
+  %2 = getelementptr inbounds %Definition, %Definition* %0, i1 0, i32 7
   %3 = getelementptr inbounds %DefAlias, %DefAlias* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   ret %Str %4
@@ -19987,12 +19984,7 @@ then_2:
 ;stmt13:
   %51 = getelementptr inbounds %Value, %Value* %9, i1 0, i32 4
   %52 = load %Definition*, %Definition** %51
-  %53 = getelementptr inbounds %Definition, %Definition* %52, i1 0, i32 1
-  store %Str %5, %Str* %53, align 8
-;stmt14:
-  %54 = getelementptr inbounds %Value, %Value* %9, i1 0, i32 4
-  %55 = load %Definition*, %Definition** %54
-  call void (%Definition*, %Str) @def_rename (%Definition* %55, %Str %5)
+  call void (%Definition*, %Str) @def_rename (%Definition* %52, %Str %5)
   br label %endif_2
 else_2:
   br label %endif_2

@@ -618,8 +618,6 @@ DefAlias = (id : Str, type : *Type, org : Str)
 Definition = (
   kind : DefinitionKind
 
-  id   : Str     // идентификатор который идет на печать
-
   stringdef : DefStr
   typedef   : DefType
   constdef  : DefConst

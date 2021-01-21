@@ -190,7 +190,6 @@ do_value_bind = (x : *AstNodeBindValue) -> () {
       strcmp("fprintf", id) == 0
 
   if v.def != nil {
-    v.def.id := id
     def_rename(v.def, id)
   }
 }
