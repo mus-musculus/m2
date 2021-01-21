@@ -495,6 +495,8 @@ exist eval_rec : Eval
 exist eval_as : Eval
 exist eval_is : Eval
 
+
+exist def_getname : (d : *Definition) -> Str
 // value evaluation
 // Принимает на вход значение. Возвращает объект принтера
 // Значения-операции вычисляются. Результатом может быть константа, имя, регистр или адрес.
@@ -504,13 +506,7 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => !LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm)
 
-    #ValueGlobalConst => Eval {
-      if x.type.kind == #TypeFunc {
-        return !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=x.def.funcdef.id)
-      }
-
-      return !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=x.def.id)
-    } (x)
+    #ValueGlobalConst => !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
     #ValueGlobalVar   => !LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
