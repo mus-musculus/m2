@@ -485,6 +485,7 @@ exist eval_not : Eval
 exist eval_plus : Eval
 exist eval_minus : Eval
 exist eval_rec : Eval
+exist eval_arr : Eval
 
 exist eval_as : Eval
 exist eval_is : Eval
@@ -523,6 +524,7 @@ eval = Eval {
     #ValueIs     => eval_is     (x)
     #ValueWhen   => eval_when   (x)
     #ValueRecord => eval_rec    (x)
+    #ValueArray  => eval_arr    (x)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
@@ -1204,7 +1206,35 @@ eval_rec = Eval {
   return ctx.v
 }
 
+eval_arr = Eval {
 
+  // контекст в котором будет происходить формирование структуры
+  Ctx8 = (
+    type : *Type
+    v : LLVM_Value  // значение итеративно формируемого массива
+    cnt : Nat // счетчик
+  )
+
+  ctx = !Ctx8 (type=x.array.type, v=!LLVM_Value (kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
+
+  // итеративно формируем массив
+  pack = ListForeachHandler {
+    val = data to *Value
+    c = ctx to *Ctx8
+
+    vx = reval (val)
+
+    // do value insert into record
+    reg = operation_with_type ("insertvalue", c.type); space()
+    print_val (c.v); comma ()
+    print_val_with_type (vx); comma (); fprintf (fout, "%d", c.cnt)
+    c.v := !LLVM_Value (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
+    c.cnt := c.cnt + 1
+  }
+  list_foreach(&x.array.items, pack, &ctx)
+
+  return ctx.v
+}
 
 
 
