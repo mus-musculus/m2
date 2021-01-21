@@ -442,7 +442,7 @@ llval_create = (k : LLVM_ValueKind, t : *Type, reg : Int64) -> LLVM_Value {
   o.imm := reg
   return o
 
-  //return rec LLVM_Value (type=t, kind=k, reg=reg to Nat32, id=nil, reg=reg)
+  //return !LLVM_Value (type=t, kind=k, reg=reg to Nat32, id=nil, reg=reg)
 }
 
 
@@ -452,7 +452,7 @@ llval_create_id = (k : LLVM_ValueKind, t : *Type, id : Str) -> LLVM_Value {
   o.kind := k
   o.id := id
   return o*/
-  return rec LLVM_Value (kind=k, type=t, id=id)
+  return !LLVM_Value (kind=k, type=t, id=id)
 }
 
 llval_create_reg = (t : *Type, reg : Nat32) -> LLVM_Value {
@@ -461,7 +461,7 @@ llval_create_reg = (t : *Type, reg : Nat32) -> LLVM_Value {
   o.type := t
   o.reg := reg
   return o*/
-  return rec LLVM_Value (kind=#LLVM_ValueRegister, type=t, reg=reg)
+  return !LLVM_Value (kind=#LLVM_ValueRegister, type=t, reg=reg)
 }
 
 llval_create_adr = (t : *Type, reg : Nat32) -> LLVM_Value {

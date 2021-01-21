@@ -965,6 +965,16 @@ parse_value_term = AstValueParser {
     #TokenId  => parse_value_id()
     #TokenNum => parse_value_num()
     #TokenString => parse_value_str()
+
+    #TokenSym => (token : *Token) -> *AstValue {
+      if match("!") {
+        return parse_value_rec()
+      }
+      error("unexpected symbol\n", &token.ti)
+      assert(false, "bad term")
+      return nil to *AstValue
+    } (token)
+
     else => (token : *Token) -> *AstValue {
       error("unexpected symbol\n", &token.ti)
       printf("received: %s\n", &token.text[0])
