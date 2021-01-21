@@ -876,8 +876,7 @@ eval_is = Eval {
 
 
 
-//%agg1 = insertvalue {i32, float} undef, i32 1, 0 ; yields {i32 1, float undef}
-//%agg2 = insertvalue {i32, float} %agg1, float %val, 1
+
 
 // U0
 eval_cast_to_union = EvalCast {
@@ -1179,9 +1178,41 @@ eval_when = Eval {
 
 
 
+//%agg1 = insertvalue {i32, float} undef, i32 1, 0 ; yields {i32 1, float undef}
+//%agg2 = insertvalue {i32, float} %agg1, float %val, 1
 eval_rec = Eval {
 
-  return llval_create (#LLVM_ValueInvalid, x.type, 0)
+  // контекст в котором будет происходить формирование структуры
+  Ctx6 = (
+    type : *Type
+    v : LLVM_Value  // значение итеративно формируемой структуры
+  )
+
+  ctx = 0 to Var Ctx6
+  ctx.type := x.rec.type
+  ctx.v := llval_create (#LLVM_ValueUndef, nil, 0) to Var LLVM_Value
+
+  // итеративно формируем структуру
+  pack = MapForeachHandler {
+    fid = k to Str
+    val = v to *Value
+    c = ctx to *Ctx6
+
+    vx = eval (val)
+
+    // get target field offset
+    field = type_record_get_field (c.type, fid)
+    fieldno = field.offset
+
+    // do value insert into record
+    reg = operation_with_type ("insertvalue", c.type); space()
+    print_val (c.v); comma ()
+    print_val_with_type (vx); comma (); fprintf (fout, "%d", fieldno)
+    c.v := llval_create_reg (c.type, reg)
+  }
+  map_foreach(&x.rec.values, pack, &ctx)
+
+  return ctx.v
 }
 
 
@@ -1280,6 +1311,7 @@ print_val = (x : LLVM_Value) -> () {
     #LLVM_ValueGlobalVar   => fprintf (fout, "@%s", x.id)
     #LLVM_ValueGlobalConst => fprintf (fout, "@%s", x.id)
     #LLVM_ValueLocalVar    => fprintf (fout, "%%%d", x.reg)
+    #LLVM_ValueUndef       => fprintf (fout, "undef")
     else => fprintf (fout, "<LLVM_ValueInvalid x.kind = %d>", x.kind)
   }
 }
