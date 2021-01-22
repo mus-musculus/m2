@@ -1043,14 +1043,41 @@ parse_value_str = AstValueParser {
 }
 
 
+parse_value_rec2 = AstValueParser {
+  fields = 0 to Var Map  // id -> *Value
+
+  ti = &ctok().ti
+  while true {
+    id = parse_id()
+    need("=")
+    v = parse_value()
+
+    map_append(&fields, id.str, v)
+
+    if match(")") {break}
+    need(",")
+  }
+
+  t = ast_type_new(#AstTypeGenericRec, ti)
+  //t.record := !AstTypeRecord (decls=decls, ti=ti)  // вроде не надо
+  v = ast_value_new (#AstValueRec, ti)
+  v.rec := !AstValueRecord (type=t, values=fields, ti=ti)
+  return v
+}
+
+
 parse_value_rec = AstValueParser {
   ti = &ctok().ti
 
+  if match("(") {
+    return parse_value_rec2()
+  }
+
   // типа может и не быть, тогда это Generic запись
   t = nil to Var *AstType
-  if is_it_type() {
+  //if is_it_type() {
     t := parse_type()
-  }
+  //}
 
   need("(")
 

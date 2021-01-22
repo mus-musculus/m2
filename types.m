@@ -70,6 +70,7 @@ AstTypeKind = {
   #AstTypeNamed
   #AstTypeEnum
   #AstTypeRecord
+  #AstTypeGenericRec
   #AstTypeArray
   #AstTypeArrayU
   #AstTypeFunc
@@ -307,6 +308,9 @@ TypeKind = {
 
   // Специальный тип для универсального указателя nil
   #TypeGenericReference
+
+  // Тип для записи
+  #TypeGenericRec
 
   // Nat8, Nat16, Int8, Int16, etc.
   // see TypeNumeric (TypeNumeric#power, TypeNumeric#signed)

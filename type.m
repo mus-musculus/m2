@@ -211,6 +211,13 @@ align = (req_sz : Nat32, align : Nat) -> Nat32 {
   }
 }
 
+type_record_field_new = (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl {
+  f = malloc (sizeof Decl) to *Decl
+  assert (f != nil, "type_record_field_new")
+  *f := !Decl (id=id, type=t, align=t.align, ti=ti)
+  return f
+}
+
 do_type_record = DoType {
   old_ctype = ctype
   t = type_new (#TypeRecord, 0, x.ti)
@@ -235,17 +242,7 @@ do_type_record = DoType {
     process_field_in_decl = ListForeachHandler {
       id = data to *AstId
       context = ctx to *Ctx1
-      field_new = (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl {
-        f = malloc (sizeof Decl) to *Decl
-        assert (f != nil, "field_new")
-        f.id := id
-        f.type := t
-        f.offset := 0
-        f.align := t.align
-        f.ti := ti
-        return f
-      }
-      field_decl = field_new (id, context.type, id.ti)
+      field_decl = type_record_field_new (id, context.type, id.ti)
       list_append (context.fields, field_decl)
     }
     list_foreach (&fieldsdef.ids, process_field_in_decl, &ctx)

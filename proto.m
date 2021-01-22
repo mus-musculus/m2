@@ -19,7 +19,7 @@ exist type_enum_new : (constructors : *List, ti : *TokenInfo) -> *Type
 exist type_func_new : (from, _to : *Type, arghack : Bool, ti : *TokenInfo) -> *Type
 exist type_record_get_field : (t : *Type, field_id : Str) -> *Decl
 exist type_is_ref : (t : *Type) -> Bool
-
+exist type_record_field_new : (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl
 exist type_is_maybe_ptr : (t : *Type) -> Bool
 
 exist typeIsDefinedArray : (t : *Type) -> Bool

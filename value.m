@@ -920,7 +920,55 @@ fail:
 }
 
 
+do_value_record2 = DoValue {
+  ti = &ctok().ti
+  Ctx9 = (type : *Type, vl : Map)
+
+  printf("do_value_record2\n")
+
+  t = type_new (#TypeGenericRec, 0, ti)
+
+  ctx = !Ctx9 (type=t) to Var Ctx9
+
+
+  // обрабатываем все поля
+  field_value_handle = MapForeachHandler {
+    field_id = k to Str
+    field_ast_val = v to *AstValue
+    c = ctx to *Ctx9
+    v = do_value (field_ast_val)
+
+    // создаем поле для GenericRec типа
+    // убери отсюда мап тк нужно не просто строку id давать а AstId
+    // а так как сейчас у тебя теряется ti! (но пока так)
+    // оч хреново - тут нет ti нигде
+    ast_id = malloc(sizeof AstId) to *AstId
+    *ast_id := !AstId (str=field_id, ti=nil)
+    f = type_record_field_new(ast_id, v.type, nil)
+
+    list_append(c.type.record.decls, f)
+    // получили поле, на его основе строим поля для Generic типа
+
+    map_append(&c.vl, field_id, v)
+  }
+  map_foreach(&x.rec.values, field_value_handle, &ctx)
+
+  vx = value_new (#ValueGenericRecord, t, x.ti)
+  vx.rec := !ValueRecord (type=t, values=ctx.vl)
+  return vx
+
+fail:
+  return value_new_poison (x.ti)
+}
+
+
 do_value_record = DoValue {
+
+  if x.rec.type.kind == #AstTypeGenericRec {
+    // это запись без типа
+    return do_value_record2(x)
+  }
+
   // тип будет nil если это generic запись
   t = when x.rec.type {
     nil => nil to *Type

@@ -102,10 +102,17 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
   return s
 }
 
-
+// РАЗБЕРИСЬ НАКОНЕЦ ЧТО ТУТ ВОБЩЕ ПРОИСХОДИТ!! (НИХЕРА НЕ ПОНЯТНО!!)
 do_stmt_valdef = (x : *AstStmtValueDef) -> *Stmt or Unit {
   id = x.id
   v = do_valuex (x.expr, false)
+
+  // пока так
+  if v.kind == #ValueGenericRecord {
+    // дженерики просто заносятся в индекс но не печатаются принтером
+    bind_value_in_block (fctx.cblock, id.str, v)
+    return unit
+  }
 
   // Local
   // важно чтобы undef переменные попадали сюда так как иначе
@@ -126,6 +133,8 @@ do_stmt_valdef = (x : *AstStmtValueDef) -> *Stmt or Unit {
       return se
     }
   }
+
+  //printf("F= "); value_print_kind(v.kind); printf("\n");
 
   bind_value_in_block (fctx.cblock, id.str, v)
   return unit
