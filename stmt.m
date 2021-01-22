@@ -11,11 +11,7 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 }
 
 
-stmt_assign_new = (l, r : *Value, ti : *TokenInfo) -> *Stmt {
-  s = stmt_new (#StmtAssign, ti)
-  s.assign := !StmtAssign (l=l, r=r, ti=ti)
-  return s
-}
+
 
 
 exist do_stmt_assign   : (x : *AstStmtAssign) -> *Stmt or Unit
@@ -101,7 +97,9 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
     return unit
   }
 
-  return stmt_assign_new (lval, rval, x.ti)
+  s = stmt_new (#StmtAssign, x.ti)
+  s.assign := !StmtAssign (l=lval, r=rval, ti=x.ti)
+  return s
 }
 
 

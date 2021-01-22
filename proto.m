@@ -122,7 +122,7 @@ exist valueIsMutable : (v : *Value) -> Bool
 exist value_init : () -> ()
 
 exist stmt_new : (kind : StmtKind, ti : *TokenInfo) -> *Stmt
-exist stmt_assign_new : (l, r : *Value, ti : *TokenInfo) -> *Stmt
+//exist stmt_assign_new : (l, r : *Value, ti : *TokenInfo) -> *Stmt
 exist stmt_block_new : (b, parent : *Block) -> *Block
 
 
