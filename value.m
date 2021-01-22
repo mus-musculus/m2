@@ -377,7 +377,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     call_ti : *TokenInfo
   )
 
-  ctx = !Ctx3 (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
+  ctx = @Ctx3 (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
 
   chk = ListWhileHandler2 {
     p = data1 to *Decl   // param
@@ -877,7 +877,7 @@ do_value_array = DoValue {
 
   Ctx7 = (type : *Type, vl : List)
 
-  ctx = !Ctx7 (type=t) to Var Ctx7
+  ctx = @Ctx7 (type=t) to Var Ctx7
 
   // обрабатываем все поля
   item_value_handle = ListForeachHandler {
@@ -913,7 +913,7 @@ do_value_record2 = DoValue {
   t = type_new (#TypeGenericRec, 0, ti)
   t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
-  ctx = !Ctx9 (type=t) to Var Ctx9
+  ctx = @Ctx9 (type=t) to Var Ctx9
 
 
   // обрабатываем все поля
@@ -928,7 +928,7 @@ do_value_record2 = DoValue {
     // а так как сейчас у тебя теряется ti! (но пока так)
     // оч хреново - тут нет ti нигде
     ast_id = malloc(sizeof AstId) to *AstId
-    *ast_id := !AstId (str=field_id, ti=nil)
+    *ast_id := @AstId (str=field_id, ti=nil)
     f = type_record_field_new(ast_id, v.type, nil)
     list_append(c.type.record.decls, f)
     // получили поле, на его основе строим поля для Generic типа
@@ -965,7 +965,7 @@ do_value_record = DoValue {
 
   Ctx5 = (type : *Type, vl : Map)
 
-  ctx = !Ctx5 (type=t) to Var Ctx5
+  ctx = @Ctx5 (type=t) to Var Ctx5
 
   // обрабатываем все поля
   field_value_handle = MapForeachHandler {

@@ -499,16 +499,16 @@ exist def_getname : (d : *Definition) -> Str
 // (только если это не lval)
 eval = Eval {
   return when x.kind {
-    #ValueImmediate   => !LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm)
+    #ValueImmediate   => @LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm)
 
-    #ValueGlobalConst => !LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
+    #ValueGlobalConst => @LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
-    #ValueGlobalVar   => !LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
+    #ValueGlobalVar   => @LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
-    #ValueLocalConst  => !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
-    #ValueLocalVar    => !LLVM_Value (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
+    #ValueLocalConst  => @LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
+    #ValueLocalVar    => @LLVM_Value (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
 
-    #ValueParam       => !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.field.offset to Nat32)
+    #ValueParam       => @LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.field.offset to Nat32)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x)
@@ -529,7 +529,7 @@ eval = Eval {
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
 
-      return !LLVM_Value (kind=#LLVM_ValueInvalid)
+      return @(kind=#LLVM_ValueInvalid)
     } (x)
 
     else => eval_bin (x)
@@ -588,7 +588,7 @@ eval_call = Eval {
   }
   o (")")
 
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=retval_reg)
+  return @(kind=#LLVM_ValueRegister, type=x.type, reg=retval_reg)
 }
 
 
@@ -600,7 +600,7 @@ eval_index_uarray = (a, i : LLVM_Value) -> LLVM_Value {
   reg = llvm_getelementptr (item_type, a)
   print_val_with_type (i)
 
-  return !LLVM_Value (kind=#LLVM_ValueAddress, type=item_type, reg=reg)
+  return @(kind=#LLVM_ValueAddress, type=item_type, reg=reg)
 }
 
 
@@ -620,7 +620,7 @@ eval_index = Eval {
   index_is_imm = true
   if is_def_array_in_register and index_is_imm {
     reg = llvm_extractvalue (a.type, a, i.imm to Nat)
-    return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+    return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
   }
 
   // оперделенный массив или указатель на определенный массив
@@ -640,7 +640,7 @@ eval_index = Eval {
 
     item_type = atype.array.of
 
-    return !LLVM_Value (kind=#LLVM_ValueAddress, type=item_type, reg=reg)
+    return @(kind=#LLVM_ValueAddress, type=item_type, reg=reg)
   }
 
   return eval_index_array (a, i)
@@ -671,7 +671,7 @@ eval_access = Eval {
     // работа именно со значением в регистре
     if s.kind == #LLVM_ValueRegister {
       reg = llvm_extractvalue (record_type, s, fieldno to Nat)
-      return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+      return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
     }
   }
 
@@ -686,7 +686,7 @@ eval_access = Eval {
   reg = llvm_getelementptr (record_type, ss)
   fprintf (fout, "i1 0, i32 %u", fieldno)
 
-  return !LLVM_Value (kind=#LLVM_ValueAddress, type=x.type, reg=reg)
+  return @(kind=#LLVM_ValueAddress, type=x.type, reg=reg)
 }
 
 
@@ -695,13 +695,13 @@ eval_ref = Eval {
   vx = eval (x.un.x)
   if vx.kind == #LLVM_ValueAddress {
     // если это адрес - вернем его в регистре, а тип обернем в указатель
-    return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=vx.reg)
+    return @(kind=#LLVM_ValueRegister, type=x.type, reg=vx.reg)
   }
 
   //%7 = getelementptr inbounds %Int32, %Int32* @a, i32 0
   reg = llvm_getelementptr (vx.type, vx); o ("i1 0")
 
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
 }
 
 
@@ -710,7 +710,7 @@ eval_deref = Eval {
   vx = reval (x.un.x)
 
   // return loaded pointer as #Address
-  return !LLVM_Value (kind=#LLVM_ValueAddress, type=x.type, reg=vx.reg)
+  return @(kind=#LLVM_ValueAddress, type=x.type, reg=vx.reg)
 }
 
 
@@ -722,17 +722,17 @@ eval_not = Eval {
   space ()
   print_val (vx)
   if (type_eq (vx.type, typeBool)) {o (", 1")} else {o (", -1")}
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=vx.type, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=vx.type, reg=reg)
 }
 
 
 eval_minus = Eval {
   vx = reval (x.un.x)
 
-  z = !LLVM_Value (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0)
+  z = @(kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
 
   reg = llvm_binary ("sub nsw", z, vx, vx.type)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=vx.type, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=vx.type, reg=reg)
 }
 
 
@@ -746,7 +746,7 @@ llvm_cast = (k : Str, v : LLVM_Value, t : *Type) -> LLVM_Value {
   print_val (v)
   o (" to ")
   printType (t)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=t, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=t, reg=reg)
 }
 
 // тип семейства функций выполняющих приведение
@@ -806,7 +806,7 @@ eval_cast_to_basic = EvalCast {
       fprintf (fout, "\n<invalid k = %d in cast>", k)
       printf("cast "); prttype(v.type); printf(" to "); prttype(t); printf("\n")
       assert (false, "eval_cast_to_basic")
-      return !LLVM_Value (kind=#LLVM_ValueInvalid)
+      return @(kind=#LLVM_ValueInvalid)
     } (v, t)
   }
 }
@@ -825,7 +825,7 @@ eval_is = Eval {
 
   // Maybe Ptr
   if v.type.union.impl != nil {
-    variant_reg = !LLVM_Value (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0)
+    variant_reg = @(kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
     variant = loadImmAs(variant_reg, typeBaseInt)
 
     // загружаем селектор (пока просто берем значение указателя как инт)
@@ -841,7 +841,7 @@ eval_is = Eval {
     }
 
     // возвращаем результат сравнения селектора с вариантом
-    return !LLVM_Value (kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
+    return @(kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
   }
 
   // Regular Union
@@ -855,16 +855,16 @@ eval_is = Eval {
   print_val (v)
   o(", 0")
 
-  selector = !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+  selector = @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
 
   t16 = getIntByPower(2)
 
   // Maybe
-  variant_reg = !LLVM_Value (kind=#LLVM_ValueImmediate, type=t16, imm=x.is.variant to Int64)
+  variant_reg = @(kind=#LLVM_ValueImmediate, type=t16, imm=x.is.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
 
   regno = llvm_binary ("icmp eq", selector, variant, t16)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
+  return @(kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
 }
 
 
@@ -889,7 +889,7 @@ eval_cast_to_union = EvalCast {
     // поэтому приходится создавать переменную и в нее писать
     // посредством указателей. А вот указатели приводить можно как угодно
     var_reg = operation_with_type ("alloca", t)
-    lvar = !LLVM_Value (kind=#LLVM_ValueLocalVar, type=t, reg=var_reg)
+    lvar = @(kind=#LLVM_ValueLocalVar, type=t, reg=var_reg)
 
     variant_type = getIntByPower(2)
     variant_ptr_type = type_pointer_new (variant_type, nil)
@@ -898,9 +898,9 @@ eval_cast_to_union = EvalCast {
     // %5 = getelementptr inbounds <ot>, <ot>* @by,
     preg = llvm_getelementptr (t, lvar); o("i1 0, i32 0");
 
-    ptr_to_variant = !LLVM_Value (kind=#LLVM_ValueRegister, type=variant_ptr_type, reg=preg)
+    ptr_to_variant = @(kind=#LLVM_ValueRegister, type=variant_ptr_type, reg=preg)
 
-    variant_imm = !LLVM_Value (kind=#LLVM_ValueImmediate, type=variant_type, imm=variant to Int64)
+    variant_imm = @(kind=#LLVM_ValueImmediate, type=variant_type, imm=variant to Int64)
 
     llvm_st (ptr_to_variant, variant_imm)
 
@@ -911,14 +911,14 @@ eval_cast_to_union = EvalCast {
     size = t.union.data_size
     ta = type_array_new (typeChar, size, nil)
     data_field_type = type_pointer_new (ta, nil)
-    ptr_to_data_field = !LLVM_Value (kind=#LLVM_ValueRegister, type=data_field_type, reg=rr)
+    ptr_to_data_field = @(kind=#LLVM_ValueRegister, type=data_field_type, reg=rr)
 
     // приводим указатель на Union#data к указателю на пакуемый тип
     p = llvm_cast("bitcast", ptr_to_data_field, type_pointer_new (v.type, nil))
 
     llvm_st (p, v)
 
-    return !LLVM_Value (kind=#LLVM_ValueLocalVar, type=t, reg=var_reg)
+    return @(kind=#LLVM_ValueLocalVar, type=t, reg=var_reg)
   }
 
   // cast `maybe ptr`
@@ -933,14 +933,14 @@ eval_cast_to_union = EvalCast {
 eval_cast_union_to = EvalCast {
   // 1. загружаем юнион в память
   var_reg = operation_with_type ("alloca", v.type)
-  lvar= !LLVM_Value (kind=#LLVM_ValueLocalVar, type=v.type, reg=var_reg)
+  lvar= @(kind=#LLVM_ValueLocalVar, type=v.type, reg=var_reg)
   llvm_st (lvar, v)
   // 2. получаем указатель на его поле data
   size = v.type.union.data_size
   ta = type_array_new (typeChar, size, nil)
   data_field_type = type_pointer_new (ta, nil)
   preg = llvm_getelementptr (v.type, lvar); o ("i1 0, i32 1");
-  data_field_ptr_reg = !LLVM_Value (kind=#LLVM_ValueRegister, type=data_field_type, reg=preg)
+  data_field_ptr_reg = @(kind=#LLVM_ValueRegister, type=data_field_type, reg=preg)
   // 3. приводим указатель к требуемому типу
   tx = type_pointer_new (t, nil)
   p = llvm_cast ("bitcast", data_field_ptr_reg, tx)
@@ -950,7 +950,7 @@ eval_cast_union_to = EvalCast {
   printType (t)
   o ("* ")
   print_val (p)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=t, reg=reg_res)
+  return @(kind=#LLVM_ValueRegister, type=t, reg=reg_res)
   // 5. profit
 }
 
@@ -974,13 +974,13 @@ eval_cast = Eval {
     t.kind == #TypeBool    => eval_cast_to_bool  (v, t)  // cast -> Bool
     t.kind == #TypeNumeric => eval_cast_to_basic (v, t)  // cast -> Basic
     t.kind == #TypeUnion   => eval_cast_to_union (v, t)  // cast -> Union
-    type_eq (t, typeUnit)  => !LLVM_Value (kind=#LLVM_ValueEmpty, type=t) // cast -> ()
+    type_eq (t, typeUnit)  => @LLVM_Value(kind=#LLVM_ValueEmpty, type=t) // cast -> ()
 
     else => EvalCast {
       printf ("eval_cast error:\n")
       prttype (v.type); printf (" --> "); prttype (t); printf ("\n")
       fatal ("eval_cast error")
-      return !LLVM_Value (kind=#LLVM_ValueInvalid, type=t)
+      return @(kind=#LLVM_ValueInvalid, type=t)
     } (v, t)
   }
 }
@@ -1029,7 +1029,7 @@ eval_bin = Eval {
   }
 
   regno = llvm_binary (op, l, r, l.type)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
+  return @(kind=#LLVM_ValueRegister, type=x.type, reg=regno)
 }
 
 
@@ -1044,7 +1044,7 @@ loadImmPtr = (x : LLVM_Value) -> LLVM_Value {
   reg = lab_get ()
   fprintf (fout, "\n  %%%d = inttoptr i64 %d to", reg, x.imm)
   printType (x.type)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
 }
 
 
@@ -1103,7 +1103,7 @@ eval_when = Eval {
 
   typ = x.type
 
-  ctx = !Ctx (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
+  ctx = @Ctx (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
 
   fprintf (fout, "\n  br label %%select_%d_0", sno)
 
@@ -1162,10 +1162,10 @@ eval_when = Eval {
     // otherwise case
     fprintf (fout, "[ %%%d, %%select_%d_%d ]", otherwise.reg, sno, ctx.case)
 
-    return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+    return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
   }
 
-  return !LLVM_Value (kind=#LLVM_ValueInvalid, type=x.type)
+  return @(kind=#LLVM_ValueInvalid, type=x.type)
 }
 
 
@@ -1181,7 +1181,7 @@ eval_rec = Eval {
     v : LLVM_Value  // значение итеративно формируемой структуры
   )
 
-  ctx = !Ctx6 (type=x.rec.type, v=!LLVM_Value (kind=#LLVM_ValueZero)) to Var Ctx6
+  ctx = @Ctx6 (type=x.rec.type, v=@(kind=#LLVM_ValueZero)) to Var Ctx6
 
   // итеративно формируем структуру
   pack = MapForeachHandler {
@@ -1199,7 +1199,7 @@ eval_rec = Eval {
     reg = operation_with_type ("insertvalue", c.type); space()
     print_val (c.v); comma ()
     print_val_with_type (vx); comma (); fprintf (fout, "%d", fieldno)
-    c.v := !LLVM_Value (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
+    c.v := @(kind=#LLVM_ValueRegister, type=c.type, reg=reg)
   }
   map_foreach(&x.rec.values, pack, &ctx)
 
@@ -1215,7 +1215,7 @@ eval_arr = Eval {
     cnt : Nat // счетчик
   )
 
-  ctx = !Ctx8 (type=x.array.type, v=!LLVM_Value (kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
+  ctx = @Ctx8 (type=x.array.type, v=@(kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
 
   // итеративно формируем массив
   pack = ListForeachHandler {
@@ -1228,7 +1228,7 @@ eval_arr = Eval {
     reg = operation_with_type ("insertvalue", c.type); space()
     print_val (c.v); comma ()
     print_val_with_type (vx); comma (); fprintf (fout, "%d", c.cnt)
-    c.v := !LLVM_Value (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
+    c.v := @(kind=#LLVM_ValueRegister, type=c.type, reg=reg)
     c.cnt := c.cnt + 1
   }
   list_foreach(&x.array.items, pack, &ctx)
@@ -1291,7 +1291,7 @@ load = (x : LLVM_Value) -> LLVM_Value {
   printType (typ)
   o ("* ")
   print_val (x)
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=typ, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=typ, reg=reg)
 }
 
 
@@ -1345,7 +1345,7 @@ print_val_with_type = (x : LLVM_Value) -> ()
 create_array = (x : LLVM_Value) -> LLVM_Value {
   reg = operation_with_type ("insertvalue", x.type)
   o (" undef, ")
-  return !LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+  return @(kind=#LLVM_ValueRegister, type=x.type, reg=reg)
 }
 
 
@@ -1402,7 +1402,7 @@ print_stmt_var = (v : *Decl) -> () {
   iv = v.init_value
   if iv != nil {
     init_value = reval (iv)
-    lo = !LLVM_Value (kind=#LLVM_ValueLocalVar, type=v.type, reg=reg)
+    lo = @(kind=#LLVM_ValueLocalVar, type=v.type, reg=reg)
     llvm_st (lo, init_value)
   }
 }
