@@ -14,19 +14,19 @@ type_new = (k : TypeKind, size : Nat, ti : *TokenInfo) -> *Type {
 type_var_new = (of : *Type, ti : *TokenInfo) -> *Type {
   tn = type_new (#TypeVar, of.size, ti)
   tn.align := of.align
-  tn.var.of := of
+  tn.var := @(of=of)
   return tn
 }
 
 type_pointer_new = (to : *Type, ti : *TokenInfo) -> *Type {
   t = type_new (#TypePointer, cfgPointerSize, ti)
-  t.pointer.to := to
+  t.pointer := @(to=to)
   return t
 }
 
 type_array_u_new = (of : *Type, ti : *TokenInfo) -> *Type {
   t = type_new (#TypeArrayU, cfgPointerSize, ti)
-  t.array_u.of := of
+  t.array_u := @(of=of)
   return t
 }
 
@@ -34,8 +34,7 @@ type_array_new = (of : *Type, volume : Nat32, ti : *TokenInfo) -> *Type {
   size = volume * of.size
   t = type_new (#TypeArray, size, ti)
   t.align := of.align
-  t.array.of := of
-  t.array.volume := volume
+  t.array := @(of=of, volume=volume)
   return t
 }
 
@@ -54,9 +53,7 @@ type_enum_new = (constructors : *List, ti : *TokenInfo) -> *Type {
 
 type_func_new = (from, _to : *Type, arghack : Bool, ti : *TokenInfo) -> *Type {
   t = type_new (#TypeFunc, cfgPointerSize, ti)
-  t.func.from := from
-  t.func.to := _to
-  t.func.arghack := arghack
+  t.func := @(from=from, to=_to, arghack=arghack)
   return t
 }
 
@@ -306,9 +303,7 @@ do_type_enum = DoType {
     cons_id = data to *AstId
     cons_list = ctx to *List
     ec = malloc (sizeof EnumConstructor) to *EnumConstructor
-    ec.id := cons_id
-    ec.d := index
-    ec.ti := nil
+    *ec := @(id=cons_id, d=index, ti=nil to *TokenInfo)
     list_append (cons_list, ec)
   }
   list_foreach (&x.enum.constructors, hc, constructors)
@@ -485,8 +480,7 @@ type_init = () -> () {
     size = power / 8
     t = type_new (#TypeNumeric, size, nil)
     t.aka := id
-    t.num.power := power
-    t.num.signed := signed
+    t.num := @(power=power, signed=signed)
     return t
   }
 

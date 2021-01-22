@@ -13346,8 +13346,8 @@ define %Type* @type_var_new (%Type*, %TokenInfo*) {
   store %Nat32 %8, %Nat32* %6, align 4
 ;stmt2:
   %9 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 11
-  %10 = getelementptr inbounds %TypeVar, %TypeVar* %9, i1 0, i32 0
-  store %Type* %0, %Type** %10, align 8
+  %10 = insertvalue %TypeVar zeroinitializer, %Type* %0, 0
+  store %TypeVar %10, %TypeVar* %9, align 8
 ;stmt3:
   ret %Type* %5
 }
@@ -13357,8 +13357,8 @@ define %Type* @func381 (%Type*, %TokenInfo*) {
   %3 = call %Type* (%TypeKind, %Nat32, %TokenInfo*) @func379 (%TypeKind 11, %Nat32 8, %TokenInfo* %1)
 ;stmt1:
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 6
-  %5 = getelementptr inbounds %TypePointer, %TypePointer* %4, i1 0, i32 0
-  store %Type* %0, %Type** %5, align 8
+  %5 = insertvalue %TypePointer zeroinitializer, %Type* %0, 0
+  store %TypePointer %5, %TypePointer* %4, align 8
 ;stmt2:
   ret %Type* %3
 }
@@ -13368,8 +13368,8 @@ define %Type* @func382 (%Type*, %TokenInfo*) {
   %3 = call %Type* (%TypeKind, %Nat32, %TokenInfo*) @func379 (%TypeKind 13, %Nat32 8, %TokenInfo* %1)
 ;stmt1:
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 8
-  %5 = getelementptr inbounds %TypeArrayU, %TypeArrayU* %4, i1 0, i32 0
-  store %Type* %0, %Type** %5, align 8
+  %5 = insertvalue %TypeArrayU zeroinitializer, %Type* %0, 0
+  store %TypeArrayU %5, %TypeArrayU* %4, align 8
 ;stmt2:
   ret %Type* %3
 }
@@ -13388,13 +13388,10 @@ define %Type* @func383 (%Type*, %Nat32, %TokenInfo*) {
   store %Nat32 %10, %Nat32* %8, align 4
 ;stmt3:
   %11 = getelementptr inbounds %Type, %Type* %7, i1 0, i32 7
-  %12 = getelementptr inbounds %TypeArray, %TypeArray* %11, i1 0, i32 0
-  store %Type* %0, %Type** %12, align 8
+  %12 = insertvalue %TypeArray zeroinitializer, %Type* %0, 0
+  %13 = insertvalue %TypeArray %12, %Nat32 %1, 1
+  store %TypeArray %13, %TypeArray* %11, align 8
 ;stmt4:
-  %13 = getelementptr inbounds %Type, %Type* %7, i1 0, i32 7
-  %14 = getelementptr inbounds %TypeArray, %TypeArray* %13, i1 0, i32 1
-  store %Nat32 %1, %Nat32* %14, align 4
-;stmt5:
   ret %Type* %7
 }
 
@@ -13436,17 +13433,11 @@ define %Type* @func386 (%Type*, %Type*, i1, %TokenInfo*) {
   %5 = call %Type* (%TypeKind, %Nat32, %TokenInfo*) @func379 (%TypeKind 8, %Nat32 8, %TokenInfo* %3)
 ;stmt1:
   %6 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 5
-  %7 = getelementptr inbounds %TypeFunc, %TypeFunc* %6, i1 0, i32 0
-  store %Type* %0, %Type** %7, align 8
+  %7 = insertvalue %TypeFunc zeroinitializer, %Type* %0, 0
+  %8 = insertvalue %TypeFunc %7, %Type* %1, 1
+  %9 = insertvalue %TypeFunc %8, i1 %2, 2
+  store %TypeFunc %9, %TypeFunc* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 5
-  %9 = getelementptr inbounds %TypeFunc, %TypeFunc* %8, i1 0, i32 1
-  store %Type* %1, %Type** %9, align 8
-;stmt3:
-  %10 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 5
-  %11 = getelementptr inbounds %TypeFunc, %TypeFunc* %10, i1 0, i32 2
-  store i1 %2, i1* %11, align 1
-;stmt4:
   ret %Type* %5
 }
 
@@ -14205,16 +14196,12 @@ define void @func413 (%Unit*, %Unit*, %Nat32, %Node*) {
   %7 = call %Unit* (%Nat32) @malloc (%Nat32 24)
   %8 = bitcast %Unit* %7 to %EnumConstructor*
 ;stmt3:
-  %9 = getelementptr inbounds %EnumConstructor, %EnumConstructor* %8, i1 0, i32 0
-  store %AstId* %5, %AstId** %9, align 8
+  %9 = insertvalue %EnumConstructor zeroinitializer, %AstId* %5, 0
+  %10 = insertvalue %EnumConstructor %9, %Nat32 %2, 1; loadImmPtr
+  %11 = inttoptr i64 0 to%TokenInfo*
+  %12 = insertvalue %EnumConstructor %10, %TokenInfo* %11, 2
+  store %EnumConstructor %12, %EnumConstructor* %8, align 8
 ;stmt4:
-  %10 = getelementptr inbounds %EnumConstructor, %EnumConstructor* %8, i1 0, i32 1
-  store %Nat32 %2, %Nat32* %10, align 4
-;stmt5:
-  %11 = getelementptr inbounds %EnumConstructor, %EnumConstructor* %8, i1 0, i32 2; loadImmPtr
-  %12 = inttoptr i64 0 to%TokenInfo*
-  store %TokenInfo* %12, %TokenInfo** %11, align 8
-;stmt6:
   %13 = bitcast %EnumConstructor* %8 to %Unit*
   %14 = call i1 (%List*, %Unit*) @list_append (%List* %6, %Unit* %13)
   ret void
@@ -14733,13 +14720,10 @@ define %Type* @func427 (%Str, %Nat32, i1) {
   store %Str %0, %Str* %7, align 8
 ;stmt3:
   %8 = getelementptr inbounds %Type, %Type* %6, i1 0, i32 4
-  %9 = getelementptr inbounds %TypeNumeric, %TypeNumeric* %8, i1 0, i32 0
-  store %Nat32 %1, %Nat32* %9, align 4
+  %9 = insertvalue %TypeNumeric zeroinitializer, %Nat32 %1, 0
+  %10 = insertvalue %TypeNumeric %9, i1 %2, 1
+  store %TypeNumeric %10, %TypeNumeric* %8, align 4
 ;stmt4:
-  %10 = getelementptr inbounds %Type, %Type* %6, i1 0, i32 4
-  %11 = getelementptr inbounds %TypeNumeric, %TypeNumeric* %10, i1 0, i32 1
-  store i1 %2, i1* %11, align 1
-;stmt5:
   ret %Type* %6
 }
 
