@@ -556,8 +556,9 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func233_str1 = private unnamed_addr constant [2 x i8] c"(\00", align 1
 @func233_str2 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func234_func235_str1 = private unnamed_addr constant [2 x i8] c"!\00", align 1
-@func234_func235_str2 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
-@func234_func235_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
+@func234_func235_str2 = private unnamed_addr constant [2 x i8] c"@\00", align 1
+@func234_func235_str3 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
+@func234_func235_str4 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
 @func234_func236_str1 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
 @func234_func236_str2 = private unnamed_addr constant [14 x i8] c"received: %s\0A\00", align 1
 @func234_func236_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
@@ -7920,25 +7921,28 @@ define %AstValue* @func235 (%Token*) {
 ;stmt0:
   %2 = bitcast [2 x %Nat8]* @func234_func235_str1 to %Str
   %3 = call i1 (%Str) @func198 (%Str %2)
-  br i1 %3, label %then_0, label %else_0
+  %4 = bitcast [2 x %Nat8]* @func234_func235_str2 to %Str
+  %5 = call i1 (%Str) @func198 (%Str %4)
+  %6 = or i1 %3, %5
+  br i1 %6, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  %4 = call %AstValue* () @func241 ()
-  ret %AstValue* %4
+  %7 = call %AstValue* () @func241 ()
+  ret %AstValue* %7
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
 ;stmt2:
-  %6 = bitcast [19 x %Nat8]* @func234_func235_str2 to %Str
-  %7 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
-  call void (%Str, %TokenInfo*) @error (%Str %6, %TokenInfo* %7)
+  %9 = bitcast [19 x %Nat8]* @func234_func235_str3 to %Str
+  %10 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
+  call void (%Str, %TokenInfo*) @error (%Str %9, %TokenInfo* %10)
 ;stmt3:
-  %8 = bitcast [9 x %Nat8]* @func234_func235_str3 to %Str
-  call void (i1, %Str) @assert (i1 0, %Str %8)
+  %11 = bitcast [9 x %Nat8]* @func234_func235_str4 to %Str
+  call void (i1, %Str) @assert (i1 0, %Str %11)
 ;stmt4:; loadImmPtr
-  %9 = inttoptr i64 0 to%AstValue*
-  ret %AstValue* %9
+  %12 = inttoptr i64 0 to%AstValue*
+  ret %AstValue* %12
 }
 
 define %AstValue* @func236 (%Token*) {
