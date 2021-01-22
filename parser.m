@@ -1059,7 +1059,6 @@ parse_value_rec2 = AstValueParser {
   }
 
   t = ast_type_new(#AstTypeGenericRec, ti)
-  //t.record := !AstTypeRecord (decls=decls, ti=ti)  // вроде не надо
   v = ast_value_new (#AstValueRec, ti)
   v.rec := @(type=t, values=fields, ti=ti)
   return v
