@@ -964,7 +964,6 @@ do_value_record = DoValue {
   if t.kind == #TypePoison {goto fail}
 
   Ctx5 = (type : *Type, vl : Map)
-
   ctx = @Ctx5 (type=t) to Var Ctx5
 
   // обрабатываем все поля
