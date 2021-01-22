@@ -949,7 +949,7 @@ parse_value_term = AstValueParser {
     #TokenString => parse_value_str()
 
     #TokenSym => (token : *Token) -> *AstValue {
-      if /*match("!") or*/ match("@") {
+      if match("@") {
         return parse_value_rec()
       }
       error("unexpected symbol\n", &token.ti)
