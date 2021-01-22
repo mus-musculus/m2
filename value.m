@@ -26,7 +26,7 @@ value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
 
-  *v := !Value (kind=k, type=t, ti=ti)
+  *v := !(kind=k, type=t, ti=ti)
   return v
 }
 
@@ -347,7 +347,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin := !ValueBin (l=l, r=r)
+  v.bin := !(l=l, r=r)
   v.dirty := l.dirty or r.dirty
   return v
 
@@ -366,7 +366,7 @@ do_value_call = DoValue {
   args = do_args (f, &x.call.args, x.ti)
 
   v = value_new (#ValueCall, f.type.func.to, x.ti)
-  v.call := !ValueCall (func=f, args=args)
+  v.call := !(func=f, args=args)
   return v
 
 fail:
@@ -460,7 +460,7 @@ do_value_index = DoValue {
   }
 
   v = value_new (#ValueIndex, typ, x.ti)
-  v.index := !ValueIndex (array=a, index=implicit_cast_int (i))
+  v.index := !(array=a, index=implicit_cast_int (i))
   return v
 
 fail:
@@ -499,7 +499,7 @@ do_value_access = DoValue {
   }
 
   v = value_new (#ValueAccess, field.type, x.ti)
-  v.access := !ValueAccess (value=r, field=field_id)
+  v.access := !(value=r, field=field_id)
   return v
 
 fail:
@@ -589,7 +589,6 @@ do_value_cast = DoValue {
   t = do_type (x.cast.type)
   ti = x.ti
 
-  //printf("CAST: "); prttype(v.type); printf("\n")
 
   if v.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
@@ -683,7 +682,7 @@ do_value_is = DoValue {
   variant = type_union_get_variant (v.type, t)
 
   vx = value_new(#ValueIs, typeBool, x.ti)
-  vx.is := !ValueIs (value=v, variant=variant)
+  vx.is := !(value=v, variant=variant)
   return vx
 
 fail:
@@ -896,7 +895,7 @@ do_value_array = DoValue {
   // обрабатываем все поля
   item_value_handle = ListForeachHandler {
     av = data to *AstValue
-    c = ctx  to *Ctx7
+    c = ctx to *Ctx7
 
     arr_item_type = c.type.array.of
 
@@ -912,7 +911,7 @@ do_value_array = DoValue {
   list_foreach(&x.array.items, item_value_handle, &ctx)
 
   vx = value_new (#ValueArray, t, x.ti)
-  vx.array := !ValueArray (type=t, items=ctx.vl)
+  vx.array := !(type=t, items=ctx.vl)
   return vx
 
 fail:
@@ -924,9 +923,8 @@ do_value_record2 = DoValue {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
-  printf("do_value_record2\n")
-
   t = type_new (#TypeGenericRec, 0, ti)
+  t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
   ctx = !Ctx9 (type=t) to Var Ctx9
 
@@ -945,16 +943,15 @@ do_value_record2 = DoValue {
     ast_id = malloc(sizeof AstId) to *AstId
     *ast_id := !AstId (str=field_id, ti=nil)
     f = type_record_field_new(ast_id, v.type, nil)
-
     list_append(c.type.record.decls, f)
     // получили поле, на его основе строим поля для Generic типа
-
     map_append(&c.vl, field_id, v)
   }
   map_foreach(&x.rec.values, field_value_handle, &ctx)
 
+
   vx = value_new (#ValueGenericRecord, t, x.ti)
-  vx.rec := !ValueRecord (type=t, values=ctx.vl)
+  vx.rec := !(type=t, values=ctx.vl)
   return vx
 
 fail:
@@ -1011,12 +1008,12 @@ do_value_record = DoValue {
 
   if t == nil {
     vx = value_new (#ValueGenericRecord, t, x.ti)
-    vx.rec := !ValueRecord (values=ctx.vl)
+    vx.rec := !(values=ctx.vl)
     return vx
   }
 
   vx = value_new (#ValueRecord, t, x.ti)
-  vx.rec := !ValueRecord (type=t, values=ctx.vl)
+  vx.rec := !(type=t, values=ctx.vl)
   return vx
 
 fail:
@@ -1035,7 +1032,7 @@ do_value_plus = DoValue {
   }
 
   vx = value_new (#ValuePlus, v.type, x.ti)
-  vx.un := !ValueUn (x=v)
+  vx.un := !(x=v)
   return vx
 
 fail:
@@ -1053,7 +1050,7 @@ do_value_minus = DoValue {
   }
 
   vx = value_new (#ValueMinus, v.type, x.ti)
-  vx.un := !ValueUn (x=v)
+  vx.un := !(x=v)
   return vx
 
 fail:
@@ -1071,7 +1068,7 @@ do_value_not = DoValue {
   }
 
   vx = value_new (#ValueNot, v.type, x.ti)
-  vx.un := !ValueUn (x=v)
+  vx.un := !(x=v)
   return vx
 
 fail:
@@ -1110,7 +1107,7 @@ do_value_shift = DoValue {
   r2 = cast (r, l.type, r.ti)
 
   v = value_new (k, l.type, x.ti)
-  v.bin := !ValueBin (l=l2, r=r2)
+  v.bin := !(l=l2, r=r2)
   return v
 
 fail:
@@ -1184,7 +1181,7 @@ sact:
 
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)
-  v.cast := !ValueCast (value=vx, type=t)
+  v.cast := !(value=vx, type=t)
   return v
 
 fail:
@@ -1219,6 +1216,45 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
 
   if v.kind == #ValuePoison {return v}
   if t.kind == #TypePoison {goto fail}
+
+
+  // GenericRecord -> Record
+  if v.kind == #ValueGenericRecord {
+    // если приводим не к структуре то пока!
+    if t.kind != #TypeRecord {
+      return v
+    }
+    // в Generic не должно быть больше полей чем в реальной структуре
+    if v.type.record.decls.volume > t.record.decls.volume {
+      return v
+    }
+
+    // проверяем если имена и типы полей в дженерике соотв
+    // именам и типам в типе к которому приводим значит можно приводить
+    chk = ListSearchHandler {
+      f = data to *Decl
+      t = ctx to *Type
+
+      // сперва ищем такое поле
+      fd = type_record_get_field(t, f.id.str)
+      if fd == nil {return true}  // нет такого поля, приехали
+
+      // при сравнении полей нам нужно сделать implicit_cast! а как?
+
+      if not type_eq(f.type, fd.type) {return true}  // типы не равны, пока
+
+      return false  // и поле с таким id есть и типы совпадают
+    }
+    res = list_search(v.type.record.decls, chk, t)
+
+    if res != nil {
+      return v;  // ничего у нас не вышло привести
+    }
+
+    nv = value_new (#ValueRecord, t, v.ti)
+    nv.rec := !(type=t, values=v.rec.values)
+    return nv
+  }
 
   // TypeNumeric -> Basic:Integer
   if v.kind == #ValueImmediate {
