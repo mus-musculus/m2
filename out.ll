@@ -674,7 +674,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func295_str9 = private unnamed_addr constant [2 x i8] c"\22\00", align 1
 @func295_str10 = private unnamed_addr constant [6 x i8] c"\5C%02X\00", align 1
 @func295_str11 = private unnamed_addr constant [3 x i8] c"%c\00", align 1
-@func295_str12 = private unnamed_addr constant [16 x i8] c"\5C%02d\22, align 1\00", align 1
+@func295_str12 = private unnamed_addr constant [14 x i8] c"\5C00\22, align 1\00", align 1
 @func296_str1 = private unnamed_addr constant [15 x i8] c"\0A@%s = global \00", align 1
 @func296_str2 = private unnamed_addr constant [16 x i8] c"zeroinitializer\00", align 1
 @func296_str3 = private unnamed_addr constant [29 x i8] c"expected constant init value\00", align 1
@@ -10062,9 +10062,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt10:
-  %52 = load %FILE*, %FILE** @fout
-  %53 = bitcast [16 x %Nat8]* @func295_str12 to %Str
-  %54 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %52, %Str %53, %Int64 0)
+  %52 = bitcast [14 x %Nat8]* @func295_str12 to %Str
+  call void (%Str) @o (%Str %52)
   ret void
 }
 

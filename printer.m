@@ -323,7 +323,7 @@ stringdef = (id : Str, len : Nat, s : Str) -> () {
       fprintf (fout, "%c", c)
     }
   }
-  fprintf (fout, "\\%02d\", align 1", 0)
+  o ("\\00\", align 1")
 }
 
 
