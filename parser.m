@@ -1402,7 +1402,7 @@ parse_stmt_return = AstStmtParser {
 parse_stmt_goto = AstStmtParser {
   id = parse_id()
   s = ast_stmt_new(#AstStmtGoto, ti)
-  s.goto:= @AstStmtGoto (label=id)
+  s.goto:= (label=id)
   return s
 }
 

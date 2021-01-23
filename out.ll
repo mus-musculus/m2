@@ -18649,28 +18649,28 @@ else_3:
   br label %endif_3
 endif_3:
 ;stmt9:
-  %27 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 23
-  %28 = load %TokenInfo*, %TokenInfo** %27
-  %29 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 7, %Type* %1, %TokenInfo* %28)
+  %27 = alloca %func493.type14
+  %28 = insertvalue %func493.type14 zeroinitializer, %Type* %1, 0
+  store %func493.type14 %28, %func493.type14* %27, align 8
 ;stmt10:
-  %30 = alloca %func493.type14
-  %31 = insertvalue %func493.type14 zeroinitializer, %Type* %1, 0
-  store %func493.type14 %31, %func493.type14* %30, align 8
+  %29 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 19
+  %30 = getelementptr inbounds %ValueRecord, %ValueRecord* %29, i1 0, i32 1
+  %31 = getelementptr inbounds %func493.type14, %func493.type14* %27, i1 0
+  %32 = bitcast %func493.type14* %31 to %Unit*
+  call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %30, %MapForeachHandler @func494, %Unit* %32)
 ;stmt11:
-  %32 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 19
-  %33 = getelementptr inbounds %ValueRecord, %ValueRecord* %32, i1 0, i32 1
-  %34 = getelementptr inbounds %func493.type14, %func493.type14* %30, i1 0
-  %35 = bitcast %func493.type14* %34 to %Unit*
-  call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %33, %MapForeachHandler @func494, %Unit* %35)
+  %33 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 23
+  %34 = load %TokenInfo*, %TokenInfo** %33
+  %35 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 7, %Type* %1, %TokenInfo* %34)
 ;stmt12:
-  %36 = getelementptr inbounds %Value, %Value* %29, i1 0, i32 19
+  %36 = getelementptr inbounds %Value, %Value* %35, i1 0, i32 19
   %37 = insertvalue %ValueRecord zeroinitializer, %Type* %1, 0
-  %38 = getelementptr inbounds %func493.type14, %func493.type14* %30, i1 0, i32 1
+  %38 = getelementptr inbounds %func493.type14, %func493.type14* %27, i1 0, i32 1
   %39 = load %List, %List* %38
   %40 = insertvalue %ValueRecord %37, %List %39, 1
   store %ValueRecord %40, %ValueRecord* %36, align 8
 ;stmt13:
-  ret %Value* %29
+  ret %Value* %35
   br label %endif_2
 else_2:
   br label %endif_2
