@@ -242,6 +242,9 @@ string = () -> () {
     lstate.token[lstate.ti.length] := c
     lstate.ti.length := lstate.ti.length + 1
   }
+
+
+  lstate.token[lstate.ti.length] := 0
 }
 
 
