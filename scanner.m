@@ -207,31 +207,29 @@ xslash = () -> () {
 string = () -> () {
   c = 0 to Var Nat8
   lstate.kind := #TokenString
-  lstate.ti.length := 0  // skip first "
+  lstate.ti.length := 0
 
   while true {
     c := getcc ()
-    if c == "\""[0] {
-      break
-    } else if c == symEOF {
-      fatal ("unexpected end-of-file")
-    } else {
-      if c == "\\"[0] {
-        /* ESACPE-symbols */
-        c := getcc ()
 
-        c := when c {
-          "n"[0] => "\n"[0]
-          "r"[0] => "\r"[0]
-          "t"[0] => "\t"[0]
-          "\\"[0] => "\\"[0]
-          "\""[0] => "\""[0]
-          "0"[0] => "\0"[0]
-          "a"[0] => "\a"[0]
-          "b"[0] => "\b"[0]
-          "v"[0] => "\v"[0]
-          else => c
-        }
+    if c == "\""[0] {break}
+    if c == symEOF {fatal ("unexpected end-of-file")}
+
+    if c == "\\"[0] {
+      /* ESACPE-symbols */
+      c := getcc ()
+
+      c := when c {
+        "n"[0]  => "\n"[0]
+        "r"[0]  => "\r"[0]
+        "t"[0]  => "\t"[0]
+        "\\"[0] => "\\"[0]
+        "\""[0] => "\""[0]
+        "0"[0]  => "\0"[0]
+        "a"[0]  => "\a"[0]
+        "b"[0]  => "\b"[0]
+        "v"[0]  => "\v"[0]
+        else => c
       }
     }
 

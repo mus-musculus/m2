@@ -5265,6 +5265,8 @@ then_0:
   br label %break_0
   br label %endif_0
 else_0:
+  br label %endif_0
+endif_0:
 ;stmt7:
   %11 = load %Nat8, %Nat8* %1
   %12 = icmp eq %Nat8 %11, 0
@@ -5275,6 +5277,8 @@ then_1:
   call void (%Str) @fatal (%Str %13)
   br label %endif_1
 else_1:
+  br label %endif_1
+endif_1:
 ;stmt9:
   %14 = load %Nat8, %Nat8* %1
 ; index array
@@ -5398,10 +5402,6 @@ select_1_end:
 else_2:
   br label %endif_2
 endif_2:
-  br label %endif_1
-endif_1:
-  br label %endif_0
-endif_0:
 ;stmt12:
   %67 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
   %68 = getelementptr inbounds %TokenInfo, %TokenInfo* %67, i1 0, i32 2
