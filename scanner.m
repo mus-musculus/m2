@@ -260,10 +260,8 @@ tokenize = (filename : Str) -> *Source {
     len = lstate.ti.length + 1
     t = malloc (sizeof Token + len to Nat32) to *Token
     t.kind := lstate.kind
-    t.ti.length := lstate.ti.length
-    t.ti.file := lstate.ti.file
-    t.ti.line := lstate.ti.line
-    t.ti.start := lstate.ti.start
+    t.ti := lstate.ti
+
     memcpy (&t.text, &lstate.token, len to Size_T)
     t.text[len + 1] := 0
     list_append (&src.tokens, t)

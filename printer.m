@@ -309,6 +309,7 @@ stringdef = (id : Str, len : Nat, s : Str) -> () {
     c = s[i]
     i := i + 1
     if c == 0 {break}
+
     if c == "\n"[0] or  // line feed
        c == "\r"[0] or  // carriage return
        c == "\t"[0] or  // horizontal tab
