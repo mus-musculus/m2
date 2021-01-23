@@ -943,7 +943,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func457_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func459_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func460_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
-@func461_str1 = private unnamed_addr constant [17 x i8] c"type cast errorð\00", align 1
+@func461_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func463_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func464_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func466_str1 = private unnamed_addr constant [18 x i8] c"cast to same type\00", align 1
@@ -16807,7 +16807,7 @@ endif_0:
 
 define %Value* @do_value_cast_rec (%Value*, %Type*, %TokenInfo*) {
 ;stmt0:
-  %4 = bitcast [17 x %Nat8]* @func461_str1 to %Str
+  %4 = bitcast [16 x %Nat8]* @func461_str1 to %Str
   call void (%Str, %TokenInfo*) @error (%Str %4, %TokenInfo* %2)
 ;stmt1:
   %5 = call %Value* (%Value*, %Type*, %TokenInfo*) @func488 (%Value* %0, %Type* %1, %TokenInfo* %2)

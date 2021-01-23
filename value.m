@@ -1245,7 +1245,6 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
 
     // приводим generic запись к типу записи t
     // для этого приводим все ее поля к типу полей соотв типа-записи
-    nv = value_new (#ValueRecord, t, v.ti)
     Ctx12 = (type : *Type, new_vm : Map)
     ctx = @Ctx12 (type=t) to Var Ctx12
     prep = MapForeachHandler {
@@ -1256,6 +1255,8 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
       map_append (&c.new_vm, id, vx)
     }
     map_foreach(&v.rec.values, prep, &ctx)
+
+    nv = value_new (#ValueRecord, t, v.ti)
     nv.rec := (type=t, values=ctx.new_vm)
     return nv
   }
