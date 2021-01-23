@@ -20,6 +20,7 @@ exist parse_type : () -> *AstType
 exist parse_value : () -> *AstValue
 
 exist is_it_type : () -> Bool
+exist is_it_value_record : () -> Bool
 
 // возвращает ноду текущего токена
 gett = () -> *Node {return pstat.token_node}
@@ -136,7 +137,7 @@ need = (s : Str) -> Bool {
 ast_id_new = (str : Str, ti : *TokenInfo) -> *AstId {
   id = malloc(sizeof AstId) to *AstId
   assert(id != nil, "ast_id_new")
-  *id := @(str=str, ti=ti)
+  *id := (str=str, ti=ti)
   return id
 }
 
@@ -179,7 +180,7 @@ parse_name = () -> AstName {
 ast_node_new = (kind : AstNodeKind, entity : *Unit) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
   assert(n != nil, "ast_node_new")
-  *n := @(kind=kind, entity=entity)
+  *n := (kind=kind, entity=entity)
   return n
 }
 
@@ -290,7 +291,7 @@ parse_bind_type = () -> *AstNodeBindType {
   t = parse_type()
 
   bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
-  *bt := @(id=id, type=t, ti=ti)
+  *bt := (id=id, type=t, ti=ti)
   return bt
 }
 
@@ -302,7 +303,7 @@ parse_bind_value = () -> *AstNodeBindValue {
   v = parse_value()
 
   bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
-  *bv := @(id=id, value=v, ti=ti)
+  *bv := (id=id, value=v, ti=ti)
   return bv
 }
 
@@ -314,7 +315,7 @@ parse_bind_value = () -> *AstNodeBindValue {
 ast_type_new = (kind : AstTypeKind, ti : *TokenInfo) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  *t := @(kind=kind, ti=ti)
+  *t := (kind=kind, ti=ti)
   return t
 }
 
@@ -343,7 +344,7 @@ parse_type0 = AstTypeParser {
     _to = parse_type()
 
     ft = ast_type_new(#AstTypeFunc, &tk.ti)
-    ft.func := @(from=from, to=_to, ti=&tk.ti)
+    ft.func := (from=from, to=_to, ti=&tk.ti)
     return ft
   }
 
@@ -383,14 +384,14 @@ parse_type2 = AstTypeParser {
     pointer_to = parse_type2()
 
     t = ast_type_new(#AstTypePointer, &tk.ti)
-    t.pointer := @(to=pointer_to, ti=&tk.ti)
+    t.pointer := (to=pointer_to, ti=&tk.ti)
     return t
   } else if match("[") {
 
     if match("]") {
       t = ast_type_new(#AstTypeArrayU, &tk.ti)
       of = parse_type2()
-      t.array_u := @(of=of, ti=&tk.ti)
+      t.array_u := (of=of, ti=&tk.ti)
       return t
     }
 
@@ -398,7 +399,7 @@ parse_type2 = AstTypeParser {
     size = parse_value()
     need("]")
     of = parse_type2()
-    t.array := @(of=of, size=size, ti=&tk.ti)
+    t.array := (of=of, size=size, ti=&tk.ti)
     return t
   }
 
@@ -433,7 +434,7 @@ parse_type4 = AstTypeParser {
     var_type = parse_type()
 
     t = ast_type_new(#AstTypeVar, &tk.ti)
-    t.var := @(of=var_type)
+    t.var := (of=var_type)
     return t
   }
 
@@ -505,7 +506,7 @@ parse_type_rec = AstTypeParser {
   }
 
   t = ast_type_new(#AstTypeRecord, &tk.ti)
-  t.record := @(decls=decls, ti=&tk.ti)
+  t.record := (decls=decls, ti=&tk.ti)
   return t
 }
 
@@ -516,7 +517,7 @@ parse_type_ptr = AstTypeParser {
   t = parse_type()
 
   pt = ast_type_new(#AstTypePointer, &tk.ti)
-  pt.pointer := @(to=t, ti=&tk.ti)
+  pt.pointer := (to=t, ti=&tk.ti)
   return pt
 }
 
@@ -527,7 +528,7 @@ parse_type_array = AstTypeParser {
   if match("]") {
     t = ast_type_new(#AstTypeArrayU, &tk.ti)
     of = parse_type()
-    t.array_u := @(of=of, ti=&tk.ti)
+    t.array_u := (of=of, ti=&tk.ti)
     return t
   }
 
@@ -536,7 +537,7 @@ parse_type_array = AstTypeParser {
   of = parse_type()
 
   t = ast_type_new(#AstTypeArray, &tk.ti)
-  t.array := @(size=size, of=of, ti=&tk.ti)
+  t.array := (size=size, of=of, ti=&tk.ti)
   return t
 }
 
@@ -560,7 +561,7 @@ parse_decl = (arghack : Bool) -> *AstDecl {
   t = parse_type()
 
   afd = malloc(sizeof AstDecl) to *AstDecl
-  *afd := @(ids=ids, type=t, extern=external, arghack=xarghack, ti=ti)
+  *afd := (ids=ids, type=t, extern=external, arghack=xarghack, ti=ti)
   return afd
 }
 
@@ -577,7 +578,7 @@ AstValueParser = () -> *AstValue
 ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
   assert(v != nil, "ast_value_new malloc")
-  *v := @(kind=k, ti=ti)
+  *v := (kind=k, ti=ti)
   return v
 }
 
@@ -798,17 +799,17 @@ parse_value9 = AstValueParser {
   if match("to") {
     t = parse_type ()
     nv = ast_value_new (#AstValueCast, ti)
-    nv.cast := @(value=v, type=t, ti=ti)
+    nv.cast := (value=v, type=t, ti=ti)
     v := nv
   } else if match("is") {
     t = parse_type ()
     nv = ast_value_new (#AstValueIs, ti)
-    nv.is := @(value=v, type=t, ti=ti)
+    nv.is := (value=v, type=t, ti=ti)
     v := nv
   } else if match("as") {
     t = parse_type ()
     nv = ast_value_new (#AstValueAs, ti)
-    nv.as := @(value=v, type=t, ti=ti)
+    nv.as := (value=v, type=t, ti=ti)
     v := nv
   }
   return v
@@ -891,18 +892,18 @@ parse_value11 = AstValueParser {
       }
 
       nv = ast_value_new(#AstValueCall, ti)
-      nv.call := @(func=v, args=*arglist, ti=ti)
+      nv.call := (func=v, args=*arglist, ti=ti)
       v := nv
     } else if match("[") {
       i = parse_value()
       match("]")
       nv = ast_value_new(#AstValueIndex, ti)
-      nv.index := @(array=v, index=i, ti=ti)
+      nv.index := (array=v, index=i, ti=ti)
       v := nv
     } else if match(".") {
       fid = parse_id()
       nv = ast_value_new(#AstValueAccess, ti)
-      nv.access := @(rec=v, field_id=fid, ti=ti)
+      nv.access := (rec=v, field_id=fid, ti=ti)
       v := nv
     } else {
       break
@@ -914,6 +915,8 @@ parse_value11 = AstValueParser {
 
 
 exist parse_value_func : AstValueParser
+exist parse_value_rec : AstValueParser
+exist parse_value_rec2 : AstValueParser
 
 parse_value12 = AstValueParser {
   if is_it_type() {
@@ -923,6 +926,12 @@ parse_value12 = AstValueParser {
   v = nil to Var *AstValue
   ti = &ctok().ti
   if match("(") {
+
+    // если это Generic запись
+    if is_it_value_record () {
+      return parse_value_rec2 ()
+    }
+
     v := parse_value()
     need(")")
   } else {
@@ -938,7 +947,6 @@ exist parse_value_extern : AstValueParser
 exist parse_value_num : AstValueParser
 exist parse_value_str : AstValueParser
 exist parse_value_when : AstValueParser
-exist parse_value_rec : AstValueParser
 exist parse_value_array : AstValueParser
 
 parse_value_term = AstValueParser {
@@ -986,7 +994,7 @@ parse_value_id = AstValueParser {
   if id == nil {return nil}
 
   v = ast_value_new(#AstValueId, ti)
-  v.name := @(id=id, ti=ti, ti=ti)
+  v.name := (id=id, ti=ti, ti=ti)
   return v
 
 fail:
@@ -1060,7 +1068,7 @@ parse_value_rec2 = AstValueParser {
 
   t = ast_type_new(#AstTypeGenericRec, ti)
   v = ast_value_new (#AstValueRec, ti)
-  v.rec := @(type=t, values=fields, ti=ti)
+  v.rec := (type=t, values=fields, ti=ti)
   return v
 }
 
@@ -1096,7 +1104,7 @@ parse_value_rec = AstValueParser {
   }
 
   v = ast_value_new (#AstValueRec, ti)
-  v.rec := @(type=t, values=fields, ti=ti)
+  v.rec := (type=t, values=fields, ti=ti)
   return v
 }
 
@@ -1120,7 +1128,7 @@ parse_value_array = AstValueParser {
   }
 
   v = ast_value_new (#AstValueArr, ti)
-  v.array := @(type=t, items=items, ti=ti)
+  v.array := (type=t, items=items, ti=ti)
   return v
 }
 
@@ -1197,13 +1205,13 @@ exist parse_stmt_expr : AstStmtParser
 
 parse_stmt_break = AstStmtParser {
   s = ast_stmt_new(#AstStmtBreak, ti)
-  s.break := @(ti=ti)
+  s.break := (ti=ti)
   return s
 }
 
 parse_stmt_continue = AstStmtParser {
   s = ast_stmt_new(#AstStmtContinue, ti)
-  s.continue := @(ti=ti)
+  s.continue := (ti=ti)
   return s
 }
 
@@ -1228,7 +1236,7 @@ parse_stmt = () -> *AstStmt or Unit {
         skip()  // `:`
         ti = &ctok().ti
         s = ast_stmt_new(#AstStmtLabel, ti)
-        s.label := @(label=id)
+        s.label := (label=id)
         return s
       }
     }
@@ -1261,12 +1269,12 @@ parse_stmt_expr = AstStmtParser {
     v = parse_value()
 
     s = ast_stmt_new(#AstStmtAssign, ti)
-    s.assign := @(l=x, r=v)
+    s.assign := (l=x, r=v)
     return s
   }
 
   s = ast_stmt_new(#AstStmtExpr, ti)
-  s.expr := @(expr=x)
+  s.expr := (expr=x)
   return s
 }
 
@@ -1281,7 +1289,7 @@ parse_stmt_valdef = AstStmtParser {
   if id == nil or v == nil {return unit}
 
   s = ast_stmt_new(#AstStmtValueDef, ti)
-  s.valdef := @(id=id, expr=v)
+  s.valdef := (id=id, expr=v)
   return s
 }
 
@@ -1296,7 +1304,7 @@ parse_stmt_typedef = AstStmtParser {
   if id == nil or t == nil {return unit}
 
   s = ast_stmt_new(#AstStmtTypeDef, ti)
-  s.typedef := @(id=id, type=t)
+  s.typedef := (id=id, type=t)
   return s
 }
 
@@ -1322,7 +1330,7 @@ parse_stmt_block = AstStmtParser {
   }
 
   sb = ast_stmt_new(#AstStmtBlock, ti)
-  sb.block := @(stmts=stmts)
+  sb.block := (stmts=stmts)
   return sb
 }
 
@@ -1490,4 +1498,29 @@ yes:
 }
 
 
+// вызывается после '(' в выражении значения
+// для проверки это подвыражение или запись
+is_it_value_record = () -> Bool {
+  start = gett()
+
+  skip_nl()
+
+  if match(")") {goto yes}
+
+  if ctok().kind != #TokenId {goto no}
+  skip()  // skip Id
+
+  if match("=") {
+    goto yes
+  } else {
+    goto no
+  }
+
+no:
+  sett(start)  // restore
+  return false
+yes:
+  sett(start)  // restore
+  return true
+}
 

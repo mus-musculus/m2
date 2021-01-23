@@ -6,12 +6,9 @@
 stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
   s = malloc (sizeof Stmt) to *Stmt
   assert (s != nil, "stmt_new")
-  *s := @(kind=kind, ti=ti)
+  *s := (kind=kind, ti=ti)
   return s
 }
-
-
-
 
 
 exist do_stmt_assign   : (x : *AstStmtAssign) -> *Stmt or Unit
@@ -98,7 +95,7 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
   }
 
   s = stmt_new (#StmtAssign, x.ti)
-  s.assign := @(l=lval, r=rval, ti=x.ti)
+  s.assign := (l=lval, r=rval, ti=x.ti)
   return s
 }
 
@@ -189,7 +186,7 @@ do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
   }
 
   s = stmt_new (#StmtExpr, x.ti)
-  s.expr := @(v=v)
+  s.expr := (v=v)
   return s
 }
 
@@ -221,7 +218,7 @@ do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
   if then is Unit {return unit}
 
   s = stmt_new (#StmtIf, x.ti)
-  s.if := @(cond=cond, then=then as *Stmt, else=_else)
+  s.if := (cond=cond, then=then as *Stmt, else=_else)
   return s
 }
 
@@ -242,7 +239,7 @@ do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
   if block is Unit {return unit}
 
   s = stmt_new (#StmtWhile, x.ti)
-  s.while := @(cond=cond, stmt=block as *Stmt)
+  s.while := (cond=cond, stmt=block as *Stmt)
   return s
 }
 

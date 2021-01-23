@@ -26,7 +26,7 @@ value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
 
-  *v := @(kind=k, type=t, ti=ti)
+  *v := (kind=k, type=t, ti=ti)
   return v
 }
 
@@ -192,7 +192,7 @@ do_value_when = DoValue {
       if not type_check (kit.selector.type, key.type, key.ti) {}
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-      *v := @(x=key, y=val)
+      *v := (x=key, y=val)
 
       list_append (&kit.v.select.variants, v)
 
@@ -230,10 +230,10 @@ do_value_when = DoValue {
       // Создаю локальное выражение is
       vx = value_new(#ValueIs, typeBool, tx.ti)
       vari = type_union_get_variant (kit.v.type, tx)
-      vx.is := @(value=kit.selector, variant=vari)
+      vx.is := (value=kit.selector, variant=vari)
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-      *v := @(x=vx, y=val)
+      *v := (x=vx, y=val)
 
       list_append (&kit.v.select.variants, v)
     }
@@ -271,7 +271,7 @@ do_value_ref = DoValue {
   if v.kind == #ValuePoison {return v}
 
   vx = value_new (#ValueRef, type_pointer_new (v.type, x.ti), x.ti)
-  vx.un := @(x=v)
+  vx.un := (x=v)
   return vx
 }
 
@@ -288,7 +288,7 @@ do_value_deref = DoValue {
   }
 
   vx = value_new (#ValueDeref, v.type.pointer.to, x.ti)
-  vx.un := @(x=v)
+  vx.un := (x=v)
   return vx
 }
 
@@ -343,7 +343,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin := @(l=l, r=r)
+  v.bin := (l=l, r=r)
   return v
 
 fail:
@@ -359,7 +359,7 @@ do_value_call = DoValue {
   args = do_args (f, &x.call.args, x.ti)
 
   v = value_new (#ValueCall, f.type.func.to, x.ti)
-  v.call := @(func=f, args=args)
+  v.call := (func=f, args=args)
   return v
 
 fail:
@@ -453,7 +453,7 @@ do_value_index = DoValue {
   }
 
   v = value_new (#ValueIndex, typ, x.ti)
-  v.index := @(array=a, index=implicit_cast_int (i))
+  v.index := (array=a, index=implicit_cast_int (i))
   return v
 
 fail:
@@ -492,7 +492,7 @@ do_value_access = DoValue {
   }
 
   v = value_new (#ValueAccess, field.type, x.ti)
-  v.access := @(value=r, field=field_id)
+  v.access := (value=r, field=field_id)
   return v
 
 fail:
@@ -669,7 +669,7 @@ do_value_is = DoValue {
   variant = type_union_get_variant (v.type, t)
 
   vx = value_new(#ValueIs, typeBool, x.ti)
-  vx.is := @(value=v, variant=variant)
+  vx.is := (value=v, variant=variant)
   return vx
 
 fail:
@@ -898,7 +898,7 @@ do_value_array = DoValue {
   list_foreach(&x.array.items, item_value_handle, &ctx)
 
   vx = value_new (#ValueArray, t, x.ti)
-  vx.array := @(type=t, items=ctx.vl)
+  vx.array := (type=t, items=ctx.vl)
   return vx
 
 fail:
@@ -938,7 +938,7 @@ do_value_record2 = DoValue {
 
 
   vx = value_new (#ValueGenericRecord, t, x.ti)
-  vx.rec := @(type=t, values=ctx.vl)
+  vx.rec := (type=t, values=ctx.vl)
   return vx
 
 fail:
@@ -994,12 +994,12 @@ do_value_record = DoValue {
 
   if t == nil {
     vx = value_new (#ValueGenericRecord, t, x.ti)
-    vx.rec := @(values=ctx.vl)
+    vx.rec := (values=ctx.vl)
     return vx
   }
 
   vx = value_new (#ValueRecord, t, x.ti)
-  vx.rec := @(type=t, values=ctx.vl)
+  vx.rec := (type=t, values=ctx.vl)
   return vx
 
 fail:
@@ -1018,7 +1018,7 @@ do_value_plus = DoValue {
   }
 
   vx = value_new (#ValuePlus, v.type, x.ti)
-  vx.un := @(x=v)
+  vx.un := (x=v)
   return vx
 
 fail:
@@ -1036,7 +1036,7 @@ do_value_minus = DoValue {
   }
 
   vx = value_new (#ValueMinus, v.type, x.ti)
-  vx.un := @(x=v)
+  vx.un := (x=v)
   return vx
 
 fail:
@@ -1054,7 +1054,7 @@ do_value_not = DoValue {
   }
 
   vx = value_new (#ValueNot, v.type, x.ti)
-  vx.un := @(x=v)
+  vx.un := (x=v)
   return vx
 
 fail:
@@ -1093,7 +1093,7 @@ do_value_shift = DoValue {
   r2 = cast (r, l.type, r.ti)
 
   v = value_new (k, l.type, x.ti)
-  v.bin := @(l=l2, r=r2)
+  v.bin := (l=l2, r=r2)
   return v
 
 fail:
@@ -1167,7 +1167,7 @@ sact:
 
   // во всех остальных случаях выполняем runtime приведение
   v = value_new (#ValueCast, t, ti)
-  v.cast := @(value=vx, type=t)
+  v.cast := (value=vx, type=t)
   return v
 
 fail:
@@ -1238,7 +1238,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
     }
 
     nv = value_new (#ValueRecord, t, v.ti)
-    nv.rec := @(type=t, values=v.rec.values)
+    nv.rec := (type=t, values=v.rec.values)
     return nv
   }
 
