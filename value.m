@@ -928,7 +928,7 @@ do_value_record2 = DoValue {
     // а так как сейчас у тебя теряется ti! (но пока так)
     // оч хреново - тут нет ti нигде
     ast_id = malloc(sizeof AstId) to *AstId
-    *ast_id := @AstId (str=field_id, ti=nil)
+    *ast_id := (str=field_id, ti=nil)
     f = type_record_field_new(ast_id, v.type, nil)
     list_append(c.type.record.decls, f)
     // получили поле, на его основе строим поля для Generic типа

@@ -32,7 +32,7 @@ lex_init = (fname : Str) -> () {
   fd = open (fname, c_O_RDONLY)
   lstate.fd := fd
   lstate.pos := 1
-  lstate.ti := (file=fname, line=1 to Nat32)
+  lstate.ti := (file=fname, line=1)
 }
 
 

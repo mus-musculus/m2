@@ -1088,7 +1088,7 @@ eval_when = Eval {
 
   typ = x.type
 
-  ctx = @Ctx (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
+  ctx = (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
 
   fprintf (fout, "\n  br label %%select_%d_0", sno)
 
