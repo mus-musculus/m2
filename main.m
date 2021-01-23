@@ -50,12 +50,12 @@ main = (argc : Nat, argv : []Str) -> Int32 {
   /*printf ("sizeof Token %d\n", sizeof Token)
   printf ("sizeof AstValue %d\n", sizeof AstValue)
   printf ("sizeof Type %d\n", sizeof Type)*/
-  printf ("sizeof Stmt %d\n", sizeof Stmt)
-  printf ("sizeof Stmt2 %d\n", sizeof Stmt2)
+  //printf ("sizeof Stmt %d\n", sizeof Stmt)
+  //printf ("sizeof Stmt2 %d\n", sizeof Stmt2)
 
 
-  iff = 0 to Var StmtIf
-  va = iff to Var Stmt2
+  /*iff = 0 to Var StmtIf
+  va = iff to Var Stmt2*/
 
   m = parse ("main.m")
 

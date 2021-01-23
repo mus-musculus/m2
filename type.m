@@ -362,6 +362,10 @@ do_type_union = DoType {
       else => c.max_size
     }
 
+    if type_present_in_list(c.tlist, t) {
+      error("this type already present in union", t.ti)
+    }
+
     list_append(c.tlist, t)
   }
   list_foreach(&x.union.types, do_variant, &ctx)
