@@ -5163,6 +5163,8 @@ then_2:
   call void (%Str) @fatal (%Str %16)
   br label %endif_2
 else_2:
+  br label %endif_2
+endif_2:
 ;stmt13:
   %17 = load %Nat8, %Nat8* %1
 ; index array
@@ -5217,8 +5219,6 @@ else_5:
 endif_5:
   br label %endif_3
 endif_3:
-  br label %endif_2
-endif_2:
   br label %continue_0
 break_0:
   br label %endif_1

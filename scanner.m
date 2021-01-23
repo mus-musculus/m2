@@ -178,7 +178,9 @@ xslash = () -> () {
 
       if c == symEOF {
         fatal("unexpected end-of-file")
-      } else if c == "*"[0] {
+      }
+
+      if c == "*"[0] {
         c := getcc ()
         if c == "/"[0] {
           // C-style comment ended
