@@ -386,7 +386,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func129_str1 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func129_str2 = private unnamed_addr constant [16 x i8] c"type expected: \00", align 1
 @func129_str3 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
-@func129_str4 = private unnamed_addr constant [17 x i8] c"type received: \00", align 1
+@func129_str4 = private unnamed_addr constant [16 x i8] c"type received: \00", align 1
 @func129_str5 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @func139_str1 = private unnamed_addr constant [5 x i8] c"self\00", align 1
 @func141_str1 = private unnamed_addr constant [35 x i8] c"value bind error: id already bound\00", align 1
@@ -3897,7 +3897,7 @@ endif_0:
   br i1 %12, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  %13 = bitcast [17 x %Nat8]* @func129_str4 to %Str
+  %13 = bitcast [16 x %Nat8]* @func129_str4 to %Str
   %14 = call %Int32 (%Str, ...) @printf (%Str %13)
 ;stmt7:
   call void (%Type*) @func81 (%Type* %1)
@@ -5487,23 +5487,27 @@ body_0:
   store %TokenInfo %19, %TokenInfo* %17, align 8
 ;stmt9:
   %20 = getelementptr inbounds %Token, %Token* %13, i1 0, i32 2
-  %21 = bitcast [0 x %Nat8]* %20 to %Unit*
-  %22 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
-  %23 = bitcast [255 x %Nat8]* %22 to %Unit*
-  %24 = zext %Nat16 %9 to %Nat32
-  %25 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %21, %Unit* %23, %Nat32 %24)
-;stmt10:
-  %26 = getelementptr inbounds %Token, %Token* %13, i1 0, i32 2
 ; index array
-  %27 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %26, i1 0, %Nat16 %9
-  store %Nat8 0, %Nat8* %27, align 1
+  %21 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %20, i1 0, %Int64 0
+  %22 = bitcast %Nat8* %21 to %Unit*
+  %23 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
+; index array
+  %24 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %23, i1 0, %Int64 0
+  %25 = bitcast %Nat8* %24 to %Unit*
+  %26 = zext %Nat16 %9 to %Nat32
+  %27 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %22, %Unit* %25, %Nat32 %26)
+;stmt10:
+  %28 = getelementptr inbounds %Token, %Token* %13, i1 0, i32 2
+; index array
+  %29 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %28, i1 0, %Nat16 %9
+  store %Nat8 0, %Nat8* %29, align 1
 ;stmt11:
-  %28 = getelementptr inbounds %Source, %Source* %3, i1 0, i32 0
-  %29 = bitcast %Token* %13 to %Unit*
-  %30 = call i1 (%List*, %Unit*) @list_append (%List* %28, %Unit* %29)
+  %30 = getelementptr inbounds %Source, %Source* %3, i1 0, i32 0
+  %31 = bitcast %Token* %13 to %Unit*
+  %32 = call i1 (%List*, %Unit*) @list_append (%List* %30, %Unit* %31)
 ;stmt12:
-  %31 = icmp eq %TokenKind %5, 0
-  br i1 %31, label %then_0, label %else_0
+  %33 = icmp eq %TokenKind %5, 0
+  br i1 %33, label %then_0, label %else_0
 then_0:
 ;stmt13:
   br label %break_0
@@ -5514,12 +5518,12 @@ endif_0:
   br label %continue_0
 break_0:
 ;stmt14:
-  %33 = load %Nat32, %Nat32* @lines
-  %34 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %35 = getelementptr inbounds %TokenInfo, %TokenInfo* %34, i1 0, i32 3
-  %36 = load %Nat32, %Nat32* %35
-  %37 = add %Nat32 %33, %36
-  store %Nat32 %37, %Nat32* @lines, align 4
+  %35 = load %Nat32, %Nat32* @lines
+  %36 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %37 = getelementptr inbounds %TokenInfo, %TokenInfo* %36, i1 0, i32 3
+  %38 = load %Nat32, %Nat32* %37
+  %39 = add %Nat32 %35, %38
+  store %Nat32 %39, %Nat32* @lines, align 4
 ;stmt15:
   ret %Source* %3
 }
