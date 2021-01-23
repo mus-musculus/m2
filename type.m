@@ -164,11 +164,9 @@ do_type_named = DoType {
 do_type_func = DoType {
   from = do_type (x.func.from)
   if from.kind == #TypePoison {return from}
-  //if from.kind == #TypeUndefined or from.kind == #TypePoison {return from}
 
   _to = do_type (x.func.to)
   if _to.kind == #TypePoison {return _to}
-  //if _to.kind == #TypeUndefind or _to.kind == #TypePoison {return _to}
 
   arghack = false
   return type_func_new (from, _to, arghack, x.ti)
