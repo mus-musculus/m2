@@ -9519,17 +9519,14 @@ define %Definition* @func270 (%Assembly*, %Str, %Type*) {
   %4 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 0, %Str %1)
 ;stmt1:
   %5 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 2
-  %6 = getelementptr inbounds %DefType, %DefType* %5, i1 0, i32 1
-  store %Type* %2, %Type** %6, align 8
+  %6 = insertvalue %DefType zeroinitializer, %Str %1, 0
+  %7 = insertvalue %DefType %6, %Type* %2, 1
+  store %DefType %7, %DefType* %5, align 8
 ;stmt2:
-  %7 = getelementptr inbounds %Definition, %Definition* %4, i1 0, i32 2
-  %8 = getelementptr inbounds %DefType, %DefType* %7, i1 0, i32 0
-  store %Str %1, %Str* %8, align 8
+  %8 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 3
+  %9 = bitcast %Definition* %4 to %Unit*
+  %10 = call i1 (%List*, %Unit*) @list_append (%List* %8, %Unit* %9)
 ;stmt3:
-  %9 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 3
-  %10 = bitcast %Definition* %4 to %Unit*
-  %11 = call i1 (%List*, %Unit*) @list_append (%List* %9, %Unit* %10)
-;stmt4:
   ret %Definition* %4
 }
 
@@ -9538,21 +9535,15 @@ define %Definition* @func271 (%Assembly*, %Str, %Str, %Nat32) {
   %5 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 2, %Str %1)
 ;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-  %7 = getelementptr inbounds %DefStr, %DefStr* %6, i1 0, i32 0
-  store %Str %1, %Str* %7, align 8
+  %7 = insertvalue %DefStr zeroinitializer, %Str %1, 0
+  %8 = insertvalue %DefStr %7, %Str %2, 2
+  %9 = insertvalue %DefStr %8, %Nat32 %3, 3
+  store %DefStr %9, %DefStr* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-  %9 = getelementptr inbounds %DefStr, %DefStr* %8, i1 0, i32 2
-  store %Str %2, %Str* %9, align 8
+  %10 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 6
+  %11 = bitcast %Definition* %5 to %Unit*
+  %12 = call i1 (%List*, %Unit*) @list_append (%List* %10, %Unit* %11)
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 1
-  %11 = getelementptr inbounds %DefStr, %DefStr* %10, i1 0, i32 3
-  store %Nat32 %3, %Nat32* %11, align 4
-;stmt4:
-  %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 6
-  %13 = bitcast %Definition* %5 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %12, %Unit* %13)
-;stmt5:
   ret %Definition* %5
 }
 
@@ -9561,21 +9552,15 @@ define %Definition* @func272 (%Assembly*, %Str, %Type*, %List*) {
   %5 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 3, %Str %1)
 ;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
-  %7 = getelementptr inbounds %DefArray, %DefArray* %6, i1 0, i32 0
-  store %Str %1, %Str* %7, align 8
+  %7 = insertvalue %DefArray zeroinitializer, %Str %1, 0
+  %8 = insertvalue %DefArray %7, %Type* %2, 1
+  %9 = insertvalue %DefArray %8, %List* %3, 3
+  store %DefArray %9, %DefArray* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
-  %9 = getelementptr inbounds %DefArray, %DefArray* %8, i1 0, i32 1
-  store %Type* %2, %Type** %9, align 8
+  %10 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 5
+  %11 = bitcast %Definition* %5 to %Unit*
+  %12 = call i1 (%List*, %Unit*) @list_append (%List* %10, %Unit* %11)
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 4
-  %11 = getelementptr inbounds %DefArray, %DefArray* %10, i1 0, i32 3
-  store %List* %3, %List** %11, align 8
-;stmt4:
-  %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 5
-  %13 = bitcast %Definition* %5 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %12, %Unit* %13)
-;stmt5:
   ret %Definition* %5
 }
 
@@ -9584,21 +9569,15 @@ define %Definition* @func273 (%Assembly*, %Str, %Type*, %Block*) {
   %5 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 4, %Str %1)
 ;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
-  %7 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
-  store %Str %1, %Str* %7, align 8
+  %7 = insertvalue %DefFunc zeroinitializer, %Str %1, 0
+  %8 = insertvalue %DefFunc %7, %Type* %2, 1
+  %9 = insertvalue %DefFunc %8, %Block* %3, 2
+  store %DefFunc %9, %DefFunc* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
-  %9 = getelementptr inbounds %DefFunc, %DefFunc* %8, i1 0, i32 1
-  store %Type* %2, %Type** %9, align 8
+  %10 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 8
+  %11 = bitcast %Definition* %5 to %Unit*
+  %12 = call i1 (%List*, %Unit*) @list_append (%List* %10, %Unit* %11)
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 5
-  %11 = getelementptr inbounds %DefFunc, %DefFunc* %10, i1 0, i32 2
-  store %Block* %3, %Block** %11, align 8
-;stmt4:
-  %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 8
-  %13 = bitcast %Definition* %5 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %12, %Unit* %13)
-;stmt5:
   ret %Definition* %5
 }
 
@@ -9607,21 +9586,15 @@ define %Definition* @func274 (%Assembly*, %Str, %Type*, %Value*) {
   %5 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 5, %Str %1)
 ;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
-  %7 = getelementptr inbounds %DefVar, %DefVar* %6, i1 0, i32 0
-  store %Str %1, %Str* %7, align 8
+  %7 = insertvalue %DefVar zeroinitializer, %Str %1, 0
+  %8 = insertvalue %DefVar %7, %Type* %2, 1
+  %9 = insertvalue %DefVar %8, %Value* %3, 2
+  store %DefVar %9, %DefVar* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
-  %9 = getelementptr inbounds %DefVar, %DefVar* %8, i1 0, i32 1
-  store %Type* %2, %Type** %9, align 8
+  %10 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 7
+  %11 = bitcast %Definition* %5 to %Unit*
+  %12 = call i1 (%List*, %Unit*) @list_append (%List* %10, %Unit* %11)
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 6
-  %11 = getelementptr inbounds %DefVar, %DefVar* %10, i1 0, i32 2
-  store %Value* %3, %Value** %11, align 8
-;stmt4:
-  %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 7
-  %13 = bitcast %Definition* %5 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %12, %Unit* %13)
-;stmt5:
   ret %Definition* %5
 }
 
@@ -9630,21 +9603,15 @@ define %Definition* @func275 (%Assembly*, %Str, %Type*, %Str) {
   %5 = call %Definition* (%DefinitionKind, %Str) @func269 (%DefinitionKind 6, %Str %1)
 ;stmt1:
   %6 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
-  %7 = getelementptr inbounds %DefAlias, %DefAlias* %6, i1 0, i32 0
-  store %Str %1, %Str* %7, align 8
+  %7 = insertvalue %DefAlias zeroinitializer, %Str %1, 0
+  %8 = insertvalue %DefAlias %7, %Type* %2, 1
+  %9 = insertvalue %DefAlias %8, %Str %3, 2
+  store %DefAlias %9, %DefAlias* %6, align 8
 ;stmt2:
-  %8 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
-  %9 = getelementptr inbounds %DefAlias, %DefAlias* %8, i1 0, i32 1
-  store %Type* %2, %Type** %9, align 8
+  %10 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 4
+  %11 = bitcast %Definition* %5 to %Unit*
+  %12 = call i1 (%List*, %Unit*) @list_append (%List* %10, %Unit* %11)
 ;stmt3:
-  %10 = getelementptr inbounds %Definition, %Definition* %5, i1 0, i32 7
-  %11 = getelementptr inbounds %DefAlias, %DefAlias* %10, i1 0, i32 2
-  store %Str %3, %Str* %11, align 8
-;stmt4:
-  %12 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 4
-  %13 = bitcast %Definition* %5 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %12, %Unit* %13)
-;stmt5:
   ret %Definition* %5
 }
 

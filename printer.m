@@ -54,8 +54,7 @@ definition_new = (kind : DefinitionKind, id : Str) -> *Definition {
 
 asmTypedefAdd = (a : *Assembly, id : Str, t : *Type) -> *Definition {
   x = definition_new (#DefType, id)
-  x.typedef.type := t
-  x.typedef.id := id
+  x.typedef := (id=id, type=t)
   list_append (&a.types, x)
   return x
 }
@@ -63,9 +62,7 @@ asmTypedefAdd = (a : *Assembly, id : Str, t : *Type) -> *Definition {
 
 asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
   x = definition_new (#DefStr, id)
-  x.stringdef.id := id
-  x.stringdef.data := s
-  x.stringdef.len := len
+  x.stringdef := (id=id, data=s, len=len)
   list_append (&a.strings, x)
   return x
 }
@@ -73,9 +70,7 @@ asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
 
 asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definition {
   x = definition_new (#DefArray, id)
-  x.arraydef.id := id
-  x.arraydef.type := t
-  x.arraydef.values := values
+  x.arraydef := (id=id, type=t, values=values)
   list_append (&a.arrays, x)
   return x
 }
@@ -83,9 +78,7 @@ asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definitio
 
 asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition {
   x = definition_new (#DefFunc, id)
-  x.funcdef.id := id
-  x.funcdef.type := t
-  x.funcdef.block := b
+  x.funcdef := (id=id, type=t, block=b)
   list_append (&a.funcs, x)
   return x
 }
@@ -93,9 +86,7 @@ asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition {
 
 asmVarAdd = (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *Definition {
   x = definition_new (#DefVar, id)
-  x.vardef.id := id
-  x.vardef.type := t
-  x.vardef.init_value := init_value
+  x.vardef := (id=id, type=t, init_value=init_value)
   list_append (&a.vars, x)
   return x
 }
@@ -103,15 +94,10 @@ asmVarAdd = (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *Defini
 
 asmAliasAdd = (a : *Assembly, id : Str, type : *Type, org : Str) -> *Definition {
   x = definition_new (#DefAlias, id)
-  x.aliasdef.id := id
-  x.aliasdef.type := type
-  x.aliasdef.org := org
+  x.aliasdef := (id=id, type=type, org=org)
   list_append (&a.aliases, x)
   return x
 }
-
-
-
 
 
 
@@ -338,8 +324,6 @@ stringdef = (id : Str, len : Nat, s : Str) -> () {
   }
   fprintf (fout, "\\%02d\", align 1", 0)
 }
-
-
 
 
 vardef = (id : Str, t : *Type, v : *Value) -> () {
@@ -1133,7 +1117,7 @@ eval_when = Eval {
     fprintf (fout, "\nselect_%d_%d_ok:", c.sno, c.case)
 
     e = reval (va.y)
-    s1 = loadIfImmAs(e, c.type)
+    s1 = loadIfImmAs (e, c.type)
 
     fprintf (fout, "\n  br label %%select_%d_end", c.sno)
 
@@ -1143,7 +1127,7 @@ eval_when = Eval {
   list_foreach (&x.select.variants, print_select_case, &ctx)
 
   fprintf (fout, "\nselect_%d_%d:", sno, ctx.case) // else ->
-  otherwise = loadIfImmAs(reval (x.select.other), ctx.type)
+  otherwise = loadIfImmAs (reval (x.select.other), ctx.type)
   fprintf (fout, "\n  br label %%select_%d_end", sno)
   fprintf (fout, "\nselect_%d_end:", sno)
 
@@ -1207,7 +1191,6 @@ eval_rec = Eval {
 }
 
 eval_arr = Eval {
-
   // контекст в котором будет происходить формирование структуры
   Ctx8 = (
     type : *Type
@@ -1337,8 +1320,9 @@ print_val = (x : LLVM_Value) -> () {
 }
 
 
-print_val_with_type = (x : LLVM_Value) -> ()
-{printType (x.type); space (); print_val (x)}
+print_val_with_type = (x : LLVM_Value) -> () {
+  printType (x.type); space (); print_val (x)
+}
 
 
 //%agg1 = insertvalue {i32, float} undef, i32 1, 0  ; yields {i32 1, float undef}
@@ -1350,17 +1334,17 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 
 
 exist print_stmt_assign : (x : *StmtAssign) -> ()
-exist print_stmt : (s : *Stmt) -> ()
-exist print_stmt_var : (v : *Decl) -> ()
-exist print_stmt_expr : (e : *Expr) -> ()
-exist print_stmt_if : (i : *If) -> ()
-exist print_stmt_while : (w : *While) -> ()
+exist print_stmt        : (s : *Stmt) -> ()
+exist print_stmt_var    : (v : *Decl) -> ()
+exist print_stmt_expr   : (e : *Expr) -> ()
+exist print_stmt_if     : (i : *If) -> ()
+exist print_stmt_while  : (w : *While) -> ()
 
-exist print_stmt_return : (x : *StmtReturn) -> ()
-exist print_stmt_break : () -> ()
+exist print_stmt_return   : (x : *StmtReturn) -> ()
+exist print_stmt_break    : () -> ()
 exist print_stmt_continue : () -> ()
-exist print_stmt_goto : (l : Str) -> ()
-exist print_stmt_label : (l : Str) -> ()
+exist print_stmt_goto     : (l : Str) -> ()
+exist print_stmt_label    : (l : Str) -> ()
 
 
 print_stmt = (s : *Stmt) -> () {
@@ -1392,7 +1376,7 @@ print_stmt_assign = (x : *StmtAssign) -> () {print_st (x.l, x.r)}
 // Печать значения происходит в два этапа
 // 1. eval - распечатывается алгоритм вычисления значения
 // 2. print_val - печатается регистр в котором находится значение (уже вычисленное)
-//                    или непосредственная константа (которая никак не вычисляется в LLVM)
+// или непосредственная константа (которая никак не вычисляется в LLVM)
 
 
 print_stmt_var = (v : *Decl) -> () {
@@ -1521,8 +1505,8 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
     #TypeBool    => o ("i1")
     #TypeUnion   => fprintf (fout, "%%%s", t.aka) to ()
     else => (t : *Type) -> () {
-      o ("<type-unknown-kind>");
-      printf ("unk type kind %d\n", t.kind);
+      o ("<type-unknown-kind>")
+      printf ("unk type kind %d\n", t.kind)
     } (t)
   }
 }
@@ -1543,8 +1527,9 @@ printTypeRecord = (r : *TypeRecord) -> () {
 }
 
 
-printTypeArray = (a : *TypeArray) -> ()
-{fprintf (fout, "[%d x ", a.volume); printType (a.of); o ("]")}
+printTypeArray = (a : *TypeArray) -> () {
+  fprintf (fout, "[%d x ", a.volume); printType (a.of); o ("]")
+}
 
 printTypeArrayU = (a : *TypeArrayU) -> () {printType (a.of); o ("*")}
 
