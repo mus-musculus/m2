@@ -29,10 +29,10 @@ lex_init = (fname : Str) -> () {
     fatal ("module not exist")
   }
 
-  lstate.fd := open (fname, c_O_RDONLY)
-  lstate.ti.file := fname
-  lstate.ti.line := 1
+  fd = open (fname, c_O_RDONLY)
+  lstate.fd := fd
   lstate.pos := 1
+  lstate.ti := (file=fname, line=1 to Nat32)
 }
 
 
@@ -78,21 +78,22 @@ fill = (rule : Rule) -> () {
 }
 
 
-blank = Rule {return c == " "[0] or c == "\t"[0]}
-minus = Rule {return c == ">"[0]}
-slash = Rule {return c == "/"[0] or c == "*"[0]}
-rarrow = Rule {return c == ">"[0] or c == "="[0]}
-larrow = Rule {return c == "<"[0] or c == "="[0]}
-eq = Rule {return c == "="[0] or c == ">"[0]}
-ass = Rule {return c == "="[0]}
-bang = Rule {return c == "="[0]}
-id = Rule {return isAlNum (c) or c == "_"[0] or c == "-"[0]}
-digit = Rule {return isAlNum (c)}
+blank   = Rule {return c == " "[0] or c == "\t"[0]}
+minus   = Rule {return c == ">"[0]}
+slash   = Rule {return c == "/"[0] or c == "*"[0]}
+rarrow  = Rule {return c == ">"[0] or c == "="[0]}
+larrow  = Rule {return c == "<"[0] or c == "="[0]}
+eq      = Rule {return c == "="[0] or c == ">"[0]}
+ass     = Rule {return c == "="[0]}
+bang    = Rule {return c == "="[0]}
+id      = Rule {return isAlNum (c) or c == "_"[0] or c == "-"[0]}
+digit   = Rule {return isAlNum (c)}
 cpp_com = Rule {return c != "\n"[0]}
 
 /* комментарии это тоже токены */
 
 x_nl = () -> () {lstate.kind := #TokenNL}
+
 x_eof = () -> () {
   lstate.kind := #TokenEOF
   lstate.token[0] := 0
@@ -139,16 +140,16 @@ getToken = () -> TokenKind {
     lstate.kind := #TokenSym
 
     when c {
-      "\n"[0] => x_nl   ()
-      ":"[0]  => fill   (ass)
-      "="[0]  => fill   (eq)
-      "-"[0]  => fill   (minus)
+      "\n"[0] => x_nl ()
+      ":"[0]  => fill (ass)
+      "="[0]  => fill (eq)
+      "-"[0]  => fill (minus)
       "/"[0]  => xslash ()
-      ">"[0]  => fill   (rarrow)
-      "<"[0]  => fill   (larrow)
-      "!"[0]  => fill   (bang)
+      ">"[0]  => fill (rarrow)
+      "<"[0]  => fill (larrow)
+      "!"[0]  => fill (bang)
       "\""[0] => string ()
-      symEOF  => x_eof  ()
+      symEOF  => x_eof ()
       else => () -> () {} ()
     }
   }

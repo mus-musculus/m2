@@ -4584,20 +4584,18 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt3:
-  %7 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 0
-  %8 = call %Int32 (%Str, %Int32) @open (%Str %0, %Int32 0)
-  store %Int32 %8, %Int32* %7, align 4
+  %7 = call %Int32 (%Str, %Int32) @open (%Str %0, %Int32 0)
 ;stmt4:
-  %9 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %10 = getelementptr inbounds %TokenInfo, %TokenInfo* %9, i1 0, i32 0
-  store %Str %0, %Str* %10, align 8
+  %8 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 0
+  store %Int32 %7, %Int32* %8, align 4
 ;stmt5:
-  %11 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %12 = getelementptr inbounds %TokenInfo, %TokenInfo* %11, i1 0, i32 3
-  store %Nat32 1, %Nat32* %12, align 4
+  %9 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 4
+  store %Nat16 1, %Nat16* %9, align 2
 ;stmt6:
-  %13 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 4
-  store %Nat16 1, %Nat16* %13, align 2
+  %10 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %11 = insertvalue %TokenInfo zeroinitializer, %Str %0, 0
+  %12 = insertvalue %TokenInfo %11, %Nat32 1, 3
+  store %TokenInfo %12, %TokenInfo* %10, align 8
   ret void
 }
 
