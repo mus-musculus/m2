@@ -877,7 +877,7 @@ do_value_array = DoValue {
 
   Ctx7 = (type : *Type, vl : List)
 
-  ctx = @Ctx7 (type=t) to Var Ctx7
+  ctx = (type=t) to Var Ctx7
 
   // обрабатываем все поля
   item_value_handle = ListForeachHandler {

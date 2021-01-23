@@ -233,7 +233,7 @@ do_type_record = DoType {
     }
 
     Ctx1 = (fields : *List, type : *Type)
-    ctx = @Ctx1 (fields=ctx0.fields, type=type) to Var Ctx1
+    ctx = (fields=ctx0.fields, type=type) to Var Ctx1
 
     process_field_in_decl = ListForeachHandler {
       id = data to *AstId
@@ -349,7 +349,7 @@ do_type_union = DoType {
     max_size : Nat
   )
 
-  ctx = @CtxUnion (tlist=&t.union.types) to Var CtxUnion
+  ctx = (tlist=&t.union.types) to Var CtxUnion
 
   do_variant = ListForeachHandler {
     ast_type = data to *AstType
@@ -582,15 +582,12 @@ type_union_variant_present = (union, type : *Type) -> Bool {
 // получает тип-юнион (union) и тип который в нем должен быть (type)
 // возвращает номер варианта для этого типа в этом юнионе
 type_union_get_variant = (union, type : *Type) -> Nat {
-
-
-
   VarCtx2 = (
     type    : *Type
     variant : Nat
   )
 
-  var_ctx = @VarCtx2 (type=type) to Var VarCtx2
+  var_ctx = (type=type) to Var VarCtx2
 
   find_variant = ListForeachHandler {
     t = data to *Type
