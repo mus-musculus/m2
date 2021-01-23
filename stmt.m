@@ -88,6 +88,7 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
     else => lval.type
   }
 
+
   rval = implicit_cast (rval0, ltype)
 
   if not type_check (ltype, rval.type, x.ti) {

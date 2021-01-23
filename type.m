@@ -566,10 +566,25 @@ getIntByPower = (size : Nat) -> *Type {
 
 
 
+// есть ли тип type в типе union
+type_union_variant_present = (union, type : *Type) -> Bool {
+  // type present?
+  find_variant = ListSearchHandler {
+    t = data to *Type
+    ct = ctx to *Type
+    return type_eq (t, ct)
+  }
+  x = list_search(&union.union.types, find_variant, type)
+  return x != nil
+}
+
 
 // получает тип-юнион (union) и тип который в нем должен быть (type)
 // возвращает номер варианта для этого типа в этом юнионе
 type_union_get_variant = (union, type : *Type) -> Nat {
+
+
+
   VarCtx2 = (
     type    : *Type
     variant : Nat

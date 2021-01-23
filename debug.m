@@ -32,6 +32,7 @@ prttype2 = (t, selfptr : *Type) -> () {
     #TypePoison => printf("<TypePoison>") to ()
     #TypeForbidden => printf("<TypeForbidden>") to ()
     #TypeUnion => type_print_union(&t.union)
+    #TypeGenericRec => printf("<TypeGenericRec>") to ()
     else => printf("<TypeUnknown>") to ()
   }
 }

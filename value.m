@@ -942,12 +942,12 @@ do_value_record2 = DoValue {
   return vx
 
 fail:
+  printf("FAIL\n")
   return value_new_poison (x.ti)
 }
 
 
 do_value_record = DoValue {
-
   if x.rec.type.kind == #AstTypeGenericRec {
     // это запись без типа
     return do_value_record2(x)
@@ -1134,6 +1134,30 @@ typeValidForBin = (k : ValueKind, t : *Type) -> Bool {
 
 
 
+
+exist generic_rec_cast_possible : (t_gen, t : *Type) -> Bool
+
+cast_generic_rec_val_to_rec = (v : *Value, t : *Type) -> *Value {
+  // приводим generic запись к типу записи t
+  // для этого приводим все ее поля к типу полей соотв типа-записи
+  Ctx12 = (type : *Type, new_vm : Map)
+  ctx = @Ctx12 (type=t) to Var Ctx12
+  prep = MapForeachHandler {
+    id = k to Str
+    val = v to *Value
+    c = ctx to *Ctx12
+    vx = implicit_cast (val, c.type)
+    map_append (&c.new_vm, id, vx)
+  }
+  map_foreach(&v.rec.values, prep, &ctx)
+
+  nv = value_new (#ValueRecord, t, v.ti)
+  nv.rec := (type=t, values=ctx.new_vm)
+  return nv
+}
+
+
+
 cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   if vx.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
@@ -1149,6 +1173,15 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
     return value_new_poison (ti)
   }
 
+  // приведение GenericRec к Rec
+  if vx.type.kind == #TypeGenericRec and t.kind == #TypeRecord {
+    if not generic_rec_cast_possible (vx.type, t) {
+      error("type error", ti)
+    }
+
+    warning("??", ti)
+    return cast_generic_rec_val_to_rec(vx, t)
+  }
 
   // можем ли мы приводить непосредственно значение v к типу t ?
   immCastIsPossible = (v : *Value, t : *Type) -> Bool {
@@ -1217,9 +1250,30 @@ generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
 
     // при сравнении полей нам нужно сделать implicit_cast! а как?
 
-    if not type_eq(f.type, fd.type) {return true}  // типы не равны, пока
+    // равны ли типы?
+    if not type_eq(f.type, fd.type) {
 
-    return false  // и поле с таким id есть и типы совпадают
+      // может тут просто дженерик интеджер?
+      if type_is_generic_num(f.type) and type_is_basic_integer(fd.type) {
+        return false  // да, все ок, продолжаем
+      }
+
+      // или nil а ожидается указатель
+      if f.type.kind == #TypeGenericReference and type_is_ref(fd.type) {
+        return false  //
+      }
+
+      if fd.type.kind == #TypeUnion {
+        //type_union_get_variant(fd.type, f.type)
+        return not type_union_variant_present(fd.type, f.type)
+      }
+
+      return true  // типы не равны, до свиданья
+    }
+
+    // и поле с таким id есть и типы совпадают,
+    // продолжаем поиск несоответствия полей
+    return false
   }
   res = list_search(t_gen.record.decls, chk, t)
 
@@ -1243,22 +1297,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
       return v;  // невозможно привести
     }
 
-    // приводим generic запись к типу записи t
-    // для этого приводим все ее поля к типу полей соотв типа-записи
-    Ctx12 = (type : *Type, new_vm : Map)
-    ctx = @Ctx12 (type=t) to Var Ctx12
-    prep = MapForeachHandler {
-      id = k to Str
-      val = v to *Value
-      c = ctx to *Ctx12
-      vx = implicit_cast (val, c.type)
-      map_append (&c.new_vm, id, vx)
-    }
-    map_foreach(&v.rec.values, prep, &ctx)
-
-    nv = value_new (#ValueRecord, t, v.ti)
-    nv.rec := (type=t, values=ctx.new_vm)
-    return nv
+    return cast_generic_rec_val_to_rec (v, t)
   }
 
   // TypeNumeric -> Basic:Integer
