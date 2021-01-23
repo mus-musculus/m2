@@ -249,7 +249,6 @@ string = () -> () {
 
 // токенизируем файл в список (включая #TokenEOF)
 tokenize = (filename : Str) -> *Source {
-
   src = malloc (sizeof Source) to *Source
   list_init (&src.tokens)
 
@@ -261,9 +260,9 @@ tokenize = (filename : Str) -> *Source {
     t = malloc (sizeof Token + len to Nat32) to *Token
     t.kind := lstate.kind
     t.ti := lstate.ti
-
     memcpy (&t.text, &lstate.token, len to Size_T)
     t.text[len] := 0
+
     list_append (&src.tokens, t)
     if tt == #TokenEOF {break}
   }
