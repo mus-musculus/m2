@@ -1262,8 +1262,7 @@ generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
       }
 
       if fd.type.kind == #TypeUnion {
-        //type_union_get_variant(fd.type, f.type)
-        return not type_union_variant_present(fd.type, f.type)
+        return not type_present_in_list (&fd.type.union.types, t)
       }
 
       return true  // типы не равны, до свиданья
