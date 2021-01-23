@@ -263,7 +263,7 @@ tokenize = (filename : Str) -> *Source {
     t.kind := lstate.kind
     t.ti := lstate.ti
     memcpy (&t.text[0], &lstate.token[0], len to Size_T)
-    t.text[len] := 0
+    t.text[len - 1] := 0
 
     list_append (&src.tokens, t)
     if tt == #TokenEOF {break}

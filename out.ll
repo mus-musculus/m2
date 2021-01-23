@@ -5498,16 +5498,17 @@ body_0:
   %27 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %22, %Unit* %25, %Nat32 %26)
 ;stmt10:
   %28 = getelementptr inbounds %Token, %Token* %13, i1 0, i32 2
+  %29 = sub %Nat16 %9, 1
 ; index array
-  %29 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %28, i1 0, %Nat16 %9
-  store %Nat8 0, %Nat8* %29, align 1
+  %30 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %28, i1 0, %Nat16 %29
+  store %Nat8 0, %Nat8* %30, align 1
 ;stmt11:
-  %30 = getelementptr inbounds %Source, %Source* %3, i1 0, i32 0
-  %31 = bitcast %Token* %13 to %Unit*
-  %32 = call i1 (%List*, %Unit*) @list_append (%List* %30, %Unit* %31)
+  %31 = getelementptr inbounds %Source, %Source* %3, i1 0, i32 0
+  %32 = bitcast %Token* %13 to %Unit*
+  %33 = call i1 (%List*, %Unit*) @list_append (%List* %31, %Unit* %32)
 ;stmt12:
-  %33 = icmp eq %TokenKind %5, 0
-  br i1 %33, label %then_0, label %else_0
+  %34 = icmp eq %TokenKind %5, 0
+  br i1 %34, label %then_0, label %else_0
 then_0:
 ;stmt13:
   br label %break_0
@@ -5518,12 +5519,12 @@ endif_0:
   br label %continue_0
 break_0:
 ;stmt14:
-  %35 = load %Nat32, %Nat32* @lines
-  %36 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
-  %37 = getelementptr inbounds %TokenInfo, %TokenInfo* %36, i1 0, i32 3
-  %38 = load %Nat32, %Nat32* %37
-  %39 = add %Nat32 %35, %38
-  store %Nat32 %39, %Nat32* @lines, align 4
+  %36 = load %Nat32, %Nat32* @lines
+  %37 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %38 = getelementptr inbounds %TokenInfo, %TokenInfo* %37, i1 0, i32 3
+  %39 = load %Nat32, %Nat32* %38
+  %40 = add %Nat32 %36, %39
+  store %Nat32 %40, %Nat32* @lines, align 4
 ;stmt15:
   ret %Source* %3
 }
