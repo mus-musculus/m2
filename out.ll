@@ -961,10 +961,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func475_str4 = private unnamed_addr constant [5 x i8] c"%lld\00", align 1
 @func477_str1 = private unnamed_addr constant [5 x i8] c"func\00", align 1
 @func477_str2 = private unnamed_addr constant [2 x i8] c"_\00", align 1
-@func481_str1 = private unnamed_addr constant [6 x i8] c"FAIL\0A\00", align 1
 @func492_str1 = private unnamed_addr constant [32 x i8] c"приведение юнион\00", align 1
 @func492_str2 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
-@func492_str3 = private unnamed_addr constant [3 x i8] c"??\00", align 1
 @func497_str1 = private unnamed_addr constant [29 x i8] c"implicit_cast::v.type == nil\00", align 1
 @func497_str2 = private unnamed_addr constant [24 x i8] c"implicit_cast::t == nil\00", align 1
 @func497_str3 = private unnamed_addr constant [14 x i8] c"type overflow\00", align 1
@@ -5437,6 +5435,14 @@ endif_3:
   store %Nat16 %83, %Nat16* %79, align 2
   br label %continue_0
 break_0:
+;stmt16:
+  %84 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 2
+  %85 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %86 = getelementptr inbounds %TokenInfo, %TokenInfo* %85, i1 0, i32 2
+  %87 = load %Nat16, %Nat16* %86
+; index array
+  %88 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %84, i1 0, %Nat16 %87
+  store %Nat8 0, %Nat8* %88, align 1
   ret void
 }
 
@@ -17844,13 +17850,10 @@ define %Value* @do_value_record2 (%AstValue*) {
   br label %fail
 fail:
 ;stmt9:
-  %23 = bitcast [6 x %Nat8]* @func481_str1 to %Str
-  %24 = call %Int32 (%Str, ...) @printf (%Str %23)
-;stmt10:
-  %25 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
-  %26 = load %TokenInfo*, %TokenInfo** %25
-  %27 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %26)
-  ret %Value* %27
+  %23 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
+  %24 = load %TokenInfo*, %TokenInfo** %23
+  %25 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %24)
+  ret %Value* %25
 }
 
 define void @func484 (%Unit*, %Unit*, %Unit*) {
@@ -18537,46 +18540,43 @@ else_5:
   br label %endif_5
 endif_5:
 ;stmt13:
-  %37 = bitcast [3 x %Nat8]* @func492_str3 to %Str
-  call void (%Str, %TokenInfo*) @warning (%Str %37, %TokenInfo* %2)
-;stmt14:
-  %38 = call %Value* (%Value*, %Type*) @cast_generic_rec_val_to_rec (%Value* %0, %Type* %1)
-  ret %Value* %38
+  %37 = call %Value* (%Value*, %Type*) @cast_generic_rec_val_to_rec (%Value* %0, %Type* %1)
+  ret %Value* %37
   br label %endif_4
 else_4:
   br label %endif_4
 endif_4:
-;stmt15:
-  %40 = call i1 (%Value*, %Type*) @func493 (%Value* %0, %Type* %1)
-  br i1 %40, label %then_6, label %else_6
+;stmt14:
+  %39 = call i1 (%Value*, %Type*) @func493 (%Value* %0, %Type* %1)
+  br i1 %39, label %then_6, label %else_6
 then_6:
-;stmt16:
-  %41 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %42 = load %Int64, %Int64* %41
-  %43 = call %Value* (%Type*, %Int64, %TokenInfo*) @func439 (%Type* %1, %Int64 %42, %TokenInfo* %2)
-  ret %Value* %43
+;stmt15:
+  %40 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
+  %41 = load %Int64, %Int64* %40
+  %42 = call %Value* (%Type*, %Int64, %TokenInfo*) @func439 (%Type* %1, %Int64 %41, %TokenInfo* %2)
+  ret %Value* %42
   br label %endif_6
 else_6:
   br label %endif_6
 endif_6:
-;stmt17:
+;stmt16:
   br label %sact
 sact:
+;stmt17:
+  %44 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func437 (%ValueKind 37, %Type* %1, %TokenInfo* %2)
 ;stmt18:
-  %45 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func437 (%ValueKind 37, %Type* %1, %TokenInfo* %2)
+  %45 = getelementptr inbounds %Value, %Value* %44, i1 0, i32 12
+  %46 = insertvalue %ValueCast zeroinitializer, %Value* %0, 0
+  %47 = insertvalue %ValueCast %46, %Type* %1, 1
+  store %ValueCast %47, %ValueCast* %45, align 8
 ;stmt19:
-  %46 = getelementptr inbounds %Value, %Value* %45, i1 0, i32 12
-  %47 = insertvalue %ValueCast zeroinitializer, %Value* %0, 0
-  %48 = insertvalue %ValueCast %47, %Type* %1, 1
-  store %ValueCast %48, %ValueCast* %46, align 8
+  ret %Value* %44
 ;stmt20:
-  ret %Value* %45
-;stmt21:
   br label %fail
 fail:
-;stmt22:
-  %50 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %2)
-  ret %Value* %50
+;stmt21:
+  %49 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %2)
+  ret %Value* %49
 }
 
 define %Value* @func494 (%Value*) {

@@ -220,7 +220,7 @@ do_type_record = DoType {
   ctype := t
 
   Ctx0 = (fields : *List, undef_field : Bool)
-  ctx0 = @Ctx0 (fields=list_new (), undef_field=false) to Var Ctx0
+  ctx0 = (fields=list_new (), undef_field=false) to Var Ctx0
 
   process_decl = ListForeachHandler {
     fieldsdef = data to *AstDecl

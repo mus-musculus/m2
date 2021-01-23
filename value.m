@@ -164,7 +164,7 @@ do_value_when = DoValue {
 
   // контекст
   Kit = (selector : *Value, v : *Value)
-  kit = @Kit (v=v, selector=selector) to Var Kit
+  kit = (v=v, selector=selector) to Var Kit
 
   do_variants = ListForeachHandler {
     variant = data to *AstValueWhenVariant
@@ -377,7 +377,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     call_ti : *TokenInfo
   )
 
-  ctx = @Ctx3 (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
+  ctx = (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
 
   chk = ListWhileHandler2 {
     p = data1 to *Decl   // param
@@ -638,7 +638,7 @@ do_value_cast = DoValue {
 
   if fctx != nil {
     // we're in function (create local var)
-    id = @AstId (str=varname, ti=x.ti) to Var AstId
+    id = (str=varname, ti=x.ti) to Var AstId
     return create_local_var (&id, t, init_value, x.ti)
   } else {
     // create global var
@@ -913,7 +913,7 @@ do_value_record2 = DoValue {
   t = type_new (#TypeGenericRec, 0, ti)
   t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
-  ctx = @Ctx9 (type=t) to Var Ctx9
+  ctx = (type=t) to Var Ctx9
 
 
   // обрабатываем все поля
@@ -942,7 +942,6 @@ do_value_record2 = DoValue {
   return vx
 
 fail:
-  printf("FAIL\n")
   return value_new_poison (x.ti)
 }
 
@@ -964,7 +963,7 @@ do_value_record = DoValue {
   if t.kind == #TypePoison {goto fail}
 
   Ctx5 = (type : *Type, vl : Map)
-  ctx = @Ctx5 (type=t) to Var Ctx5
+  ctx = (type=t) to Var Ctx5
 
   // обрабатываем все поля
   field_value_handle = MapForeachHandler {
@@ -1141,7 +1140,7 @@ cast_generic_rec_val_to_rec = (v : *Value, t : *Type) -> *Value {
   // приводим generic запись к типу записи t
   // для этого приводим все ее поля к типу полей соотв типа-записи
   Ctx12 = (type : *Type, new_vm : Map)
-  ctx = @Ctx12 (type=t) to Var Ctx12
+  ctx = (type=t) to Var Ctx12
   prep = MapForeachHandler {
     id = k to Str
     val = v to *Value
@@ -1179,7 +1178,6 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
       error("type error", ti)
     }
 
-    warning("??", ti)
     return cast_generic_rec_val_to_rec(vx, t)
   }
 
