@@ -245,6 +245,7 @@ string = () -> () {
   }
 
   lstate.token[lstate.ti.length] := 0
+  lstate.ti.length := lstate.ti.length + 1
 }
 
 

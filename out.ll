@@ -386,7 +386,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func129_str1 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func129_str2 = private unnamed_addr constant [16 x i8] c"type expected: \00", align 1
 @func129_str3 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
-@func129_str4 = private unnamed_addr constant [16 x i8] c"type received: \00", align 1
+@func129_str4 = private unnamed_addr constant [17 x i8] c"type received: \00", align 1
 @func129_str5 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @func139_str1 = private unnamed_addr constant [5 x i8] c"self\00", align 1
 @func141_str1 = private unnamed_addr constant [35 x i8] c"value bind error: id already bound\00", align 1
@@ -3897,7 +3897,7 @@ endif_0:
   br i1 %12, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  %13 = bitcast [16 x %Nat8]* @func129_str4 to %Str
+  %13 = bitcast [17 x %Nat8]* @func129_str4 to %Str
   %14 = call %Int32 (%Str, ...) @printf (%Str %13)
 ;stmt7:
   call void (%Type*) @func81 (%Type* %1)
@@ -5438,6 +5438,14 @@ break_0:
 ; index array
   %88 = getelementptr inbounds [255 x %Nat8], [255 x %Nat8]* %84, i1 0, %Nat16 %87
   store %Nat8 0, %Nat8* %88, align 1
+;stmt17:
+  %89 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %90 = getelementptr inbounds %TokenInfo, %TokenInfo* %89, i1 0, i32 2
+  %91 = getelementptr inbounds %LexerState, %LexerState* @lstate, i1 0, i32 5
+  %92 = getelementptr inbounds %TokenInfo, %TokenInfo* %91, i1 0, i32 2
+  %93 = load %Nat16, %Nat16* %92
+  %94 = add %Nat16 %93, 1
+  store %Nat16 %94, %Nat16* %90, align 2
   ret void
 }
 
