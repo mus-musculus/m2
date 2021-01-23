@@ -1145,7 +1145,9 @@ cast_generic_rec_val_to_rec = (v : *Value, t : *Type) -> *Value {
     id = k to Str
     val = v to *Value
     c = ctx to *Ctx12
-    vx = implicit_cast (val, c.type)
+    field = type_record_get_field(c.type, id)
+    assert(field!=nil, "cast_generic_rec_val_to_rec field=nil")
+    vx = implicit_cast (val, field.type)
     map_append (&c.new_vm, id, vx)
   }
   map_foreach(&v.rec.values, prep, &ctx)

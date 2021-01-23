@@ -959,6 +959,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func473_str4 = private unnamed_addr constant [5 x i8] c"%lld\00", align 1
 @func475_str1 = private unnamed_addr constant [5 x i8] c"func\00", align 1
 @func475_str2 = private unnamed_addr constant [2 x i8] c"_\00", align 1
+@func488_func489_str1 = private unnamed_addr constant [38 x i8] c"cast_generic_rec_val_to_rec field=nil\00", align 1
 @func490_str1 = private unnamed_addr constant [32 x i8] c"приведение юнион\00", align 1
 @func490_str2 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func495_str1 = private unnamed_addr constant [29 x i8] c"implicit_cast::v.type == nil\00", align 1
@@ -18345,11 +18346,20 @@ define void @func489 (%Unit*, %Unit*, %Unit*) {
 ;stmt3:
   %7 = getelementptr inbounds %func488.type14, %func488.type14* %6, i1 0, i32 0
   %8 = load %Type*, %Type** %7
-  %9 = call %Value* (%Value*, %Type*) @func495 (%Value* %5, %Type* %8)
-;stmt4:
-  %10 = getelementptr inbounds %func488.type14, %func488.type14* %6, i1 0, i32 1
-  %11 = bitcast %Value* %9 to %Unit*
-  %12 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %10, %Str %4, %Unit* %11)
+  %9 = call %Decl* (%Type*, %Str) @func388 (%Type* %8, %Str %4)
+;stmt4:; loadImmPtr
+  %10 = inttoptr i64 0 to%Decl*
+  %11 = icmp ne %Decl* %9, %10
+  %12 = bitcast [38 x %Nat8]* @func488_func489_str1 to %Str
+  call void (i1, %Str) @assert (i1 %11, %Str %12)
+;stmt5:
+  %13 = getelementptr inbounds %Decl, %Decl* %9, i1 0, i32 1
+  %14 = load %Type*, %Type** %13
+  %15 = call %Value* (%Value*, %Type*) @func495 (%Value* %5, %Type* %14)
+;stmt6:
+  %16 = getelementptr inbounds %func488.type14, %func488.type14* %6, i1 0, i32 1
+  %17 = bitcast %Value* %15 to %Unit*
+  %18 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %16, %Str %4, %Unit* %17)
   ret void
 }
 
