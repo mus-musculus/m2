@@ -1194,6 +1194,39 @@ implicit_cast_int = (v : *Value) -> *Value {
 }
 
 
+generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
+  // если приводим не к структуре то пока!
+  if t.kind != #TypeRecord {
+    return false
+  }
+
+  // в Generic не должно быть больше полей чем в реальной структуре
+  if t_gen.record.decls.volume > t.record.decls.volume {
+    return false
+  }
+
+  // проверяем если имена и типы полей в дженерике соотв
+  // именам и типам в типе к которому приводим значит можно приводить
+  chk = ListSearchHandler {
+    f = data to *Decl
+    t = ctx to *Type
+
+    // сперва ищем такое поле
+    fd = type_record_get_field(t, f.id.str)
+    if fd == nil {return true}  // нет такого поля, приехали
+
+    // при сравнении полей нам нужно сделать implicit_cast! а как?
+
+    if not type_eq(f.type, fd.type) {return true}  // типы не равны, пока
+
+    return false  // и поле с таким id есть и типы совпадают
+  }
+  res = list_search(t_gen.record.decls, chk, t)
+
+  return res == nil
+}
+
+
 // неявное преобразование значения к заданному типу
 // или просто возвращает значение без преобразования (когда оно невозможно)
 implicit_cast = (v : *Value, t : *Type) -> *Value {
@@ -1206,35 +1239,8 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
 
   // GenericRecord -> Record
   if v.kind == #ValueGenericRecord {
-    // если приводим не к структуре то пока!
-    if t.kind != #TypeRecord {
-      return v
-    }
-    // в Generic не должно быть больше полей чем в реальной структуре
-    if v.type.record.decls.volume > t.record.decls.volume {
-      return v
-    }
-
-    // проверяем если имена и типы полей в дженерике соотв
-    // именам и типам в типе к которому приводим значит можно приводить
-    chk = ListSearchHandler {
-      f = data to *Decl
-      t = ctx to *Type
-
-      // сперва ищем такое поле
-      fd = type_record_get_field(t, f.id.str)
-      if fd == nil {return true}  // нет такого поля, приехали
-
-      // при сравнении полей нам нужно сделать implicit_cast! а как?
-
-      if not type_eq(f.type, fd.type) {return true}  // типы не равны, пока
-
-      return false  // и поле с таким id есть и типы совпадают
-    }
-    res = list_search(v.type.record.decls, chk, t)
-
-    if res != nil {
-      return v;  // ничего у нас не вышло привести
+    if not generic_rec_cast_possible (v.type, t) {
+      return v;  // невозможно привести
     }
 
     nv = value_new (#ValueRecord, t, v.ti)
