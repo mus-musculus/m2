@@ -14807,9 +14807,9 @@ define void @func427 () {
 ;stmt4:
   %11 = load %Type*, %Type** @typeUnit
   %12 = getelementptr inbounds %Type, %Type* %11, i1 0, i32 9
-  %13 = getelementptr inbounds %TypeRecord, %TypeRecord* %12, i1 0, i32 0
-  %14 = call %List* () @map_new ()
-  store %List* %14, %List** %13, align 8
+  %13 = call %List* () @map_new ()
+  %14 = insertvalue %TypeRecord zeroinitializer, %List* %13, 0
+  store %TypeRecord %14, %TypeRecord* %12, align 8
 ;stmt5:
   %15 = load %Type*, %Type** @typeUnit
   %16 = getelementptr inbounds %Type, %Type* %15, i1 0, i32 1

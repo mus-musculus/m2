@@ -371,7 +371,6 @@ do_type_union = DoType {
   size = propagation(align(ctx.max_size + 2, 4))
 
 
-
   t.size := size
   t.align := size
 
@@ -466,7 +465,7 @@ type_init = () -> () {
 
   // Unit is an empty record
   typeUnit := type_new (#TypeRecord, 0, nil)
-  typeUnit.record.decls := list_new ()
+  typeUnit.record := (decls=list_new ())
 
   typeUnit.aka := "Unit"
   builtin_type_bind ("Unit", typeUnit)
