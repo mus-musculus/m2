@@ -284,7 +284,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func82_str5 = private unnamed_addr constant [5 x i8] c"Bool\00", align 1
 @func82_str6 = private unnamed_addr constant [13 x i8] c"<TypePoison>\00", align 1
 @func82_str7 = private unnamed_addr constant [16 x i8] c"<TypeForbidden>\00", align 1
-@func82_str8 = private unnamed_addr constant [17 x i8] c"<TypeGenericRec>\00", align 1
+@func82_str8 = private unnamed_addr constant [20 x i8] c"<TypeGenericRecord>\00", align 1
 @func82_str9 = private unnamed_addr constant [14 x i8] c"<TypeUnknown>\00", align 1
 @func83_str1 = private unnamed_addr constant [5 x i8] c"Var \00", align 1
 @func84_str1 = private unnamed_addr constant [2 x i8] c"*\00", align 1
@@ -2728,7 +2728,7 @@ select_1_12:
   %50 = icmp eq %TypeKind %25, 4
   br i1 %50, label %select_1_12_ok, label %select_1_13
 select_1_12_ok:
-  %51 = bitcast [17 x %Nat8]* @func82_str8 to %Str
+  %51 = bitcast [20 x %Nat8]* @func82_str8 to %Str
   %52 = call %Int32 (%Str, ...) @printf (%Str %51)
   br label %select_1_end
 select_1_13:

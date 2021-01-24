@@ -70,7 +70,7 @@ AstTypeKind = {
   #AstTypeNamed
   #AstTypeEnum
   #AstTypeRecord
-  #AstTypeGenericRec
+  #AstTypeGenericRecord  // по сути нигде и не используется...
   #AstTypeArray
   #AstTypeArrayU
   #AstTypeFunc
@@ -310,7 +310,7 @@ TypeKind = {
   #TypeGenericReference
 
   // Тип для записи
-  #TypeGenericRec
+  #TypeGenericRecord
 
   // Nat8, Nat16, Int8, Int16, etc.
   // see TypeNumeric (TypeNumeric#power, TypeNumeric#signed)

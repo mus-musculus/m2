@@ -1060,7 +1060,7 @@ parse_value_rec = AstValueParser {
     need(",")
   }
 
-  t = ast_type_new(#AstTypeGenericRec, ti)
+  t = ast_type_new(#AstTypeGenericRecord, ti)
   v = ast_value_new (#AstValueRec, ti)
   v.rec := (type=t, values=fields, ti=ti)
   return v

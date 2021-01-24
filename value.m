@@ -632,7 +632,7 @@ do_value_cast = DoValue {
       #TypeVar       => do_value_cast_var   (v, t, ti)
       #TypeBool      => do_value_cast_bool  (v, t, ti)
       #TypeGenericReference => do_value_cast_ref (v, t, ti)
-      #TypeGenericRec => do_value_cast_gen_rec (v, t, ti)
+      #TypeGenericRecord => do_value_cast_gen_rec (v, t, ti)
       #TypeNumeric   => do_value_cast_num   (v, t, ti)
       #TypeFunc      => do_value_cast_func  (v, t, ti)
       #TypeEnum      => do_value_cast_set   (v, t, ti)
@@ -941,7 +941,7 @@ do_value_record = DoValue {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
-  t = type_new (#TypeGenericRec, 0, ti)
+  t = type_new (#TypeGenericRecord, 0, ti)
   t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
   ctx = (type=t) to Var Ctx9
@@ -954,7 +954,7 @@ do_value_record = DoValue {
     c = ctx to *Ctx9
     v = do_value (field_ast_val)
 
-    // создаем поле для GenericRec типа
+    // создаем поле для #TypeGenericRecord типа
     // убери отсюда мап тк нужно не просто строку id давать а AstId
     // а так как сейчас у тебя теряется ti! (но пока так)
     // оч хреново - тут нет ti нигде
@@ -1125,8 +1125,8 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
     return value_new_poison (ti)
   }
 
-  // приведение GenericRec к Rec
-  if vx.type.kind == #TypeGenericRec and t.kind == #TypeRecord {
+  // приведение #TypeGenericRecord к Rec
+  if vx.type.kind == #TypeGenericRecord and t.kind == #TypeRecord {
     if not generic_rec_cast_possible (vx.type, t) {
       error("type error", ti)
     }
@@ -1222,7 +1222,7 @@ generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
 
       // или это Generic Record - если ожидаем Record попробуем привести
       // дженерик к нашему рекорд.
-      if f.type.kind == #TypeGenericRec {
+      if f.type.kind == #TypeGenericRecord {
         return not generic_rec_cast_possible(f.type, fd.type)
       }
 
