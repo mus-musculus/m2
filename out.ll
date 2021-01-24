@@ -557,9 +557,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func232_str10 = private unnamed_addr constant [2 x i8] c".\00", align 1
 @func233_str1 = private unnamed_addr constant [2 x i8] c"(\00", align 1
 @func233_str2 = private unnamed_addr constant [2 x i8] c")\00", align 1
-@func234_func235_str1 = private unnamed_addr constant [2 x i8] c"@\00", align 1
-@func234_func235_str2 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
-@func234_func235_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
+@func234_func235_str1 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
+@func234_func235_str2 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
 @func234_func236_str1 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
 @func234_func236_str2 = private unnamed_addr constant [14 x i8] c"received: %s\0A\00", align 1
 @func234_func236_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
@@ -941,7 +940,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func449_func450_str1 = private unnamed_addr constant [21 x i8] c"not enough arguments\00", align 1
 @func449_func450_str2 = private unnamed_addr constant [16 x i8] c"excess argument\00", align 1
 @func453_str1 = private unnamed_addr constant [16 x i8] c"undefined field\00", align 1
-@func456_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
+@func456_str1 = private unnamed_addr constant [17 x i8] c"type cast error–\00", align 1
 @func457_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func459_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func460_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
@@ -7948,27 +7947,15 @@ endif_1:
 
 define %AstValue* @func235 (%Token*) {
 ;stmt0:
-  %2 = bitcast [2 x %Nat8]* @func234_func235_str1 to %Str
-  %3 = call i1 (%Str) @func198 (%Str %2)
-  br i1 %3, label %then_0, label %else_0
-then_0:
+  %2 = bitcast [19 x %Nat8]* @func234_func235_str1 to %Str
+  %3 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
+  call void (%Str, %TokenInfo*) @error (%Str %2, %TokenInfo* %3)
 ;stmt1:
-  %4 = call %AstValue* () @func241 ()
-  ret %AstValue* %4
-  br label %endif_0
-else_0:
-  br label %endif_0
-endif_0:
-;stmt2:
-  %6 = bitcast [19 x %Nat8]* @func234_func235_str2 to %Str
-  %7 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
-  call void (%Str, %TokenInfo*) @error (%Str %6, %TokenInfo* %7)
-;stmt3:
-  %8 = bitcast [9 x %Nat8]* @func234_func235_str3 to %Str
-  call void (i1, %Str) @assert (i1 0, %Str %8)
-;stmt4:; loadImmPtr
-  %9 = inttoptr i64 0 to%AstValue*
-  ret %AstValue* %9
+  %4 = bitcast [9 x %Nat8]* @func234_func235_str2 to %Str
+  call void (i1, %Str) @assert (i1 0, %Str %4)
+;stmt2:; loadImmPtr
+  %5 = inttoptr i64 0 to%AstValue*
+  ret %AstValue* %5
 }
 
 define %AstValue* @func236 (%Token*) {
@@ -16687,7 +16674,7 @@ define %Value* @do_value_cast_bool (%Value*, %Type*, %TokenInfo*) {
   br i1 %6, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  %7 = bitcast [16 x %Nat8]* @func456_str1 to %Str
+  %7 = bitcast [17 x %Nat8]* @func456_str1 to %Str
   call void (%Str, %TokenInfo*) @error (%Str %7, %TokenInfo* %2)
   br label %endif_0
 else_0:
