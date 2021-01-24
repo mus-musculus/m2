@@ -433,7 +433,7 @@ ValueRecord = (type : *Type, values : Map, ti : *TokenInfo)
 ValueArray  = (type : *Type, items : List, ti : *TokenInfo)
 
 ValueUn     = (type : *Type, x : *Value, ti : *TokenInfo)
-ValueBin    = (type : *Type, l, r : *Value, ti : *TokenInfo)
+ValueBin    = (type : *Type, left, right : *Value, ti : *TokenInfo)
 ValueCall   = (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
 ValueAccess = (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
 ValueIndex  = (type : *Type, array, index : *Value, ti : *TokenInfo)
@@ -567,7 +567,6 @@ Stmt = (
   continue : StmtContinue
 
   l : Str        // goto & label statement
-
 //)
 
   ti : *TokenInfo

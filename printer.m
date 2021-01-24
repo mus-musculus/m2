@@ -987,8 +987,8 @@ llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
 
 
 eval_bin = Eval {
-  l = reval (x.bin.l)
-  r = reval (x.bin.r)
+  l = reval (x.bin.left)
+  r = reval (x.bin.right)
 
   // берем тип левого а не тип x тк у x может быть Bool тип (в случае отношений)!
   signed = l.type.num.signed

@@ -351,7 +351,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin := (l=l, r=r)
+  v.bin := (left=l, right=r)
   return v
 
 fail:
@@ -1069,7 +1069,7 @@ do_value_shift = DoValue {
   r2 = cast (r, l.type, r.ti)
 
   v = value_new (k, l.type, x.ti)
-  v.bin := (l=l2, r=r2)
+  v.bin := (left=l2, right=r2)
   return v
 
 fail:

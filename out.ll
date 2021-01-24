@@ -368,7 +368,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func122_str1 = private unnamed_addr constant [5 x i8] c"info\00", align 1
 @func122_str2 = private unnamed_addr constant [5 x i8] c"info\00", align 1
 @func122_str3 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
-@func123_str1 = private unnamed_addr constant [8 x i8] c"warning\00", align 1
+@func123_str1 = private unnamed_addr constant [9 x i8] c"warning¿\00", align 1
 @func123_str2 = private unnamed_addr constant [8 x i8] c"warning\00", align 1
 @func123_str3 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @func123_str4 = private unnamed_addr constant [14 x i8] c"*** STOP ***\0A\00", align 1
@@ -3513,7 +3513,7 @@ define void @func111 (%Value*, %Str) {
   %13 = call %Int32 (%Str, ...) @printf (%Str %12)
 ;stmt4:
   %14 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %15 = getelementptr inbounds %ValueBin, %ValueBin* %14, i1 0, i32 1
+  %15 = getelementptr inbounds %ValueBin, %ValueBin* %14, i1 0, i32 2
   %16 = load %Value*, %Value** %15
   %17 = getelementptr inbounds %Value, %Value* %16, i1 0, i32 1
   %18 = load %Type*, %Type** %17
@@ -3602,7 +3602,7 @@ define void @warning (%Str, %TokenInfo*) {
   br i1 %4, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  %5 = bitcast [8 x %Nat8]* @func123_str1 to %Str
+  %5 = bitcast [9 x %Nat8]* @func123_str1 to %Str
   call void (%Str, %Nat8, %TokenInfo*, %Str) @txti (%Str %5, %Nat8 34, %TokenInfo* %1, %Str %0)
 ;stmt2:
   call void (%TokenInfo*) @func127 (%TokenInfo* %1)
