@@ -940,7 +940,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func447_str1 = private unnamed_addr constant [18 x i8] c"binary type error\00", align 1
 @func449_func450_str1 = private unnamed_addr constant [21 x i8] c"not enough arguments\00", align 1
 @func449_func450_str2 = private unnamed_addr constant [16 x i8] c"excess argument\00", align 1
-@func453_str1 = private unnamed_addr constant [17 x i8] c"undefined fieldp\00", align 1
+@func453_str1 = private unnamed_addr constant [16 x i8] c"undefined field\00", align 1
 @func456_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func457_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func459_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
@@ -16634,7 +16634,7 @@ endif_1:
   br i1 %49, label %then_2, label %else_2
 then_2:
 ;stmt10:
-  %50 = bitcast [17 x %Nat8]* @func453_str1 to %Str
+  %50 = bitcast [16 x %Nat8]* @func453_str1 to %Str
   %51 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 10
   %52 = getelementptr inbounds %AstValueAccess, %AstValueAccess* %51, i1 0, i32 1
   %53 = load %AstId*, %AstId** %52

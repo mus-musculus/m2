@@ -1148,7 +1148,7 @@ parse_value_func = AstValueParser {
   b = parse_stmt_block(block_ti)
 
   v = ast_value_new(#AstValueFunc, func_ti)
-  v.func := @AstValueFunc (type=t, block_stmt=b as *AstStmt, ti=block_ti)
+  v.func := (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc
   return v
 }
 
@@ -1158,7 +1158,7 @@ parse_value_extern = AstValueParser {
   t = parse_type()
 
   v = ast_value_new(#AstValueFunc, ti)
-  v.func := @AstValueFunc (type=t, block_stmt=unit, ti=ti)
+  v.func := (type=t, block_stmt=unit, ti=ti) to AstValueFunc
   v.extern := true
   return v
 }
@@ -1359,7 +1359,7 @@ parse_stmt_if = AstStmtParser {
   if then is Unit {return unit}
 
   s = ast_stmt_new(#AstStmtIf, ti)
-  s.if := @AstStmtIf (cond=cond, then=then as *AstStmt, else=els)
+  s.if := (cond=cond, then=then as *AstStmt, else=els) to AstStmtIf
   return s
 }
 
@@ -1375,7 +1375,7 @@ parse_stmt_while = AstStmtParser {
   if block is Unit {return unit}
 
   s = ast_stmt_new(#AstStmtWhile, ti)
-  s.while := @AstStmtWhile (cond=cond, block=block as *AstStmt)
+  s.while := (cond=cond, block=block as *AstStmt) to AstStmtWhile
   return s
 }
 
@@ -1383,7 +1383,7 @@ parse_stmt_while = AstStmtParser {
 parse_stmt_return = AstStmtParser {
   if separator() {
     s = ast_stmt_new(#AstStmtReturn, ti)
-    s.return := @AstStmtReturn (value=unit)
+    s.return := (value=unit) to AstStmtReturn
     return s
   }
 
@@ -1394,7 +1394,7 @@ parse_stmt_return = AstStmtParser {
   }
 
   s = ast_stmt_new(#AstStmtReturn, ti)
-  s.return := @AstStmtReturn (value=v)
+  s.return := (value=v) to AstStmtReturn
   return s
 }
 
