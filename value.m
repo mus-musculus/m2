@@ -601,16 +601,21 @@ do_value_cast_gen_rec = DoValueCast {
 
 
 do_value_cast = DoValue {
-  v = do_value (x.cast.value)
+  v0 = do_value (x.cast.value)
   t = do_type (x.cast.type)
   ti = x.ti
 
-  if v.kind == #ValuePoison {goto fail}
+  if v0.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
 
-  /*if v.kind == #ValueGenericRecord {
-    warning("ValueGenericRecord", v.ti)
-  }*/
+  // если приводим к Var-типу попробуем сделать неявное приведение значения
+  // к типу который завернут в тип Var. Это нужно для присваивания переменной-
+  // записи generic-записи
+
+  v = when t.kind {
+    #TypeVar => implicit_cast(v0, t.var.of)
+    else => v0
+  }
 
   // если приводим не к переменной
   if t.kind != #TypeVar {
@@ -934,7 +939,7 @@ fail:
 }
 
 
-do_value_record2 = DoValue {
+do_value_record = DoValue {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
@@ -973,12 +978,15 @@ fail:
   return value_new_poison (x.ti)
 }
 
+/*
 
 do_value_record = DoValue {
   if x.rec.type.kind == #AstTypeGenericRec {
     // это запись без типа
     return do_value_record2(x)
   }
+
+  fatal("wtf?")
 
   // тип будет nil если это generic запись
   t = when x.rec.type {
@@ -1032,6 +1040,7 @@ do_value_record = DoValue {
 fail:
   return value_new_poison (x.ti)
 }
+*/
 
 
 
@@ -1247,6 +1256,7 @@ generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
     return false
   }
 
+
   // проверяем если имена и типы полей в дженерике соотв
   // именам и типам в типе к которому приводим значит можно приводить
   chk = ListSearchHandler {
@@ -1272,8 +1282,15 @@ generic_rec_cast_possible = (t_gen, t : *Type) -> Bool {
         return false  //
       }
 
+      // может это юнион - смотрим можем ли привести к нему
       if fd.type.kind == #TypeUnion {
         return not type_present_in_list (&fd.type.union.types, t)
+      }
+
+      // или это Generic Record - если ожидаем Record попробуем привести
+      // дженерик к нашему рекорд.
+      if f.type.kind == #TypeGenericRec {
+        return not generic_rec_cast_possible(f.type, fd.type)
       }
 
       return true  // типы не равны, до свиданья

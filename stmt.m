@@ -74,15 +74,6 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
     return unit
   }
 
-  if lx.kind != #AstValueAccess and
-     lx.kind != #AstValueIndex and
-     lx.kind != #AstValueDeref
-  {
-    /*if lval.type.kind != #TypeVar {
-      //warning("expected var", x.ti)
-    }*/
-  }
-
   ltype = when lval.type.kind {
     #TypeVar => lval.type.var.of
     else => lval.type

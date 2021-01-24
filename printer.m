@@ -1166,7 +1166,7 @@ eval_rec = Eval {
     v : LLVM_Value  // значение итеративно формируемой структуры
   )
 
-  ctx = ((type=x.rec.type, v=(kind=#LLVM_ValueZero)) to Ctx6) to Var Ctx6
+  ctx = (type=x.rec.type, v=(kind=#LLVM_ValueZero)) to Var Ctx6
 
   // итеративно формируем структуру
   pack = MapForeachHandler {
@@ -1201,7 +1201,7 @@ eval_arr = Eval {
 
   // изза того что приведение к вар типу неправильно реализовано
   // появлется такой вот маразм!
-  ctx = ((type=x.array.type, v=(kind=#LLVM_ValueZero), cnt=0) to Ctx8) to Var Ctx8
+  ctx = (type=x.array.type, v=(kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
 
   // итеративно формируем массив
   pack = ListForeachHandler {
