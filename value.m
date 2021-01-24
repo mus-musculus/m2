@@ -851,9 +851,8 @@ do_value_func = DoValue {
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_block = ctx to *Block
-
     param_value = value_new (#ValueParam, decl.type, decl.ti)
-    param_value.field := decl
+    param_value.param := decl
     map_append (&param_block.index.values, decl.id.str, param_value)
   }
   list_foreach (t.func.from.record.decls, getparam, param_block)
@@ -909,7 +908,6 @@ do_value_array = DoValue {
   if t.kind == #TypePoison {goto fail}
 
   Ctx7 = (type : *Type, vl : List)
-
   ctx = (type=t) to Var Ctx7
 
   // обрабатываем все поля

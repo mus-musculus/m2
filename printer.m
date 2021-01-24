@@ -493,7 +493,7 @@ eval = Eval {
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg) to LLVM_Value
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab) to LLVM_Value
 
-    #ValueParam       => (kind=#LLVM_ValueRegister, type=x.type, reg=x.field.offset to Nat32) to LLVM_Value
+    #ValueParam       => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32) to LLVM_Value
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x)

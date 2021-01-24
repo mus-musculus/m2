@@ -455,7 +455,7 @@ Value = (
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
-  field  : *Decl        // ValueParam (Decl#offset)
+  param  : *Decl        // ValueParam (Decl#offset)
   expr   : *Expr        // ValueLocalConst
 
   // operation info
