@@ -429,20 +429,20 @@ ValueKind = {
 
 
 ValueImm    = (type : *Type, value : Int64, ti : *TokenInfo)
-ValueRecord = (type : *Type, values : Map)
-ValueArray  = (type : *Type, items : List)
+ValueRecord = (type : *Type, values : Map, ti : *TokenInfo)
+ValueArray  = (type : *Type, items : List, ti : *TokenInfo)
 
-ValueUn     = (type : *Type, x : *Value)
-ValueBin    = (type : *Type, l, r : *Value)
-ValueCall   = (type : *Type, func : *Value, args : *List)
-ValueAccess = (type : *Type, value : *Value, field : Str)
-ValueIndex  = (type : *Type, array, index : *Value)
-ValueCast   = (type : *Type, value : *Value, type : *Type)
-ValueAs     = (type : *Type, value : *Value, type : *Type)
-ValueIs     = (type : *Type, value : *Value, variant : Nat)
+ValueUn     = (type : *Type, x : *Value, ti : *TokenInfo)
+ValueBin    = (type : *Type, l, r : *Value, ti : *TokenInfo)
+ValueCall   = (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
+ValueAccess = (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
+ValueIndex  = (type : *Type, array, index : *Value, ti : *TokenInfo)
+ValueCast   = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueAs     = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueIs     = (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
 
-ValueWhenVariant = (tx : *Type, x, y : *Value)
-ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value)
+ValueWhenVariant = (tx : *Type, x, y : *Value, ti : *TokenInfo)
+ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
 Value = (

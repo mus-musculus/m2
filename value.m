@@ -192,7 +192,7 @@ do_value_when = DoValue {
       if not type_check (kit.selector.type, key.type, key.ti) {}
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-      *v := (x=key, y=val)
+      *v := (x=key, y=val, ti=variant.ti)
 
       list_append (&kit.v.select.variants, v)
 
