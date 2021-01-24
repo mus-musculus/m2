@@ -197,20 +197,20 @@ target triple = "x86_64-apple-macosx10.15.0"
 %TypeKind = type i16
 %Type = type {%TypeKind, %Str, %Nat32, %Nat32, %TypeNumeric, %TypeFunc, %TypePointer, %TypeArray, %TypeArrayU, %TypeRecord, %TypeEnum, %TypeVar, %TypeUnion, %TokenInfo*}
 %ValueKind = type i16
-%ValueAccess = type {%Type*, %Value*, %Str}
+%ValueImm = type {%Type*, %Int64, %TokenInfo*}
+%ValueRecord = type {%Type*, %List}
+%ValueArray = type {%Type*, %List}
+%ValueUn = type {%Type*, %Value*}
 %ValueBin = type {%Type*, %Value*, %Value*}
 %ValueCall = type {%Type*, %Value*, %List*}
+%ValueAccess = type {%Type*, %Value*, %Str}
+%ValueIndex = type {%Type*, %Value*, %Value*}
 %ValueCast = type {%Type*, %Value*, %Type*}
 %ValueAs = type {%Type*, %Value*, %Type*}
 %ValueIs = type {%Type*, %Value*, %Nat32}
-%ValueIndex = type {%Type*, %Value*, %Value*}
-%ValueUn = type {%Type*, %Value*}
 %ValueWhenVariant = type {%Type*, %Value*, %Value*}
 %ValueWhen = type {%Type*, %Value*, %List, %Value*}
-%ValueRecord = type {%Type*, %List}
-%ValueArray = type {%Type*, %List}
-%ValueImmediate = type {%Type*, %Int64, %TokenInfo*}
-%Value = type {%ValueKind, %Type*, %ValueImmediate, %Definition*, %Decl*, %Decl*, %Expr*, %ValueUn, %ValueBin, %ValueIndex, %ValueAccess, %ValueCast, %ValueAs, %ValueIs, %ValueCall, %ValueWhen, %ValueRecord, %ValueArray, %TokenInfo*}
+%Value = type {%ValueKind, %Type*, %ValueImm, %Definition*, %Decl*, %Decl*, %Expr*, %ValueUn, %ValueBin, %ValueIndex, %ValueAccess, %ValueCast, %ValueAs, %ValueIs, %ValueCall, %ValueWhen, %ValueRecord, %ValueArray, %TokenInfo*}
 %StmtKind = type i16
 %Index = type {%List, %List}
 %Block = type {%Block*, %Index, %List, %List, %TokenInfo*}
@@ -10391,7 +10391,7 @@ select_1_0_ok:
   %7 = load %Type*, %Type** %6
   %8 = insertvalue %LLVM_Value %5, %Type* %7, 1
   %9 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %10 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %9, i1 0, i32 1
+  %10 = getelementptr inbounds %ValueImm, %ValueImm* %9, i1 0, i32 1
   %11 = load %Int64, %Int64* %10
   %12 = insertvalue %LLVM_Value %8, %Int64 %11, 2
   br label %select_1_end
@@ -13936,7 +13936,7 @@ else_1:
 endif_1:
 ;stmt6:
   %21 = getelementptr inbounds %Value, %Value* %13, i1 0, i32 2
-  %22 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %21, i1 0, i32 1
+  %22 = getelementptr inbounds %ValueImm, %ValueImm* %21, i1 0, i32 1
   %23 = load %Int64, %Int64* %22
   %24 = trunc %Int64 %23 to %Nat32
   %25 = getelementptr inbounds %AstType, %AstType* %0, i1 0, i32 10
@@ -15144,10 +15144,10 @@ define %Value* @func437 (%Type*, %Int64, %TokenInfo*) {
   %4 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 3, %Type* %0, %TokenInfo* %2)
 ;stmt1:
   %5 = getelementptr inbounds %Value, %Value* %4, i1 0, i32 2
-  %6 = insertvalue %ValueImmediate zeroinitializer, %Type* %0, 0
-  %7 = insertvalue %ValueImmediate %6, %Int64 %1, 1
-  %8 = insertvalue %ValueImmediate %7, %TokenInfo* %2, 2
-  store %ValueImmediate %8, %ValueImmediate* %5, align 8
+  %6 = insertvalue %ValueImm zeroinitializer, %Type* %0, 0
+  %7 = insertvalue %ValueImm %6, %Int64 %1, 1
+  %8 = insertvalue %ValueImm %7, %TokenInfo* %2, 2
+  store %ValueImm %8, %ValueImm* %5, align 8
 ;stmt2:
   ret %Value* %4
 }
@@ -16060,11 +16060,11 @@ select_1_end:
 then_4:
 ;stmt15:
   %55 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 2
-  %56 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %55, i1 0, i32 1
+  %56 = getelementptr inbounds %ValueImm, %ValueImm* %55, i1 0, i32 1
   %57 = load %Int64, %Int64* %56
 ;stmt16:
   %58 = getelementptr inbounds %Value, %Value* %24, i1 0, i32 2
-  %59 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %58, i1 0, i32 1
+  %59 = getelementptr inbounds %ValueImm, %ValueImm* %58, i1 0, i32 1
   %60 = load %Int64, %Int64* %59
 ;stmt17:
   br label %select_2_0
@@ -17963,7 +17963,7 @@ then_1:
   %13 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
   %14 = load %Type*, %Type** %13
   %15 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 2
-  %16 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %15, i1 0, i32 1
+  %16 = getelementptr inbounds %ValueImm, %ValueImm* %15, i1 0, i32 1
   %17 = load %Int64, %Int64* %16
   %18 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
   %19 = load %TokenInfo*, %TokenInfo** %18
@@ -18024,7 +18024,7 @@ then_1:
   %13 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
   %14 = load %Type*, %Type** %13
   %15 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 2
-  %16 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %15, i1 0, i32 1
+  %16 = getelementptr inbounds %ValueImm, %ValueImm* %15, i1 0, i32 1
   %17 = load %Int64, %Int64* %16
   %18 = sub nsw %Int64 0, %17
   %19 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
@@ -18086,7 +18086,7 @@ then_1:
   %13 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 1
   %14 = load %Type*, %Type** %13
   %15 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 2
-  %16 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %15, i1 0, i32 1
+  %16 = getelementptr inbounds %ValueImm, %ValueImm* %15, i1 0, i32 1
   %17 = load %Int64, %Int64* %16
   %18 = xor %Int64 %17, -1
   %19 = getelementptr inbounds %AstValue, %AstValue* %0, i1 0, i32 16
@@ -18188,19 +18188,19 @@ select_2_0:
   br i1 %31, label %select_2_0_ok, label %select_2_1
 select_2_0_ok:
   %32 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 2
-  %33 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %32, i1 0, i32 1
+  %33 = getelementptr inbounds %ValueImm, %ValueImm* %32, i1 0, i32 1
   %34 = load %Int64, %Int64* %33
   %35 = getelementptr inbounds %Value, %Value* %9, i1 0, i32 2
-  %36 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %35, i1 0, i32 1
+  %36 = getelementptr inbounds %ValueImm, %ValueImm* %35, i1 0, i32 1
   %37 = load %Int64, %Int64* %36
   %38 = shl %Int64 %34, %37
   br label %select_2_end
 select_2_1:
   %39 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 2
-  %40 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %39, i1 0, i32 1
+  %40 = getelementptr inbounds %ValueImm, %ValueImm* %39, i1 0, i32 1
   %41 = load %Int64, %Int64* %40
   %42 = getelementptr inbounds %Value, %Value* %9, i1 0, i32 2
-  %43 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %42, i1 0, i32 1
+  %43 = getelementptr inbounds %ValueImm, %ValueImm* %42, i1 0, i32 1
   %44 = load %Int64, %Int64* %43
   %45 = ashr %Int64 %41, %44
   br label %select_2_end
@@ -18485,7 +18485,7 @@ endif_4:
 then_6:
 ;stmt15:
   %40 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %41 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %40, i1 0, i32 1
+  %41 = getelementptr inbounds %ValueImm, %ValueImm* %40, i1 0, i32 1
   %42 = load %Int64, %Int64* %41
   %43 = call %Value* (%Type*, %Int64, %TokenInfo*) @func437 (%Type* %1, %Int64 %42, %TokenInfo* %2)
   ret %Value* %43
@@ -18526,7 +18526,7 @@ select_1_0:
 select_1_0_ok:
   %7 = load %Type*, %Type** @typeBaseInt
   %8 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %9 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %8, i1 0, i32 1
+  %9 = getelementptr inbounds %ValueImm, %ValueImm* %8, i1 0, i32 1
   %10 = load %Int64, %Int64* %9
   %11 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
   %12 = load %TokenInfo*, %TokenInfo** %11
@@ -18763,7 +18763,7 @@ then_5:
   %40 = zext %Nat32 %39 to %Nat128
   %41 = shl %Nat128 1, %40
   %42 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %43 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %42, i1 0, i32 1
+  %43 = getelementptr inbounds %ValueImm, %ValueImm* %42, i1 0, i32 1
   %44 = load %Int64, %Int64* %43
   %45 = zext %Int64 %44 to %Nat128
   %46 = icmp ule %Nat128 %41, %45
@@ -18780,7 +18780,7 @@ else_6:
 endif_6:
 ;stmt14:
   %50 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %51 = getelementptr inbounds %ValueImmediate, %ValueImmediate* %50, i1 0, i32 1
+  %51 = getelementptr inbounds %ValueImm, %ValueImm* %50, i1 0, i32 1
   %52 = load %Int64, %Int64* %51
   %53 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
   %54 = load %TokenInfo*, %TokenInfo** %53

@@ -428,23 +428,22 @@ ValueKind = {
 }
 
 
-ValueAccess = (type : *Type, value : *Value, field : Str)
+ValueImm    = (type : *Type, value : Int64, ti : *TokenInfo)
+ValueRecord = (type : *Type, values : Map)
+ValueArray  = (type : *Type, items : List)
+
+ValueUn     = (type : *Type, x : *Value)
 ValueBin    = (type : *Type, l, r : *Value)
 ValueCall   = (type : *Type, func : *Value, args : *List)
+ValueAccess = (type : *Type, value : *Value, field : Str)
+ValueIndex  = (type : *Type, array, index : *Value)
 ValueCast   = (type : *Type, value : *Value, type : *Type)
 ValueAs     = (type : *Type, value : *Value, type : *Type)
 ValueIs     = (type : *Type, value : *Value, variant : Nat)
-ValueIndex  = (type : *Type, array, index : *Value)
-ValueUn     = (type : *Type, x : *Value)
 
 ValueWhenVariant = (tx : *Type, x, y : *Value)
-ValueWhen = (type : *Type, x : *Value, variants : List, other : *Value)
+ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value)
 
-ValueRecord = (type : *Type, values : Map)
-ValueArray = (type : *Type, items : List)
-
-ValueImmediate = (type : *Type, value : Int64, ti : *TokenInfo)
-//ValueSizeof = (type : *Type, value : Int64, ti : *TokenInfo)
 
 Value = (
   kind : ValueKind
@@ -452,9 +451,8 @@ Value = (
   type : *Type
 
 //union (
-  imm    : ValueImmediate
+  imm    : ValueImm
 
-//def    : *Definition  // we cannot import asm/types because of recursive import :(
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
   field  : *Decl        // ValueParam (Decl#offset)
@@ -475,10 +473,6 @@ Value = (
   //load   : *Value  // #ValueLoad
 //)
 
-  //need_load : Bool
-
-//  declared_at,     // place in code where value was mentioned first time
-//  defined_at,      // place in code where value was defined
   ti : *TokenInfo  // place in code where value was mentioned
 )
 
