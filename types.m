@@ -452,6 +452,9 @@ Value = (
 
 //union (
   imm    : ValueImm
+  rec    : ValueRecord
+  array  : ValueArray
+
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
@@ -468,8 +471,7 @@ Value = (
   is     : ValueIs
   call   : ValueCall
   select : ValueWhen
-  rec    : ValueRecord
-  array  : ValueArray
+
   //load   : *Value  // #ValueLoad
 //)
 

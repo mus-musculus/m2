@@ -2,6 +2,10 @@
 /*                                Value                                      */
 /*****************************************************************************/
 
+is_value_imm_num = (v : *Value) -> Bool {
+  return v.kind == #ValueImmediate
+}
+
 smalloc = (size : Nat) -> *Unit or Unit {
   p = malloc(size)
   if p == nil {return unit}
@@ -175,18 +179,20 @@ do_value_when = DoValue {
 
       val0 = do_value (variant.y)
 
-      if kit.v.type == nil {
-        kit.v.type := val0.type
-      } else {
-        if not type_check (val0.type, kit.v.type, val0.ti) {}
-      }
-
       // если тип селекта определен,
       // пытаемся неявно привести к нему все варианты
       val = when kit.v.type {
         nil => val0
         else => implicit_cast (val0, kit.v.type)
       }
+
+      if kit.v.type == nil {
+        kit.v.type := val.type
+      } else {
+        if not type_check (kit.v.type, val.type, val.ti) {}
+      }
+
+
 
 
       if not type_check (kit.selector.type, key.type, key.ti) {}
@@ -318,7 +324,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
     else => l.type
   }
 
-  if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
+  if is_value_imm_num(l) and is_value_imm_num(r) {
     lv = l.imm.value
     rv = r.imm.value
     imm = when k {
@@ -982,7 +988,7 @@ do_value_plus = DoValue {
 
   if v.kind == #ValuePoison {goto fail}
 
-  if v.kind == #ValueImmediate {
+  if is_value_imm_num(v) {
     return value_new_imm (v.type, v.imm.value, x.ti)
   }
 
@@ -1000,7 +1006,7 @@ do_value_minus = DoValue {
 
   if v.kind == #ValuePoison {goto fail}
 
-  if v.kind == #ValueImmediate {
+  if is_value_imm_num(v) {
     return value_new_imm (v.type, -v.imm.value, x.ti)
   }
 
@@ -1018,7 +1024,7 @@ do_value_not = DoValue {
 
   if v.kind == #ValuePoison {goto fail}
 
-  if v.kind == #ValueImmediate {
+  if is_value_imm_num(v) {
     return value_new_imm (v.type, not v.imm.value, x.ti)
   }
 
@@ -1045,7 +1051,7 @@ do_value_shift = DoValue {
   }
 
   // свертка констант
-  if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
+  if is_value_imm_num(l) and is_value_imm_num(r) {
 
     d = when k {
       #ValueShl => l.imm.value << r.imm.value
@@ -1136,7 +1142,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // можем ли мы приводить непосредственно значение v к типу t ?
   immCastIsPossible = (v : *Value, t : *Type) -> Bool {
-    return v.kind == #ValueImmediate  // STUB
+    return is_value_imm_num(v)  // STUB
   }
 
   // creating new imm value with target type
@@ -1259,7 +1265,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   }
 
   // TypeNumeric -> Basic:Integer
-  if v.kind == #ValueImmediate {
+  if is_value_imm_num(v) {
     if type_is_generic_num (v.type) and type_is_basic_integer (t) {
       // проверяем если константа вписывается в размер типа
       if 1 to Nat128 << t.num.power <= v.imm.value to Nat128 {

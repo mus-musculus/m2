@@ -260,3 +260,4 @@ exist value_print_cast : (v : *Value) -> ()
 exist value_print_select : (v : *Value) -> ()
 
 
+//exist is_value_imm_num : (v : *Value) -> Bool

@@ -458,7 +458,7 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
 
 
 
-
+exist eval_immediate : Eval
 exist eval_call : Eval
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
@@ -476,6 +476,7 @@ exist eval_as : Eval
 exist eval_is : Eval
 
 
+
 exist def_getname : (d : *Definition) -> Str
 // value evaluation
 // Принимает на вход значение. Возвращает объект принтера
@@ -484,16 +485,16 @@ exist def_getname : (d : *Definition) -> Str
 // (только если это не lval)
 eval = Eval {
   return when x.kind {
-    #ValueImmediate   => (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value) to LLVM_Value
+    #ValueImmediate   => eval_immediate (x)
 
-    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def)) to LLVM_Value
+    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
-    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id) to LLVM_Value
+    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
-    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg) to LLVM_Value
-    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab) to LLVM_Value
+    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
+    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
 
-    #ValueParam       => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32) to LLVM_Value
+    #ValueParam       => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x)
@@ -519,6 +520,11 @@ eval = Eval {
 
     else => eval_bin (x)
   }
+}
+
+
+eval_immediate = Eval {
+  return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value) to LLVM_Value
 }
 
 // right eval
