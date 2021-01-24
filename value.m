@@ -6,6 +6,11 @@ is_value_imm_num = (v : *Value) -> Bool {
   return v.kind == #ValueImmediate
 }
 
+/*is_value_imm_rec = (v : *Value) -> Bool {
+  if v.kind != #ValueImmediate {return false}
+  return v.type.kind ==
+}*/
+
 smalloc = (size : Nat) -> *Unit or Unit {
   p = malloc(size)
   if p == nil {return unit}
@@ -191,9 +196,6 @@ do_value_when = DoValue {
       } else {
         if not type_check (kit.v.type, val.type, val.ti) {}
       }
-
-
-
 
       if not type_check (kit.selector.type, key.type, key.ti) {}
 
@@ -951,7 +953,6 @@ do_value_record = DoValue {
   t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
   ctx = (type=t) to Var Ctx9
-
 
   // обрабатываем все поля
   field_value_handle = MapForeachHandler {
