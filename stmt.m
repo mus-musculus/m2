@@ -256,7 +256,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
     }
 
     s = stmt_new (#StmtReturn, x.ti)
-    s.return := @StmtReturn (value=unit, ti=x.ti)
+    s.return := (value=unit, ti=x.ti) to StmtReturn
     return s
   }
 
@@ -266,7 +266,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   if not type_check (func_to, v.type, v0.ti) {}
 
   s = stmt_new (#StmtReturn, x.ti)
-  s.return := @StmtReturn (value=v, ti=x.ti)
+  s.return := (value=v, ti=x.ti) to StmtReturn
   return s
 }
 
