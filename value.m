@@ -51,7 +51,7 @@ dold2 = (x : *Value) -> *Value {
     else => x.type
   }
 
-  k = x.kind
+  /*k = x.kind
   if x.type.kind == #TypeVar or
   k == #ValueGlobalVar or // это плохо
   k == #ValueLocalVar or  // и это плохо
@@ -60,9 +60,9 @@ dold2 = (x : *Value) -> *Value {
   k == #ValueAccess
   {
     ldval = value_new (#ValueLoad, typ, x.ti)
-    ldval.load := x
+    //ldval.load := x
     return ldval
-  }
+  }*/
 
   return x
 }

@@ -428,22 +428,23 @@ ValueKind = {
 }
 
 
-ValueAccess = (value : *Value, field : Str)
-ValueBin    = (l, r : *Value)
-ValueCall   = (func : *Value, args : *List)
-ValueCast   = (value : *Value, type : *Type)
-ValueAs     = (value : *Value, type : *Type)
-ValueIs     = (value : *Value, variant : Nat)
-ValueIndex  = (array, index : *Value)
-ValueUn     = (x : *Value)
+ValueAccess = (type : *Type, value : *Value, field : Str)
+ValueBin    = (type : *Type, l, r : *Value)
+ValueCall   = (type : *Type, func : *Value, args : *List)
+ValueCast   = (type : *Type, value : *Value, type : *Type)
+ValueAs     = (type : *Type, value : *Value, type : *Type)
+ValueIs     = (type : *Type, value : *Value, variant : Nat)
+ValueIndex  = (type : *Type, array, index : *Value)
+ValueUn     = (type : *Type, x : *Value)
 
 ValueWhenVariant = (tx : *Type, x, y : *Value)
-ValueWhen = (x : *Value, variants : List, other : *Value)
+ValueWhen = (type : *Type, x : *Value, variants : List, other : *Value)
 
 ValueRecord = (type : *Type, values : Map)
 ValueArray = (type : *Type, items : List)
 
 ValueImmediate = (type : *Type, value : Int64, ti : *TokenInfo)
+//ValueSizeof = (type : *Type, value : Int64, ti : *TokenInfo)
 
 Value = (
   kind : ValueKind
@@ -451,10 +452,7 @@ Value = (
   type : *Type
 
 //union (
-  // term info
-  //imm    : Int64        // ValueImmediate
   imm    : ValueImmediate
-  immx   : List         // List of immediate values for aggreagte immediate
 
 //def    : *Definition  // we cannot import asm/types because of recursive import :(
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
@@ -471,11 +469,10 @@ Value = (
   as     : ValueAs
   is     : ValueIs
   call   : ValueCall
-  szof   : *Type
   select : ValueWhen
-  load   : *Value  // #ValueLoad
   rec    : ValueRecord
   array  : ValueArray
+  //load   : *Value  // #ValueLoad
 //)
 
   //need_load : Bool
