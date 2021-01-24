@@ -95,7 +95,9 @@ type_print_union = (t : *TypeUnion) -> () {
 }
 
 
-value_print_kind = (k : ValueKind) -> () {
+
+
+print_value_kind = (k : ValueKind) -> () {
   kstr = when k {
     #ValueForbidden => "#ValueForbidden" to Str
 
@@ -105,6 +107,8 @@ value_print_kind = (k : ValueKind) -> () {
 
 
     #ValueImmediate => "#ValueImmediate" to Str
+    #ValueRecord => "#ValueRecord" to Str
+    #ValueGenericRecord => "#ValueGenericRecord" to Str
 
     #ValueGlobalConst => "#ValueGlobalConst" to Str
     #ValueGlobalVar => "#ValueGlobalVar" to Str

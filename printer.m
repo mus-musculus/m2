@@ -484,16 +484,16 @@ exist def_getname : (d : *Definition) -> Str
 // (только если это не lval)
 eval = Eval {
   return when x.kind {
-    #ValueImmediate   => @LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value)
+    #ValueImmediate   => (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value) to LLVM_Value
 
-    #ValueGlobalConst => @LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
+    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def)) to LLVM_Value
 
-    #ValueGlobalVar   => @LLVM_Value (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
+    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id) to LLVM_Value
 
-    #ValueLocalConst  => @LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
-    #ValueLocalVar    => @LLVM_Value (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
+    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg) to LLVM_Value
+    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab) to LLVM_Value
 
-    #ValueParam       => @LLVM_Value (kind=#LLVM_ValueRegister, type=x.type, reg=x.field.offset to Nat32)
+    #ValueParam       => (kind=#LLVM_ValueRegister, type=x.type, reg=x.field.offset to Nat32) to LLVM_Value
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x)
@@ -959,7 +959,7 @@ eval_cast = Eval {
     t.kind == #TypeBool    => eval_cast_to_bool  (v, t)  // cast -> Bool
     t.kind == #TypeNumeric => eval_cast_to_basic (v, t)  // cast -> Basic
     t.kind == #TypeUnion   => eval_cast_to_union (v, t)  // cast -> Union
-    type_eq (t, typeUnit)  => @LLVM_Value(kind=#LLVM_ValueEmpty, type=t) // cast -> ()
+    type_eq (t, typeUnit)  => (kind=#LLVM_ValueEmpty, type=t) to LLVM_Value // cast -> ()
 
     else => EvalCast {
       printf ("eval_cast error:\n")

@@ -577,6 +577,29 @@ do_value_cast_union = DoValueCast {
   return cast (v, t, ti)
 }
 
+
+do_value_cast_gen_rec = DoValueCast {
+  // приводим generic запись к типу записи t
+  // для этого приводим все ее поля к типу полей соотв типа-записи
+  Ctx12 = (type : *Type, new_vm : Map)
+  ctx = (type=t) to Var Ctx12
+  prep = MapForeachHandler {
+    id = k to Str
+    val = v to *Value
+    c = ctx to *Ctx12
+    field = type_record_get_field(c.type, id)
+    assert(field!=nil, "do_value_cast_gen_rec field=nil")
+    vx = implicit_cast (val, field.type)
+    map_append (&c.new_vm, id, vx)
+  }
+  map_foreach(&v.rec.values, prep, &ctx)
+
+  nv = value_new (#ValueRecord, t, ti)
+  nv.rec := (type=t, values=ctx.new_vm)
+  return nv
+}
+
+
 do_value_cast = DoValue {
   v = do_value (x.cast.value)
   t = do_type (x.cast.type)
@@ -584,6 +607,10 @@ do_value_cast = DoValue {
 
   if v.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
+
+  /*if v.kind == #ValueGenericRecord {
+    warning("ValueGenericRecord", v.ti)
+  }*/
 
   // если приводим не к переменной
   if t.kind != #TypeVar {
@@ -600,6 +627,7 @@ do_value_cast = DoValue {
       #TypeVar       => do_value_cast_var   (v, t, ti)
       #TypeBool      => do_value_cast_bool  (v, t, ti)
       #TypeGenericReference => do_value_cast_ref (v, t, ti)
+      #TypeGenericRec => do_value_cast_gen_rec (v, t, ti)
       #TypeNumeric   => do_value_cast_num   (v, t, ti)
       #TypeFunc      => do_value_cast_func  (v, t, ti)
       #TypeEnum      => do_value_cast_set   (v, t, ti)
@@ -1136,26 +1164,7 @@ typeValidForBin = (k : ValueKind, t : *Type) -> Bool {
 
 exist generic_rec_cast_possible : (t_gen, t : *Type) -> Bool
 
-cast_generic_rec_val_to_rec = (v : *Value, t : *Type) -> *Value {
-  // приводим generic запись к типу записи t
-  // для этого приводим все ее поля к типу полей соотв типа-записи
-  Ctx12 = (type : *Type, new_vm : Map)
-  ctx = (type=t) to Var Ctx12
-  prep = MapForeachHandler {
-    id = k to Str
-    val = v to *Value
-    c = ctx to *Ctx12
-    field = type_record_get_field(c.type, id)
-    assert(field!=nil, "cast_generic_rec_val_to_rec field=nil")
-    vx = implicit_cast (val, field.type)
-    map_append (&c.new_vm, id, vx)
-  }
-  map_foreach(&v.rec.values, prep, &ctx)
 
-  nv = value_new (#ValueRecord, t, v.ti)
-  nv.rec := (type=t, values=ctx.new_vm)
-  return nv
-}
 
 
 
@@ -1180,7 +1189,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
       error("type error", ti)
     }
 
-    return cast_generic_rec_val_to_rec(vx, t)
+    return do_value_cast_gen_rec(vx, t, ti)
   }
 
   // можем ли мы приводить непосредственно значение v к типу t ?
@@ -1296,7 +1305,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
       return v;  // невозможно привести
     }
 
-    return cast_generic_rec_val_to_rec (v, t)
+    return do_value_cast_gen_rec (v, t, v.ti)
   }
 
   // TypeNumeric -> Basic:Integer
