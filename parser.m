@@ -916,7 +916,6 @@ parse_value11 = AstValueParser {
 
 exist parse_value_func : AstValueParser
 exist parse_value_rec : AstValueParser
-exist parse_value_rec2 : AstValueParser
 
 parse_value12 = AstValueParser {
   if is_it_type() {
@@ -929,7 +928,7 @@ parse_value12 = AstValueParser {
 
     // если это Generic запись
     if is_it_value_record () {
-      return parse_value_rec2 ()
+      return parse_value_rec ()
     }
 
     v := parse_value()
@@ -979,8 +978,6 @@ parse_value_id = AstValueParser {
     return parse_value_func()
   } else if match("extern") {
     return parse_value_extern()
-  } else if match("rec") {
-    return parse_value_rec()
   } else if match("array") {
     return parse_value_array()
   } else if match("when") {
@@ -1048,7 +1045,7 @@ parse_value_str = AstValueParser {
 }
 
 
-parse_value_rec2 = AstValueParser {
+parse_value_rec = AstValueParser {
   fields = 0 to Var Map  // id -> *Value
 
   ti = &ctok().ti
@@ -1064,42 +1061,6 @@ parse_value_rec2 = AstValueParser {
   }
 
   t = ast_type_new(#AstTypeGenericRec, ti)
-  v = ast_value_new (#AstValueRec, ti)
-  v.rec := (type=t, values=fields, ti=ti)
-  return v
-}
-
-
-parse_value_rec = AstValueParser {
-  ti = &ctok().ti
-
-  if match("(") {
-    return parse_value_rec2()
-  }
-
-  // типа может и не быть, тогда это Generic запись
-  t = nil to Var *AstType
-  //if is_it_type() {
-    t := parse_type()
-  //}
-
-  need("(")
-
-  fields = 0 to Var Map  // id -> *Value
-
-  len = 0 to Var Nat32
-  while true {
-    id = parse_id()
-    need("=")
-    v = parse_value()
-
-    map_append(&fields, id.str, v)
-    len := len + 1
-
-    if match(")") {break}
-    need(",")
-  }
-
   v = ast_value_new (#AstValueRec, ti)
   v.rec := (type=t, values=fields, ti=ti)
   return v
