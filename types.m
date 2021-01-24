@@ -443,6 +443,8 @@ ValueWhen = (x : *Value, variants : List, other : *Value)
 ValueRecord = (type : *Type, values : Map)
 ValueArray = (type : *Type, items : List)
 
+ValueImmediate = (type : *Type, value : Int64, ti : *TokenInfo)
+
 Value = (
   kind : ValueKind
 
@@ -450,7 +452,8 @@ Value = (
 
 //union (
   // term info
-  imm    : Int64        // ValueImmediate
+  //imm    : Int64        // ValueImmediate
+  imm    : ValueImmediate
   immx   : List         // List of immediate values for aggreagte immediate
 
 //def    : *Definition  // we cannot import asm/types because of recursive import :(
@@ -476,10 +479,6 @@ Value = (
 //)
 
   //need_load : Bool
-
-  dirty  : Bool
-
-  defined_as : Str
 
 //  declared_at,     // place in code where value was mentioned first time
 //  defined_at,      // place in code where value was defined

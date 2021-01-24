@@ -39,7 +39,7 @@ value_new_poison = (ti : *TokenInfo) -> *Value {
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
   v = value_new (#ValueImmediate, t, ti)
-  v.imm := dx
+  v.imm := (type=t, value=dx, ti=ti)
   return v
 }
 
@@ -319,8 +319,8 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
-    lv = l.imm
-    rv = r.imm
+    lv = l.imm.value
+    rv = r.imm.value
     imm = when k {
       #ValueAdd => lv + rv
       #ValueSub => lv - rv
@@ -1013,7 +1013,7 @@ do_value_plus = DoValue {
   if v.kind == #ValuePoison {goto fail}
 
   if v.kind == #ValueImmediate {
-    return value_new_imm (v.type, v.imm, x.ti)
+    return value_new_imm (v.type, v.imm.value, x.ti)
   }
 
   vx = value_new (#ValuePlus, v.type, x.ti)
@@ -1031,7 +1031,7 @@ do_value_minus = DoValue {
   if v.kind == #ValuePoison {goto fail}
 
   if v.kind == #ValueImmediate {
-    return value_new_imm (v.type, -v.imm, x.ti)
+    return value_new_imm (v.type, -v.imm.value, x.ti)
   }
 
   vx = value_new (#ValueMinus, v.type, x.ti)
@@ -1049,7 +1049,7 @@ do_value_not = DoValue {
   if v.kind == #ValuePoison {goto fail}
 
   if v.kind == #ValueImmediate {
-    return value_new_imm (v.type, not v.imm, x.ti)
+    return value_new_imm (v.type, not v.imm.value, x.ti)
   }
 
   vx = value_new (#ValueNot, v.type, x.ti)
@@ -1078,8 +1078,8 @@ do_value_shift = DoValue {
   if l.kind == #ValueImmediate and r.kind == #ValueImmediate {
 
     d = when k {
-      #ValueShl => l.imm << r.imm
-      else => l.imm >> r.imm
+      #ValueShl => l.imm.value << r.imm.value
+      else => l.imm.value >> r.imm.value
     }
 
     return value_new_imm (l.type, d, x.ti)
@@ -1190,7 +1190,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // creating new imm value with target type
   if immCastIsPossible (vx, t) {
-    return value_new_imm (t, vx.imm, ti)
+    return value_new_imm (t, vx.imm.value, ti)
   }
 
 
@@ -1221,7 +1221,7 @@ fail:
 // used in: [index, call, shift, expr]
 implicit_cast_int = (v : *Value) -> *Value {
   return when type_eq (v.type, typeNumeric) {
-    true => value_new_imm (typeBaseInt, v.imm, v.ti)
+    true => value_new_imm (typeBaseInt, v.imm.value, v.ti)
     else => v
   }
 }
@@ -1303,10 +1303,10 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   if v.kind == #ValueImmediate {
     if type_is_generic_num (v.type) and type_is_basic_integer (t) {
       // проверяем если константа вписывается в размер типа
-      if 1 to Nat128 << t.num.power <= v.imm to Nat128 {
+      if 1 to Nat128 << t.num.power <= v.imm.value to Nat128 {
         error ("type overflow", v.ti)
       }
-      return value_new_imm (t, v.imm, v.ti)
+      return value_new_imm (t, v.imm.value, v.ti)
     }
   }
 

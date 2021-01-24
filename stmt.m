@@ -284,7 +284,6 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   return unit
 }*/
 
-
 do_stmt_typedef = (x : *AstStmtTypeDef) -> *Stmt or Unit {
   id = x.id.str
   _type = do_type (x.type)

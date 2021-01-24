@@ -484,7 +484,7 @@ exist def_getname : (d : *Definition) -> Str
 // (только если это не lval)
 eval = Eval {
   return when x.kind {
-    #ValueImmediate   => @LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm)
+    #ValueImmediate   => @LLVM_Value (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value)
 
     #ValueGlobalConst => @LLVM_Value (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 

@@ -221,7 +221,6 @@ create_global_var = (id : Str, t : *Type, init_value : *Value, ti : *TokenInfo) 
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
   v = value_new(#ValueGlobalVar, t, ti)
-  v.dirty := true
   v.def := asmVarAdd(&asm0, id, t, init_value)
   bind_value_global(id, v)
   return v

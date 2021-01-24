@@ -185,7 +185,7 @@ do_type_array = DoType {
   size = do_valuex (x.array.size, false)
   if size.kind == #ValuePoison {return type_new (#TypePoison, 0, x.ti)}
 
-  return type_array_new (of, size.imm to Nat32, x.ti)
+  return type_array_new (of, size.imm.value to Nat32, x.ti)
 }
 
 
