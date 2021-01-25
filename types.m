@@ -169,11 +169,15 @@ AstValueArray = (items : List, ti : *TokenInfo)
 AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
 AstValueUnary = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 
+AstValueSizeof = (type : *AstType, ti : *TokenInfo)
+AstValueAlignof = (type : *AstType, ti : *TokenInfo)
+
 AstValue = (
   kind : AstValueKind
 
   str     : Str           // string representation of #AstValueId, #AstValueNum, #AstValueStr
   name    : AstName       // #AstValueName
+
   of_type : *AstType      // sizeof, alignof
 
   rec     : AstValueRecord
@@ -189,6 +193,8 @@ AstValue = (
   is      : AstValueIs
   as      : AstValueAs
   when    : AstValueWhen
+  sizeof  : AstValueSizeof
+  alignof : AstValueAlignof
 
   extern  : Bool
 

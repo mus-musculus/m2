@@ -84,8 +84,7 @@ exist do_value_forbidden : DoValue
 
 
 
-exist do_value_sizeof : DoValue
-exist do_value_alignof : DoValue
+
 exist do_value_named : DoValue
 
 exist do_value_when : DoValue

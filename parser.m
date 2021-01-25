@@ -843,7 +843,7 @@ parse_value10 = AstValueParser {
       return nil
     }
     nv = ast_value_new(#AstValueSizeof, ti)
-    nv.of_type := t
+    nv.sizeof := (type=t, ti=ti)
     v := nv
 
   } else if match("alignof") {
@@ -854,7 +854,7 @@ parse_value10 = AstValueParser {
       return nil
     }
     nv = ast_value_new(#AstValueAlignof, ti)
-    nv.of_type := t
+    nv.alignof := (type=t, ti=ti)
     v := nv
   } else {
     v := parse_value11()

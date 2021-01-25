@@ -107,7 +107,7 @@ exist do_value_index  : (x : *AstValueIndex) -> *Value
 exist do_value_access : (x : *AstValueAccess) -> *Value
 exist do_value_cast   : (x : *AstValueCast) -> *Value
 exist do_value_is     : (x : *AstValueIs) -> *Value
-exist do_value_as     : DoValue
+exist do_value_as     : (x : *AstValueAs) -> *Value
 
 
 exist do_value_ref   : (x : *AstValueUnary) -> *Value
@@ -115,6 +115,9 @@ exist do_value_deref : (x : *AstValueUnary) -> *Value
 exist do_value_minus : (x : *AstValueUnary) -> *Value
 exist do_value_plus  : (x : *AstValueUnary) -> *Value
 exist do_value_not   : (x : *AstValueUnary) -> *Value
+
+exist do_value_sizeof  : (x : *AstValueSizeof) -> *Value
+exist do_value_alignof : (x : *AstValueAlignof) -> *Value
 
 
 do_value = DoValue {return do_valuex(x, true)}
@@ -133,6 +136,7 @@ do_valuex = DoValuex {
     #AstValueNot     => do_value_not     (&x.un)
     #AstValueMinus   => do_value_minus   (&x.un)
     #AstValuePlus    => do_value_plus    (&x.un)
+
     #AstValueAdd     => do_value_bin (#ValueAdd, &x.bin)
     #AstValueSub     => do_value_bin (#ValueSub, &x.bin)
     #AstValueMul     => do_value_bin (#ValueMul, &x.bin)
@@ -155,9 +159,9 @@ do_valuex = DoValuex {
     #AstValueAccess  => do_value_access  (&x.access)
     #AstValueCast    => do_value_cast    (&x.cast)
     #AstValueIs      => do_value_is      (&x.is)
-    #AstValueAs      => do_value_as      (x)
-    #AstValueSizeof  => do_value_sizeof  (x)
-    #AstValueAlignof => do_value_alignof (x)
+    #AstValueAs      => do_value_as      (&x.as)
+    #AstValueSizeof  => do_value_sizeof  (&x.sizeof)
+    #AstValueAlignof => do_value_alignof (&x.alignof)
     #AstValueWhen    => do_value_when    (x)
     #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
@@ -723,9 +727,9 @@ fail:
 }
 
 
-do_value_as = DoValue {
-  v = do_value (x.as.value)
-  t = do_type (x.as.type)
+do_value_as = (x : *AstValueAs) -> *Value {
+  v = do_value (x.value)
+  t = do_type (x.type)
   ti = x.ti
 
   if v.kind == #ValuePoison {goto fail}
@@ -757,13 +761,13 @@ fail:
 
 
 
-do_value_sizeof = DoValue {
-  t = do_type (x.of_type)
+do_value_sizeof = (x : *AstValueSizeof) -> *Value {
+  t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
 
   if t.kind == #TypeUndefined {
-    error ("sizeof unknown type", x.of_type.ti)
+    error ("sizeof unknown type", x.type.ti)
     return value_new_poison (x.ti)
   }
 
@@ -774,13 +778,13 @@ fail:
 }
 
 
-do_value_alignof = DoValue {
-  t = do_type (x.of_type)
+do_value_alignof = (x : *AstValueAlignof) -> *Value {
+  t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
 
   if t.kind == #TypeUndefined {
-    error ("alignof unknown type", x.of_type.ti)
+    error ("alignof unknown type", x.type.ti)
     return value_new_poison (x.ti)
   }
 
