@@ -1061,17 +1061,14 @@ parse_value_rec = AstValueParser {
     need(",")
   }
 
-  t = ast_type_new(#AstTypeGenericRecord, ti)
   v = ast_value_new (#AstValueRec, ti)
-  v.rec := (type=t, values=fields, ti=ti)
+  v.rec := (values=fields, ti=ti)
   return v
 }
 
 
 parse_value_array = AstValueParser {
   ti = &ctok().ti
-  t = parse_type()
-  need("[")
 
   items = 0 to Var List  // of *Value
 
@@ -1087,7 +1084,7 @@ parse_value_array = AstValueParser {
   }
 
   v = ast_value_new (#AstValueArr, ti)
-  v.array := (type=t, items=items, ti=ti)
+  v.array := (items=items, ti=ti)
   return v
 }
 

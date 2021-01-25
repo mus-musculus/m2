@@ -106,7 +106,7 @@ exist do_value_call   : (x : *AstValueCall) -> *Value
 exist do_value_index  : (x : *AstValueIndex) -> *Value
 exist do_value_access : (x : *AstValueAccess) -> *Value
 exist do_value_cast   : (x : *AstValueCast) -> *Value
-exist do_value_is     : DoValue
+exist do_value_is     : (x : *AstValueIs) -> *Value
 exist do_value_as     : DoValue
 
 
@@ -146,7 +146,7 @@ do_valuex = DoValuex {
     #AstValueIndex   => do_value_index   (&x.index)
     #AstValueAccess  => do_value_access  (&x.access)
     #AstValueCast    => do_value_cast    (&x.cast)
-    #AstValueIs      => do_value_is      (x)
+    #AstValueIs      => do_value_is      (&x.is)
     #AstValueAs      => do_value_as      (x)
     #AstValueSizeof  => do_value_sizeof  (x)
     #AstValueAlignof => do_value_alignof (x)
@@ -689,9 +689,9 @@ fail:
 
 
 
-do_value_is = DoValue {
-  v = do_value (x.is.value)
-  t = do_type (x.is.type)
+do_value_is = (x : *AstValueIs) -> *Value {
+  v = do_value (x.value)
+  t = do_type (x.type)
 
   // чекаем если значение имеет unit тип
   if v.type.kind != #TypeUnion {
@@ -908,35 +908,7 @@ fail:
 
 
 do_value_array = DoValue {
-  t = do_type(x.array.type)
-
-  if t.kind == #TypePoison {goto fail}
-
-  Ctx7 = (type : *Type, vl : List)
-  ctx = (type=t) to Var Ctx7
-
-  // обрабатываем все поля
-  item_value_handle = ListForeachHandler {
-    av = data to *AstValue
-    c = ctx to *Ctx7
-
-    arr_item_type = c.type.array.of
-
-    // обрабатываем значение
-    v0 = do_value (av)
-    // неявно пытаемся привести значение к типу элемента массива
-    v = implicit_cast(v0, arr_item_type)
-    // проверяем тип
-    type_check(v.type, arr_item_type, av.ti)
-    // и сохраняем
-    list_append(&c.vl, v)
-  }
-  list_foreach(&x.array.items, item_value_handle, &ctx)
-
-  vx = value_new (#ValueArray, t, x.ti)
-  vx.arr := (type=t, items=ctx.vl, ti=x.ti)
-  return vx
-
+  fatal("do_value_array")
 fail:
   return value_new_poison (x.ti)
 }

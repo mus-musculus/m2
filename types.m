@@ -163,8 +163,8 @@ AstValueAs = (value : *AstValue, type : *AstType, ti : *TokenInfo)
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue, ti : *TokenInfo)
 AstValueWhen = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenInfo)
 
-AstValueRecord = (type : *AstType, values : Map, ti : *TokenInfo)
-AstValueArray = (type : *AstType, items : List, ti : *TokenInfo)
+AstValueRecord = (values : Map, ti : *TokenInfo)
+AstValueArray = (items : List, ti : *TokenInfo)
 
 AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
 
