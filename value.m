@@ -101,9 +101,12 @@ dold = (x : *Value) -> *Value {
 }
 
 
-exist do_value_array  : (x : *AstValueArray) -> *Value
-exist do_value_record : (x : *AstValueRecord) -> *Value
-exist do_value_func   : (x : *AstValueFunc) -> *Value
+exist do_value_named   : (x : *AstValueName) -> *Value
+exist do_value_numeric : (x : *AstValueNumber) -> *Value
+exist do_value_func    : (x : *AstValueFunc) -> *Value
+exist do_value_array   : (x : *AstValueArray) -> *Value
+exist do_value_record  : (x : *AstValueRecord) -> *Value
+exist do_value_string  : (x : *AstValueString) -> *Value
 
 exist do_value_ref   : (x : *AstValueUnary) -> *Value
 exist do_value_deref : (x : *AstValueUnary) -> *Value
@@ -125,9 +128,7 @@ exist do_value_alignof : (x : *AstValueAlignof) -> *Value
 
 exist do_value_when : (x : *AstValueWhen) -> *Value
 
-exist do_value_string : (x : *AstValueString) -> *Value
-exist do_value_numeric : (x : *AstValueNumber) -> *Value
-exist do_value_named : (x : *AstValueName) -> *Value
+
 
 do_value = DoValue {return do_valuex(x, true)}
 
