@@ -103,6 +103,7 @@ dold = (x : *Value) -> *Value {
 
 exist do_value_array  : (x : *AstValueArray) -> *Value
 exist do_value_record : (x : *AstValueRecord) -> *Value
+exist do_value_func   : (x : *AstValueFunc) -> *Value
 
 exist do_value_bin    : (k : ValueKind, x : *AstValueBinary) -> *Value
 exist do_value_shift  : (k : ValueKind, x : *AstValueBinary) -> *Value
@@ -133,7 +134,7 @@ do_valuex = DoValuex {
     #AstValueId      => do_value_named   (x)
     #AstValueNum     => do_value_numeric (x)
     #AstValueStr     => do_value_string  (x)
-    #AstValueFunc    => do_value_func    (x)
+    #AstValueFunc    => do_value_func    (&x.func)
     #AstValueArr     => do_value_array   (&x.arr)
     #AstValueRec     => do_value_record  (&x.rec)
 
@@ -843,8 +844,8 @@ do_value_string = DoValue {
 
 fuid = 0 to Var Nat
 // портал из мира Value в мир Stmt
-do_value_func = DoValue {
-  t = do_type (x.func.type)
+do_value_func = (x : *AstValueFunc) -> *Value {
+  t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
 
@@ -852,7 +853,7 @@ do_value_func = DoValue {
   fuid := fuid + 1
   uid = get_suid ("func", fuid)
 
-  if x.extern {
+  if x.block_stmt is Unit {
     fv = value_new (#ValueGlobalConst, t, x.ti)
     fv.def := asmFuncAdd (&asm0, uid, t, nil)
     return fv
@@ -874,7 +875,7 @@ do_value_func = DoValue {
   }
   list_foreach (t.func.from.record.decls, getparam, param_block)
 
-  block = x.func.block_stmt
+  block = x.block_stmt
 
   if block is Unit {goto fail}
 

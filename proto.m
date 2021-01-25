@@ -88,7 +88,7 @@ exist do_value_forbidden : DoValue
 exist do_value_named : DoValue
 exist do_value_numeric : DoValue
 exist do_value_string : DoValue
-exist do_value_func : DoValue
+
 
 
 
