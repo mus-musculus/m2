@@ -167,6 +167,7 @@ AstValueRecord = (values : Map, ti : *TokenInfo)
 AstValueArray = (items : List, ti : *TokenInfo)
 
 AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueUnary = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 
 AstValue = (
   kind : AstValueKind
@@ -179,6 +180,7 @@ AstValue = (
   rec     : AstValueRecord
   array   : AstValueArray
 
+  un      : AstValueUnary
   bin     : AstValueBinary
   func    : AstValueFunc
   call    : AstValueCall

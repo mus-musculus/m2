@@ -110,6 +110,13 @@ exist do_value_is     : (x : *AstValueIs) -> *Value
 exist do_value_as     : DoValue
 
 
+exist do_value_ref   : (x : *AstValueUnary) -> *Value
+exist do_value_deref : (x : *AstValueUnary) -> *Value
+exist do_value_minus : (x : *AstValueUnary) -> *Value
+exist do_value_plus  : (x : *AstValueUnary) -> *Value
+exist do_value_not   : (x : *AstValueUnary) -> *Value
+
+
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
@@ -120,11 +127,12 @@ do_valuex = DoValuex {
     #AstValueFunc    => do_value_func    (x)
     #AstValueArr     => do_value_array   (x)
     #AstValueRec     => do_value_record  (x)
-    #AstValueRef     => do_value_ref     (x)
-    #AstValueDeref   => do_value_deref   (x)
-    #AstValueNot     => do_value_not     (x)
-    #AstValueMinus   => do_value_minus   (x)
-    #AstValuePlus    => do_value_plus    (x)
+
+    #AstValueRef     => do_value_ref     (&x.un)
+    #AstValueDeref   => do_value_deref   (&x.un)
+    #AstValueNot     => do_value_not     (&x.un)
+    #AstValueMinus   => do_value_minus   (&x.un)
+    #AstValuePlus    => do_value_plus    (&x.un)
     #AstValueAdd     => do_value_bin (#ValueAdd, &x.bin)
     #AstValueSub     => do_value_bin (#ValueSub, &x.bin)
     #AstValueMul     => do_value_bin (#ValueMul, &x.bin)
@@ -273,8 +281,8 @@ do_value_when = DoValue {
 
 
 // не загружает переменную - просто пока отбрасывает ее Var тип
-do_value_ref = DoValue {
-  v0 = do_valuex (x.operand[0], false)
+do_value_ref = (x : *AstValueUnary) -> *Value {
+  v0 = do_value (x.value)
 
   if v0.kind == #ValuePoison {return v0}
 
@@ -295,9 +303,9 @@ do_value_ref = DoValue {
 }
 
 
-do_value_deref = DoValue {
+do_value_deref = (x : *AstValueUnary) -> *Value {
   // eval & load pointer
-  v = do_value (x.operand[0])
+  v = do_value (x.value)
 
   if v.kind == #ValuePoison {return v}
 
@@ -953,8 +961,8 @@ fail:
 }
 
 
-do_value_plus = DoValue {
-  v = do_value (x.operand[0])
+do_value_plus = (x : *AstValueUnary) -> *Value {
+  v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
 
@@ -971,8 +979,8 @@ fail:
 }
 
 
-do_value_minus = DoValue {
-  v = do_value (x.operand[0])
+do_value_minus = (x : *AstValueUnary) -> *Value {
+  v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
 
@@ -989,8 +997,8 @@ fail:
 }
 
 
-do_value_not = DoValue {
-  v = do_value (x.operand[0])
+do_value_not = (x : *AstValueUnary) -> *Value {
+  v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
 
