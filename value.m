@@ -127,12 +127,13 @@ exist do_value_when : (x : *AstValueWhen) -> *Value
 
 exist do_value_string : (x : *AstValueString) -> *Value
 exist do_value_numeric : (x : *AstValueNumber) -> *Value
+exist do_value_named : (x : *AstValueName) -> *Value
 
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
   v = when x.kind {
-    #AstValueId      => do_value_named   (x)
+    #AstValueId      => do_value_named   (&x.name)
     #AstValueNum     => do_value_numeric (&x.num)
     #AstValueFunc    => do_value_func    (&x.func)
     #AstValueArr     => do_value_array   (&x.arr)
@@ -797,8 +798,8 @@ fail:
 }
 
 
-do_value_named = DoValue {
-  id = x.name.id.str
+do_value_named = (x : *AstValueName) -> *Value {
+  id = x.id.str
   v = get_value (id)
 
   if v == nil {

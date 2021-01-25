@@ -175,12 +175,13 @@ AstValueAlignof = (type : *AstType, ti : *TokenInfo)
 AstValueString = (string : Str, ti : *TokenInfo)
 AstValueNumber = (string : Str, ti : *TokenInfo)
 
+AstValueName = AstName
+
 AstValue = (
   kind : AstValueKind
 
   //str     : Str // string representation of #AstValueId, #AstValueNum, #AstValueStr
-  name    : AstName // #AstValueId
-
+  name    : AstValueName // #AstValueId
 
   rec     : AstValueRecord
   arr     : AstValueArray

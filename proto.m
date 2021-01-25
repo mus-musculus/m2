@@ -85,11 +85,6 @@ exist do_value_forbidden : DoValue
 
 
 
-exist do_value_named : DoValue
-
-
-
-
 
 
 exist typeValidForBin : (k : ValueKind, t : *Type) -> Bool
