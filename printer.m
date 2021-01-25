@@ -334,7 +334,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
   // print initial value
   if v == nil {o ("zeroinitializer"); return}
 
-  ev = reval (v)
+  ev = eval (v)
   if ev.kind != #LLVM_ValueImmediate {
     error ("expected constant init value", v.ti)
     o ("zeroinitializer")

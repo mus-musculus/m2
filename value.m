@@ -608,82 +608,78 @@ do_value_cast_gen_rec = DoValueCast {
 }
 
 
-do_value_cast = DoValue {
-  v0 = do_value (x.cast.value)
-  t = do_type (x.cast.type)
-  ti = x.ti
-
-  if v0.kind == #ValuePoison {goto fail}
-  if t.kind == #TypePoison {goto fail}
-
-  // если приводим к Var-типу попробуем сделать неявное приведение значения
-  // к типу который завернут в тип Var. Это нужно для присваивания переменной-
-  // записи generic-записи
-
-  v = when t.kind {
-    #TypeVar => implicit_cast(v0, t.var.of)
-    else => v0
-  }
-
-  // если приводим не к переменной
-  if t.kind != #TypeVar {
-
-    // приведение к собственному типу не имеет смысла
-    if type_eq (v.type, t) {
-      warning ("cast to same type", ti)
-      return v
-    }
-
-    // выполняем приведение
-    xx = when v.type.kind {
-      //#TypeUndefined => nil to *Value
-      #TypeVar       => do_value_cast_var   (v, t, ti)
-      #TypeBool      => do_value_cast_bool  (v, t, ti)
-      #TypeGenericReference => do_value_cast_ref (v, t, ti)
-      #TypeGenericRecord => do_value_cast_gen_rec (v, t, ti)
-      #TypeNumeric   => do_value_cast_num   (v, t, ti)
-      #TypeFunc      => do_value_cast_func  (v, t, ti)
-      #TypeEnum      => do_value_cast_set   (v, t, ti)
-      #TypeRecord    => do_value_cast_rec   (v, t, ti)
-      #TypePointer   => do_value_cast_ptr   (v, t, ti)
-      #TypeArray     => do_value_cast_arr   (v, t, ti)
-      #TypeArrayU    => do_value_cast_uarr  (v, t, ti)
-      #TypeUnion     => do_value_cast_union (v, t, ti)
-      else => DoValueCast {
-        fatal ("do_value_cast unk")
-        return nil to *Value
-      } (v, t, ti)
-    }
-
-    //printf(">> "); value_print_kind(v.kind); /*prttype(xx.cast.type);*/ printf("\n")
-    return xx
-  }
-
+do_value_cast_to_var = DoValueCast {
   // если приводим к переменной - конструируем переменную
 
   // create Var value
   // приведение к типу Var создает по месту переменную и присваивает ей значение
   // возвращаем мы уже переменную
 
-  // наше v здесь точно имеет Var тип
-  // ХАК (поскольку cast не умеет приводить к Var типу мы его развернем
-  // а после снова завернем в VAr)
-  // приводим значение к типу объвляемой переменной
-  // но не к Var типу а к Var#of
-  tt = t.var.of
-  init_value = cast (v, tt, x.ti)
-  // а после оборачиваем тип снова в Var
-  init_value.type := type_var_new (init_value.type, t.ti)
+  // делаем попытку неявного (!) приведения значения к типу обернутому пеерменной
+  /*init_value = implicit_cast(v, t.var.of)
+
+  if init_value.type.kind == #TypeGenericReference {
+    warning("!", ti)
+    printf("BEF %d\n", v.type.kind)
+    printf("AFTR: %d\n", init_value.type.kind)
+  }*/
+
+  //
+  init_value = cast (v, t.var.of, ti)
 
   varname = get_name_var ()  // один как на глобальные так и локальные!!??
 
-  if fctx != nil {
-    // we're in function (create local var)
-    id = (str=varname, ti=x.ti) to Var AstId
-    return create_local_var (&id, t, init_value, x.ti)
-  } else {
-    // create global var
-    return create_global_var (varname, t, init_value, x.ti)
+  ast_id = (str=varname, ti=ti) to Var AstId
+
+  return when fctx {
+    nil  => create_global_var (&ast_id, t, init_value, ti)
+    else => create_local_var (&ast_id, t, init_value, ti)
+  }
+
+fail:
+  return value_new_poison (ti)
+}
+
+
+do_value_cast = DoValue {
+  v = do_value (x.cast.value)
+  t = do_type (x.cast.type)
+
+  if v.kind == #ValuePoison {goto fail}
+  if t.kind == #TypePoison {goto fail}
+
+  ti = x.ti
+
+  // приведение к собственному типу не имеет смысла
+  if type_eq (v.type, t) {
+    warning ("cast to same type", ti)
+    return v
+  }
+
+  // приведение к типу Var порождает новую переменную
+  if t.kind == #TypeVar {
+    return do_value_cast_to_var(v, t, ti)
+  }
+
+  // выполняем явное (принудительное) приведение типа значения
+  return when v.type.kind {
+    //#TypeUndefined => nil to *Value
+    #TypeVar       => do_value_cast_var   (v, t, ti)
+    #TypeBool      => do_value_cast_bool  (v, t, ti)
+    #TypeGenericReference => do_value_cast_ref (v, t, ti)
+    #TypeGenericRecord => do_value_cast_gen_rec (v, t, ti)
+    #TypeNumeric   => do_value_cast_num   (v, t, ti)
+    #TypeFunc      => do_value_cast_func  (v, t, ti)
+    #TypeEnum      => do_value_cast_set   (v, t, ti)
+    #TypeRecord    => do_value_cast_rec   (v, t, ti)
+    #TypePointer   => do_value_cast_ptr   (v, t, ti)
+    #TypeArray     => do_value_cast_arr   (v, t, ti)
+    #TypeArrayU    => do_value_cast_uarr  (v, t, ti)
+    #TypeUnion     => do_value_cast_union (v, t, ti)
+    else => DoValueCast {
+      fatal ("do_value_cast unk")
+      return nil to *Value
+    } (v, t, ti)
   }
 
 fail:
@@ -1152,11 +1148,8 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   }
 
 
-sact:
-
-  //printf("OOPS: "); prttype(vx.type); printf("\n")
-
   // во всех остальных случаях выполняем runtime приведение
+sact:
   v = value_new (#ValueCast, t, ti)
   v.cast := (value=vx, type=t)
   return v
@@ -1256,6 +1249,14 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   if t.kind == #TypePoison {goto fail}
 
 
+  // ?
+  //printf("BEF %d\n", v.type.kind)
+  if v.type.kind == #TypeGenericReference and type_is_ref(t) {
+    xx = do_value_cast_ref (v, t, v.ti)
+    if xx.type.kind == #TypeGenericReference {printf("AFT %d\n", xx.type.kind)}
+    return xx
+  }
+
   // GenericRecord -> Record
   if v.kind == #ValueGenericRecord {
     if not generic_rec_cast_possible (v.type, t) {
@@ -1276,6 +1277,8 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
     }
   }
 
+
+
   if implicit_cast_possible (v.type, t) {
     return cast (v, t, v.ti)
   }
@@ -1292,6 +1295,10 @@ fail:
 implicit_cast_possible = (a, b : *Type) -> Bool {
   ak = a.kind
   bk = b.kind
+
+  if type_is_generic_num(a) and type_is_basic_integer(b) {
+    return true
+  }
 
   // nil -> TypeReference
   if ak == #TypeGenericReference {

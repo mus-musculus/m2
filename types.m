@@ -380,7 +380,7 @@ ValueKind = {
 
   #ValuePoison,
 
-  #ValueUndefined,    // Value was used but not defined
+  #ValueUndefined,    // Value was marked as `exist` but not defined
 
   /* Terminals */
 

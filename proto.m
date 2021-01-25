@@ -131,7 +131,7 @@ exist stmt_block_new : (b, parent : *Block) -> *Block
 exist do_stmt : DoStmt
 
 
-exist create_global_var : (id : Str, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value
+exist create_global_var : (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value
 
 exist create_local_var : (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value
 

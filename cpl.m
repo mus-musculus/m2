@@ -217,12 +217,12 @@ value_decl_global = (id : *AstId, t : *Type) -> () {
 
 
 
-create_global_var = (id : Str, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
+create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new(#ValueGlobalVar, t, ti)
-  v.def := asmVarAdd(&asm0, id, t, init_value)
-  bind_value_global(id, v)
+  v = value_new(#ValueGlobalVar, t, id.ti)
+  v.def := asmVarAdd(&asm0, id.str, t, init_value)
+  bind_value_global(id.str, v)
   return v
 }
 
