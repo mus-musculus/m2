@@ -72,7 +72,7 @@ exist do_value : (x : *AstValue) -> *Value
 exist do_lvalue : (x : *AstValue) -> *Value
 exist do_valuex : DoValuex
 exist do_value_ref : DoValue
-exist do_value_bin : (k : ValueKind, x : *AstValue) -> *Value
+
 
 
 
@@ -82,10 +82,8 @@ exist do_args : (f : *Value, a : *List, ti : *TokenInfo) -> *List
 exist do_value_forbidden : DoValue
 exist do_value_deref : DoValue
 
-exist do_value_access : DoValue
-exist do_value_cast : DoValue
-exist do_value_is : DoValue
-exist do_value_as : DoValue
+
+
 exist do_value_sizeof : DoValue
 exist do_value_alignof : DoValue
 exist do_value_named : DoValue
@@ -99,7 +97,7 @@ exist do_value_record : DoValue
 exist do_value_minus : DoValue
 exist do_value_plus : DoValue
 exist do_value_not : DoValue
-exist do_value_shift : DoValue
+
 exist typeValidForBin : (k : ValueKind, t : *Type) -> Bool
 exist cast : (v : *Value, t : *Type, ti : *TokenInfo) -> *Value
 

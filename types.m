@@ -166,6 +166,8 @@ AstValueWhen = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenIn
 AstValueRecord = (type : *AstType, values : Map, ti : *TokenInfo)
 AstValueArray = (type : *AstType, items : List, ti : *TokenInfo)
 
+AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+
 AstValue = (
   kind : AstValueKind
 
@@ -177,6 +179,7 @@ AstValue = (
   rec     : AstValueRecord
   array   : AstValueArray
 
+  bin     : AstValueBinary
   func    : AstValueFunc
   call    : AstValueCall
   index   : AstValueIndex

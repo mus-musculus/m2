@@ -59,8 +59,8 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
   lval = when lx.kind {
     #AstValueId => do_value_named      (lx)
     #AstValueDeref => do_value_deref   (lx)
-    #AstValueIndex => do_value_index   (lx)
-    #AstValueAccess => do_value_access (lx)
+    #AstValueIndex => do_value_index   (&lx.index)
+    #AstValueAccess => do_value_access (&lx.access)
     else => nil
   }
 

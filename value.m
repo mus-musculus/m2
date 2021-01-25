@@ -100,9 +100,14 @@ dold = (x : *Value) -> *Value {
   return x
 }
 
-
-exist do_value_call  : (x : *AstValueCall) -> *Value
-exist do_value_index : (x : *AstValue/*Index*/) -> *Value
+exist do_value_bin    : (k : ValueKind, x : *AstValueBinary) -> *Value
+exist do_value_shift  : (k : ValueKind, x : *AstValueBinary) -> *Value
+exist do_value_call   : (x : *AstValueCall) -> *Value
+exist do_value_index  : (x : *AstValueIndex) -> *Value
+exist do_value_access : (x : *AstValueAccess) -> *Value
+exist do_value_cast   : (x : *AstValueCast) -> *Value
+exist do_value_is     : DoValue
+exist do_value_as     : DoValue
 
 
 do_value = DoValue {return do_valuex(x, true)}
@@ -120,26 +125,27 @@ do_valuex = DoValuex {
     #AstValueNot     => do_value_not     (x)
     #AstValueMinus   => do_value_minus   (x)
     #AstValuePlus    => do_value_plus    (x)
-    #AstValueAdd     => do_value_bin (#ValueAdd, x)
-    #AstValueSub     => do_value_bin (#ValueSub, x)
-    #AstValueMul     => do_value_bin (#ValueMul, x)
-    #AstValueDiv     => do_value_bin (#ValueDiv, x)
-    #AstValueMod     => do_value_bin (#ValueMod, x)
-    #AstValueAnd     => do_value_bin (#ValueAnd, x)
-    #AstValueXor     => do_value_bin (#ValueXor, x)
-    #AstValueOr      => do_value_bin (#ValueOr, x)
-    #AstValueLt      => do_value_bin (#ValueLt, x)
-    #AstValueGt      => do_value_bin (#ValueGt, x)
-    #AstValueEq      => do_value_bin (#ValueEq, x)
-    #AstValueNe      => do_value_bin (#ValueNe, x)
-    #AstValueLe      => do_value_bin (#ValueLe, x)
-    #AstValueGe      => do_value_bin (#ValueGe, x)
-    #AstValueShl     => do_value_shift   (x)
-    #AstValueShr     => do_value_shift   (x)
+    #AstValueAdd     => do_value_bin (#ValueAdd, &x.bin)
+    #AstValueSub     => do_value_bin (#ValueSub, &x.bin)
+    #AstValueMul     => do_value_bin (#ValueMul, &x.bin)
+    #AstValueDiv     => do_value_bin (#ValueDiv, &x.bin)
+    #AstValueMod     => do_value_bin (#ValueMod, &x.bin)
+    #AstValueAnd     => do_value_bin (#ValueAnd, &x.bin)
+    #AstValueXor     => do_value_bin (#ValueXor, &x.bin)
+    #AstValueOr      => do_value_bin (#ValueOr, &x.bin)
+    #AstValueLt      => do_value_bin (#ValueLt, &x.bin)
+    #AstValueGt      => do_value_bin (#ValueGt, &x.bin)
+    #AstValueEq      => do_value_bin (#ValueEq, &x.bin)
+    #AstValueNe      => do_value_bin (#ValueNe, &x.bin)
+    #AstValueLe      => do_value_bin (#ValueLe, &x.bin)
+    #AstValueGe      => do_value_bin (#ValueGe, &x.bin)
+    #AstValueShl     => do_value_shift (#ValueShl, &x.bin)
+    #AstValueShr     => do_value_shift (#ValueShr, &x.bin)
+
     #AstValueCall    => do_value_call    (&x.call)
-    #AstValueIndex   => do_value_index   (x)
-    #AstValueAccess  => do_value_access  (x)
-    #AstValueCast    => do_value_cast    (x)
+    #AstValueIndex   => do_value_index   (&x.index)
+    #AstValueAccess  => do_value_access  (&x.access)
+    #AstValueCast    => do_value_cast    (&x.cast)
     #AstValueIs      => do_value_is      (x)
     #AstValueAs      => do_value_as      (x)
     #AstValueSizeof  => do_value_sizeof  (x)
@@ -308,11 +314,9 @@ do_value_deref = DoValue {
 
 
 
-
-
-do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
-  lv = do_value (x.operand[0])
-  rv = do_value (x.operand[1])
+do_value_bin = (k : ValueKind, x : *AstValueBinary) -> *Value {
+  lv = do_value (x.left)
+  rv = do_value (x.right)
 
   if lv.kind == #ValuePoison {return lv}
   if rv.kind == #ValuePoison {return rv}
@@ -438,9 +442,9 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
 
 
-do_value_index = (x : *AstValue) -> *Value {
-  a = do_value (x.index.array)
-  i = do_value (x.index.index)
+do_value_index = (x : *AstValueIndex) -> *Value {
+  a = do_value (x.array)
+  i = do_value (x.index)
 
   if a.kind == #ValuePoison {goto fail}
   if i.kind == #ValuePoison {goto fail}
@@ -477,9 +481,9 @@ fail:
 }
 
 
-do_value_access = DoValue {
-  r = unwrap_var (do_valuex (x.access.rec, false)) to Var *Value
-  field_id = x.access.field_id.str
+do_value_access = (x : *AstValueAccess) -> *Value {
+  r = do_value (x.rec)
+  field_id = x.field_id.str
 
   if r.kind == #ValuePoison {goto fail}
 
@@ -503,7 +507,7 @@ do_value_access = DoValue {
   field = type_record_get_field (r_typ, field_id)
 
   if field == nil {
-    error ("undefined field", x.access.field_id.ti)
+    error ("undefined field", x.field_id.ti)
     goto fail
   }
 
@@ -638,9 +642,9 @@ fail:
 }
 
 
-do_value_cast = DoValue {
-  v = do_value (x.cast.value)
-  t = do_type (x.cast.type)
+do_value_cast = (x : *AstValueCast) -> *Value {
+  v = do_value (x.value)
+  t = do_type (x.type)
 
   if v.kind == #ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
@@ -1032,17 +1036,13 @@ fail:
 
 
 // shl, shr слишком отличны чтобы входить в bin
-do_value_shift = DoValue {
-  l = do_value (x.operand[0])
-  r = do_value (x.operand[1])
+do_value_shift = (k : ValueKind, x : *AstValueBinary) -> *Value {
+  l = do_value (x.left)
+  r = do_value (x.right)
 
   if l.kind == #ValuePoison {goto fail}
   if r.kind == #ValuePoison {goto fail}
 
-  k = when x.kind {
-    #AstValueShl => #ValueShl
-    else => #ValueShr
-  }
 
   // свертка констант
   if is_value_imm_num(l) and is_value_imm_num(r) {

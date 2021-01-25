@@ -591,8 +591,9 @@ prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
 
 infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
   v = ast_value_new(k, ti)
-  v.operand[0] := l
-  v.operand[1] := r
+  //v.operand[0] := l
+  //v.operand[1] := r
+  v.bin := (kind=k, left=l, right=r, ti=ti)
   return v
 }
 
