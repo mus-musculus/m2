@@ -125,17 +125,19 @@ exist do_value_alignof : (x : *AstValueAlignof) -> *Value
 
 exist do_value_when : (x : *AstValueWhen) -> *Value
 
+exist do_value_string : (x : *AstValueString) -> *Value
+exist do_value_numeric : (x : *AstValueNumber) -> *Value
 
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
   v = when x.kind {
     #AstValueId      => do_value_named   (x)
-    #AstValueNum     => do_value_numeric (x)
-    #AstValueStr     => do_value_string  (x)
+    #AstValueNum     => do_value_numeric (&x.num)
     #AstValueFunc    => do_value_func    (&x.func)
     #AstValueArr     => do_value_array   (&x.arr)
     #AstValueRec     => do_value_record  (&x.rec)
+    #AstValueStr     => do_value_string  (&x.str)
 
     #AstValueRef     => do_value_ref     (&x.un)
     #AstValueDeref   => do_value_deref   (&x.un)
@@ -817,8 +819,8 @@ do_value_named = DoValue {
 }
 
 
-do_value_numeric = DoValue {
-  str = x.str
+do_value_numeric = (x : *AstValueNumber) -> *Value {
+  str = x.string
   d = 0 to Var Int64
   if str[0] == "0"[0] and str[1] == "x"[0] {
     sscanf (&str[2], "%llx", &d)
@@ -830,8 +832,8 @@ do_value_numeric = DoValue {
 }
 
 
-do_value_string = DoValue {
-  s = x.str
+do_value_string = (x : *AstValueString) -> *Value {
+  s = x.string
   len = strlen (s) + 1
   typ = type_pointer_new (type_array_new (typeChar, len, x.ti), x.ti)
   v = value_new (#ValueGlobalConst, typ, x.ti)

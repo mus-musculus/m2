@@ -1041,7 +1041,7 @@ parse_value_str = AstValueParser {
   skip()
 
   v = ast_value_new(#AstValueStr, &token.ti)
-  v.str := str
+  v.str := (string=str, ti=&token.ti)
   return v
 }
 
@@ -1128,7 +1128,7 @@ parse_value_num = AstValueParser {
   skip()
 
   v = ast_value_new(#AstValueNum, ti)
-  v.str := str
+  v.num := (string=str, ti=ti)
   return v
 }
 

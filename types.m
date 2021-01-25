@@ -172,20 +172,26 @@ AstValueUnary = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 AstValueSizeof = (type : *AstType, ti : *TokenInfo)
 AstValueAlignof = (type : *AstType, ti : *TokenInfo)
 
+AstValueString = (string : Str, ti : *TokenInfo)
+AstValueNumber = (string : Str, ti : *TokenInfo)
+
 AstValue = (
   kind : AstValueKind
 
-  str     : Str           // string representation of #AstValueId, #AstValueNum, #AstValueStr
-  name    : AstName       // #AstValueName
+  //str     : Str // string representation of #AstValueId, #AstValueNum, #AstValueStr
+  name    : AstName // #AstValueId
 
-  of_type : *AstType      // sizeof, alignof
 
   rec     : AstValueRecord
   arr     : AstValueArray
+  str     : AstValueString
+  num     : AstValueNumber
+
+  func    : AstValueFunc
 
   un      : AstValueUnary
   bin     : AstValueBinary
-  func    : AstValueFunc
+
   call    : AstValueCall
   index   : AstValueIndex
   access  : AstValueAccess
