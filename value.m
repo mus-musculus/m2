@@ -119,6 +119,8 @@ exist do_value_not   : (x : *AstValueUnary) -> *Value
 exist do_value_sizeof  : (x : *AstValueSizeof) -> *Value
 exist do_value_alignof : (x : *AstValueAlignof) -> *Value
 
+exist do_value_when : (x : *AstValueWhen) -> *Value
+
 
 do_value = DoValue {return do_valuex(x, true)}
 
@@ -162,7 +164,8 @@ do_valuex = DoValuex {
     #AstValueAs      => do_value_as      (&x.as)
     #AstValueSizeof  => do_value_sizeof  (&x.sizeof)
     #AstValueAlignof => do_value_alignof (&x.alignof)
-    #AstValueWhen    => do_value_when    (x)
+    #AstValueWhen    => do_value_when    (&x.when)
+
     #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
   }
@@ -187,99 +190,92 @@ do_value_forbidden = DoValue {
 }
 
 
-do_value_when = DoValue {
-  v = value_new (#ValueWhen, nil, x.ti)
-  selector = do_value (x.when.x)
-  v.when.x := selector
+do_value_when = (x : *AstValueWhen) -> *Value {
+  val = do_value (x.x)
 
-  // контекст
-  Kit = (selector : *Value, v : *Value)
-  kit = (v=v, selector=selector) to Var Kit
+  Kit = (val : *Value, type : *Type, variants : List, other : *Value)
+  kit = (val=val) to Var Kit
 
   do_variants = ListForeachHandler {
     variant = data to *AstValueWhenVariant
     kit = ctx to *Kit
 
     if variant.x != nil {
-      key = implicit_cast (do_value (variant.x), kit.selector.type)
+      key = implicit_cast (do_value (variant.x), kit.val.type)
 
       val0 = do_value (variant.y)
 
       // если тип селекта определен,
       // пытаемся неявно привести к нему все варианты
-      val = when kit.v.type {
+      val = when kit.type {
         nil => val0
-        else => implicit_cast (val0, kit.v.type)
+        else => implicit_cast (val0, kit.type)
       }
 
-      if kit.v.type == nil {
-        kit.v.type := val.type
+      if kit.type == nil {
+        kit.type := val.type
       } else {
-        if not type_check (kit.v.type, val.type, val.ti) {}
+        if not type_check (kit.type, val.type, val.ti) {}
       }
 
-      if not type_check (kit.selector.type, key.type, key.ti) {}
+      if not type_check (kit.val.type, key.type, key.ti) {}
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
       *v := (x=key, y=val, ti=variant.ti)
 
-      list_append (&kit.v.when.variants, v)
+      list_append (&kit.variants, v)
 
     } else {
 
       // это when x is {}
       tx = do_type(variant.is_t)
 
-
-      if kit.selector.type.kind != #TypeUnion {
-        error ("expected value with union type", kit.selector.ti)
+      if kit.val.type.kind != #TypeUnion {
+        error ("expected value with union type", kit.val.ti)
       }
 
-
       // чекаем если проверяем на соответствие типу который входит в объединение
-      if not type_present_in_list (&kit.selector.type.union.types, tx) {
+      if not type_present_in_list (&kit.val.type.union.types, tx) {
         error ("type error", tx.ti)
       }
 
       val0 = do_value (variant.y)
 
-      if kit.v.type == nil {
-        kit.v.type := val0.type
+      if kit.type == nil {
+        kit.type := val0.type
       } else {
-        if not type_check (val0.type, kit.v.type, val0.ti) {}
+        if not type_check (val0.type, kit.type, val0.ti) {}
       }
 
       // если тип селекта определен,
       // пытаемся неявно привести к нему все варианты
-      val = when kit.v.type {
+      val = when kit.type {
         nil => val0
-        else => implicit_cast (val0, kit.v.type)
+        else => implicit_cast (val0, kit.type)
       }
 
       // Создаю локальное выражение is
       vx = value_new(#ValueIs, typeBool, tx.ti)
-      vari = type_union_get_variant (kit.v.type, tx)
-      vx.is := (type=typeBool, value=kit.selector, variant=vari, ti=tx.ti)
+      vari = type_union_get_variant (kit.type, tx)
+      vx.is := (type=typeBool, value=kit.val, variant=vari, ti=tx.ti)
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
       *v := (x=vx, y=val, ti=variant.ti)
 
-      list_append (&kit.v.when.variants, v)
+      list_append (&kit.variants, v)
     }
   }
-  list_foreach (&x.when.variants, do_variants, &kit)
+  list_foreach (&x.variants, do_variants, &kit)
 
-
-  if x.when.other == nil {
+  if x.other == nil {
     error("expected 'other' variant", x.ti)
     return value_new_poison (x.ti)
   }
 
-  v.when.other := implicit_cast (do_value(x.when.other), kit.v.type)
-  v.when.ti := x.ti
-  v.when.type := kit.v.type
-  v.ti := x.ti
+  other = implicit_cast (do_value(x.other), kit.type)
 
+  v = value_new (#ValueWhen, kit.type, x.ti)
+  v.when := (x=val, variants=kit.variants, other=other, type=kit.type, ti=x.ti)
   return v
 }
 
