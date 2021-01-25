@@ -278,8 +278,9 @@ do_value_ref = DoValue {
 
   if v.kind == #ValuePoison {return v}
 
-  vx = value_new (#ValueRef, type_pointer_new (v.type, x.ti), x.ti)
-  vx.un := (x=v)
+  t = type_pointer_new (v.type, x.ti)
+  vx = value_new (#ValueRef, t, x.ti)
+  vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
 
@@ -295,8 +296,9 @@ do_value_deref = DoValue {
     return value_new_poison (x.ti)
   }
 
-  vx = value_new (#ValueDeref, v.type.pointer.to, x.ti)
-  vx.un := (x=v)
+  t = v.type.pointer.to
+  vx = value_new (#ValueDeref, t, x.ti)
+  vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
 
@@ -351,7 +353,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin := (left=l, right=r)
+  v.bin := (type=typ, left=l, right=r, ti=x.ti)
   return v
 
 fail:
@@ -366,8 +368,9 @@ do_value_call = DoValue {
 
   args = do_args (f, &x.call.args, x.ti)
 
-  v = value_new (#ValueCall, f.type.func.to, x.ti)
-  v.call := (func=f, args=args)
+  t = f.type.func.to
+  v = value_new (#ValueCall, t, x.ti)
+  v.call := (type=t, func=f, args=args, ti=x.ti)
   return v
 
 fail:
@@ -978,7 +981,7 @@ do_value_plus = DoValue {
   }
 
   vx = value_new (#ValuePlus, v.type, x.ti)
-  vx.un := (x=v)
+  vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
 fail:
@@ -996,7 +999,7 @@ do_value_minus = DoValue {
   }
 
   vx = value_new (#ValueMinus, v.type, x.ti)
-  vx.un := (x=v)
+  vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
 fail:
@@ -1014,7 +1017,7 @@ do_value_not = DoValue {
   }
 
   vx = value_new (#ValueNot, v.type, x.ti)
-  vx.un := (x=v)
+  vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
 fail:

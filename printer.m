@@ -459,16 +459,16 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
 
 
 exist eval_immediate : Eval
-exist eval_call : Eval
+exist eval_call : (x : *ValueCall) -> LLVM_Value
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index : Eval
 exist eval_access : Eval
-exist eval_ref : Eval
-exist eval_deref : Eval
-exist eval_not : Eval
-exist eval_plus : Eval
-exist eval_minus : Eval
+exist eval_ref : (x : *ValueUn) -> LLVM_Value
+exist eval_deref : (x : *ValueUn) -> LLVM_Value
+exist eval_not : (x : *ValueUn) -> LLVM_Value
+exist eval_plus : (x : *ValueUn) -> LLVM_Value
+exist eval_minus : (x : *ValueUn) -> LLVM_Value
 exist eval_rec : Eval
 exist eval_arr : Eval
 
@@ -497,14 +497,14 @@ eval = Eval {
     #ValueParam  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
 
     //#ValueLoad   => load        (reval (x.load))
-    #ValueCall   => eval_call   (x)
+    #ValueCall   => eval_call   (&x.call)
     #ValueIndex  => eval_index  (x)
     #ValueAccess => eval_access (x)
-    #ValueRef    => eval_ref    (x)
-    #ValueDeref  => eval_deref  (x)
-    #ValueMinus  => eval_minus  (x)
-    #ValuePlus   => eval_plus   (x)
-    #ValueNot    => eval_not    (x)
+    #ValueRef    => eval_ref    (&x.un)
+    #ValueDeref  => eval_deref  (&x.un)
+    #ValueMinus  => eval_minus  (&x.un)
+    #ValuePlus   => eval_plus   (&x.un)
+    #ValueNot    => eval_not    (&x.un)
     #ValueCast   => eval_cast   (x)
     #ValueAs     => eval_as     (x)
     #ValueIs     => eval_is     (x)
@@ -530,7 +530,7 @@ eval_immediate = Eval {
 reval = Eval {return load(eval(x))}
 
 
-eval_call = Eval {
+eval_call = (x : *ValueCall) -> LLVM_Value {
   // evaluate arguments values before printing call
 
   // context for evaluated & loaded arguments
@@ -547,11 +547,11 @@ eval_call = Eval {
     args.args[args.cnt] := reval (arg)
     args.cnt := args.cnt + 1
   }
-  list_foreach (x.call.args, eval_args, &args)
+  list_foreach (x.args, eval_args, &args)
 
 
   // eval & load function value
-  f = reval (x.call.func)
+  f = reval (x.func)
 
   // print call
 
@@ -681,8 +681,8 @@ eval_access = Eval {
 
 
 
-eval_ref = Eval {
-  vx = eval (x.un.x)
+eval_ref = (x : *ValueUn) -> LLVM_Value {
+  vx = eval (x.value)
   if vx.kind == #LLVM_ValueAddress {
     // если это адрес - вернем его в регистре, а тип обернем в указатель
     return (kind=#LLVM_ValueRegister, type=x.type, reg=vx.reg)
@@ -695,17 +695,17 @@ eval_ref = Eval {
 }
 
 
-eval_deref = Eval {
+eval_deref = (x : *ValueUn) -> LLVM_Value {
   // eval & load pointer
-  vx = reval (x.un.x)
+  vx = reval (x.value)
 
   // return loaded pointer as #Address
   return (kind=#LLVM_ValueAddress, type=x.type, reg=vx.reg)
 }
 
 
-eval_not = Eval {
-  vx = reval (x.un.x)
+eval_not = (x : *ValueUn) -> LLVM_Value {
+  vx = reval (x.value)
 
   //"%s = xor %s, -1"
   reg = operation_with_type ("xor", vx.type)
@@ -716,8 +716,8 @@ eval_not = Eval {
 }
 
 
-eval_minus = Eval {
-  vx = reval (x.un.x)
+eval_minus = (x : *ValueUn) -> LLVM_Value {
+  vx = reval (x.value)
 
   z = (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
 
@@ -726,7 +726,7 @@ eval_minus = Eval {
 }
 
 
-eval_plus = Eval {return reval (x.un.x)}
+eval_plus = (x : *ValueUn) -> LLVM_Value {return reval (x.value)}
 
 
 
