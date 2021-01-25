@@ -105,6 +105,12 @@ exist do_value_array  : (x : *AstValueArray) -> *Value
 exist do_value_record : (x : *AstValueRecord) -> *Value
 exist do_value_func   : (x : *AstValueFunc) -> *Value
 
+exist do_value_ref   : (x : *AstValueUnary) -> *Value
+exist do_value_deref : (x : *AstValueUnary) -> *Value
+exist do_value_minus : (x : *AstValueUnary) -> *Value
+exist do_value_plus  : (x : *AstValueUnary) -> *Value
+exist do_value_not   : (x : *AstValueUnary) -> *Value
+
 exist do_value_bin    : (k : ValueKind, x : *AstValueBinary) -> *Value
 exist do_value_shift  : (k : ValueKind, x : *AstValueBinary) -> *Value
 exist do_value_call   : (x : *AstValueCall) -> *Value
@@ -113,13 +119,6 @@ exist do_value_access : (x : *AstValueAccess) -> *Value
 exist do_value_cast   : (x : *AstValueCast) -> *Value
 exist do_value_is     : (x : *AstValueIs) -> *Value
 exist do_value_as     : (x : *AstValueAs) -> *Value
-
-
-exist do_value_ref   : (x : *AstValueUnary) -> *Value
-exist do_value_deref : (x : *AstValueUnary) -> *Value
-exist do_value_minus : (x : *AstValueUnary) -> *Value
-exist do_value_plus  : (x : *AstValueUnary) -> *Value
-exist do_value_not   : (x : *AstValueUnary) -> *Value
 
 exist do_value_sizeof  : (x : *AstValueSizeof) -> *Value
 exist do_value_alignof : (x : *AstValueAlignof) -> *Value
