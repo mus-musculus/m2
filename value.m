@@ -101,6 +101,9 @@ dold = (x : *Value) -> *Value {
 }
 
 
+exist do_value_call  : (x : *AstValueCall) -> *Value
+exist do_value_index : (x : *AstValue/*Index*/) -> *Value
+
 
 do_value = DoValue {return do_valuex(x, true)}
 
@@ -133,7 +136,7 @@ do_valuex = DoValuex {
     #AstValueGe      => do_value_bin (#ValueGe, x)
     #AstValueShl     => do_value_shift   (x)
     #AstValueShr     => do_value_shift   (x)
-    #AstValueCall    => do_value_call    (x)
+    #AstValueCall    => do_value_call    (&x.call)
     #AstValueIndex   => do_value_index   (x)
     #AstValueAccess  => do_value_access  (x)
     #AstValueCast    => do_value_cast    (x)
@@ -362,12 +365,12 @@ fail:
 }
 
 
-do_value_call = DoValue {
-  f = do_value (x.call.func)
+do_value_call = (x : *AstValueCall) -> *Value {
+  f = do_value (x.func)
 
   if f.kind == #ValuePoison {return f}
 
-  args = do_args (f, &x.call.args, x.ti)
+  args = do_args (f, &x.args, x.ti)
 
   t = f.type.func.to
   v = value_new (#ValueCall, t, x.ti)
@@ -435,8 +438,8 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
 
 
-do_value_index = DoValue {
-  a = unwrap_var (do_valuex (x.index.array, false)) to Var *Value
+do_value_index = (x : *AstValue) -> *Value {
+  a = do_value (x.index.array)
   i = do_value (x.index.index)
 
   if a.kind == #ValuePoison {goto fail}

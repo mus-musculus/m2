@@ -74,14 +74,14 @@ exist do_valuex : DoValuex
 exist do_value_ref : DoValue
 exist do_value_bin : (k : ValueKind, x : *AstValue) -> *Value
 
-exist do_value_call : DoValue
+
 
 exist do_args : (f : *Value, a : *List, ti : *TokenInfo) -> *List
 
 
 exist do_value_forbidden : DoValue
 exist do_value_deref : DoValue
-exist do_value_index : DoValue
+
 exist do_value_access : DoValue
 exist do_value_cast : DoValue
 exist do_value_is : DoValue
