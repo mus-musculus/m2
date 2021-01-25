@@ -1084,7 +1084,7 @@ parse_value_array = AstValueParser {
   }
 
   v = ast_value_new (#AstValueArr, ti)
-  v.array := (items=items, ti=ti)
+  v.arr := (items=items, ti=ti)
   return v
 }
 

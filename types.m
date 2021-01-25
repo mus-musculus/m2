@@ -181,7 +181,7 @@ AstValue = (
   of_type : *AstType      // sizeof, alignof
 
   rec     : AstValueRecord
-  array   : AstValueArray
+  arr     : AstValueArray
 
   un      : AstValueUnary
   bin     : AstValueBinary

@@ -89,8 +89,7 @@ exist do_value_named : DoValue
 exist do_value_numeric : DoValue
 exist do_value_string : DoValue
 exist do_value_func : DoValue
-exist do_value_array : DoValue
-exist do_value_record : DoValue
+
 
 
 exist typeValidForBin : (k : ValueKind, t : *Type) -> Bool

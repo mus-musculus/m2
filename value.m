@@ -100,6 +100,10 @@ dold = (x : *Value) -> *Value {
   return x
 }
 
+
+exist do_value_array  : (x : *AstValueArray) -> *Value
+exist do_value_record : (x : *AstValueRecord) -> *Value
+
 exist do_value_bin    : (k : ValueKind, x : *AstValueBinary) -> *Value
 exist do_value_shift  : (k : ValueKind, x : *AstValueBinary) -> *Value
 exist do_value_call   : (x : *AstValueCall) -> *Value
@@ -130,8 +134,8 @@ do_valuex = DoValuex {
     #AstValueNum     => do_value_numeric (x)
     #AstValueStr     => do_value_string  (x)
     #AstValueFunc    => do_value_func    (x)
-    #AstValueArr     => do_value_array   (x)
-    #AstValueRec     => do_value_record  (x)
+    #AstValueArr     => do_value_array   (&x.arr)
+    #AstValueRec     => do_value_record  (&x.rec)
 
     #AstValueRef     => do_value_ref     (&x.un)
     #AstValueDeref   => do_value_deref   (&x.un)
@@ -915,14 +919,14 @@ fail:
 }
 
 
-do_value_array = DoValue {
+do_value_array = (x : *AstValueArray) -> *Value {
   fatal("do_value_array")
 fail:
   return value_new_poison (x.ti)
 }
 
 
-do_value_record = DoValue {
+do_value_record = (x : *AstValueRecord) -> *Value {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
@@ -949,7 +953,7 @@ do_value_record = DoValue {
     // получили поле, на его основе строим поля для Generic типа
     map_append(&c.vl, field_id, v)
   }
-  map_foreach(&x.rec.values, field_value_handle, &ctx)
+  map_foreach(&x.values, field_value_handle, &ctx)
 
 
   vx = value_new (#ValueGenericRecord, t, x.ti)
