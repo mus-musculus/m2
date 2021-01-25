@@ -959,8 +959,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func490_str2 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func495_str1 = private unnamed_addr constant [29 x i8] c"implicit_cast::v.type == nil\00", align 1
 @func495_str2 = private unnamed_addr constant [24 x i8] c"implicit_cast::t == nil\00", align 1
-@func495_str3 = private unnamed_addr constant [8 x i8] c"AFT %d\0A\00", align 1
-@func495_str4 = private unnamed_addr constant [14 x i8] c"type overflow\00", align 1
+@func495_str3 = private unnamed_addr constant [14 x i8] c"type overflow\00", align 1
 @func503_str1 = private unnamed_addr constant [6 x i8] c"false\00", align 1
 @func503_str2 = private unnamed_addr constant [5 x i8] c"true\00", align 1
 @func503_str3 = private unnamed_addr constant [4 x i8] c"nil\00", align 1
@@ -18489,132 +18488,113 @@ then_2:
   %27 = load %TokenInfo*, %TokenInfo** %26
   %28 = call %Value* (%Value*, %Type*, %TokenInfo*) @do_value_cast_ref (%Value* %0, %Type* %1, %TokenInfo* %27)
 ;stmt8:
-  %29 = getelementptr inbounds %Value, %Value* %28, i1 0, i32 1
-  %30 = load %Type*, %Type** %29
-  %31 = getelementptr inbounds %Type, %Type* %30, i1 0, i32 0
-  %32 = load %TypeKind, %TypeKind* %31
-  %33 = icmp eq %TypeKind %32, 3
-  br i1 %33, label %then_3, label %else_3
-then_3:
-;stmt9:
-  %34 = bitcast [8 x %Nat8]* @func495_str3 to %Str
-  %35 = getelementptr inbounds %Value, %Value* %28, i1 0, i32 1
-  %36 = load %Type*, %Type** %35
-  %37 = getelementptr inbounds %Type, %Type* %36, i1 0, i32 0
-  %38 = load %TypeKind, %TypeKind* %37
-  %39 = call %Int32 (%Str, ...) @printf (%Str %34, %TypeKind %38)
-  br label %endif_3
-else_3:
-  br label %endif_3
-endif_3:
-;stmt10:
   ret %Value* %28
   br label %endif_2
 else_2:
   br label %endif_2
 endif_2:
-;stmt11:
-  %41 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 0
-  %42 = load %ValueKind, %ValueKind* %41
-  %43 = icmp eq %ValueKind %42, 8
-  br i1 %43, label %then_4, label %else_4
+;stmt9:
+  %30 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 0
+  %31 = load %ValueKind, %ValueKind* %30
+  %32 = icmp eq %ValueKind %31, 8
+  br i1 %32, label %then_3, label %else_3
+then_3:
+;stmt10:
+  %33 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %34 = load %Type*, %Type** %33
+  %35 = call i1 (%Type*, %Type*) @func493 (%Type* %34, %Type* %1)
+  %36 = xor i1 %35, 1
+  br i1 %36, label %then_4, label %else_4
 then_4:
-;stmt12:
-  %44 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %45 = load %Type*, %Type** %44
-  %46 = call i1 (%Type*, %Type*) @func493 (%Type* %45, %Type* %1)
-  %47 = xor i1 %46, 1
-  br i1 %47, label %then_5, label %else_5
-then_5:
-;stmt13:
+;stmt11:
   ret %Value* %0
-  br label %endif_5
-else_5:
-  br label %endif_5
-endif_5:
-;stmt14:
-  %49 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
-  %50 = load %TokenInfo*, %TokenInfo** %49
-  %51 = call %Value* (%Value*, %Type*, %TokenInfo*) @do_value_cast_gen_rec (%Value* %0, %Type* %1, %TokenInfo* %50)
-  ret %Value* %51
   br label %endif_4
 else_4:
   br label %endif_4
 endif_4:
-;stmt15:
-  %53 = call i1 (%Value*) @is_value_imm_num (%Value* %0)
-  br i1 %53, label %then_6, label %else_6
+;stmt12:
+  %38 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
+  %39 = load %TokenInfo*, %TokenInfo** %38
+  %40 = call %Value* (%Value*, %Type*, %TokenInfo*) @do_value_cast_gen_rec (%Value* %0, %Type* %1, %TokenInfo* %39)
+  ret %Value* %40
+  br label %endif_3
+else_3:
+  br label %endif_3
+endif_3:
+;stmt13:
+  %42 = call i1 (%Value*) @is_value_imm_num (%Value* %0)
+  br i1 %42, label %then_5, label %else_5
+then_5:
+;stmt14:
+  %43 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %44 = load %Type*, %Type** %43
+  %45 = call i1 (%Type*) @type_is_generic_num (%Type* %44)
+  %46 = call i1 (%Type*) @func395 (%Type* %1)
+  %47 = and i1 %45, %46
+  br i1 %47, label %then_6, label %else_6
 then_6:
-;stmt16:
-  %54 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %55 = load %Type*, %Type** %54
-  %56 = call i1 (%Type*) @type_is_generic_num (%Type* %55)
-  %57 = call i1 (%Type*) @func395 (%Type* %1)
-  %58 = and i1 %56, %57
-  br i1 %58, label %then_7, label %else_7
+;stmt15:
+  %48 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 4
+  %49 = getelementptr inbounds %TypeNumeric, %TypeNumeric* %48, i1 0, i32 0
+  %50 = load %Nat32, %Nat32* %49
+  %51 = zext %Nat32 %50 to %Nat128
+  %52 = shl %Nat128 1, %51
+  %53 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
+  %54 = getelementptr inbounds %ValueImm, %ValueImm* %53, i1 0, i32 1
+  %55 = load %Int64, %Int64* %54
+  %56 = zext %Int64 %55 to %Nat128
+  %57 = icmp ule %Nat128 %52, %56
+  br i1 %57, label %then_7, label %else_7
 then_7:
-;stmt17:
-  %59 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 4
-  %60 = getelementptr inbounds %TypeNumeric, %TypeNumeric* %59, i1 0, i32 0
-  %61 = load %Nat32, %Nat32* %60
-  %62 = zext %Nat32 %61 to %Nat128
-  %63 = shl %Nat128 1, %62
-  %64 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %65 = getelementptr inbounds %ValueImm, %ValueImm* %64, i1 0, i32 1
-  %66 = load %Int64, %Int64* %65
-  %67 = zext %Int64 %66 to %Nat128
-  %68 = icmp ule %Nat128 %63, %67
-  br i1 %68, label %then_8, label %else_8
-then_8:
-;stmt18:
-  %69 = bitcast [14 x %Nat8]* @func495_str4 to %Str
-  %70 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
-  %71 = load %TokenInfo*, %TokenInfo** %70
-  call void (%Str, %TokenInfo*) @error (%Str %69, %TokenInfo* %71)
-  br label %endif_8
-else_8:
-  br label %endif_8
-endif_8:
-;stmt19:
-  %72 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
-  %73 = getelementptr inbounds %ValueImm, %ValueImm* %72, i1 0, i32 1
-  %74 = load %Int64, %Int64* %73
-  %75 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
-  %76 = load %TokenInfo*, %TokenInfo** %75
-  %77 = call %Value* (%Type*, %Int64, %TokenInfo*) @func438 (%Type* %1, %Int64 %74, %TokenInfo* %76)
-  ret %Value* %77
+;stmt16:
+  %58 = bitcast [14 x %Nat8]* @func495_str3 to %Str
+  %59 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
+  %60 = load %TokenInfo*, %TokenInfo** %59
+  call void (%Str, %TokenInfo*) @error (%Str %58, %TokenInfo* %60)
   br label %endif_7
 else_7:
   br label %endif_7
 endif_7:
+;stmt17:
+  %61 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 2
+  %62 = getelementptr inbounds %ValueImm, %ValueImm* %61, i1 0, i32 1
+  %63 = load %Int64, %Int64* %62
+  %64 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
+  %65 = load %TokenInfo*, %TokenInfo** %64
+  %66 = call %Value* (%Type*, %Int64, %TokenInfo*) @func438 (%Type* %1, %Int64 %63, %TokenInfo* %65)
+  ret %Value* %66
   br label %endif_6
 else_6:
   br label %endif_6
 endif_6:
+  br label %endif_5
+else_5:
+  br label %endif_5
+endif_5:
+;stmt18:
+  %68 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %69 = load %Type*, %Type** %68
+  %70 = call i1 (%Type*, %Type*) @func496 (%Type* %69, %Type* %1)
+  br i1 %70, label %then_8, label %else_8
+then_8:
+;stmt19:
+  %71 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
+  %72 = load %TokenInfo*, %TokenInfo** %71
+  %73 = call %Value* (%Value*, %Type*, %TokenInfo*) @func490 (%Value* %0, %Type* %1, %TokenInfo* %72)
+  ret %Value* %73
+  br label %endif_8
+else_8:
+  br label %endif_8
+endif_8:
 ;stmt20:
-  %79 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %80 = load %Type*, %Type** %79
-  %81 = call i1 (%Type*, %Type*) @func496 (%Type* %80, %Type* %1)
-  br i1 %81, label %then_9, label %else_9
-then_9:
-;stmt21:
-  %82 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
-  %83 = load %TokenInfo*, %TokenInfo** %82
-  %84 = call %Value* (%Value*, %Type*, %TokenInfo*) @func490 (%Value* %0, %Type* %1, %TokenInfo* %83)
-  ret %Value* %84
-  br label %endif_9
-else_9:
-  br label %endif_9
-endif_9:
-;stmt22:
   ret %Value* %0
-;stmt23:
+;stmt21:
   br label %fail
 fail:
-;stmt24:; loadImmPtr
-  %87 = inttoptr i64 0 to%TokenInfo*
-  %88 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %87)
-  ret %Value* %88
+;stmt22:; loadImmPtr
+  %76 = inttoptr i64 0 to%TokenInfo*
+  %77 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %76)
+  ret %Value* %77
 }
 
 define i1 @func496 (%Type*, %Type*) {

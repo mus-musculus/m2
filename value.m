@@ -608,23 +608,11 @@ do_value_cast_gen_rec = DoValueCast {
 }
 
 
+// приведение к Var <T> типу приводит значение к типу <T>
+// после чего создает переменную и сохраняет в нее полученное значение
+// результатом является новая инициализированная переменная
 do_value_cast_to_var = DoValueCast {
-  // если приводим к переменной - конструируем переменную
 
-  // create Var value
-  // приведение к типу Var создает по месту переменную и присваивает ей значение
-  // возвращаем мы уже переменную
-
-  // делаем попытку неявного (!) приведения значения к типу обернутому пеерменной
-  /*init_value = implicit_cast(v, t.var.of)
-
-  if init_value.type.kind == #TypeGenericReference {
-    warning("!", ti)
-    printf("BEF %d\n", v.type.kind)
-    printf("AFTR: %d\n", init_value.type.kind)
-  }*/
-
-  //
   init_value = cast (v, t.var.of, ti)
 
   varname = get_name_var ()  // один как на глобальные так и локальные!!??
@@ -633,7 +621,7 @@ do_value_cast_to_var = DoValueCast {
 
   return when fctx {
     nil  => create_global_var (&ast_id, t, init_value, ti)
-    else => create_local_var (&ast_id, t, init_value, ti)
+    else => create_local_var  (&ast_id, t, init_value, ti)
   }
 
 fail:
@@ -1249,18 +1237,15 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   if t.kind == #TypePoison {goto fail}
 
 
-  // ?
-  //printf("BEF %d\n", v.type.kind)
   if v.type.kind == #TypeGenericReference and type_is_ref(t) {
     xx = do_value_cast_ref (v, t, v.ti)
-    if xx.type.kind == #TypeGenericReference {printf("AFT %d\n", xx.type.kind)}
     return xx
   }
 
   // GenericRecord -> Record
   if v.kind == #ValueGenericRecord {
     if not generic_rec_cast_possible (v.type, t) {
-      return v;  // невозможно привести
+      return v
     }
 
     return do_value_cast_gen_rec (v, t, v.ti)
@@ -1276,7 +1261,6 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
       return value_new_imm (t, v.imm.value, v.ti)
     }
   }
-
 
 
   if implicit_cast_possible (v.type, t) {
