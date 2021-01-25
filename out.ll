@@ -10,22 +10,22 @@ target triple = "x86_64-apple-macosx10.15.0"
 %Unit = type i1
 %Str = type i8*
 %Numeric = type i64
-%Int64 = type i64
-%Nat64 = type i64
-%Int32 = type i32
-%Nat32 = type i32
-%Int8 = type i8
-%Nat8 = type i8
-%Int16 = type i16
-%Nat16 = type i16
-%Int128 = type i128
-%Int256 = type i256
-%Int512 = type i512
-%Int1024 = type i1024
-%Nat128 = type i128
-%Nat256 = type i256
-%Nat512 = type i512
-%Nat1024 = type i1024
+%Int64 = type i64
+%Nat64 = type i64
+%Int32 = type i32
+%Nat32 = type i32
+%Int8 = type i8
+%Nat8 = type i8
+%Int16 = type i16
+%Nat16 = type i16
+%Int128 = type i128
+%Int256 = type i256
+%Int512 = type i512
+%Int1024 = type i1024
+%Nat128 = type i128
+%Nat256 = type i256
+%Nat512 = type i512
+%Nat1024 = type i1024
 
 ; aliases:
 %union.0 = type %Unit*
@@ -694,7 +694,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func301_str2 = private unnamed_addr constant [5 x i8] c", %u\00", align 1
 @func302_func303_str1 = private unnamed_addr constant [28 x i8] c"error eval #ValueUndefined\0A\00", align 1
 @func306_str1 = private unnamed_addr constant [4 x i8] c"\0A  \00", align 1
-@func306_str2 = private unnamed_addr constant [9 x i8] c"%%%d = p\00", align 1
+@func306_str2 = private unnamed_addr constant [8 x i8] c"%%%d = \00", align 1
 @func306_str3 = private unnamed_addr constant [6 x i8] c"call \00", align 1
 @func306_str4 = private unnamed_addr constant [3 x i8] c" (\00", align 1
 @func306_str5 = private unnamed_addr constant [2 x i8] c")\00", align 1
@@ -10548,7 +10548,7 @@ then_0:
   store %Nat32 %20, %Nat32* %12, align 4
 ;stmt8:
   %21 = load %FILE*, %FILE** @fout
-  %22 = bitcast [9 x %Nat8]* @func306_str2 to %Str
+  %22 = bitcast [8 x %Nat8]* @func306_str2 to %Str
   %23 = load %Nat32, %Nat32* %12
   %24 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %21, %Str %22, %Nat32 %23)
   br label %endif_0
