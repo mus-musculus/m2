@@ -496,8 +496,8 @@ exist eval_immediate : Eval
 exist eval_call : (x : *ValueCall) -> LLVM_Value
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index : Eval
-exist eval_access : Eval
+exist eval_index : (x : *ValueIndex) -> LLVM_Value
+exist eval_access : (x : *ValueAccess) -> LLVM_Value
 exist eval_ref : (x : *ValueUn) -> LLVM_Value
 exist eval_deref : (x : *ValueUn) -> LLVM_Value
 exist eval_not : (x : *ValueUn) -> LLVM_Value
@@ -532,8 +532,8 @@ eval = Eval {
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (&x.call)
-    #ValueIndex  => eval_index  (x)
-    #ValueAccess => eval_access (x)
+    #ValueIndex  => eval_index  (&x.index)
+    #ValueAccess => eval_access (&x.access)
     #ValueRef    => eval_ref    (&x.un)
     #ValueDeref  => eval_deref  (&x.un)
     #ValueMinus  => eval_minus  (&x.un)
@@ -629,9 +629,9 @@ eval_index_uarray = (a, i : LLVM_Value) -> LLVM_Value {
 
 
 
-eval_index = Eval {
-  a = eval (x.index.array)
-  i = reval (x.index.index)
+eval_index = (x : *ValueIndex) -> LLVM_Value {
+  a = eval (x.array)
+  i = reval (x.index)
 
   if typeIsUndefinedArray (a.type) {
     return eval_index_uarray (a, i)
@@ -674,12 +674,12 @@ eval_index = Eval {
 
 /*.*/
 
-eval_access = Eval {
-  assert (x.access.field != nil, "print/expr:: x.field == nil\n")
+eval_access = (x : *ValueAccess) -> LLVM_Value {
+  assert (x.field != nil, "print/expr:: x.field == nil\n")
 
-  if x.access.value.kind == #ValueAccess {}
+  if x.value.kind == #ValueAccess {}
 
-  s = eval (x.access.value)
+  s = eval (x.value)
 
   byptr = s.type.kind == #TypePointer
 
@@ -688,7 +688,7 @@ eval_access = Eval {
     else => s.type
   }
 
-  field = type_record_get_field (record_type, x.access.field)
+  field = type_record_get_field (record_type, x.field)
   fieldno = field.offset
 
   if not byptr {

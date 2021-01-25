@@ -463,8 +463,9 @@ do_value_index = DoValue {
     goto fail
   }
 
+  ind = implicit_cast_int (i)
   v = value_new (#ValueIndex, typ, x.ti)
-  v.index := (array=a, index=implicit_cast_int (i))
+  v.index := (type=typ, array=a, index=ind, ti=x.ti)
   return v
 
 fail:
@@ -502,8 +503,9 @@ do_value_access = DoValue {
     goto fail
   }
 
-  v = value_new (#ValueAccess, field.type, x.ti)
-  v.access := (value=r, field=field_id)
+  t = field.type
+  v = value_new (#ValueAccess, t, x.ti)
+  v.access := (type=t, value=r, field=field_id, ti=x.ti)
   return v
 
 fail:
