@@ -270,6 +270,40 @@ print_value_index = (index : *Map) -> () {
 */
 
 
+Eval = (x : *Value) -> LLVM_Value
+
+exist operand : (t : *Type, k : LLVM_ValueKind, reg : Nat32) -> LLVM_Value
+
+
+
+
+
+exist operation_with_type : (op : Str, t : *Type) -> Nat
+exist llvm_binary : (op : Str, l, r : LLVM_Value, t : *Type) -> Nat
+exist llvm_getelementptr : (by : LLVM_Value, item_type : *Type) -> Nat
+exist llvm_extractvalue : (t : *Type, o : LLVM_Value, index : Nat) -> Nat
+
+exist llvm_cast : (op : Str, op : LLVM_Value, to : *Type) -> LLVM_Value
+
+exist llvm_st : (lo, ro : LLVM_Value) -> ()
+
+exist eval_cast_to_ref : (op : LLVM_Value, to : *Type) -> LLVM_Value
+exist eval_cast_to_bool : (op : LLVM_Value, to : *Type) -> LLVM_Value
+exist eval_cast_to_basic : (op : LLVM_Value, to : *Type) -> LLVM_Value
+exist eval_cast : (x : *ValueCast) -> LLVM_Value
+exist eval_bin : Eval
+exist eval_when : Eval
+
+exist print_st : (l, r : *Value) -> ()
+exist load : (x : LLVM_Value) -> LLVM_Value
+
+exist print_val_with_type : (op : LLVM_Value) -> ()
+exist print_val : (op : LLVM_Value) -> ()
+
+exist create_array : (x : LLVM_Value) -> LLVM_Value
+
+exist print_block : (b : *Block) -> ()
+
 exist eval : Eval
 exist reval : Eval
 
@@ -505,7 +539,7 @@ eval = Eval {
     #ValueMinus  => eval_minus  (&x.un)
     #ValuePlus   => eval_plus   (&x.un)
     #ValueNot    => eval_not    (&x.un)
-    #ValueCast   => eval_cast   (x)
+    #ValueCast   => eval_cast   (&x.cast)
     #ValueAs     => eval_as     (x)
     #ValueIs     => eval_is     (x)
     #ValueWhen   => eval_when   (x)
@@ -945,9 +979,9 @@ eval_cast_union_to = EvalCast {
 }
 
 
-eval_cast = Eval {
-  v = reval (x.cast.value)
-  t = x.cast.type
+eval_cast = (x : *ValueCast) -> LLVM_Value {
+  v = reval (x.value)
+  t = x.type
 
   if v.type.kind == #TypeVar {
     printf("CAST VAR!\n")

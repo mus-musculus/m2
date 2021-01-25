@@ -190,37 +190,7 @@ exist funcdef : (id : Str, t : *Type, b : *Block) -> ()
 exist aliasdef : (id : Str, t : *Type, org : Str) -> ()
 
 
-exist operand : (t : *Type, k : LLVM_ValueKind, reg : Nat32) -> LLVM_Value
 
-
-
-
-
-exist operation_with_type : (op : Str, t : *Type) -> Nat
-exist llvm_binary : (op : Str, l, r : LLVM_Value, t : *Type) -> Nat
-exist llvm_getelementptr : (by : LLVM_Value, item_type : *Type) -> Nat
-exist llvm_extractvalue : (t : *Type, o : LLVM_Value, index : Nat) -> Nat
-
-exist llvm_cast : (op : Str, op : LLVM_Value, to : *Type) -> LLVM_Value
-
-exist llvm_st : (lo, ro : LLVM_Value) -> ()
-
-exist eval_cast_to_ref : (op : LLVM_Value, to : *Type) -> LLVM_Value
-exist eval_cast_to_bool : (op : LLVM_Value, to : *Type) -> LLVM_Value
-exist eval_cast_to_basic : (op : LLVM_Value, to : *Type) -> LLVM_Value
-exist eval_cast : Eval
-exist eval_bin : Eval
-exist eval_when : Eval
-
-exist print_st : (l, r : *Value) -> ()
-exist load : (x : LLVM_Value) -> LLVM_Value
-
-exist print_val_with_type : (op : LLVM_Value) -> ()
-exist print_val : (op : LLVM_Value) -> ()
-
-exist create_array : (x : LLVM_Value) -> LLVM_Value
-
-exist print_block : (b : *Block) -> ()
 
 exist printTypeSpec : (t : *Type, print_alias, func_as_ptr : Bool) -> ()
 exist printType : (t : *Type) -> ()

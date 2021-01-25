@@ -755,6 +755,6 @@ DoType = (x : *AstType) -> *Type
 DoStmt = (x : *AstStmt) -> *Stmt or Unit
 
 
-Eval = (x : *Value) -> LLVM_Value
+
 
 

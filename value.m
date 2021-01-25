@@ -1142,7 +1142,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   // во всех остальных случаях выполняем runtime приведение
 sact:
   v = value_new (#ValueCast, t, ti)
-  v.cast := (value=vx, type=t)
+  v.cast := (value=vx, type=t, ti=ti)
   return v
 
 fail:
