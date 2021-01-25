@@ -174,7 +174,6 @@ AstValue = (
 
   str     : Str           // string representation of #AstValueId, #AstValueNum, #AstValueStr
   name    : AstName       // #AstValueName
-  operand : [2]*AstValue  // un, bin, shl & shr operands
   of_type : *AstType      // sizeof, alignof
 
   rec     : AstValueRecord

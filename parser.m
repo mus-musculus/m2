@@ -585,7 +585,6 @@ ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
 
 prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
   nv = ast_value_new(k, ti)
-  nv.operand[0] := v
   nv.un := (kind=k, value=v, ti=ti)
   return nv
 }
