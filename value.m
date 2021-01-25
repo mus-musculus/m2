@@ -238,10 +238,10 @@ do_value_when = DoValue {
       // Создаю локальное выражение is
       vx = value_new(#ValueIs, typeBool, tx.ti)
       vari = type_union_get_variant (kit.v.type, tx)
-      vx.is := (value=kit.selector, variant=vari)
+      vx.is := (type=typeBool, value=kit.selector, variant=vari, ti=tx.ti)
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-      *v := (x=vx, y=val)
+      *v := (x=vx, y=val, ti=variant.ti)
 
       list_append (&kit.v.select.variants, v)
     }
@@ -608,7 +608,7 @@ do_value_cast_gen_rec = DoValueCast {
   map_foreach(&v.rec.values, prep, &ctx)
 
   nv = value_new (#ValueRecord, t, ti)
-  nv.rec := (type=t, values=ctx.new_vm)
+  nv.rec := (type=t, values=ctx.new_vm, ti=ti)
   return nv
 }
 
@@ -699,7 +699,7 @@ do_value_is = DoValue {
   variant = type_union_get_variant (v.type, t)
 
   vx = value_new(#ValueIs, typeBool, x.ti)
-  vx.is := (value=v, variant=variant)
+  vx.is := (type=typeBool, value=v, variant=variant, ti=x.ti)
   return vx
 
 fail:
@@ -926,7 +926,7 @@ do_value_array = DoValue {
   list_foreach(&x.array.items, item_value_handle, &ctx)
 
   vx = value_new (#ValueArray, t, x.ti)
-  vx.array := (type=t, items=ctx.vl)
+  vx.arr := (type=t, items=ctx.vl, ti=x.ti)
   return vx
 
 fail:
@@ -1057,8 +1057,9 @@ do_value_shift = DoValue {
   // что глупо но.. поэтому приводим правое к левому
   r2 = cast (r, l.type, r.ti)
 
-  v = value_new (k, l.type, x.ti)
-  v.bin := (left=l2, right=r2)
+  t = l.type
+  v = value_new (k, t, x.ti)
+  v.bin := (type=t, left=l2, right=r2, ti=x.ti)
   return v
 
 fail:
@@ -1144,7 +1145,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
   // во всех остальных случаях выполняем runtime приведение
 sact:
   v = value_new (#ValueCast, t, ti)
-  v.cast := (value=vx, type=t, ti=ti)
+  v.cast := (type=t, value=vx, ti=ti)
   return v
 
 fail:

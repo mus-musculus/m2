@@ -453,7 +453,7 @@ Value = (
 //union (
   imm    : ValueImm
   rec    : ValueRecord
-  array  : ValueArray
+  arr    : ValueArray
 
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)

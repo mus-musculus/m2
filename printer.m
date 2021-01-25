@@ -503,11 +503,11 @@ exist eval_deref : (x : *ValueUn) -> LLVM_Value
 exist eval_not : (x : *ValueUn) -> LLVM_Value
 exist eval_plus : (x : *ValueUn) -> LLVM_Value
 exist eval_minus : (x : *ValueUn) -> LLVM_Value
-exist eval_rec : Eval
-exist eval_arr : Eval
+exist eval_rec : (x : *ValueRecord) -> LLVM_Value
+exist eval_arr : (x : *ValueArray) -> LLVM_Value
 
-exist eval_as : Eval
-exist eval_is : Eval
+exist eval_as : (x : *ValueAs) -> LLVM_Value
+exist eval_is : (x : *ValueIs) -> LLVM_Value
 
 
 
@@ -540,11 +540,11 @@ eval = Eval {
     #ValuePlus   => eval_plus   (&x.un)
     #ValueNot    => eval_not    (&x.un)
     #ValueCast   => eval_cast   (&x.cast)
-    #ValueAs     => eval_as     (x)
-    #ValueIs     => eval_is     (x)
+    #ValueAs     => eval_as     (&x.as)
+    #ValueIs     => eval_is     (&x.is)
     #ValueWhen   => eval_when   (x)
-    #ValueRecord => eval_rec    (x)
-    #ValueArray  => eval_arr    (x)
+    #ValueRecord => eval_rec    (&x.rec)
+    #ValueArray  => eval_arr    (&x.arr)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
@@ -836,16 +836,16 @@ eval_cast_to_basic = EvalCast {
 }
 
 
-eval_as = Eval {
-  v = reval (x.as.value)
-  t = x.as.type
+eval_as = (x : *ValueAs) -> LLVM_Value {
+  v = reval (x.value)
+  t = x.type
 
   return llvm_cast ("bitcast", v, t)
 }
 
 
-eval_is = Eval {
-  v = reval (x.is.value)
+eval_is = (x : *ValueIs) -> LLVM_Value {
+  v = reval (x.value)
 
   // Maybe Ptr
   if v.type.union.impl != nil {
@@ -858,7 +858,7 @@ eval_is = Eval {
 
 
     // Для `Maybe Pointer
-    regno = when x.is.variant {
+    regno = when x.variant {
       0 => llvm_binary ("icmp ne", selector, variant, typeBaseInt)
       1 => llvm_binary ("icmp eq", selector, variant, typeBaseInt)
       else => 0
@@ -884,7 +884,7 @@ eval_is = Eval {
   t16 = getIntByPower(2)
 
   // Maybe
-  variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.is.variant to Int64)
+  variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
 
   regno = llvm_binary ("icmp eq", selector, variant, t16)
@@ -1197,7 +1197,7 @@ eval_when = Eval {
 
 //%agg1 = insertvalue {i32, float} undef, i32 1, 0 ; yields {i32 1, float undef}
 //%agg2 = insertvalue {i32, float} %agg1, float %val, 1
-eval_rec = Eval {
+eval_rec = (x : *ValueRecord) -> LLVM_Value {
 
   // контекст в котором будет происходить формирование структуры
   Ctx6 = (
@@ -1205,7 +1205,7 @@ eval_rec = Eval {
     v : LLVM_Value  // значение итеративно формируемой структуры
   )
 
-  ctx = (type=x.rec.type, v=(kind=#LLVM_ValueZero)) to Var Ctx6
+  ctx = (type=x.type, v=(kind=#LLVM_ValueZero)) to Var Ctx6
 
   // итеративно формируем структуру
   pack = MapForeachHandler {
@@ -1225,12 +1225,12 @@ eval_rec = Eval {
     print_val_with_type (vx); comma (); fprintf (fout, "%d", fieldno)
     c.v := (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
   }
-  map_foreach(&x.rec.values, pack, &ctx)
+  map_foreach(&x.values, pack, &ctx)
 
   return ctx.v
 }
 
-eval_arr = Eval {
+eval_arr = (x : *ValueArray) -> LLVM_Value {
   // контекст в котором будет происходить формирование структуры
   Ctx8 = (
     type : *Type
@@ -1240,7 +1240,7 @@ eval_arr = Eval {
 
   // изза того что приведение к вар типу неправильно реализовано
   // появлется такой вот маразм!
-  ctx = (type=x.array.type, v=(kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
+  ctx = (type=x.type, v=(kind=#LLVM_ValueZero), cnt=0) to Var Ctx8
 
   // итеративно формируем массив
   pack = ListForeachHandler {
@@ -1256,7 +1256,7 @@ eval_arr = Eval {
     c.v := (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
     c.cnt := c.cnt + 1
   }
-  list_foreach(&x.array.items, pack, &ctx)
+  list_foreach(&x.items, pack, &ctx)
 
   return ctx.v
 }
