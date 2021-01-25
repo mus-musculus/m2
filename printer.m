@@ -291,8 +291,8 @@ exist eval_cast_to_ref : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast_to_bool : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast_to_basic : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast : (x : *ValueCast) -> LLVM_Value
-exist eval_bin : Eval
-exist eval_when : Eval
+exist eval_bin : (x : *ValueBin) -> LLVM_Value
+exist eval_when : (x : *ValueWhen) -> LLVM_Value
 
 exist print_st : (l, r : *Value) -> ()
 exist load : (x : LLVM_Value) -> LLVM_Value
@@ -542,7 +542,7 @@ eval = Eval {
     #ValueCast   => eval_cast   (&x.cast)
     #ValueAs     => eval_as     (&x.as)
     #ValueIs     => eval_is     (&x.is)
-    #ValueWhen   => eval_when   (x)
+    #ValueWhen   => eval_when   (&x.when)
     #ValueRecord => eval_rec    (&x.rec)
     #ValueArray  => eval_arr    (&x.arr)
 
@@ -551,7 +551,7 @@ eval = Eval {
       return (kind=#LLVM_ValueInvalid)
     } (x)
 
-    else => eval_bin (x)
+    else => eval_bin (&x.bin)
   }
 }
 
@@ -1020,9 +1020,9 @@ llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
 }
 
 
-eval_bin = Eval {
-  l = reval (x.bin.left)
-  r = reval (x.bin.right)
+eval_bin = (x : *ValueBin) -> LLVM_Value {
+  l = reval (x.left)
+  r = reval (x.right)
 
   // берем тип левого а не тип x тк у x может быть Bool тип (в случае отношений)!
   signed = l.type.num.signed
@@ -1107,13 +1107,13 @@ default:
 cond_next:
   %X.2 = phi i32 [ %X.1, %cond_false ], [ %X.0, %cond_true ]
 */
-eval_when = Eval {
-  sel = reval (x.select.x)
+eval_when = (x : *ValueWhen) -> LLVM_Value {
+  sel = reval (x.x)
 
   select_no := select_no + 1
   sno = select_no
 
-  n = x.select.variants.volume
+  n = x.variants.volume
 
   Ctx = (
     sel : LLVM_Value
@@ -1164,10 +1164,10 @@ eval_when = Eval {
     c.regs[index] := s1.reg  // сохраняем регистр для фи
     c.case := c.case + 1
   }
-  list_foreach (&x.select.variants, print_select_case, &ctx)
+  list_foreach (&x.variants, print_select_case, &ctx)
 
   fprintf (fout, "\nselect_%d_%d:", sno, ctx.case) // else ->
-  otherwise = loadIfImmAs (reval (x.select.other), ctx.type)
+  otherwise = loadIfImmAs (reval (x.other), ctx.type)
   fprintf (fout, "\n  br label %%select_%d_end", sno)
   fprintf (fout, "\nselect_%d_end:", sno)
 

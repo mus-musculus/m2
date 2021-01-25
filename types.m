@@ -184,7 +184,7 @@ AstValue = (
   cast    : AstValueCast
   is      : AstValueIs
   as      : AstValueAs
-  select  : AstValueWhen
+  when    : AstValueWhen
 
   extern  : Bool
 
@@ -433,7 +433,7 @@ ValueRecord = (type : *Type, values : Map, ti : *TokenInfo)
 ValueArray  = (type : *Type, items : List, ti : *TokenInfo)
 
 ValueUn     = (type : *Type, value : *Value, ti : *TokenInfo)
-ValueBin    = (type : *Type, left, right : *Value, ti : *TokenInfo)
+ValueBin    = (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
 ValueCall   = (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
 ValueAccess = (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
 ValueIndex  = (type : *Type, array, index : *Value, ti : *TokenInfo)
@@ -470,7 +470,7 @@ Value = (
   as     : ValueAs
   is     : ValueIs
   call   : ValueCall
-  select : ValueWhen
+  when   : ValueWhen
 
   //load   : *Value  // #ValueLoad
 //)

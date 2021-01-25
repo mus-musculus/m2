@@ -168,8 +168,8 @@ do_value_forbidden = DoValue {
 
 do_value_when = DoValue {
   v = value_new (#ValueWhen, nil, x.ti)
-  selector = do_value (x.select.x)
-  v.select.x := selector
+  selector = do_value (x.when.x)
+  v.when.x := selector
 
   // контекст
   Kit = (selector : *Value, v : *Value)
@@ -202,7 +202,7 @@ do_value_when = DoValue {
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
       *v := (x=key, y=val, ti=variant.ti)
 
-      list_append (&kit.v.select.variants, v)
+      list_append (&kit.v.when.variants, v)
 
     } else {
 
@@ -243,19 +243,20 @@ do_value_when = DoValue {
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
       *v := (x=vx, y=val, ti=variant.ti)
 
-      list_append (&kit.v.select.variants, v)
+      list_append (&kit.v.when.variants, v)
     }
   }
-  list_foreach (&x.select.variants, do_variants, &kit)
+  list_foreach (&x.when.variants, do_variants, &kit)
 
 
-  if x.select.other == nil {
+  if x.when.other == nil {
     error("expected 'other' variant", x.ti)
     return value_new_poison (x.ti)
   }
 
-  v.select.other := implicit_cast (do_value(x.select.other), kit.v.type)
-
+  v.when.other := implicit_cast (do_value(x.when.other), kit.v.type)
+  v.when.ti := x.ti
+  v.when.type := kit.v.type
   v.ti := x.ti
 
   return v
@@ -353,7 +354,7 @@ do_value_bin = (k : ValueKind, x : *AstValue) -> *Value {
   }
 
   v = value_new (k, typ, x.ti)
-  v.bin := (type=typ, left=l, right=r, ti=x.ti)
+  v.bin := (type=typ, kind=k, left=l, right=r, ti=x.ti)
   return v
 
 fail:
@@ -1059,7 +1060,7 @@ do_value_shift = DoValue {
 
   t = l.type
   v = value_new (k, t, x.ti)
-  v.bin := (type=t, left=l2, right=r2, ti=x.ti)
+  v.bin := (type=t, kind=k, left=l2, right=r2, ti=x.ti)
   return v
 
 fail:
