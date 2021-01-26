@@ -189,7 +189,7 @@ value_print = (v : *Value) -> () {
     #ValueMul => value_print_bin (v, "mul")
     #ValueDiv => value_print_bin (v, "div")
     #ValueMod => value_print_bin (v, "mod")
-    #ValueOr => value_print_bin (v, "or")
+    #ValueOr  => value_print_bin (v, "or")
     #ValueXor => value_print_bin (v, "xor")
     #ValueAnd => value_print_bin (v, "and")
 

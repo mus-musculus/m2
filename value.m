@@ -290,17 +290,14 @@ do_value_when = (x : *AstValueWhen) -> *Value {
 
 // не загружает переменную - просто пока отбрасывает ее Var тип
 do_value_ref = (x : *AstValueUnary) -> *Value {
-  v0 = do_value (x.value)
+  v = do_value (x.value)
 
-  if v0.kind == #ValuePoison {return v0}
+  if v.kind == #ValuePoison {return v}
 
-  if v0.type.kind != #TypeVar {
-    //warning("expected Var for ref operation", x.operand[0].ti)
-  } else {
-    v0.type := v0.type.var.of
+  v.type := when v.type.kind {
+    #TypeVar => v.type.var.of
+    else => v.type
   }
-
-  v = v0
 
   if v.kind == #ValuePoison {return v}
 
