@@ -143,7 +143,7 @@ do_type = DoType {
 
 spec_type_uid = 0 to Var Nat32
 do_type_special = DoType {
-  spec_type = do_type(x)
+  spec_type = do_type(x.special.type)
   spec_type.uid := spec_type_uid
   spec_type_uid := spec_type_uid + 1
   return spec_type

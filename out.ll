@@ -13704,17 +13704,20 @@ select_1_end:
 
 define %Type* @func401 (%AstType*) {
 ;stmt0:
-  %2 = call %Type* (%AstType*) @func400 (%AstType* %0)
+  %2 = getelementptr inbounds %AstType, %AstType* %0, i1 0, i32 10
+  %3 = getelementptr inbounds %AstTypeSpecial, %AstTypeSpecial* %2, i1 0, i32 0
+  %4 = load %AstType*, %AstType** %3
+  %5 = call %Type* (%AstType*) @func400 (%AstType* %4)
 ;stmt1:
-  %3 = getelementptr inbounds %Type, %Type* %2, i1 0, i32 1
-  %4 = load %Nat32, %Nat32* @spec_type_uid
-  store %Nat32 %4, %Nat32* %3, align 4
+  %6 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 1
+  %7 = load %Nat32, %Nat32* @spec_type_uid
+  store %Nat32 %7, %Nat32* %6, align 4
 ;stmt2:
-  %5 = load %Nat32, %Nat32* @spec_type_uid
-  %6 = add %Nat32 %5, 1
-  store %Nat32 %6, %Nat32* @spec_type_uid, align 4
+  %8 = load %Nat32, %Nat32* @spec_type_uid
+  %9 = add %Nat32 %8, 1
+  store %Nat32 %9, %Nat32* @spec_type_uid, align 4
 ;stmt3:
-  ret %Type* %2
+  ret %Type* %5
 }
 
 define %Type* @func402 (%AstType*) {
