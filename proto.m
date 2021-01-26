@@ -67,7 +67,8 @@ exist value_new_imm : (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value
 
 exist ld_if_var : (x : *Value) -> *Value
 
-exist do_value : (x : *AstValue) -> *Value
+exist do_lvalue : DoValue
+exist do_value  : (x : *AstValue) -> *Value
 
 exist do_lvalue : (x : *AstValue) -> *Value
 exist do_valuex : DoValuex

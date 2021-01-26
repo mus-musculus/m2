@@ -130,6 +130,7 @@ exist do_value_when : (x : *AstValueWhen) -> *Value
 
 
 
+
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
@@ -187,6 +188,20 @@ do_valuex = DoValuex {
   return when load {
     true => dold (v)
     else => v
+  }
+}
+
+
+do_lvalue = DoValue {
+  return when x.kind {
+    #AstValueId     => do_value_named  (&x.name)
+    #AstValueDeref  => do_value_deref  (&x.un)
+    #AstValueIndex  => do_value_index  (&x.index)
+    #AstValueAccess => do_value_access (&x.access)
+    else => DoValue {
+      error ("invalid lvalue", x.ti)
+      return value_new_poison (x.ti)
+    } (x)
   }
 }
 

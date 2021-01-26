@@ -55,19 +55,9 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
 
   if rval0.kind == #ValuePoison {return unit}
 
-  lx = x.l
-  lval = when lx.kind {
-    #AstValueId => do_value_named      (&lx.name)
-    #AstValueDeref => do_value_deref   (&lx.un)
-    #AstValueIndex => do_value_index   (&lx.index)
-    #AstValueAccess => do_value_access (&lx.access)
-    else => nil
-  }
+  lval = do_lvalue(x.l)
 
-  if lval == nil {
-    error ("expected lvalue", lx.ti)
-    return unit
-  }
+  if lval.kind == #ValuePoison {return unit}
 
   if value_is_readonly (lval) {
     error ("invalid lval", x.ti)
