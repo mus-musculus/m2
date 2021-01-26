@@ -235,13 +235,13 @@ AstStmtIf = (
 
 AstStmtWhile    = (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
 AstStmtReturn   = (value : *AstValue or Unit, ti : *TokenInfo)
-AstStmtGoto     = (label : *AstId, ti : *TokenInfo)
-AstStmtLabel    =  (label : *AstId, ti : *TokenInfo)
-AstStmtBreak    = (ti : *TokenInfo)
-AstStmtContinue = (ti : *TokenInfo)
+AstStmtGoto     = Special (label : *AstId, ti : *TokenInfo)
+AstStmtLabel    = Special (label : *AstId, ti : *TokenInfo)
+AstStmtBreak    = Special (ti : *TokenInfo)
+AstStmtContinue = Special (ti : *TokenInfo)
 
 
-/*AstStmt2 = AstStmtAssign or
+AstStmt2 = AstStmtAssign or
           AstStmtValueDef or
           AstStmtTypeDef or
           AstStmtExpr or
@@ -252,7 +252,7 @@ AstStmtContinue = (ti : *TokenInfo)
           AstStmtGoto or
           AstStmtLabel or
           AstStmtBreak or
-          AstStmtContinue*/
+          AstStmtContinue
 
 
 AstStmt = (
