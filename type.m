@@ -130,6 +130,7 @@ do_type = DoType {
     #AstTypeNamed   => do_type_named   (x)
     #AstTypeFunc    => do_type_func    (x)
     #AstTypeVar     => do_type_var     (x)
+    #AstTypeSpecial => do_type_special (x)
     #AstTypeArray   => do_type_array   (x)
     #AstTypeArrayU  => do_type_array_u (x)
     #AstTypePointer => do_type_pointer (x)
@@ -138,6 +139,14 @@ do_type = DoType {
     #AstTypeUnion   => do_type_union   (x)
     else => type_new (#TypePoison, 0, x.ti)
   }
+}
+
+spec_type_uid = 0 to Var Nat32
+do_type_special = DoType {
+  spec_type = do_type(x)
+  spec_type.uid := spec_type_uid
+  spec_type_uid := spec_type_uid + 1
+  return spec_type
 }
 
 
@@ -429,6 +438,8 @@ type_eq_union = (a, b : *TypeUnion) -> Bool {
 
 type_eq = (a, b : *Type) -> Bool {
   if a == b {return true}
+
+  if a.uid != b.uid {return false}
 
   if a.kind != b.kind {return false}
 

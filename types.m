@@ -75,7 +75,8 @@ AstTypeKind = {
   #AstTypeArrayU
   #AstTypeFunc
   #AstTypePointer
-  #AstTypeVar
+  #AstTypeVar            // тип обертка для изменяемого значения
+  #AstTypeSpecial        // тип обертка для уникального типа
   #AstTypeUnion
 }
 
@@ -86,6 +87,7 @@ AstTypeArrayU = (of : *AstType, ti : *TokenInfo)
 AstTypePointer = (to : *AstType, ti : *TokenInfo)
 AstTypeFunc = (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
 AstTypeVar = (of : *AstType, ti : *TokenInfo)
+AstTypeSpecial = (type : *AstType, ti : *TokenInfo)
 AstTypeUnion = (types : List /* of *AstType */, ti : *TokenInfo)
 
 AstType = (
@@ -100,6 +102,7 @@ AstType = (
   func    : AstTypeFunc
   var     : AstTypeVar
   union   : AstTypeUnion
+  special : AstTypeSpecial
 
   ti : *TokenInfo
 )
@@ -238,7 +241,7 @@ AstStmtBreak    = (ti : *TokenInfo)
 AstStmtContinue = (ti : *TokenInfo)
 
 
-/*AstStmt = AstStmtAssign or
+/*AstStmt2 = AstStmtAssign or
           AstStmtValueDef or
           AstStmtTypeDef or
           AstStmtExpr or
@@ -367,7 +370,10 @@ TypeKind = {
 Type = (
   kind  : TypeKind
 
+  uid   : Nat32
+
   aka   : Str         // type alias (used by printer)
+
 
   size, align  : Nat  // размер и выравнивание в байтах
 

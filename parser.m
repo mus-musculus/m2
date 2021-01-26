@@ -423,6 +423,7 @@ parse_type3 = AstTypeParser {
   return parse_type4()
 }
 
+
 parse_type4 = AstTypeParser {
   if match("{") {
     return parse_type_set()
@@ -430,9 +431,15 @@ parse_type4 = AstTypeParser {
 
   tk = ctok()
 
+  if match("Special") {
+    spec_type = parse_type()
+    t = ast_type_new(#AstTypeSpecial, &tk.ti)
+    t.special := (type=spec_type, ti=&tk.ti)
+    return t
+  }
+
   if match("Var") {
     var_type = parse_type()
-
     t = ast_type_new(#AstTypeVar, &tk.ti)
     t.var := (of=var_type)
     return t

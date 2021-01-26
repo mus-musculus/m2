@@ -427,7 +427,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
   ctx = (f=f, paramlist=plist, arglist=list_new (), call_ti=ti) to Var Ctx3
 
   chk = ListWhileHandler2 {
-    p = data1 to *Decl   // param
+    p = data1 to *Decl       // param
     a0 = data2 to *AstValue  // arg
     context = ctx to *Ctx3
 
