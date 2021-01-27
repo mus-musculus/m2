@@ -84,33 +84,32 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
 
 // РАЗБЕРИСЬ НАКОНЕЦ ЧТО ТУТ ВОБЩЕ ПРОИСХОДИТ!! (НИХЕРА НЕ ПОНЯТНО!!)
 do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
-  id = x.id
+  id = x.id.str
   v = do_valuex (x.expr, false)
 
-  // Local
-  // важно чтобы undef переменные попадали сюда так как иначе
-  // происходит просто связывание id с переменной а не с ее значением по месту
-  // это слабое место, Саня, придумай как переделать let
-  if v.type.kind != #TypeVar {
-    k = v.kind
-    if k != #ValueGlobalConst and k != #ValueImmediate and k != #ValueGenericRecord {
+  k = v.kind
+  is_constbind = k == #ValueGlobalConst or
+                 k == #ValueImmediate or
+                 k == #ValueGenericRecord
+  is_varbind = v.type.kind == #TypeVar
 
-      v0 = value_new (#ValueLocalConst, v.type, x.ti)
-      bind_value_local (id.str, v0)
-
-      se = stmt_new (#StmtExpr, x.ti)
-      se.expr.v := dold (v)
-      v0.expr := &se.expr
-      return se
-    }
+  if is_constbind or is_varbind {
+    // просто связываем имя с константным значением или новой переменной
+    bind_value_in_block (fctx.cblock, id, v)
+    return unit
   }
 
-  // объявление констант и переменных попадает сюда
-  //printf("F= "); print_value_kind(v.kind); printf("\n");
-  //warning("F", x.ti)
+  // Сюда попадают неизменяемые значения (регистры)
+  // инициализируемые в рантайме
 
-  bind_value_in_block (fctx.cblock, id.str, v)
-  return unit
+
+  se = stmt_new (#StmtExpr, x.ti)
+  se.expr.v := dold (v)
+
+  v0 = value_new (#ValueLocalConst, v.type, x.ti)
+  v0.expr := &se.expr
+  bind_value_local (id, v0)
+  return se
 }
 
 
