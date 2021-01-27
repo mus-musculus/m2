@@ -54,8 +54,8 @@ main = (argc : Nat, argv : []Str) -> Int32 {
   //printf ("sizeof Stmt2 %d\n", sizeof Stmt2)
 
 
-  /*iff = 0 to Var StmtIf
-  va = iff to Var Stmt2*/
+  sb = malloc(sizeof AstStmt2) to *AstStmt2
+  *sb := (ti=nil) to AstStmtBreak
 
   m = parse ("main.m")
 

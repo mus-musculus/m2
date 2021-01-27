@@ -419,7 +419,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func163_str2 = private unnamed_addr constant [17 x i8] c"module not exist\00", align 1
 @func165_str1 = private unnamed_addr constant [10 x i8] c"file: %s\0A\00", align 1
 @func165_str2 = private unnamed_addr constant [23 x i8] c"unexpected end-of-file\00", align 1
-@func165_str3 = private unnamed_addr constant [16 x i8] c"too long token\0A\00", align 1
+@func165_str3 = private unnamed_addr constant [17 x i8] c"too long token\0A \00", align 1
 @func166_str1 = private unnamed_addr constant [2 x i8] c" \00", align 1
 @func166_str2 = private unnamed_addr constant [2 x i8] c"\09\00", align 1
 @func167_str1 = private unnamed_addr constant [2 x i8] c">\00", align 1
@@ -4706,7 +4706,7 @@ then_1:
   br i1 %19, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  %20 = bitcast [16 x %Nat8]* @func165_str3 to %Str
+  %20 = bitcast [17 x %Nat8]* @func165_str3 to %Str
   call void (%Str) @fatal (%Str %20)
   br label %endif_2
 else_2:
@@ -20532,44 +20532,60 @@ define %Int32 @main (%Nat32, %Str*) {
   %3 = bitcast [11 x %Nat8]* @func556_str1 to %Str
   %4 = call %Int32 (%Str, ...) @printf (%Str %3, %Int64 0, %Int64 5)
 ;stmt1:
-  %5 = bitcast [7 x %Nat8]* @func556_str2 to %Str
-  %6 = call %AstModule* (%Str) @parse (%Str %5)
-;stmt2:
-  %7 = load %Int32, %Int32* @errcnt
+  %5 = call %Unit* (%Nat32) @malloc (%Nat32 64)
+  %6 = bitcast %Unit* %5 to %union.3*
+;stmt2:; loadImmPtr
+  %7 = inttoptr i64 0 to%TokenInfo*
+  %8 = insertvalue %AstStmtBreak zeroinitializer, %TokenInfo* %7, 0
+  %9 = alloca %union.3
+; write variant 10
+  %10 = getelementptr inbounds %union.3, %union.3* %9, i1 0, i32 0
+  store %Int16 10, %Int16* %10, align 2
+; write data
+  %11 = getelementptr inbounds %union.3, %union.3* %9, i1 0, i32 1
+  %12 = bitcast [48 x %Nat8]* %11 to %AstStmtBreak*
+  store %AstStmtBreak %8, %AstStmtBreak* %12, align 8
+  %13 = load %union.3, %union.3* %9
+  store %union.3 %13, %union.3* %6, align 64
 ;stmt3:
-  %8 = icmp sgt %Int32 %7, 0
-  br i1 %8, label %then_0, label %else_0
-then_0:
+  %14 = bitcast [7 x %Nat8]* @func556_str2 to %Str
+  %15 = call %AstModule* (%Str) @parse (%Str %14)
 ;stmt4:
-  ret %Int32 %7
+  %16 = load %Int32, %Int32* @errcnt
+;stmt5:
+  %17 = icmp sgt %Int32 %16, 0
+  br i1 %17, label %then_0, label %else_0
+then_0:
+;stmt6:
+  ret %Int32 %16
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt5:
+;stmt7:
   call void () @compiler_init ()
-;stmt6:
-  %10 = call %Assembly* (%AstModule*) @func542 (%AstModule* %6)
-;stmt7:; loadImmPtr
-  %11 = inttoptr i64 0 to%Assembly*
-  %12 = icmp ne %Assembly* %10, %11
-  br i1 %12, label %then_1, label %else_1
-then_1:
 ;stmt8:
-  %13 = bitcast [11 x %Nat8]* @func556_str3 to %Str
-  %14 = load %Nat32, %Nat32* @lines
-  %15 = call %Int32 (%Str, ...) @printf (%Str %13, %Nat32 %14)
-;stmt9:
-  %16 = bitcast [7 x %Nat8]* @func556_str4 to %Str
-  call void (%Assembly*, %Str) @func282 (%Assembly* %10, %Str %16)
+  %19 = call %Assembly* (%AstModule*) @func542 (%AstModule* %15)
+;stmt9:; loadImmPtr
+  %20 = inttoptr i64 0 to%Assembly*
+  %21 = icmp ne %Assembly* %19, %20
+  br i1 %21, label %then_1, label %else_1
+then_1:
+;stmt10:
+  %22 = bitcast [11 x %Nat8]* @func556_str3 to %Str
+  %23 = load %Nat32, %Nat32* @lines
+  %24 = call %Int32 (%Str, ...) @printf (%Str %22, %Nat32 %23)
+;stmt11:
+  %25 = bitcast [7 x %Nat8]* @func556_str4 to %Str
+  call void (%Assembly*, %Str) @func282 (%Assembly* %19, %Str %25)
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-;stmt10:
-  %17 = load %Int32, %Int32* @errcnt
-;stmt11:
-  ret %Int32 %17
+;stmt12:
+  %26 = load %Int32, %Int32* @errcnt
+;stmt13:
+  ret %Int32 %26
 }
 
 ;aliases:
