@@ -431,7 +431,7 @@ parse_type4 = AstTypeParser {
 
   tk = ctok()
 
-  if match("Special") {
+  if match("Tagged") {
     spec_type = parse_type()
     t = ast_type_new(#AstTypeSpecial, &tk.ti)
     t.special := (type=spec_type, ti=&tk.ti)

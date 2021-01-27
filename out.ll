@@ -511,7 +511,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func212_str2 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func212_str3 = private unnamed_addr constant [2 x i8] c")\00", align 1
 @func213_str1 = private unnamed_addr constant [2 x i8] c"{\00", align 1
-@func213_str2 = private unnamed_addr constant [8 x i8] c"Special\00", align 1
+@func213_str2 = private unnamed_addr constant [7 x i8] c"Tagged\00", align 1
 @func213_str3 = private unnamed_addr constant [4 x i8] c"Var\00", align 1
 @func214_str1 = private unnamed_addr constant [2 x i8] c",\00", align 1
 @func214_str2 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
@@ -6582,7 +6582,7 @@ endif_0:
 ;stmt2:
   %5 = call %Token* () @func190 ()
 ;stmt3:
-  %6 = bitcast [8 x %Nat8]* @func213_str2 to %Str
+  %6 = bitcast [7 x %Nat8]* @func213_str2 to %Str
   %7 = call i1 (%Str) @func198 (%Str %6)
   br i1 %7, label %then_1, label %else_1
 then_1:
