@@ -12,13 +12,13 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 
 exist do_stmt_assign   : (x : *AstStmtAssign) -> *Stmt or Unit
-exist do_stmt_valdef   : (x : *AstStmtValueDef) -> *Stmt or Unit
+exist do_stmt_valdef   : (x : *AstStmtValueBind) -> *Stmt or Unit
 exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
 exist do_stmt_expr     : (x : *AstStmtExpr) -> *Stmt or Unit
 exist do_stmt_if       : (x : *AstStmtIf) -> *Stmt or Unit
 exist do_stmt_while    : (x : *AstStmtWhile) -> *Stmt or Unit
 exist do_stmt_return   : (x : *AstStmtReturn) -> *Stmt or Unit
-exist do_stmt_typedef  : (x : *AstStmtTypeDef) -> *Stmt or Unit
+exist do_stmt_typedef  : (x : *AstStmtTypeBind) -> *Stmt or Unit
 exist do_stmt_break    : (x : *AstStmtBreak) -> *Stmt or Unit
 exist do_stmt_continue : (x : *AstStmtContinue) -> *Stmt or Unit
 exist do_stmt_goto     : (x : *AstStmtGoto) -> *Stmt or Unit
@@ -27,19 +27,19 @@ exist do_stmt_label    : (x : *AstStmtLabel) -> *Stmt or Unit
 
 do_stmt = DoStmt {
   return when x.kind {
-    #AstStmtAssign   => do_stmt_assign   (&x.assign)
-    #AstStmtValueDef => do_stmt_valdef   (&x.valdef)
-    #AstStmtBlock    => do_stmt_block    (&x.block)
-    #AstStmtExpr     => do_stmt_expr     (&x.expr)
-    #AstStmtIf       => do_stmt_if       (&x.if)
-    #AstStmtWhile    => do_stmt_while    (&x.while)
-    #AstStmtReturn   => do_stmt_return   (&x.return)
-    #AstStmtTypeDef  => do_stmt_typedef  (&x.typedef)
-    #AstStmtBreak    => do_stmt_break    (&x.break)
-    #AstStmtContinue => do_stmt_continue (&x.continue)
-    #AstStmtGoto     => do_stmt_goto     (&x.goto)
-    #AstStmtLabel    => do_stmt_label    (&x.label)
-    //#AstStmtVarDef => do_stmt_vardef (x)
+    #AstStmtAssign    => do_stmt_assign   (&x.assign)
+    #AstStmtValueBind => do_stmt_valdef   (&x.valdef)
+    #AstStmtBlock     => do_stmt_block    (&x.block)
+    #AstStmtExpr      => do_stmt_expr     (&x.expr)
+    #AstStmtIf        => do_stmt_if       (&x.if)
+    #AstStmtWhile     => do_stmt_while    (&x.while)
+    #AstStmtReturn    => do_stmt_return   (&x.return)
+    #AstStmtTypeBind  => do_stmt_typedef  (&x.typedef)
+    #AstStmtBreak     => do_stmt_break    (&x.break)
+    #AstStmtContinue  => do_stmt_continue (&x.continue)
+    #AstStmtGoto      => do_stmt_goto     (&x.goto)
+    #AstStmtLabel     => do_stmt_label    (&x.label)
+    //#AstStmtVarDef  => do_stmt_vardef (x)
     else => unit
   }
 }
@@ -82,7 +82,7 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
 }
 
 // РАЗБЕРИСЬ НАКОНЕЦ ЧТО ТУТ ВОБЩЕ ПРОИСХОДИТ!! (НИХЕРА НЕ ПОНЯТНО!!)
-do_stmt_valdef = (x : *AstStmtValueDef) -> *Stmt or Unit {
+do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
   id = x.id
   v = do_valuex (x.expr, false)
 
@@ -265,7 +265,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   return unit
 }*/
 
-do_stmt_typedef = (x : *AstStmtTypeDef) -> *Stmt or Unit {
+do_stmt_typedef = (x : *AstStmtTypeBind) -> *Stmt or Unit {
   id = x.id.str
   _type = do_type (x.type)
 

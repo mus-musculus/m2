@@ -819,7 +819,7 @@ do_value_named = (x : *AstValueName) -> *Value {
   v = get_value (id)
 
   if v == nil {
-    error ("unknown value\n", x.ti)
+    error ("unknown value7\n", x.ti)
     nv = value_new_poison (x.ti)
     //bind_value(&module.public, id, nv)
     //bind_value(&module.undef, id, nv)
@@ -827,8 +827,8 @@ do_value_named = (x : *AstValueName) -> *Value {
     return nv
   }
 
-  vv = value_new(#ValueMention, v.type, x.ti)
-  vv.mention := (type=v.type, of=v, ti=x.ti)
+  vx = value_new(#ValueMention, v.type, x.ti)
+  //vx.mention := (type=v.type, of=v, ti=x.ti)
 
   return v
 }

@@ -182,8 +182,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstValueName = type {%AstId*, %AstId*, %TokenInfo*}
 %AstValue = type {%AstValueKind, %AstName, %AstValueRecord, %AstValueArray, %AstValueString, %AstValueNumber, %AstValueFunc, %AstValueUnary, %AstValueBinary, %AstValueCall, %AstValueIndex, %AstValueAccess, %AstValueCast, %AstValueIs, %AstValueAs, %AstValueWhen, %AstValueSizeof, %AstValueAlignof, i1, %TokenInfo*}
 %AstStmtKind = type i16
-%AstStmtValueDef = type {%AstId*, %AstValue*, %TokenInfo*}
-%AstStmtTypeDef = type {%AstId*, %AstType*, %TokenInfo*}
+%AstStmtValueBind = type {%AstId*, %AstValue*, %TokenInfo*}
+%AstStmtTypeBind = type {%AstId*, %AstType*, %TokenInfo*}
 %AstStmtExpr = type {%AstValue*, %TokenInfo*}
 %AstStmtAssign = type {%AstValue*, %AstValue*, %TokenInfo*}
 %AstStmtBlock = type {%List, %TokenInfo*}
@@ -195,7 +195,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstStmtBreak = type {%TokenInfo*}
 %AstStmtContinue = type {%TokenInfo*}
 %AstStmt2 = type %union.3
-%AstStmt = type {%AstStmtKind, %AstStmtAssign, %AstStmtValueDef, %AstStmtTypeDef, %AstStmtExpr, %AstStmtBlock, %AstStmtIf, %AstStmtWhile, %AstStmtReturn, %AstStmtGoto, %AstStmtLabel, %AstStmtBreak, %AstStmtContinue}
+%AstStmt = type {%AstStmtKind, %AstStmtAssign, %AstStmtValueBind, %AstStmtTypeBind, %AstStmtExpr, %AstStmtBlock, %AstStmtIf, %AstStmtWhile, %AstStmtReturn, %AstStmtGoto, %AstStmtLabel, %AstStmtBreak, %AstStmtContinue}
 %TypeNumeric = type {%Nat32, i1}
 %TypeArray = type {%Type*, %Nat32}
 %TypeArrayU = type {%Type*}
@@ -497,7 +497,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func202_str1 = private unnamed_addr constant [2 x i8] c".\00", align 1
 @func203_str1 = private unnamed_addr constant [13 x i8] c"ast_node_new\00", align 1
 @func204_str1 = private unnamed_addr constant [7 x i8] c"import\00", align 1
-@func204_str2 = private unnamed_addr constant [9 x i8] c"arghackp\00", align 1
+@func204_str2 = private unnamed_addr constant [8 x i8] c"arghack\00", align 1
 @func204_str3 = private unnamed_addr constant [6 x i8] c"exist\00", align 1
 @func204_str4 = private unnamed_addr constant [7 x i8] c"extern\00", align 1
 @func206_str1 = private unnamed_addr constant [2 x i8] c"=\00", align 1
@@ -963,7 +963,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func476_str1 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func477_str1 = private unnamed_addr constant [20 x i8] c"sizeof unknown type\00", align 1
 @func478_str1 = private unnamed_addr constant [21 x i8] c"alignof unknown type\00", align 1
-@func479_str1 = private unnamed_addr constant [15 x i8] c"unknown value\0A\00", align 1
+@func479_str1 = private unnamed_addr constant [16 x i8] c"unknown value7\0A\00", align 1
 @func480_str1 = private unnamed_addr constant [2 x i8] c"0\00", align 1
 @func480_str2 = private unnamed_addr constant [2 x i8] c"x\00", align 1
 @func480_str3 = private unnamed_addr constant [5 x i8] c"%llx\00", align 1
@@ -6110,7 +6110,7 @@ else_6:
   br label %endif_6
 endif_6:
 ;stmt30:
-  %49 = bitcast [9 x %Nat8]* @func204_str2 to %Str
+  %49 = bitcast [8 x %Nat8]* @func204_str2 to %Str
   %50 = call i1 (%Str) @func198 (%Str %49)
 ;stmt31:
   %51 = bitcast [6 x %Nat8]* @func204_str3 to %Str
@@ -8732,10 +8732,10 @@ endif_0:
   %15 = call %AstStmt* (%AstStmtKind) @ast_stmt_new (%AstStmtKind 1)
 ;stmt7:
   %16 = getelementptr inbounds %AstStmt, %AstStmt* %15, i1 0, i32 2
-  %17 = insertvalue %AstStmtValueDef zeroinitializer, %AstId* %4, 0
-  %18 = insertvalue %AstStmtValueDef %17, %AstValue* %7, 1
-  %19 = insertvalue %AstStmtValueDef %18, %TokenInfo* %3, 2
-  store %AstStmtValueDef %19, %AstStmtValueDef* %16, align 8
+  %17 = insertvalue %AstStmtValueBind zeroinitializer, %AstId* %4, 0
+  %18 = insertvalue %AstStmtValueBind %17, %AstValue* %7, 1
+  %19 = insertvalue %AstStmtValueBind %18, %TokenInfo* %3, 2
+  store %AstStmtValueBind %19, %AstStmtValueBind* %16, align 8
 ;stmt8:
   %20 = bitcast %AstStmt* %15 to %union.9
   ret %union.9 %20
@@ -8771,10 +8771,10 @@ endif_0:
   %15 = call %AstStmt* (%AstStmtKind) @ast_stmt_new (%AstStmtKind 2)
 ;stmt7:
   %16 = getelementptr inbounds %AstStmt, %AstStmt* %15, i1 0, i32 3
-  %17 = insertvalue %AstStmtTypeDef zeroinitializer, %AstId* %4, 0
-  %18 = insertvalue %AstStmtTypeDef %17, %AstType* %7, 1
-  %19 = insertvalue %AstStmtTypeDef %18, %TokenInfo* %3, 2
-  store %AstStmtTypeDef %19, %AstStmtTypeDef* %16, align 8
+  %17 = insertvalue %AstStmtTypeBind zeroinitializer, %AstId* %4, 0
+  %18 = insertvalue %AstStmtTypeBind %17, %AstType* %7, 1
+  %19 = insertvalue %AstStmtTypeBind %18, %TokenInfo* %3, 2
+  store %AstStmtTypeBind %19, %AstStmtTypeBind* %16, align 8
 ;stmt8:
   %20 = bitcast %AstStmt* %15 to %union.9
   ret %union.9 %20
@@ -17431,7 +17431,7 @@ define %Value* @func479 (%AstName*) {
   br i1 %8, label %then_0, label %else_0
 then_0:
 ;stmt3:
-  %9 = bitcast [15 x %Nat8]* @func479_str1 to %Str
+  %9 = bitcast [16 x %Nat8]* @func479_str1 to %Str
   %10 = getelementptr inbounds %AstName, %AstName* %0, i1 0, i32 2
   %11 = load %TokenInfo*, %TokenInfo** %10
   call void (%Str, %TokenInfo*) @error (%Str %9, %TokenInfo* %11)
@@ -17452,16 +17452,6 @@ endif_0:
   %19 = load %TokenInfo*, %TokenInfo** %18
   %20 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func437 (%ValueKind 4, %Type* %17, %TokenInfo* %19)
 ;stmt7:
-  %21 = getelementptr inbounds %Value, %Value* %20, i1 0, i32 3
-  %22 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
-  %23 = load %Type*, %Type** %22
-  %24 = insertvalue %ValueMention zeroinitializer, %Type* %23, 0
-  %25 = insertvalue %ValueMention %24, %Value* %6, 1
-  %26 = getelementptr inbounds %AstName, %AstName* %0, i1 0, i32 2
-  %27 = load %TokenInfo*, %TokenInfo** %26
-  %28 = insertvalue %ValueMention %25, %TokenInfo* %27, 2
-  store %ValueMention %28, %ValueMention* %21, align 8
-;stmt8:
   ret %Value* %6
 }
 
@@ -19045,7 +19035,7 @@ select_1_1:
   br i1 %7, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
   %8 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 2
-  %9 = call %union.28 (%AstStmtValueDef*) @func509 (%AstStmtValueDef* %8)
+  %9 = call %union.28 (%AstStmtValueBind*) @func509 (%AstStmtValueBind* %8)
   br label %select_1_end
 select_1_2:
   %10 = icmp eq %AstStmtKind %3, 6
@@ -19087,7 +19077,7 @@ select_1_7:
   br i1 %25, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
   %26 = getelementptr inbounds %AstStmt, %AstStmt* %0, i1 0, i32 3
-  %27 = call %union.35 (%AstStmtTypeDef*) @func517 (%AstStmtTypeDef* %26)
+  %27 = call %union.35 (%AstStmtTypeBind*) @func517 (%AstStmtTypeBind* %26)
   br label %select_1_end
 select_1_8:
   %28 = icmp eq %AstStmtKind %3, 10
@@ -19233,12 +19223,12 @@ endif_3:
   ret %union.27 %55
 }
 
-define %union.28 @func509 (%AstStmtValueDef*) {
+define %union.28 @func509 (%AstStmtValueBind*) {
 ;stmt0:
-  %2 = getelementptr inbounds %AstStmtValueDef, %AstStmtValueDef* %0, i1 0, i32 0
+  %2 = getelementptr inbounds %AstStmtValueBind, %AstStmtValueBind* %0, i1 0, i32 0
   %3 = load %AstId*, %AstId** %2
 ;stmt1:
-  %4 = getelementptr inbounds %AstStmtValueDef, %AstStmtValueDef* %0, i1 0, i32 1
+  %4 = getelementptr inbounds %AstStmtValueBind, %AstStmtValueBind* %0, i1 0, i32 1
   %5 = load %AstValue*, %AstValue** %4
   %6 = call %Value* (%AstValue*, i1) @func443 (%AstValue* %5, i1 0)
 ;stmt2:
@@ -19283,7 +19273,7 @@ then_2:
 ;stmt8:
   %29 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
   %30 = load %Type*, %Type** %29
-  %31 = getelementptr inbounds %AstStmtValueDef, %AstStmtValueDef* %0, i1 0, i32 2
+  %31 = getelementptr inbounds %AstStmtValueBind, %AstStmtValueBind* %0, i1 0, i32 2
   %32 = load %TokenInfo*, %TokenInfo** %31
   %33 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func437 (%ValueKind 11, %Type* %30, %TokenInfo* %32)
 ;stmt9:
@@ -19291,7 +19281,7 @@ then_2:
   %35 = load %Str, %Str* %34
   call void (%Str, %Value*) @func143 (%Str %35, %Value* %33)
 ;stmt10:
-  %36 = getelementptr inbounds %AstStmtValueDef, %AstStmtValueDef* %0, i1 0, i32 2
+  %36 = getelementptr inbounds %AstStmtValueBind, %AstStmtValueBind* %0, i1 0, i32 2
   %37 = load %TokenInfo*, %TokenInfo** %36
   %38 = call %Stmt* (%StmtKind, %TokenInfo*) @func506 (%StmtKind 1, %TokenInfo* %37)
 ;stmt11:
@@ -19739,14 +19729,14 @@ endif_3:
   ret %union.34 %57
 }
 
-define %union.35 @func517 (%AstStmtTypeDef*) {
+define %union.35 @func517 (%AstStmtTypeBind*) {
 ;stmt0:
-  %2 = getelementptr inbounds %AstStmtTypeDef, %AstStmtTypeDef* %0, i1 0, i32 0
+  %2 = getelementptr inbounds %AstStmtTypeBind, %AstStmtTypeBind* %0, i1 0, i32 0
   %3 = load %AstId*, %AstId** %2
   %4 = getelementptr inbounds %AstId, %AstId* %3, i1 0, i32 0
   %5 = load %Str, %Str* %4
 ;stmt1:
-  %6 = getelementptr inbounds %AstStmtTypeDef, %AstStmtTypeDef* %0, i1 0, i32 1
+  %6 = getelementptr inbounds %AstStmtTypeBind, %AstStmtTypeBind* %0, i1 0, i32 1
   %7 = load %AstType*, %AstType** %6
   %8 = call %Type* (%AstType*) @func400 (%AstType* %7)
 ;stmt2:

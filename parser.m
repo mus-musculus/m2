@@ -1257,7 +1257,7 @@ parse_stmt_valbind = AstStmtParser {
 
   if id == nil or v == nil {return unit}
 
-  s = ast_stmt_new(#AstStmtValueDef)
+  s = ast_stmt_new(#AstStmtValueBind)
   s.valdef := (id=id, expr=v, ti=ti)
   return s
 }
@@ -1272,7 +1272,7 @@ parse_stmt_typebind = AstStmtParser {
 
   if id == nil or t == nil {return unit}
 
-  s = ast_stmt_new(#AstStmtTypeDef)
+  s = ast_stmt_new(#AstStmtTypeBind)
   s.typedef := (id=id, type=t, ti=ti)
   return s
 }

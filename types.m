@@ -80,15 +80,15 @@ AstTypeKind = {
   #AstTypeUnion
 }
 
-AstTypeEnum = (constructors : List, ti : *TokenInfo)
-AstTypeRecord = (decls : List /* of *AstDecl */, ti : *TokenInfo)
-AstTypeArray = (of : *AstType, size : *AstValue, ti : *TokenInfo)
-AstTypeArrayU = (of : *AstType, ti : *TokenInfo)
+AstTypeEnum    = (constructors : List, ti : *TokenInfo)
+AstTypeRecord  = (decls : List /* of *AstDecl */, ti : *TokenInfo)
+AstTypeArray   = (of : *AstType, size : *AstValue, ti : *TokenInfo)
+AstTypeArrayU  = (of : *AstType, ti : *TokenInfo)
 AstTypePointer = (to : *AstType, ti : *TokenInfo)
-AstTypeFunc = (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
-AstTypeVar = (of : *AstType, ti : *TokenInfo)
+AstTypeFunc    = (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
+AstTypeVar     = (of : *AstType, ti : *TokenInfo)
 AstTypeSpecial = (type : *AstType, ti : *TokenInfo)
-AstTypeUnion = (types : List /* of *AstType */, ti : *TokenInfo)
+AstTypeUnion   = (types : List /* of *AstType */, ti : *TokenInfo)
 
 AstType = (
   kind : AstTypeKind
@@ -116,12 +116,12 @@ AstDecl = (
   _ : [10]Nat8
 )
 
-AstNodeComment = (text : Str, ti : *TokenInfo)
-AstNodeImport = (line : Str, ti : *TokenInfo)
-AstNodeBindType = (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstNodeComment   = (text : Str, ti : *TokenInfo)
+AstNodeImport    = (line : Str, ti : *TokenInfo)
+AstNodeBindType  = (id : *AstId, type : *AstType, ti : *TokenInfo)
 AstNodeBindValue = (id : *AstId, value : *AstValue, ti : *TokenInfo)
-AstNodeDeclVar = (decl : *AstDecl)
-AstNodeDeclType = (id : *AstId)
+AstNodeDeclVar   = (decl : *AstDecl)
+AstNodeDeclType  = (id : *AstId)
 AstNodeDeclValue = (decl : *AstDecl)
 
 
@@ -214,18 +214,18 @@ AstValue = (
 
 AstStmtKind = {
   #AstStmtUnknown,
-  #AstStmtValueDef, #AstStmtTypeDef, #AstStmtVarDef,
+  #AstStmtValueBind, #AstStmtTypeBind, #AstStmtVarDef,
   #AstStmtExpr, #AstStmtAssign, #AstStmtBlock,
   #AstStmtIf, #AstStmtWhile, #AstStmtReturn,
   #AstStmtBreak, #AstStmtContinue,
   #AstStmtGoto, #AstStmtLabel
 }
 
-AstStmtValueDef = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
-AstStmtTypeDef  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
-AstStmtExpr     = Tagged (expr : *AstValue, ti : *TokenInfo)
-AstStmtAssign   = Tagged (l, r : *AstValue, ti : *TokenInfo)
-AstStmtBlock    = Tagged (stmts : List, ti : *TokenInfo)
+AstStmtValueBind = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
+AstStmtTypeBind  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstStmtExpr      = Tagged (expr : *AstValue, ti : *TokenInfo)
+AstStmtAssign    = Tagged (l, r : *AstValue, ti : *TokenInfo)
+AstStmtBlock     = Tagged (stmts : List, ti : *TokenInfo)
 AstStmtIf = Tagged (
   cond : *AstValue
   then : *AstStmt
@@ -242,8 +242,8 @@ AstStmtContinue = Tagged (ti : *TokenInfo)
 
 
 AstStmt2 = AstStmtAssign or
-          AstStmtValueDef or
-          AstStmtTypeDef or
+          AstStmtValueBind or
+          AstStmtTypeBind or
           AstStmtExpr or
           AstStmtBlock or
           AstStmtIf or
@@ -259,8 +259,8 @@ AstStmt = (
   kind     : AstStmtKind
 
   assign   : AstStmtAssign
-  valdef   : AstStmtValueDef
-  typedef  : AstStmtTypeDef
+  valdef   : AstStmtValueBind
+  typedef  : AstStmtTypeBind
   expr     : AstStmtExpr
   block    : AstStmtBlock
   if       : AstStmtIf
