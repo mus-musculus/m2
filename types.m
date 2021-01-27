@@ -408,6 +408,7 @@ ValueKind = {
   /* Terminals */
 
   #ValueImmediate,    // Value#imm
+  #ValueMention,      // Using value by name
 
   #ValueGlobalConst,  // Value#assembly_item (id)
   #ValueGlobalVar,    // Value#assembly_item (id)
@@ -451,9 +452,10 @@ ValueKind = {
 }
 
 
-ValueImm    = (type : *Type, value : Int64, ti : *TokenInfo)
-ValueRecord = (type : *Type, values : Map, ti : *TokenInfo)
-ValueArray  = (type : *Type, items : List, ti : *TokenInfo)
+ValueImm     = (type : *Type, value : Int64, ti : *TokenInfo)
+ValueRecord  = (type : *Type, values : Map, ti : *TokenInfo)
+ValueArray   = (type : *Type, items : List, ti : *TokenInfo)
+ValueMention = (type : *Type, of : *Value, ti : *TokenInfo)
 
 ValueUn     = (type : *Type, value : *Value, ti : *TokenInfo)
 ValueBin    = (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
@@ -474,9 +476,10 @@ Value = (
   type : *Type
 
 //union (
-  imm    : ValueImm
-  rec    : ValueRecord
-  arr    : ValueArray
+  imm     : ValueImm
+  mention : ValueMention
+  rec     : ValueRecord
+  arr     : ValueArray
 
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)

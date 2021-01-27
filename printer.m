@@ -521,6 +521,8 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => eval_immediate (x)
 
+    #ValueMention     => eval(x.mention.of)
+
     #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
     #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
