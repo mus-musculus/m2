@@ -82,7 +82,6 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
 }
 
 
-// РАЗБЕРИСЬ НАКОНЕЦ ЧТО ТУТ ВОБЩЕ ПРОИСХОДИТ!! (НИХЕРА НЕ ПОНЯТНО!!)
 do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
   id = x.id.str
   v = do_valuex (x.expr, false)
@@ -101,8 +100,6 @@ do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
 
   // Сюда попадают неизменяемые значения (регистры)
   // инициализируемые в рантайме
-
-
   se = stmt_new (#StmtExpr, x.ti)
   se.expr.v := dold (v)
 
