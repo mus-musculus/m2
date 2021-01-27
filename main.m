@@ -40,50 +40,9 @@ compilerVersionMajor = 0
 compilerVersionMinor = 5
 
 
-ast_stmt_new2 = (x : AstStmt2) -> *AstStmt2 {
-  s = malloc(sizeof AstStmt2) to *AstStmt2
-  assert(s != nil, "ast_value_new malloc")
-  memset(s, 0, sizeof AstStmt2)
-  if x is AstStmtBreak {
-    printf("IS!AstStmtBreak\n")
-  }
-  *s := x
-  return s
-}
-
-
 
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
-
-  /* если первым параметром не передано имя файла, то это main.m */
-  /*fname = "main.m" to Var Str
-  if argc > 1 {fname := argv[1]}*/
-
-  /*printf ("sizeof Token %d\n", sizeof Token)
-  printf ("sizeof AstValue %d\n", sizeof AstValue)
-  printf ("sizeof Type %d\n", sizeof Type)*/
-  //printf ("sizeof Stmt %d\n", sizeof Stmt)
-  //printf ("sizeof Stmt2 %d\n", sizeof Stmt2)
-
-
-  s2 = ast_stmt_new2 ((ti=nil) to AstStmtBreak)
-
-  s3 = *s2  // expected value with union type (!)
-
-  if s3 is AstStmtBreak {
-    printf("IS2!\n")
-  }
-
-  if s3 is AstStmtIf {
-    printf("IS2!AstStmtIf\n")
-  }
-  /*when s3 {
-    AstStmtBreak => printf("AstStmtBreak\n")
-    AstStmtIf => printf("AstStmtIf\n")
-    else => printf("else\n")
-  }*/
-
 
   m = parse ("main.m")
 
