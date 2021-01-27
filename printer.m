@@ -1139,6 +1139,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
     s0 = reval (va.x)
 
     if va.x.kind != #ValueIs {
+      // when по значению
       reg = operation_with_type ("icmp eq", s0.type)
       space ()
       print_val (c.sel)
@@ -1146,6 +1147,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
       print_val (s0)
       fprintf (fout, "\n  br i1 %%%d", reg)
     } else {
+      // when по типу
       // если это сравнение с типом то не нужно сравнивать значение
       // is операции (WhenVariant#x) со значением селектора when
       // оно булево и уже несет всю инфу

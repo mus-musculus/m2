@@ -249,6 +249,7 @@ do_value_when = (x : *AstValueWhen) -> *Value {
       list_append (&kit.variants, v)
 
     } else {
+      printf("WHEN TYPE\n")
 
       // это when x is {}
       tx = do_type(variant.is_t)
@@ -279,7 +280,9 @@ do_value_when = (x : *AstValueWhen) -> *Value {
 
       // Создаю локальное выражение is
       vx = value_new(#ValueIs, typeBool, tx.ti)
-      vari = type_union_get_variant (kit.type, tx)
+      vari = type_union_get_variant (kit.val.type, tx)
+      printf("> "); prttype(val.type); printf("\n")
+      printf("VARI: %d\n", vari)
       vx.is := (type=typeBool, value=kit.val, variant=vari, ti=tx.ti)
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
