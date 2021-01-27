@@ -114,7 +114,7 @@ exist value_init : () -> ()
 
 exist stmt_new : (kind : StmtKind, ti : *TokenInfo) -> *Stmt
 //exist stmt_assign_new : (l, r : *Value, ti : *TokenInfo) -> *Stmt
-exist stmt_block_new : (b, parent : *Block) -> *Block
+exist stmt_block_init : (b, parent : *Block) -> *Block
 
 
 

@@ -100,6 +100,8 @@ do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
 
   // Сюда попадают неизменяемые значения (регистры)
   // инициализируемые в рантайме
+
+
   se = stmt_new (#StmtExpr, x.ti)
   se.expr.v := dold (v)
 
@@ -110,17 +112,12 @@ do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
 }
 
 
-stmt_block_new = (b, parent : *Block) -> *Block {
-  //b = malloc(sizeof Block) to *Block
-  //assert(b != nil, "stmt_block_new : b != nil")
+stmt_block_init = (b, parent : *Block) -> *Block {
   memset (b, 0, sizeof Block)
-
   b.parent := parent
-
   index_init (&b.index)
   list_init (&b.stmts)
   list_init (&b.local_funcs)
-
   return b
 }
 
@@ -128,7 +125,7 @@ stmt_block_new = (b, parent : *Block) -> *Block {
 do_stmt_block = (x : *AstStmtBlock) -> *Stmt or Unit {
   s = stmt_new (#StmtBlock, x.ti)
 
-  b = stmt_block_new (&s.block, fctx.cblock)
+  b = stmt_block_init (&s.block, fctx.cblock)
 
   fctx.cblock := b
 
