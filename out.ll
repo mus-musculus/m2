@@ -497,7 +497,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func202_str1 = private unnamed_addr constant [2 x i8] c".\00", align 1
 @func203_str1 = private unnamed_addr constant [13 x i8] c"ast_node_new\00", align 1
 @func204_str1 = private unnamed_addr constant [7 x i8] c"import\00", align 1
-@func204_str2 = private unnamed_addr constant [8 x i8] c"arghack\00", align 1
+@func204_str2 = private unnamed_addr constant [9 x i8] c"arghackp\00", align 1
 @func204_str3 = private unnamed_addr constant [6 x i8] c"exist\00", align 1
 @func204_str4 = private unnamed_addr constant [7 x i8] c"extern\00", align 1
 @func206_str1 = private unnamed_addr constant [2 x i8] c"=\00", align 1
@@ -6110,7 +6110,7 @@ else_6:
   br label %endif_6
 endif_6:
 ;stmt30:
-  %49 = bitcast [8 x %Nat8]* @func204_str2 to %Str
+  %49 = bitcast [9 x %Nat8]* @func204_str2 to %Str
   %50 = call i1 (%Str) @func198 (%Str %49)
 ;stmt31:
   %51 = bitcast [6 x %Nat8]* @func204_str3 to %Str
@@ -17446,16 +17446,22 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt6:
-  %16 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 0
-  %17 = load %ValueKind, %ValueKind* %16
-  %18 = icmp ne %ValueKind %17, 2
-  br i1 %18, label %then_1, label %else_1
-then_1:
-  br label %endif_1
-else_1:
-  br label %endif_1
-endif_1:
+  %16 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
+  %17 = load %Type*, %Type** %16
+  %18 = getelementptr inbounds %AstName, %AstName* %0, i1 0, i32 2
+  %19 = load %TokenInfo*, %TokenInfo** %18
+  %20 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func437 (%ValueKind 4, %Type* %17, %TokenInfo* %19)
 ;stmt7:
+  %21 = getelementptr inbounds %Value, %Value* %20, i1 0, i32 3
+  %22 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
+  %23 = load %Type*, %Type** %22
+  %24 = insertvalue %ValueMention zeroinitializer, %Type* %23, 0
+  %25 = insertvalue %ValueMention %24, %Value* %6, 1
+  %26 = getelementptr inbounds %AstName, %AstName* %0, i1 0, i32 2
+  %27 = load %TokenInfo*, %TokenInfo** %26
+  %28 = insertvalue %ValueMention %25, %TokenInfo* %27, 2
+  store %ValueMention %28, %ValueMention* %21, align 8
+;stmt8:
   ret %Value* %6
 }
 

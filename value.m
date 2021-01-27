@@ -827,16 +827,8 @@ do_value_named = (x : *AstValueName) -> *Value {
     return nv
   }
 
-  if v.kind != #ValueUndefined {
-    // копируется все норм, но есть ValueUndefined
-    // которые будут потом определены, и вот с ними бывает пролет
-    /*vv = value_new(v.kind, v.type, v.ti)
-    memcpy(vv, v, sizeof Value)
-    //*vv := *v
-    //vv.ti := x.ti  // ti упоминания вместо ti определения!
-    return vv*/
-  }
-
+  vv = value_new(#ValueMention, v.type, x.ti)
+  vv.mention := (type=v.type, of=v, ti=x.ti)
 
   return v
 }

@@ -521,7 +521,7 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => eval_immediate (x)
 
-    #ValueMention     => eval(x.mention.of)
+    #ValueMention     => eval (x.mention.of)  // Just go through
 
     #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
@@ -530,7 +530,7 @@ eval = Eval {
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
 
-    #ValueParam  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
+    #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (&x.call)
