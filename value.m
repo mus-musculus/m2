@@ -827,9 +827,6 @@ do_value_named = (x : *AstValueName) -> *Value {
     return nv
   }
 
-  vx = value_new(#ValueMention, v.type, x.ti)
-  //vx.mention := (type=v.type, of=v, ti=x.ti)
-
   return v
 }
 

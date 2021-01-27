@@ -81,17 +81,11 @@ do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
   return s
 }
 
+
 // РАЗБЕРИСЬ НАКОНЕЦ ЧТО ТУТ ВОБЩЕ ПРОИСХОДИТ!! (НИХЕРА НЕ ПОНЯТНО!!)
 do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
   id = x.id
   v = do_valuex (x.expr, false)
-
-  // пока так
-  if v.kind == #ValueGenericRecord {
-    // дженерики просто заносятся в индекс но не печатаются принтером
-    bind_value_in_block (fctx.cblock, id.str, v)
-    return unit
-  }
 
   // Local
   // важно чтобы undef переменные попадали сюда так как иначе
@@ -99,9 +93,7 @@ do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
   // это слабое место, Саня, придумай как переделать let
   if v.type.kind != #TypeVar {
     k = v.kind
-    if k != #ValueGlobalConst and
-       k != #ValueImmediate or
-       k == #ValueUndefined {
+    if k != #ValueGlobalConst and k != #ValueImmediate and k != #ValueGenericRecord {
 
       v0 = value_new (#ValueLocalConst, v.type, x.ti)
       bind_value_local (id.str, v0)
@@ -113,7 +105,9 @@ do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
     }
   }
 
-  //printf("F= "); value_print_kind(v.kind); printf("\n");
+  // объявление констант и переменных попадает сюда
+  //printf("F= "); print_value_kind(v.kind); printf("\n");
+  //warning("F", x.ti)
 
   bind_value_in_block (fctx.cblock, id.str, v)
   return unit
