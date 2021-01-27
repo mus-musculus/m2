@@ -460,7 +460,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
     na = implicit_cast (a, p.type)
 
     /* check argument type */
-    if not type_check (p.type, na.type, na.ti) {}
+    if not type_check (p.type, na.type, a.ti) {}
 
     list_append (context.arglist, na)
 
@@ -827,10 +827,16 @@ do_value_named = (x : *AstValueName) -> *Value {
     return nv
   }
 
-  // копируется все норм, но есть ValueUndefined
-  // которые будут потом определены, и вот с ними бывает пролет
-  //vv = malloc(sizeof Value) to *Value
-  //*vv := *v
+  if v.kind != #ValueUndefined {
+    // копируется все норм, но есть ValueUndefined
+    // которые будут потом определены, и вот с ними бывает пролет
+    /*vv = value_new(v.kind, v.type, v.ti)
+    memcpy(vv, v, sizeof Value)
+    //*vv := *v
+    //vv.ti := x.ti  // ti упоминания вместо ti определения!
+    return vv*/
+  }
+
 
   return v
 }

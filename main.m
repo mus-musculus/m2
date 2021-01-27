@@ -46,21 +46,19 @@ main = (argc : Nat, argv : []Str) -> Int32 {
 
   m = parse ("main.m")
 
-  ee = errcnt
 
-  if ee > 0 {return ee/* to Int32*/}
+  if m is Unit {return errcnt}
 
   compiler_init ()
 
-  a = compile (m)
+  a = compile (m as *AstModule)
 
   if a != nil {
     printf ("lines: %d\n", lines)
     print_assembly (a, "out.ll")
   }
 
-  eee = errcnt
-  return eee/* to Int32*/
+  return errcnt
 }
 
 

@@ -76,22 +76,26 @@ do_import = (x : *AstNodeImport) -> () {
   line = x.line
 
   /* include guard */
-  if map_get(&imp_list, line) != nil {return}
+  if map_get (&imp_list, line) != nil {return}
   //not_null = 0x1 to Var *Unit
-  map_append(&imp_list, line, &imp_list/*not_null*/)
+  map_append (&imp_list, line, &imp_list/*not_null*/)
 
-  fname = cat(line, ".m")
-  if exists(fname) {
-    m = parse(fname)
-    compile(m)
+  fname = cat (line, ".m")
+  if exists (fname) {
+    m = parse (fname)
+    if m is *AstModule {
+      compile (m as *AstModule)
+    }
     return
   }
 
-  lib_path = getenv(cfgLibraryVar)
-  lib_fname = cat4(lib_path, "/", line, ".m")
-  if exists(lib_fname) {
-    m = parse(lib_fname)
-    compile(m)
+  lib_path = getenv (cfgLibraryVar)
+  lib_fname = cat4 (lib_path, "/", line, ".m")
+  if exists (lib_fname) {
+    m = parse (lib_fname)
+    if m is *AstModule {
+      compile (m as *AstModule)
+    }
     return
   }
 

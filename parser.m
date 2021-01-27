@@ -184,7 +184,7 @@ ast_node_new = (kind : AstNodeKind, entity : *Unit) -> *AstNode {
   return n
 }
 
-parse = (filename : Str) -> *AstModule {
+parse = (filename : Str) -> *AstModule or Unit {
   m = malloc(sizeof AstModule) to *AstModule
   memset(m, 0, sizeof AstModule)
   list_init(&m.nodes)
@@ -270,6 +270,8 @@ parse = (filename : Str) -> *AstModule {
     }
 
   }
+
+  if errcnt > 0 {return unit}
   return m
 }
 
