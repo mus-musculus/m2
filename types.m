@@ -221,20 +221,20 @@ AstStmtKind = {
   #AstStmtGoto, #AstStmtLabel
 }
 
-AstStmtValueDef = (id : *AstId, expr : *AstValue, ti : *TokenInfo)
-AstStmtTypeDef  = (id : *AstId, type : *AstType, ti : *TokenInfo)
-AstStmtExpr     = (expr : *AstValue, ti : *TokenInfo)
-AstStmtAssign   = (l, r : *AstValue, ti : *TokenInfo)
-AstStmtBlock    = (stmts : List, ti : *TokenInfo)
-AstStmtIf = (
+AstStmtValueDef = Special (id : *AstId, expr : *AstValue, ti : *TokenInfo)
+AstStmtTypeDef  = Special (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstStmtExpr     = Special (expr : *AstValue, ti : *TokenInfo)
+AstStmtAssign   = Special (l, r : *AstValue, ti : *TokenInfo)
+AstStmtBlock    = Special (stmts : List, ti : *TokenInfo)
+AstStmtIf = Special (
   cond : *AstValue
   then : *AstStmt
   else : *AstStmt or Unit
   ti   : *TokenInfo
 )
 
-AstStmtWhile    = (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
-AstStmtReturn   = (value : *AstValue or Unit, ti : *TokenInfo)
+AstStmtWhile    = Special (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
+AstStmtReturn   = Special (value : *AstValue or Unit, ti : *TokenInfo)
 AstStmtGoto     = Special (label : *AstId, ti : *TokenInfo)
 AstStmtLabel    = Special (label : *AstId, ti : *TokenInfo)
 AstStmtBreak    = Special (ti : *TokenInfo)

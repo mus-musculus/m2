@@ -1097,9 +1097,9 @@ parse_value_array = AstValueParser {
 
 
 AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
-
-
+exist parse_stmt       : AstStmtParser
 exist parse_stmt_block : AstStmtParser
+
 
 parse_value_func = AstValueParser {
   func_ti = &ctok().ti
@@ -1145,6 +1145,7 @@ parse_value_num = AstValueParser {
 /*                             Parse Statement                               */
 /*****************************************************************************/
 
+
 ast_stmt_new = (k : AstStmtKind, ti : *TokenInfo) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
   assert(s != nil, "ast_value_new malloc")
@@ -1156,14 +1157,16 @@ ast_stmt_new = (k : AstStmtKind, ti : *TokenInfo) -> *AstStmt {
 
 
 
-exist parse_stmt_valdef : AstStmtParser
-exist parse_stmt_if : AstStmtParser
-exist parse_stmt_while : AstStmtParser
-exist parse_stmt_return : AstStmtParser
-exist parse_stmt_goto : AstStmtParser
+exist parse_stmt_if       : AstStmtParser
+exist parse_stmt_while    : AstStmtParser
+exist parse_stmt_return   : AstStmtParser
+exist parse_stmt_goto     : AstStmtParser
 //exist parse_stmt_vardef : AstStmtParser
-exist parse_stmt_typedef : AstStmtParser
-exist parse_stmt_expr : AstStmtParser
+exist parse_stmt_valbind  : AstStmtParser
+exist parse_stmt_typebind : AstStmtParser
+exist parse_stmt_expr     : AstStmtParser
+exist parse_stmt_break    : AstStmtParser
+exist parse_stmt_continue : AstStmtParser
 
 
 parse_stmt_break = AstStmtParser {
@@ -1183,10 +1186,14 @@ parse_stmt = () -> *AstStmt or Unit {
   nt = nextok()
   ti = &tk.ti
 
-  is_def = tk.kind == #TokenId and nt.kind == #TokenSym and nt.text[0] == "="[0]
+  is_bind = tk.kind == #TokenId and nt.kind == #TokenSym and nt.text[0] == "="[0]
 
-  is_valdef = is_def and (isLowerCase(tk.text[0]) or tk.text[0] == "_"[0])
-  is_typdef = is_def and isUpperCase(tk.text[0])
+  if is_bind {
+    return when true  {
+      isUpperCase(tk.text[0]) => parse_stmt_typebind(ti)
+      else => parse_stmt_valbind(ti)
+    }
+  }
 
 
   lab_or_expr = () -> *AstStmt or Unit{
@@ -1208,17 +1215,14 @@ parse_stmt = () -> *AstStmt or Unit {
   }
 
   return when true {
-    match("let") or is_valdef => parse_stmt_valdef(ti)
-    match("{") => parse_stmt_block(ti)
-    match("if") => parse_stmt_if(ti)
-    match("while") => parse_stmt_while(ti)
-    match("return") => parse_stmt_return(ti)
-    match("break") => parse_stmt_break(ti)
-    match("continue") => parse_stmt_continue(ti)
-    //match("var") => parse_stmt_vardef(ti)
-    match("type") or is_typdef => parse_stmt_typedef(ti)
-    match("goto") => parse_stmt_goto(ti)
-    else => lab_or_expr()
+    match("{")        => parse_stmt_block    (ti)
+    match("if")       => parse_stmt_if       (ti)
+    match("while")    => parse_stmt_while    (ti)
+    match("return")   => parse_stmt_return   (ti)
+    match("break")    => parse_stmt_break    (ti)
+    match("continue") => parse_stmt_continue (ti)
+    match("goto")     => parse_stmt_goto     (ti)
+    else              => lab_or_expr         ()
   }
 }
 
@@ -1242,7 +1246,7 @@ parse_stmt_expr = AstStmtParser {
 }
 
 
-parse_stmt_valdef = AstStmtParser {
+parse_stmt_valbind = AstStmtParser {
   // <id> '=' <expr>
   ti = &ctok().ti
   id = parse_id()
@@ -1257,7 +1261,7 @@ parse_stmt_valdef = AstStmtParser {
 }
 
 
-parse_stmt_typedef = AstStmtParser {
+parse_stmt_typebind = AstStmtParser {
   // <id> '=' <type>
   ti = &ctok().ti
   id = parse_id()

@@ -589,17 +589,14 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func242_str1 = private unnamed_addr constant [2 x i8] c"{\00", align 1
 @func245_str1 = private unnamed_addr constant [21 x i8] c"ast_value_new malloc\00", align 1
 @func248_str1 = private unnamed_addr constant [2 x i8] c"=\00", align 1
-@func248_str2 = private unnamed_addr constant [2 x i8] c"_\00", align 1
 @func248_func249_str1 = private unnamed_addr constant [2 x i8] c":\00", align 1
-@func248_str3 = private unnamed_addr constant [4 x i8] c"let\00", align 1
-@func248_str4 = private unnamed_addr constant [2 x i8] c"{\00", align 1
-@func248_str5 = private unnamed_addr constant [3 x i8] c"if\00", align 1
-@func248_str6 = private unnamed_addr constant [6 x i8] c"while\00", align 1
-@func248_str7 = private unnamed_addr constant [7 x i8] c"return\00", align 1
-@func248_str8 = private unnamed_addr constant [6 x i8] c"break\00", align 1
-@func248_str9 = private unnamed_addr constant [9 x i8] c"continue\00", align 1
-@func248_str10 = private unnamed_addr constant [5 x i8] c"type\00", align 1
-@func248_str11 = private unnamed_addr constant [5 x i8] c"goto\00", align 1
+@func248_str2 = private unnamed_addr constant [2 x i8] c"{\00", align 1
+@func248_str3 = private unnamed_addr constant [3 x i8] c"if\00", align 1
+@func248_str4 = private unnamed_addr constant [6 x i8] c"while\00", align 1
+@func248_str5 = private unnamed_addr constant [7 x i8] c"return\00", align 1
+@func248_str6 = private unnamed_addr constant [6 x i8] c"break\00", align 1
+@func248_str7 = private unnamed_addr constant [9 x i8] c"continue\00", align 1
+@func248_str8 = private unnamed_addr constant [5 x i8] c"goto\00", align 1
 @func250_str1 = private unnamed_addr constant [3 x i8] c":=\00", align 1
 @func251_str1 = private unnamed_addr constant [2 x i8] c"=\00", align 1
 @func252_str1 = private unnamed_addr constant [2 x i8] c"=\00", align 1
@@ -993,7 +990,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func548_str2 = private unnamed_addr constant [7 x i8] c"printf\00", align 1
 @func548_str3 = private unnamed_addr constant [6 x i8] c"scanf\00", align 1
 @func548_str4 = private unnamed_addr constant [7 x i8] c"sscanf\00", align 1
-@func548_str5 = private unnamed_addr constant [9 x i8] c"sprintf°\00", align 1
+@func548_str5 = private unnamed_addr constant [8 x i8] c"sprintf\00", align 1
 @func548_str6 = private unnamed_addr constant [8 x i8] c"fprintf\00", align 1
 @func549_func550_str1 = private unnamed_addr constant [15 x i8] c"undefined type\00", align 1
 @func556_str1 = private unnamed_addr constant [11 x i8] c"m2 v%d.%d\0A\00", align 1
@@ -8450,7 +8447,7 @@ define %AstStmt* @ast_stmt_new (%AstStmtKind, %TokenInfo*) {
   ret %AstStmt* %4
 }
 
-define %union.8 @parse_stmt_break (%TokenInfo*) {
+define %union.8 @func246 (%TokenInfo*) {
 ;stmt0:
   %2 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 10, %TokenInfo* %0)
 ;stmt1:
@@ -8462,7 +8459,7 @@ define %union.8 @parse_stmt_break (%TokenInfo*) {
   ret %union.8 %5
 }
 
-define %union.8 @parse_stmt_continue (%TokenInfo*) {
+define %union.8 @func247 (%TokenInfo*) {
 ;stmt0:
   %2 = call %AstStmt* (%AstStmtKind, %TokenInfo*) @ast_stmt_new (%AstStmtKind 11, %TokenInfo* %0)
 ;stmt1:
@@ -8531,7 +8528,7 @@ endif_0:
   ret %union.8 %26
 }
 
-define %union.9 @parse_stmt () {
+define %union.9 @func248 () {
 ;stmt0:
   %1 = call %Token* () @func190 ()
 ;stmt1:
@@ -8556,110 +8553,95 @@ define %union.9 @parse_stmt () {
   %16 = and i1 %9, %15
   %17 = and i1 %6, %16
 ;stmt4:
+  br i1 %17, label %then_0, label %else_0
+then_0:
+;stmt5:
+  br label %select_1_0
+select_1_0:
   %18 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 2
 ; index array
   %19 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %18, i1 0, %Int64 0
   %20 = load %Nat8, %Nat8* %19
-  %21 = call i1 (%Nat8) @isLowerCase (%Nat8 %20)
-  %22 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 2
-; index array
-  %23 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %22, i1 0, %Int64 0
-  %24 = load %Nat8, %Nat8* %23
-; index array
-  %25 = getelementptr inbounds [2 x %Nat8], [2 x %Nat8]* @func248_str2, i1 0, %Int64 0
-  %26 = load %Nat8, %Nat8* %25
-  %27 = icmp eq %Nat8 %24, %26
-  %28 = or i1 %21, %27
-  %29 = and i1 %17, %28
-;stmt5:
-  %30 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 2
-; index array
-  %31 = getelementptr inbounds [0 x %Nat8], [0 x %Nat8]* %30, i1 0, %Int64 0
-  %32 = load %Nat8, %Nat8* %31
-  %33 = call i1 (%Nat8) @isUpperCase (%Nat8 %32)
-  %34 = and i1 %17, %33
-;stmt6:
-  br label %select_1_0
-select_1_0:
-  %35 = bitcast [4 x %Nat8]* @func248_str3 to %Str
-  %36 = call i1 (%Str) @func198 (%Str %35)
-  %37 = or i1 %36, %29
-  %38 = icmp eq i1 1, %37
-  br i1 %38, label %select_1_0_ok, label %select_1_1
+  %21 = call i1 (%Nat8) @isUpperCase (%Nat8 %20)
+  %22 = icmp eq i1 1, %21
+  br i1 %22, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %39 = call %union.8 (%TokenInfo*) @func251 (%TokenInfo* %3)
+  %23 = call %union.8 (%TokenInfo*) @func252 (%TokenInfo* %3)
   br label %select_1_end
 select_1_1:
-  %40 = bitcast [2 x %Nat8]* @func248_str4 to %Str
-  %41 = call i1 (%Str) @func198 (%Str %40)
-  %42 = icmp eq i1 1, %41
-  br i1 %42, label %select_1_1_ok, label %select_1_2
-select_1_1_ok:
-  %43 = call %union.8 (%TokenInfo*) @func253 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_2:
-  %44 = bitcast [3 x %Nat8]* @func248_str5 to %Str
-  %45 = call i1 (%Str) @func198 (%Str %44)
-  %46 = icmp eq i1 1, %45
-  br i1 %46, label %select_1_2_ok, label %select_1_3
-select_1_2_ok:
-  %47 = call %union.8 (%TokenInfo*) @func254 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_3:
-  %48 = bitcast [6 x %Nat8]* @func248_str6 to %Str
-  %49 = call i1 (%Str) @func198 (%Str %48)
-  %50 = icmp eq i1 1, %49
-  br i1 %50, label %select_1_3_ok, label %select_1_4
-select_1_3_ok:
-  %51 = call %union.8 (%TokenInfo*) @func255 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_4:
-  %52 = bitcast [7 x %Nat8]* @func248_str7 to %Str
-  %53 = call i1 (%Str) @func198 (%Str %52)
-  %54 = icmp eq i1 1, %53
-  br i1 %54, label %select_1_4_ok, label %select_1_5
-select_1_4_ok:
-  %55 = call %union.8 (%TokenInfo*) @func256 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_5:
-  %56 = bitcast [6 x %Nat8]* @func248_str8 to %Str
-  %57 = call i1 (%Str) @func198 (%Str %56)
-  %58 = icmp eq i1 1, %57
-  br i1 %58, label %select_1_5_ok, label %select_1_6
-select_1_5_ok:
-  %59 = call %union.8 (%TokenInfo*) @parse_stmt_break (%TokenInfo* %3)
-  br label %select_1_end
-select_1_6:
-  %60 = bitcast [9 x %Nat8]* @func248_str9 to %Str
-  %61 = call i1 (%Str) @func198 (%Str %60)
-  %62 = icmp eq i1 1, %61
-  br i1 %62, label %select_1_6_ok, label %select_1_7
-select_1_6_ok:
-  %63 = call %union.8 (%TokenInfo*) @parse_stmt_continue (%TokenInfo* %3)
-  br label %select_1_end
-select_1_7:
-  %64 = bitcast [5 x %Nat8]* @func248_str10 to %Str
-  %65 = call i1 (%Str) @func198 (%Str %64)
-  %66 = or i1 %65, %34
-  %67 = icmp eq i1 1, %66
-  br i1 %67, label %select_1_7_ok, label %select_1_8
-select_1_7_ok:
-  %68 = call %union.8 (%TokenInfo*) @func252 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_8:
-  %69 = bitcast [5 x %Nat8]* @func248_str11 to %Str
-  %70 = call i1 (%Str) @func198 (%Str %69)
-  %71 = icmp eq i1 1, %70
-  br i1 %71, label %select_1_8_ok, label %select_1_9
-select_1_8_ok:
-  %72 = call %union.8 (%TokenInfo*) @func257 (%TokenInfo* %3)
-  br label %select_1_end
-select_1_9:
-  %73 = call %union.10 () @func249 ()
+  %24 = call %union.8 (%TokenInfo*) @func251 (%TokenInfo* %3)
   br label %select_1_end
 select_1_end:
-  %74 = phi %union.8 [ %39, %select_1_0_ok ], [ %43, %select_1_1_ok ], [ %47, %select_1_2_ok ], [ %51, %select_1_3_ok ], [ %55, %select_1_4_ok ], [ %59, %select_1_5_ok ], [ %63, %select_1_6_ok ], [ %68, %select_1_7_ok ], [ %72, %select_1_8_ok ], [ %73, %select_1_9 ]
-  ret %union.8 %74
+  %25 = phi %union.8 [ %23, %select_1_0_ok ], [ %24, %select_1_1 ]
+  ret %union.8 %25
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+;stmt6:
+  br label %select_2_0
+select_2_0:
+  %27 = bitcast [2 x %Nat8]* @func248_str2 to %Str
+  %28 = call i1 (%Str) @func198 (%Str %27)
+  %29 = icmp eq i1 1, %28
+  br i1 %29, label %select_2_0_ok, label %select_2_1
+select_2_0_ok:
+  %30 = call %union.8 (%TokenInfo*) @func253 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_1:
+  %31 = bitcast [3 x %Nat8]* @func248_str3 to %Str
+  %32 = call i1 (%Str) @func198 (%Str %31)
+  %33 = icmp eq i1 1, %32
+  br i1 %33, label %select_2_1_ok, label %select_2_2
+select_2_1_ok:
+  %34 = call %union.8 (%TokenInfo*) @func254 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_2:
+  %35 = bitcast [6 x %Nat8]* @func248_str4 to %Str
+  %36 = call i1 (%Str) @func198 (%Str %35)
+  %37 = icmp eq i1 1, %36
+  br i1 %37, label %select_2_2_ok, label %select_2_3
+select_2_2_ok:
+  %38 = call %union.8 (%TokenInfo*) @func255 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_3:
+  %39 = bitcast [7 x %Nat8]* @func248_str5 to %Str
+  %40 = call i1 (%Str) @func198 (%Str %39)
+  %41 = icmp eq i1 1, %40
+  br i1 %41, label %select_2_3_ok, label %select_2_4
+select_2_3_ok:
+  %42 = call %union.8 (%TokenInfo*) @func256 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_4:
+  %43 = bitcast [6 x %Nat8]* @func248_str6 to %Str
+  %44 = call i1 (%Str) @func198 (%Str %43)
+  %45 = icmp eq i1 1, %44
+  br i1 %45, label %select_2_4_ok, label %select_2_5
+select_2_4_ok:
+  %46 = call %union.8 (%TokenInfo*) @func246 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_5:
+  %47 = bitcast [9 x %Nat8]* @func248_str7 to %Str
+  %48 = call i1 (%Str) @func198 (%Str %47)
+  %49 = icmp eq i1 1, %48
+  br i1 %49, label %select_2_5_ok, label %select_2_6
+select_2_5_ok:
+  %50 = call %union.8 (%TokenInfo*) @func247 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_6:
+  %51 = bitcast [5 x %Nat8]* @func248_str8 to %Str
+  %52 = call i1 (%Str) @func198 (%Str %51)
+  %53 = icmp eq i1 1, %52
+  br i1 %53, label %select_2_6_ok, label %select_2_7
+select_2_6_ok:
+  %54 = call %union.8 (%TokenInfo*) @func257 (%TokenInfo* %3)
+  br label %select_2_end
+select_2_7:
+  %55 = call %union.10 () @func249 ()
+  br label %select_2_end
+select_2_end:
+  %56 = phi %union.8 [ %30, %select_2_0_ok ], [ %34, %select_2_1_ok ], [ %38, %select_2_2_ok ], [ %42, %select_2_3_ok ], [ %46, %select_2_4_ok ], [ %50, %select_2_5_ok ], [ %54, %select_2_6_ok ], [ %55, %select_2_7 ]
+  ret %union.8 %56
 }
 
 define %union.8 @func250 (%TokenInfo*) {
@@ -8815,7 +8797,7 @@ else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %13 = call %union.9 () @parse_stmt ()
+  %13 = call %union.9 () @func248 ()
 ;stmt10:
   %14 = bitcast %Int64 0 to %Int64
   %15 = ptrtoint %union.9 %13 to %Int64
@@ -20389,7 +20371,7 @@ endif_0:
   %34 = bitcast [7 x %Nat8]* @func548_str4 to %Str
   %35 = call %Int32 (%Str, %Str) @strcmp (%Str %34, %Str %5)
   %36 = icmp eq %Int32 %35, 0
-  %37 = bitcast [9 x %Nat8]* @func548_str5 to %Str
+  %37 = bitcast [8 x %Nat8]* @func548_str5 to %Str
   %38 = call %Int32 (%Str, %Str) @strcmp (%Str %37, %Str %5)
   %39 = icmp eq %Int32 %38, 0
   %40 = bitcast [8 x %Nat8]* @func548_str6 to %Str
