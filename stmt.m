@@ -13,7 +13,7 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 exist do_stmt_assign   : (x : AstStmtAssign) -> *Stmt or Unit
 exist do_stmt_valbind  : (x : AstStmtValueBind) -> *Stmt or Unit
-exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
+exist do_stmt_block    : (x : AstStmtBlock) -> *Stmt or Unit
 exist do_stmt_expr     : (x : AstStmtExpr) -> *Stmt or Unit
 exist do_stmt_if       : (x : AstStmtIf) -> *Stmt or Unit
 exist do_stmt_while    : (x : AstStmtWhile) -> *Stmt or Unit
@@ -29,10 +29,10 @@ do_stmt = DoStmt {
   return when x.kind {
     #AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
     #AstStmtValueBind => do_stmt_valbind  (x.data to AstStmtValueBind)
-    #AstStmtBlock     => do_stmt_block    (&x.block)
-    #AstStmtExpr      => do_stmt_expr     (x.expr)
-    #AstStmtIf        => do_stmt_if       (x.if)
-    #AstStmtWhile     => do_stmt_while    (x.while)
+    #AstStmtBlock     => do_stmt_block    (x.data to AstStmtBlock)
+    #AstStmtExpr      => do_stmt_expr     (x.data to AstStmtExpr)
+    #AstStmtIf        => do_stmt_if       (x.data to AstStmtIf)
+    #AstStmtWhile     => do_stmt_while    (x.data to AstStmtWhile)
     #AstStmtReturn    => do_stmt_return   (x.return)
     #AstStmtTypeBind  => do_stmt_typebind (x.typedef)
     #AstStmtBreak     => do_stmt_break    (x.break)
@@ -122,7 +122,7 @@ stmt_block_init = (b, parent : *Block) -> *Block {
 }
 
 
-do_stmt_block = (x : *AstStmtBlock) -> *Stmt or Unit {
+do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   s = stmt_new (#StmtBlock, x.ti)
 
   b = stmt_block_init (&s.block, fctx.cblock)
