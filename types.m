@@ -241,7 +241,6 @@ AstStmtBreak    = Tagged (ti : *TokenInfo)
 AstStmtContinue = Tagged (ti : *TokenInfo)
 
 
-Nothing = {#Nothing}
 
 AstStmt2 = AstStmtAssign or
           AstStmtValueBind or
@@ -254,8 +253,7 @@ AstStmt2 = AstStmtAssign or
           AstStmtGoto or
           AstStmtLabel or
           AstStmtBreak or
-          AstStmtContinue or
-          Nothing
+          AstStmtContinue
 
 
 AstStmt = (

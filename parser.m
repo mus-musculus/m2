@@ -1343,7 +1343,7 @@ parse_stmt_while = AstStmtParser {
   if cond == nil {return unit}
   if block is Unit {return unit}
 
-  s = ast_stmt_new(#AstStmtWhile, (cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
+  s = ast_stmt_new (#AstStmtWhile, (cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
   s.while := (cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile
   return s
 }
@@ -1351,7 +1351,7 @@ parse_stmt_while = AstStmtParser {
 
 parse_stmt_return = AstStmtParser {
   if separator() {
-    s = ast_stmt_new(#AstStmtReturn, #Nothing)
+    s = ast_stmt_new (#AstStmtReturn, (value=unit, ti=ti) to AstStmtReturn)
     s.return := (value=unit, ti=ti) to AstStmtReturn
     return s
   }
@@ -1362,7 +1362,7 @@ parse_stmt_return = AstStmtParser {
     error("expected return expression", ti)
   }
 
-  s = ast_stmt_new(#AstStmtReturn, #Nothing)
+  s = ast_stmt_new (#AstStmtReturn, (value=v, ti=ti) to AstStmtReturn)
   s.return := (value=v, ti=ti) to AstStmtReturn
   return s
 }
@@ -1370,7 +1370,7 @@ parse_stmt_return = AstStmtParser {
 
 parse_stmt_goto = AstStmtParser {
   id = parse_id()
-  s = ast_stmt_new(#AstStmtGoto, #Nothing)
+  s = ast_stmt_new (#AstStmtGoto, (label=id, ti=ti) to AstStmtGoto)
   s.goto := (label=id, ti=ti)
   return s
 }
