@@ -26,20 +26,20 @@ exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
 
 
 do_stmt = DoStmt {
-  return when x.kind {
-    #AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
-    #AstStmtValueBind => do_stmt_valbind  (x.data to AstStmtValueBind)
-    #AstStmtBlock     => do_stmt_block    (x.data to AstStmtBlock)
-    #AstStmtExpr      => do_stmt_expr     (x.data to AstStmtExpr)
-    #AstStmtIf        => do_stmt_if       (x.data to AstStmtIf)
-    #AstStmtWhile     => do_stmt_while    (x.data to AstStmtWhile)
-    #AstStmtReturn    => do_stmt_return   (x.data to AstStmtReturn)
-    #AstStmtTypeBind  => do_stmt_typebind (x.data to AstStmtTypeBind)
-    #AstStmtBreak     => do_stmt_break    (x.data to AstStmtBreak)
-    #AstStmtContinue  => do_stmt_continue (x.data to AstStmtContinue)
-    #AstStmtGoto      => do_stmt_goto     (x.data to AstStmtGoto)
-    #AstStmtLabel     => do_stmt_label    (x.data to AstStmtLabel)
-    //#AstStmtVarDef  => do_stmt_vardef (x)
+  return when x.data {
+    AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
+    AstStmtValueBind => do_stmt_valbind  (x.data to AstStmtValueBind)
+    AstStmtBlock     => do_stmt_block    (x.data to AstStmtBlock)
+    AstStmtExpr      => do_stmt_expr     (x.data to AstStmtExpr)
+    AstStmtIf        => do_stmt_if       (x.data to AstStmtIf)
+    AstStmtWhile     => do_stmt_while    (x.data to AstStmtWhile)
+    AstStmtReturn    => do_stmt_return   (x.data to AstStmtReturn)
+    AstStmtTypeBind  => do_stmt_typebind (x.data to AstStmtTypeBind)
+    AstStmtBreak     => do_stmt_break    (x.data to AstStmtBreak)
+    AstStmtContinue  => do_stmt_continue (x.data to AstStmtContinue)
+    AstStmtGoto      => do_stmt_goto     (x.data to AstStmtGoto)
+    AstStmtLabel     => do_stmt_label    (x.data to AstStmtLabel)
+    //AstStmtVarDef  => do_stmt_vardef (x)
     else => unit
   }
 }

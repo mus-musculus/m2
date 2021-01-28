@@ -1148,11 +1148,11 @@ parse_value_num = AstValueParser {
 /*****************************************************************************/
 
 
-ast_stmt_new = (k : AstStmtKind, x : AstStmt2) -> *AstStmt {
+ast_stmt_new = (x : AstStmt2) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
   assert(s != nil, "ast_value_new malloc")
   memset(s, 0, sizeof AstStmt)
-  s.kind := k
+  //s.kind := k
   s.data := x
   /*s.ti := ti*/
   return s
@@ -1173,13 +1173,13 @@ exist parse_stmt_continue : AstStmtParser
 
 
 parse_stmt_break = AstStmtParser {
-  s = ast_stmt_new (#AstStmtBreak, (ti=ti) to AstStmtBreak)
+  s = ast_stmt_new ((ti=ti) to AstStmtBreak)
   s.break := (ti=ti)
   return s
 }
 
 parse_stmt_continue = AstStmtParser {
-  s = ast_stmt_new (#AstStmtContinue, (ti=ti) to AstStmtContinue)
+  s = ast_stmt_new ((ti=ti) to AstStmtContinue)
   s.continue := (ti=ti)
   return s
 }
@@ -1208,7 +1208,7 @@ parse_stmt = () -> *AstStmt or Unit {
         id = parse_id()
         skip()  // `:`
         ti = &ctok().ti
-        s = ast_stmt_new (#AstStmtLabel, (label=id, ti=ti) to AstStmtLabel)
+        s = ast_stmt_new ((label=id, ti=ti) to AstStmtLabel)
         s.label := (label=id, ti=ti)
         return s
       }
@@ -1238,12 +1238,12 @@ parse_stmt_expr = AstStmtParser {
   if match(":=") {
     v = parse_value()
 
-    s = ast_stmt_new (#AstStmtAssign, (l=x, r=v, ti=ti) to AstStmtAssign)
+    s = ast_stmt_new ((l=x, r=v, ti=ti) to AstStmtAssign)
     s.assign := (l=x, r=v, ti=ti)
     return s
   }
 
-  s = ast_stmt_new (#AstStmtExpr, (expr=x, ti=ti) to AstStmtExpr)
+  s = ast_stmt_new ((expr=x, ti=ti) to AstStmtExpr)
   s.expr := (expr=x, ti=ti)
   return s
 }
@@ -1258,7 +1258,7 @@ parse_stmt_valbind = AstStmtParser {
 
   if id == nil or v == nil {return unit}
 
-  s = ast_stmt_new (#AstStmtValueBind, (id=id, expr=v, ti=ti) to AstStmtValueBind)
+  s = ast_stmt_new ((id=id, expr=v, ti=ti) to AstStmtValueBind)
   s.valdef := (id=id, expr=v, ti=ti)
   return s
 }
@@ -1273,7 +1273,7 @@ parse_stmt_typebind = AstStmtParser {
 
   if id == nil or t == nil {return unit}
 
-  s = ast_stmt_new (#AstStmtTypeBind, (id=id, type=t, ti=ti) to AstStmtTypeBind)
+  s = ast_stmt_new ((id=id, type=t, ti=ti) to AstStmtTypeBind)
   s.typedef := (id=id, type=t, ti=ti)
   return s
 }
@@ -1299,7 +1299,7 @@ parse_stmt_block = AstStmtParser {
     }
   }
 
-  sb = ast_stmt_new (#AstStmtBlock, (stmts=stmts, ti=ti) to AstStmtBlock)
+  sb = ast_stmt_new ((stmts=stmts, ti=ti) to AstStmtBlock)
   sb.block := (stmts=stmts, ti=ti)
   return sb
 }
@@ -1328,7 +1328,7 @@ parse_stmt_if = AstStmtParser {
   if cond == nil {return unit}
   if then is Unit {return unit}
 
-  s = ast_stmt_new (#AstStmtIf, (cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf)
+  s = ast_stmt_new ((cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf)
   s.if := (cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf
   return s
 }
@@ -1344,7 +1344,7 @@ parse_stmt_while = AstStmtParser {
   if cond == nil {return unit}
   if block is Unit {return unit}
 
-  s = ast_stmt_new (#AstStmtWhile, (cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
+  s = ast_stmt_new ((cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
   s.while := (cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile
   return s
 }
@@ -1352,7 +1352,7 @@ parse_stmt_while = AstStmtParser {
 
 parse_stmt_return = AstStmtParser {
   if separator() {
-    s = ast_stmt_new (#AstStmtReturn, (value=unit, ti=ti) to AstStmtReturn)
+    s = ast_stmt_new ((value=unit, ti=ti) to AstStmtReturn)
     s.return := (value=unit, ti=ti) to AstStmtReturn
     return s
   }
@@ -1363,7 +1363,7 @@ parse_stmt_return = AstStmtParser {
     error("expected return expression", ti)
   }
 
-  s = ast_stmt_new (#AstStmtReturn, (value=v, ti=ti) to AstStmtReturn)
+  s = ast_stmt_new ((value=v, ti=ti) to AstStmtReturn)
   s.return := (value=v, ti=ti) to AstStmtReturn
   return s
 }
@@ -1371,7 +1371,7 @@ parse_stmt_return = AstStmtParser {
 
 parse_stmt_goto = AstStmtParser {
   id = parse_id()
-  s = ast_stmt_new (#AstStmtGoto, (label=id, ti=ti) to AstStmtGoto)
+  s = ast_stmt_new ((label=id, ti=ti) to AstStmtGoto)
   s.goto := (label=id, ti=ti)
   return s
 }
