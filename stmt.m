@@ -12,13 +12,13 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 
 exist do_stmt_assign   : (x : AstStmtAssign) -> *Stmt or Unit
-exist do_stmt_valdef   : (x : *AstStmtValueBind) -> *Stmt or Unit
+exist do_stmt_valbind  : (x : *AstStmtValueBind) -> *Stmt or Unit
 exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
 exist do_stmt_expr     : (x : *AstStmtExpr) -> *Stmt or Unit
 exist do_stmt_if       : (x : *AstStmtIf) -> *Stmt or Unit
 exist do_stmt_while    : (x : *AstStmtWhile) -> *Stmt or Unit
 exist do_stmt_return   : (x : *AstStmtReturn) -> *Stmt or Unit
-exist do_stmt_typedef  : (x : *AstStmtTypeBind) -> *Stmt or Unit
+exist do_stmt_typebind : (x : *AstStmtTypeBind) -> *Stmt or Unit
 exist do_stmt_break    : (x : *AstStmtBreak) -> *Stmt or Unit
 exist do_stmt_continue : (x : *AstStmtContinue) -> *Stmt or Unit
 exist do_stmt_goto     : (x : *AstStmtGoto) -> *Stmt or Unit
@@ -28,13 +28,13 @@ exist do_stmt_label    : (x : *AstStmtLabel) -> *Stmt or Unit
 do_stmt = DoStmt {
   return when x.kind {
     #AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
-    #AstStmtValueBind => do_stmt_valdef   (&x.valdef)
+    #AstStmtValueBind => do_stmt_valbind   (&x.valdef)
     #AstStmtBlock     => do_stmt_block    (&x.block)
     #AstStmtExpr      => do_stmt_expr     (&x.expr)
     #AstStmtIf        => do_stmt_if       (&x.if)
     #AstStmtWhile     => do_stmt_while    (&x.while)
     #AstStmtReturn    => do_stmt_return   (&x.return)
-    #AstStmtTypeBind  => do_stmt_typedef  (&x.typedef)
+    #AstStmtTypeBind  => do_stmt_typebind  (&x.typedef)
     #AstStmtBreak     => do_stmt_break    (&x.break)
     #AstStmtContinue  => do_stmt_continue (&x.continue)
     #AstStmtGoto      => do_stmt_goto     (&x.goto)
@@ -82,7 +82,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 }
 
 
-do_stmt_valdef = (x : *AstStmtValueBind) -> *Stmt or Unit {
+do_stmt_valbind = (x : *AstStmtValueBind) -> *Stmt or Unit {
   id = x.id.str
   v = do_valuex (x.expr, false)
 
@@ -252,7 +252,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   return unit
 }*/
 
-do_stmt_typedef = (x : *AstStmtTypeBind) -> *Stmt or Unit {
+do_stmt_typebind = (x : *AstStmtTypeBind) -> *Stmt or Unit {
   id = x.id.str
   _type = do_type (x.type)
 
