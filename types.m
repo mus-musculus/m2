@@ -259,7 +259,7 @@ AstStmt2 = AstStmtAssign or
 AstStmt = (
   kind     : AstStmtKind
 
-  //data     : AstStmt2
+  data     : AstStmt2
 
   assign   : AstStmtAssign
   valdef   : AstStmtValueBind
