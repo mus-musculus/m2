@@ -257,11 +257,11 @@ AstStmt2 = AstStmtAssign or
 
 
 AstStmt = (
-  kind     : AstStmtKind
+  //kind     : AstStmtKind
 
   data     : AstStmt2
 
-  assign   : AstStmtAssign
+  /*assign   : AstStmtAssign
   valdef   : AstStmtValueBind
   typedef  : AstStmtTypeBind
   expr     : AstStmtExpr
@@ -272,7 +272,7 @@ AstStmt = (
   goto     : AstStmtGoto
   label    : AstStmtLabel
   break    : AstStmtBreak
-  continue : AstStmtContinue
+  continue : AstStmtContinue*/
 )
 
 

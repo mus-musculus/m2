@@ -889,7 +889,7 @@ do_value_func = (x : *AstValueFunc) -> *Value {
 
   if block is Unit {goto fail}
 
-  fv = value_new (#ValueGlobalConst, t, (block as *AstStmt).block.ti)
+  fv = value_new (#ValueGlobalConst, t, x.ti)
 
   // we're in func?
   // add current func to parant func local_funcs list

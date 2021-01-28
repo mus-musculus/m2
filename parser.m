@@ -1151,7 +1151,7 @@ parse_value_num = AstValueParser {
 ast_stmt_new = (x : AstStmt2) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
   assert(s != nil, "ast_value_new malloc")
-  memset(s, 0, sizeof AstStmt)
+  //memset(s, 0, sizeof AstStmt)
   s.data := x
   return s
 }
