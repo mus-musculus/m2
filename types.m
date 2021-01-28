@@ -504,7 +504,7 @@ Index = (types, values : Map)
 
 
 // Compound Statement
-StmtBlock = (
+StmtBlock = Tagged (
   parent  : *StmtBlock  // block-parent or nil
   index   : Index   // local index
   stmts   : List    // list of statements
@@ -516,15 +516,15 @@ StmtBlock = (
   ti : *TokenInfo
 )
 
-StmtExpr = (v : *Value, reg : Nat32, ti : *TokenInfo)
-StmtAssign = (l, r : *Value, ti : *TokenInfo)
-StmtIf = (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
-StmtWhile = (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
-StmtReturn = (value : *Value or Unit, ti : *TokenInfo)
-StmtBreak = (ti : *TokenInfo)
-StmtContinue = (ti : *TokenInfo)
-StmtGoto = (label : Str, ti : *TokenInfo)
-StmtLabel = (label : Str, ti : *TokenInfo)
+StmtExpr     = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
+StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
+StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
+StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
+StmtReturn   = Tagged (value : *Value or Unit, ti : *TokenInfo)
+StmtBreak    = Tagged (ti : *TokenInfo)
+StmtContinue = Tagged (ti : *TokenInfo)
+StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
+StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
 
 /*Stmt2 = StmtExpr or
