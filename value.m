@@ -875,10 +875,10 @@ do_value_func = (x : *AstValueFunc) -> *Value {
   // тк тогда придется каждый раз заново создавать значения для параметров
   // TODO вообще правильней всего просто засунуть их первыми в рут блок а не
   // делать этот фиктивный. Но пока так
-  param_block = stmt_block_init (malloc (sizeof Block) to *Block, nil)
+  param_block = stmt_block_init (malloc (sizeof StmtBlock) to *StmtBlock, nil)
   getparam = ListForeachHandler {
     decl = data to *Decl
-    param_block = ctx to *Block
+    param_block = ctx to *StmtBlock
     param_value = value_new (#ValueParam, decl.type, decl.ti)
     param_value.param := decl
     map_append (&param_block.index.values, decl.id.str, param_value)

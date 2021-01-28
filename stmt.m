@@ -113,8 +113,8 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
 }
 
 
-stmt_block_init = (b, parent : *Block) -> *Block {
-  memset (b, 0, sizeof Block)
+stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
+  memset (b, 0, sizeof StmtBlock)
   b.parent := parent
   index_init (&b.index)
   list_init (&b.stmts)

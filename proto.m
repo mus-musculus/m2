@@ -114,7 +114,7 @@ exist value_init : () -> ()
 
 exist stmt_new : (kind : StmtKind, ti : *TokenInfo) -> *Stmt
 //exist stmt_assign_new : (l, r : *Value, ti : *TokenInfo) -> *Stmt
-exist stmt_block_init : (b, parent : *Block) -> *Block
+exist stmt_block_init : (b, parent : *StmtBlock) -> *StmtBlock
 
 
 
@@ -135,7 +135,7 @@ exist asmTypedefAdd : (a : *Assembly, id : Str, t : *Type) -> *Definition
 exist asmStringAdd : (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition
 exist asmArrayAdd : (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definition
 
-exist asmFuncAdd : (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition
+exist asmFuncAdd : (a : *Assembly, id : Str, t : *Type, b : *StmtBlock) -> *Definition
 exist asmVarAdd : (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *Definition
 
 exist asmAliasAdd : (a : *Assembly, id : Str, type : *Type, org : Str) -> *Definition
@@ -150,7 +150,7 @@ exist index_get_value : (index : *Index, id : Str) -> *Value
 exist get_value_global : (id : Str) -> *Value
 exist get_value : (id : Str) -> *Value
 exist bind_value : (index : *Index, id : Str, v : *Value) -> ()
-exist bind_value_in_block : (b : *Block, id : Str, v : *Value) -> ()
+exist bind_value_in_block : (b : *StmtBlock, id : Str, v : *Value) -> ()
 exist bind_value_local : (id : Str, v : *Value) -> ()
 exist bind_value_global : (id : Str, v : *Value) -> ()
 exist bind_type : (index : *Index, id : Str, t : *Type) -> ()
@@ -177,7 +177,7 @@ exist typedef : (id : Str, t : *Type) -> ()
 exist arraydef : (id : Str, t : *Type, items : *List) -> ()
 exist stringdef : (id : Str, len : Nat, s : Str) -> ()
 exist vardef : (id : Str, t : *Type, v : *Value) -> ()
-exist funcdef : (id : Str, t : *Type, b : *Block) -> ()
+exist funcdef : (id : Str, t : *Type, b : *StmtBlock) -> ()
 exist aliasdef : (id : Str, t : *Type, org : Str) -> ()
 
 

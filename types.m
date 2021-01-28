@@ -443,6 +443,7 @@ ValueWhenVariant = (tx : *Type, x, y : *Value, ti : *TokenInfo)
 ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
+
 Value = (
   kind : ValueKind
 
@@ -458,7 +459,7 @@ Value = (
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
   param  : *Decl        // ValueParam (Decl#offset)
-  expr   : *Expr        // ValueLocalConst
+  expr   : *StmtExpr     // ValueLocalConst   ??
 
   // operation info
   un     : ValueUn
@@ -500,9 +501,11 @@ StmtKind = {
 
 Index = (types, values : Map)
 
+
+
 // Compound Statement
-Block = (
-  parent  : *Block  // block-parent or nil
+StmtBlock = (
+  parent  : *StmtBlock  // block-parent or nil
   index   : Index   // local index
   stmts   : List    // list of statements
 
@@ -513,19 +516,7 @@ Block = (
   ti : *TokenInfo
 )
 
-Expr = (v : *Value, reg : Nat32)
-
-
-If = (cond : *Value, then : *Stmt, else : *Stmt or Unit)
-
-While = (cond : *Value, stmt : *Stmt)
-
-
-
-
-// StmtForbidden = () // его просто нельзя создать!
 StmtExpr = (v : *Value, reg : Nat32, ti : *TokenInfo)
-StmtBlock = Block
 StmtAssign = (l, r : *Value, ti : *TokenInfo)
 StmtIf = (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile = (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
@@ -552,17 +543,17 @@ Stmt = (
   kind : StmtKind
 
 //union (
-  expr : Expr       // StmtExpr
+  expr   : StmtExpr
   assign : StmtAssign
-  block : Block      // block statement
+  block  : StmtBlock
 
-  v : *Decl    // var definition
-  if : If         // if statement
-  while : While      // while statement
-  return : StmtReturn
-  goto : StmtGoto
-  label : StmtLabel
-  break : StmtBreak
+  v        : *Decl    // var definition
+  if       : StmtIf
+  while    : StmtWhile
+  return   : StmtReturn
+  goto     : StmtGoto
+  label    : StmtLabel
+  break    : StmtBreak
   continue : StmtContinue
 
   l : Str        // goto & label statement
@@ -583,7 +574,7 @@ FuncContext = (
   id     : Str     // for local strings prefix
 
   cfunc  : *Value
-  cblock : *Block
+  cblock : *StmtBlock
 
   loop   : Nat32   // `we're in cycle` semaphore (used by break/continue)
 
@@ -608,7 +599,7 @@ DefType  = (id : Str, type : *Type)
 DefConst = (id : Str, type : *Type, value : *Value)
 DefStr   = (id : Str, type : *Type, data : Str, len : Nat)
 DefArray = (id : Str, type : *Type, len : Nat, values : *List)
-DefFunc  = (id : Str, type : *Type, block : *Block)
+DefFunc  = (id : Str, type : *Type, block : *StmtBlock)
 DefVar   = (id : Str, type : *Type, init_value : *Value)
 DefAlias = (id : Str, type : *Type, org : Str)
 

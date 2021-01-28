@@ -76,7 +76,7 @@ asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definitio
 }
 
 
-asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *Block) -> *Definition {
+asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *StmtBlock) -> *Definition {
   x = definition_new (#DefFunc, id)
   x.funcdef := (id=id, type=t, block=b)
   list_append (&a.funcs, x)
@@ -302,7 +302,7 @@ exist print_val : (op : LLVM_Value) -> ()
 
 exist create_array : (x : LLVM_Value) -> LLVM_Value
 
-exist print_block : (b : *Block) -> ()
+exist print_block : (b : *StmtBlock) -> ()
 
 exist eval : Eval
 exist reval : Eval
@@ -378,7 +378,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
 }
 
 
-funcdef = (id : Str, t : *Type, b : *Block) -> () {
+funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
   // 0, 1, 2 - params; 3 - entry label, 4 - first free register
   params = t.func.from.record.decls
   firstlab = params.volume + (1 /*entry label*/)
@@ -1382,9 +1382,9 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 exist print_stmt_assign : (x : *StmtAssign) -> ()
 exist print_stmt        : (s : *Stmt) -> ()
 exist print_stmt_var    : (v : *Decl) -> ()
-exist print_stmt_expr   : (e : *Expr) -> ()
-exist print_stmt_if     : (i : *If) -> ()
-exist print_stmt_while  : (w : *While) -> ()
+exist print_stmt_expr   : (e : *StmtExpr) -> ()
+exist print_stmt_if     : (i : *StmtIf) -> ()
+exist print_stmt_while  : (w : *StmtWhile) -> ()
 
 exist print_stmt_return   : (x : *StmtReturn) -> ()
 exist print_stmt_break    : () -> ()
@@ -1438,7 +1438,7 @@ print_stmt_var = (v : *Decl) -> () {
 }
 
 
-print_stmt_expr = (x : *Expr) -> () {
+print_stmt_expr = (x : *StmtExpr) -> () {
   o = reval (x.v)
   // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
   // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)
@@ -1447,7 +1447,7 @@ print_stmt_expr = (x : *Expr) -> () {
 }
 
 
-print_stmt_if = (x : *If) -> () {
+print_stmt_if = (x : *StmtIf) -> () {
   if_id = global_if_id
   global_if_id := global_if_id + 1
   c = reval (x.cond)
@@ -1464,7 +1464,7 @@ print_stmt_if = (x : *If) -> () {
 }
 
 
-print_stmt_while = (x : *While) -> () {
+print_stmt_while = (x : *StmtWhile) -> () {
   old_while_id = while_id
   while_id := global_while_id
   global_while_id := global_while_id + 1
@@ -1521,7 +1521,7 @@ print_stmt_label = (l : Str) -> () {
 }
 
 
-print_block = (b : *Block) -> () {
+print_block = (b : *StmtBlock) -> () {
   for_stmt = ListForeachHandler {
     blockno := blockno + 1
     print_stmt (data to *Stmt)

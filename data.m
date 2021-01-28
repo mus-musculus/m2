@@ -64,7 +64,7 @@ get_value_global = (id : Str) -> *Value {
 
 get_value = (id : Str) -> *Value {
   // ищет запись о значении во стеке блоков вплоть до корневого
-  search_value_in_block_stack = (id : Str, b : *Block) -> *Value {
+  search_value_in_block_stack = (id : Str, b : *StmtBlock) -> *Value {
     if b == nil {return nil}
     v = index_get_value(&b.index, id)
     if v != nil {return v}
@@ -111,7 +111,7 @@ bind_value = (index : *Index, id : Str, v : *Value) -> () {
 
 
 // Add bind into a block
-bind_value_in_block = (b : *Block, id : Str, v : *Value) -> () {bind_value(&b.index, id, v)}
+bind_value_in_block = (b : *StmtBlock, id : Str, v : *Value) -> () {bind_value(&b.index, id, v)}
 
 // Add bind into current block
 bind_value_local = (id : Str, v : *Value) -> ()
@@ -165,7 +165,7 @@ get_type = (id : Str) -> *Type {
   // searching in local block stack
   if fctx != nil {
     // ищет запись о значении во стеке блоков вплоть до корневого
-    search_type_in_block_stack = (id : Str, b : *Block) -> *Type {
+    search_type_in_block_stack = (id : Str, b : *StmtBlock) -> *Type {
       if b == nil {return nil}
       t = index_get_type(&b.index, id)
       if t != nil {return t}
