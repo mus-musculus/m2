@@ -11,7 +11,7 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 }
 
 
-exist do_stmt_assign   : (x : *AstStmtAssign) -> *Stmt or Unit
+exist do_stmt_assign   : (x : AstStmtAssign) -> *Stmt or Unit
 exist do_stmt_valdef   : (x : *AstStmtValueBind) -> *Stmt or Unit
 exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
 exist do_stmt_expr     : (x : *AstStmtExpr) -> *Stmt or Unit
@@ -27,7 +27,7 @@ exist do_stmt_label    : (x : *AstStmtLabel) -> *Stmt or Unit
 
 do_stmt = DoStmt {
   return when x.kind {
-    #AstStmtAssign    => do_stmt_assign   (&x.assign)
+    #AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
     #AstStmtValueBind => do_stmt_valdef   (&x.valdef)
     #AstStmtBlock     => do_stmt_block    (&x.block)
     #AstStmtExpr      => do_stmt_expr     (&x.expr)
@@ -50,7 +50,7 @@ do_stmt = DoStmt {
 Значит мне придется явно передавать во все функции семейства do_value флаг
 lval - означающий что не нужно загружать значение окончательно.
 */
-do_stmt_assign = (x : *AstStmtAssign) -> *Stmt or Unit {
+do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
   rval0 = do_value (x.r)
 
   if rval0.kind == #ValuePoison {return unit}
