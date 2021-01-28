@@ -19493,19 +19493,24 @@ define %union.29 @func511 (%AstStmtBlock*) {
   %11 = getelementptr inbounds %FuncContext, %FuncContext* %10, i1 0, i32 2
   store %Block* %9, %Block** %11, align 8
 ;stmt3:
-  %12 = getelementptr inbounds %AstStmtBlock, %AstStmtBlock* %0, i1 0, i32 0
-  %13 = getelementptr inbounds %Block, %Block* %9, i1 0, i32 2
-  %14 = bitcast %List* %13 to %Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %12, %ListForeachHandler @func512, %Unit* %14)
+  %12 = alloca %List
+  %13 = getelementptr inbounds %AstStmtBlock, %AstStmtBlock* %0, i1 0, i32 0
+  %14 = load %List, %List* %13
+  store %List %14, %List* %12, align 8
 ;stmt4:
-  %15 = load %FuncContext*, %FuncContext** @fctx
-  %16 = getelementptr inbounds %FuncContext, %FuncContext* %15, i1 0, i32 2
-  %17 = getelementptr inbounds %Block, %Block* %9, i1 0, i32 0
-  %18 = load %Block*, %Block** %17
-  store %Block* %18, %Block** %16, align 8
+  %15 = getelementptr inbounds %List, %List* %12, i1 0
+  %16 = getelementptr inbounds %Block, %Block* %9, i1 0, i32 2
+  %17 = bitcast %List* %16 to %Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %15, %ListForeachHandler @func512, %Unit* %17)
 ;stmt5:
-  %19 = bitcast %Stmt* %4 to %union.29
-  ret %union.29 %19
+  %18 = load %FuncContext*, %FuncContext** @fctx
+  %19 = getelementptr inbounds %FuncContext, %FuncContext* %18, i1 0, i32 2
+  %20 = getelementptr inbounds %Block, %Block* %9, i1 0, i32 0
+  %21 = load %Block*, %Block** %20
+  store %Block* %21, %Block** %19, align 8
+;stmt6:
+  %22 = bitcast %Stmt* %4 to %union.29
+  ret %union.29 %22
 }
 
 define %union.30 @func513 (%AstStmtExpr) {
