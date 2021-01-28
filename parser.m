@@ -1147,12 +1147,11 @@ parse_value_num = AstValueParser {
 /*                             Parse Statement                               */
 /*****************************************************************************/
 
-
-ast_stmt_new = (x : AstStmt2) -> *AstStmt {
+// размещаем значение AstStmt в куче
+ast_stmt_boxing = (x : AstStmt) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
   assert(s != nil, "ast_value_new malloc")
-  //memset(s, 0, sizeof AstStmt)
-  s.data := x
+  *s := x
   return s
 }
 
@@ -1171,11 +1170,11 @@ exist parse_stmt_continue : AstStmtParser
 
 
 parse_stmt_break = AstStmtParser {
-  return ast_stmt_new ((ti=ti) to AstStmtBreak)
+  return ast_stmt_boxing ((ti=ti) to AstStmtBreak)
 }
 
 parse_stmt_continue = AstStmtParser {
-  return ast_stmt_new ((ti=ti) to AstStmtContinue)
+  return ast_stmt_boxing ((ti=ti) to AstStmtContinue)
 }
 
 parse_stmt = () -> *AstStmt or Unit {
@@ -1192,7 +1191,6 @@ parse_stmt = () -> *AstStmt or Unit {
     }
   }
 
-
   lab_or_expr = () -> *AstStmt or Unit{
     tk = ctok()
     if tk.kind == #TokenId {
@@ -1202,7 +1200,7 @@ parse_stmt = () -> *AstStmt or Unit {
         id = parse_id()
         skip()  // `:`
         ti = &ctok().ti
-        return ast_stmt_new ((label=id, ti=ti) to AstStmtLabel)
+        return ast_stmt_boxing ((label=id, ti=ti) to AstStmtLabel)
       }
     }
 
@@ -1229,10 +1227,10 @@ parse_stmt_expr = AstStmtParser {
 
   if match(":=") {
     v = parse_value()
-    return ast_stmt_new ((l=x, r=v, ti=ti) to AstStmtAssign)
+    return ast_stmt_boxing ((l=x, r=v, ti=ti) to AstStmtAssign)
   }
 
-  return ast_stmt_new ((expr=x, ti=ti) to AstStmtExpr)
+  return ast_stmt_boxing ((expr=x, ti=ti) to AstStmtExpr)
 }
 
 
@@ -1245,7 +1243,7 @@ parse_stmt_valbind = AstStmtParser {
 
   if id == nil or v == nil {return unit}
 
-  return ast_stmt_new ((id=id, expr=v, ti=ti) to AstStmtValueBind)
+  return ast_stmt_boxing ((id=id, expr=v, ti=ti) to AstStmtValueBind)
 }
 
 
@@ -1258,7 +1256,7 @@ parse_stmt_typebind = AstStmtParser {
 
   if id == nil or t == nil {return unit}
 
-  return ast_stmt_new ((id=id, type=t, ti=ti) to AstStmtTypeBind)
+  return ast_stmt_boxing ((id=id, type=t, ti=ti) to AstStmtTypeBind)
 }
 
 
@@ -1282,7 +1280,7 @@ parse_stmt_block = AstStmtParser {
     }
   }
 
-  return ast_stmt_new ((stmts=stmts, ti=ti) to AstStmtBlock)
+  return ast_stmt_boxing ((stmts=stmts, ti=ti) to AstStmtBlock)
 }
 
 
@@ -1309,7 +1307,7 @@ parse_stmt_if = AstStmtParser {
   if cond == nil {return unit}
   if then is Unit {return unit}
 
-  return ast_stmt_new ((cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf)
+  return ast_stmt_boxing ((cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf)
 }
 
 
@@ -1323,13 +1321,13 @@ parse_stmt_while = AstStmtParser {
   if cond == nil {return unit}
   if block is Unit {return unit}
 
-  return ast_stmt_new ((cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
+  return ast_stmt_boxing ((cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
 }
 
 
 parse_stmt_return = AstStmtParser {
   if separator() {
-    return ast_stmt_new ((value=unit, ti=ti) to AstStmtReturn)
+    return ast_stmt_boxing ((value=unit, ti=ti) to AstStmtReturn)
   }
 
   ti = &ctok().ti
@@ -1338,18 +1336,18 @@ parse_stmt_return = AstStmtParser {
     error("expected return expression", ti)
   }
 
-  return ast_stmt_new ((value=v, ti=ti) to AstStmtReturn)
+  return ast_stmt_boxing ((value=v, ti=ti) to AstStmtReturn)
 }
 
 
 parse_stmt_goto = AstStmtParser {
   id = parse_id()
-  return ast_stmt_new ((label=id, ti=ti) to AstStmtGoto)
+  return ast_stmt_boxing ((label=id, ti=ti) to AstStmtGoto)
 }
 
 
 /*parse_stmt_vardef = AstStmtParser {
-  s = ast_stmt_new(#AstStmtVarDef, ti)
+  s = ast_stmt_boxing(#AstStmtVarDef, ti)
   fieldsdef = parse_decl(false)
   s.vardef := *fieldsdef
   return s

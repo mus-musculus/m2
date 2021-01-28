@@ -212,14 +212,7 @@ AstValue = (
 )
 
 
-AstStmtKind = {
-  #AstStmtUnknown,
-  #AstStmtValueBind, #AstStmtTypeBind, #AstStmtVarDef,
-  #AstStmtExpr, #AstStmtAssign, #AstStmtBlock,
-  #AstStmtIf, #AstStmtWhile, #AstStmtReturn,
-  #AstStmtBreak, #AstStmtContinue,
-  #AstStmtGoto, #AstStmtLabel
-}
+
 
 AstStmtValueBind = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
 AstStmtTypeBind  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
@@ -241,8 +234,7 @@ AstStmtBreak    = Tagged (ti : *TokenInfo)
 AstStmtContinue = Tagged (ti : *TokenInfo)
 
 
-
-AstStmt2 = AstStmtAssign or
+AstStmt = AstStmtAssign or
           AstStmtValueBind or
           AstStmtTypeBind or
           AstStmtExpr or
@@ -254,28 +246,6 @@ AstStmt2 = AstStmtAssign or
           AstStmtLabel or
           AstStmtBreak or
           AstStmtContinue
-
-
-AstStmt = (
-  //kind     : AstStmtKind
-
-  data     : AstStmt2
-
-  /*assign   : AstStmtAssign
-  valdef   : AstStmtValueBind
-  typedef  : AstStmtTypeBind
-  expr     : AstStmtExpr
-  block    : AstStmtBlock
-  if       : AstStmtIf
-  while    : AstStmtWhile
-  return   : AstStmtReturn
-  goto     : AstStmtGoto
-  label    : AstStmtLabel
-  break    : AstStmtBreak
-  continue : AstStmtContinue*/
-)
-
-
 
 
 
