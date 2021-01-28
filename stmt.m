@@ -12,33 +12,33 @@ stmt_new = (kind : StmtKind, ti : *TokenInfo) -> *Stmt {
 
 
 exist do_stmt_assign   : (x : AstStmtAssign) -> *Stmt or Unit
-exist do_stmt_valbind  : (x : *AstStmtValueBind) -> *Stmt or Unit
+exist do_stmt_valbind  : (x : AstStmtValueBind) -> *Stmt or Unit
 exist do_stmt_block    : (x : *AstStmtBlock) -> *Stmt or Unit
-exist do_stmt_expr     : (x : *AstStmtExpr) -> *Stmt or Unit
-exist do_stmt_if       : (x : *AstStmtIf) -> *Stmt or Unit
-exist do_stmt_while    : (x : *AstStmtWhile) -> *Stmt or Unit
-exist do_stmt_return   : (x : *AstStmtReturn) -> *Stmt or Unit
-exist do_stmt_typebind : (x : *AstStmtTypeBind) -> *Stmt or Unit
-exist do_stmt_break    : (x : *AstStmtBreak) -> *Stmt or Unit
-exist do_stmt_continue : (x : *AstStmtContinue) -> *Stmt or Unit
-exist do_stmt_goto     : (x : *AstStmtGoto) -> *Stmt or Unit
-exist do_stmt_label    : (x : *AstStmtLabel) -> *Stmt or Unit
+exist do_stmt_expr     : (x : AstStmtExpr) -> *Stmt or Unit
+exist do_stmt_if       : (x : AstStmtIf) -> *Stmt or Unit
+exist do_stmt_while    : (x : AstStmtWhile) -> *Stmt or Unit
+exist do_stmt_return   : (x : AstStmtReturn) -> *Stmt or Unit
+exist do_stmt_typebind : (x : AstStmtTypeBind) -> *Stmt or Unit
+exist do_stmt_break    : (x : AstStmtBreak) -> *Stmt or Unit
+exist do_stmt_continue : (x : AstStmtContinue) -> *Stmt or Unit
+exist do_stmt_goto     : (x : AstStmtGoto) -> *Stmt or Unit
+exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
 
 
 do_stmt = DoStmt {
   return when x.kind {
     #AstStmtAssign    => do_stmt_assign   (x.data to AstStmtAssign)
-    #AstStmtValueBind => do_stmt_valbind   (&x.valdef)
+    #AstStmtValueBind => do_stmt_valbind  (x.data to AstStmtValueBind)
     #AstStmtBlock     => do_stmt_block    (&x.block)
-    #AstStmtExpr      => do_stmt_expr     (&x.expr)
-    #AstStmtIf        => do_stmt_if       (&x.if)
-    #AstStmtWhile     => do_stmt_while    (&x.while)
-    #AstStmtReturn    => do_stmt_return   (&x.return)
-    #AstStmtTypeBind  => do_stmt_typebind  (&x.typedef)
-    #AstStmtBreak     => do_stmt_break    (&x.break)
-    #AstStmtContinue  => do_stmt_continue (&x.continue)
-    #AstStmtGoto      => do_stmt_goto     (&x.goto)
-    #AstStmtLabel     => do_stmt_label    (&x.label)
+    #AstStmtExpr      => do_stmt_expr     (x.expr)
+    #AstStmtIf        => do_stmt_if       (x.if)
+    #AstStmtWhile     => do_stmt_while    (x.while)
+    #AstStmtReturn    => do_stmt_return   (x.return)
+    #AstStmtTypeBind  => do_stmt_typebind (x.typedef)
+    #AstStmtBreak     => do_stmt_break    (x.break)
+    #AstStmtContinue  => do_stmt_continue (x.continue)
+    #AstStmtGoto      => do_stmt_goto     (x.goto)
+    #AstStmtLabel     => do_stmt_label    (x.label)
     //#AstStmtVarDef  => do_stmt_vardef (x)
     else => unit
   }
@@ -82,7 +82,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 }
 
 
-do_stmt_valbind = (x : *AstStmtValueBind) -> *Stmt or Unit {
+do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   id = x.id.str
   v = do_valuex (x.expr, false)
 
@@ -145,7 +145,7 @@ do_stmt_block = (x : *AstStmtBlock) -> *Stmt or Unit {
 }
 
 
-do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
+do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
   v = do_value (x.expr)
 
   if v.kind == #ValuePoison {return unit}
@@ -160,7 +160,7 @@ do_stmt_expr = (x : *AstStmtExpr) -> *Stmt or Unit {
 }
 
 
-do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
+do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
   cond = do_value (x.cond)
   then = do_stmt (x.then)
 
@@ -192,7 +192,7 @@ do_stmt_if = (x : *AstStmtIf) -> *Stmt or Unit {
 }
 
 
-do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
+do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
   cond = do_value (x.cond)
 
   fctx.loop := fctx.loop + 1
@@ -213,7 +213,7 @@ do_stmt_while = (x : *AstStmtWhile) -> *Stmt or Unit {
 }
 
 
-do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
+do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
   func_to = fctx.cfunc.type.func.to
   rv = x.value
 
@@ -252,7 +252,7 @@ do_stmt_return = (x : *AstStmtReturn) -> *Stmt or Unit {
   return unit
 }*/
 
-do_stmt_typebind = (x : *AstStmtTypeBind) -> *Stmt or Unit {
+do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
   id = x.id.str
   _type = do_type (x.type)
 
@@ -271,26 +271,26 @@ do_stmt_typebind = (x : *AstStmtTypeBind) -> *Stmt or Unit {
 }
 
 
-do_stmt_break = (x : *AstStmtBreak) -> *Stmt or Unit {
+do_stmt_break = (x : AstStmtBreak) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
   return stmt_new (#StmtBreak, x.ti)
 }
 
 
-do_stmt_continue = (x : *AstStmtContinue) -> *Stmt or Unit {
+do_stmt_continue = (x : AstStmtContinue) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
   return stmt_new (#StmtContinue, x.ti)
 }
 
 
-do_stmt_goto = (x : *AstStmtGoto) -> *Stmt or Unit {
+do_stmt_goto = (x : AstStmtGoto) -> *Stmt or Unit {
   s = stmt_new (#StmtGoto, x.ti)
   s.l := x.label.str
   return s
 }
 
 
-do_stmt_label = (x : *AstStmtLabel) -> *Stmt or Unit {
+do_stmt_label = (x : AstStmtLabel) -> *Stmt or Unit {
   s = stmt_new (#StmtLabel, x.ti)
   s.l := x.label.str
   return s
