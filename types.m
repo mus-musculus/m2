@@ -510,7 +510,7 @@ StmtBlock = Tagged (
   stmts   : List    // list of statements
 
   // список в который попадают все локальные функции
-  // для того чтобы их тела потом при check инге прочекать
+  // для того чтобы их тела потом при check'инге почекать
   local_funcs : List
 
   ti : *TokenInfo
@@ -543,9 +543,9 @@ Stmt = (
   kind : StmtKind
 
 //union (
-  expr   : StmtExpr
-  assign : StmtAssign
-  block  : StmtBlock
+  expr     : StmtExpr
+  assign   : StmtAssign
+  block    : StmtBlock
 
   v        : *Decl    // var definition
   if       : StmtIf

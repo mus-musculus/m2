@@ -1379,14 +1379,14 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 }
 
 
-exist print_stmt_assign : (x : *StmtAssign) -> ()
 exist print_stmt        : (s : *Stmt) -> ()
+exist print_stmt_assign : (x : StmtAssign) -> ()
 exist print_stmt_var    : (v : *Decl) -> ()
 exist print_stmt_expr   : (e : *StmtExpr) -> ()
-exist print_stmt_if     : (i : *StmtIf) -> ()
-exist print_stmt_while  : (w : *StmtWhile) -> ()
+exist print_stmt_if     : (i : StmtIf) -> ()
+exist print_stmt_while  : (w : StmtWhile) -> ()
 
-exist print_stmt_return   : (x : *StmtReturn) -> ()
+exist print_stmt_return   : (x : StmtReturn) -> ()
 exist print_stmt_break    : () -> ()
 exist print_stmt_continue : () -> ()
 exist print_stmt_goto     : (l : Str) -> ()
@@ -1404,11 +1404,11 @@ print_stmt = (s : *Stmt) -> () {
   when k {
     #StmtBlock    => print_block         (&s.block)
     #StmtExpr     => print_stmt_expr     (&s.expr)
-    #StmtAssign   => print_stmt_assign   (&s.assign)
+    #StmtAssign   => print_stmt_assign   (s.assign)
     #StmtVarDef   => print_stmt_var      (s.v)
-    #StmtIf       => print_stmt_if       (&s.if)
-    #StmtWhile    => print_stmt_while    (&s.while)
-    #StmtReturn   => print_stmt_return   (&s.return)
+    #StmtIf       => print_stmt_if       (s.if)
+    #StmtWhile    => print_stmt_while    (s.while)
+    #StmtReturn   => print_stmt_return   (s.return)
     #StmtBreak    => print_stmt_break    ()
     #StmtContinue => print_stmt_continue ()
     #StmtGoto     => print_stmt_goto     (s.l)
@@ -1417,7 +1417,7 @@ print_stmt = (s : *Stmt) -> () {
   }
 }
 
-print_stmt_assign = (x : *StmtAssign) -> () {print_st (x.l, x.r)}
+print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 
 // Печать значения происходит в два этапа
 // 1. eval - распечатывается алгоритм вычисления значения
@@ -1447,7 +1447,7 @@ print_stmt_expr = (x : *StmtExpr) -> () {
 }
 
 
-print_stmt_if = (x : *StmtIf) -> () {
+print_stmt_if = (x : StmtIf) -> () {
   if_id = global_if_id
   global_if_id := global_if_id + 1
   c = reval (x.cond)
@@ -1464,7 +1464,7 @@ print_stmt_if = (x : *StmtIf) -> () {
 }
 
 
-print_stmt_while = (x : *StmtWhile) -> () {
+print_stmt_while = (x : StmtWhile) -> () {
   old_while_id = while_id
   while_id := global_while_id
   global_while_id := global_while_id + 1
@@ -1482,7 +1482,7 @@ print_stmt_while = (x : *StmtWhile) -> () {
 }
 
 
-print_stmt_return = (x : *StmtReturn) -> () {
+print_stmt_return = (x : StmtReturn) -> () {
   v = x.value
   if v is Unit {
     lab_get ()  // for LLVM
