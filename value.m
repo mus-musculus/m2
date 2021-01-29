@@ -127,7 +127,7 @@ exist do_value_as     : (x : AstValueAs) -> *Value
 exist do_value_sizeof  : (x : AstValueSizeof) -> *Value
 exist do_value_alignof : (x : AstValueAlignof) -> *Value
 
-exist do_value_when : (x : *AstValueWhen) -> *Value
+exist do_value_when : (x : AstValueWhen) -> *Value
 
 
 exist do_value_add : (x : AstValueAdd) -> *Value
@@ -177,7 +177,7 @@ do_valuex = DoValuex {
     #AstValueAs      => do_value_as      (x.data as AstValueAs)
     #AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
     #AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
-    #AstValueWhen    => do_value_when    (&x.when)
+    #AstValueWhen    => do_value_when    (x.when)
 
     #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
@@ -217,7 +217,7 @@ do_value_forbidden = DoValue {
 }
 
 
-do_value_when = (x : *AstValueWhen) -> *Value {
+do_value_when = (x : AstValueWhen) -> *Value {
   val = do_value (x.x)
 
   Kit = (val : *Value, type : *Type, variants : List, other : *Value)
@@ -292,7 +292,7 @@ do_value_when = (x : *AstValueWhen) -> *Value {
       list_append (&kit.variants, v)
     }
   }
-  list_foreach (&x.variants, do_variants, &kit)
+  list_foreach (&(x.variants to Var List), do_variants, &kit)
 
   if x.other == nil {
     error("expected 'other' variant", x.ti)
