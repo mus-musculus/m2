@@ -116,9 +116,9 @@ exist do_value_not   : (x : AstValueUnary) -> *Value
 
 exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
 exist do_value_shift  : (k : ValueKind, x : AstValueBinary) -> *Value
-exist do_value_call   : (x : *AstValueCall) -> *Value
-exist do_value_index  : (x : *AstValueIndex) -> *Value
-exist do_value_access : (x : *AstValueAccess) -> *Value
+exist do_value_call   : (x : AstValueCall) -> *Value
+exist do_value_index  : (x : AstValueIndex) -> *Value
+exist do_value_access : (x : AstValueAccess) -> *Value
 exist do_value_cast   : (x : *AstValueCast) -> *Value
 exist do_value_is     : (x : *AstValueIs) -> *Value
 exist do_value_as     : (x : *AstValueAs) -> *Value
@@ -165,9 +165,9 @@ do_valuex = DoValuex {
     #AstValueShl     => do_value_shift (#ValueShl, x.bin)
     #AstValueShr     => do_value_shift (#ValueShr, x.bin)
 
-    #AstValueCall    => do_value_call    (&x.call)
-    #AstValueIndex   => do_value_index   (&x.index)
-    #AstValueAccess  => do_value_access  (&x.access)
+    #AstValueCall    => do_value_call    (x.call)
+    #AstValueIndex   => do_value_index   (x.index)
+    #AstValueAccess  => do_value_access  (x.access)
     #AstValueCast    => do_value_cast    (&x.cast)
     #AstValueIs      => do_value_is      (&x.is)
     #AstValueAs      => do_value_as      (&x.as)
@@ -196,8 +196,8 @@ do_lvalue = DoValue {
   return when x.kind {
     #AstValueId     => do_value_named  (x.name)
     #AstValueDeref  => do_value_deref  (x.un)
-    #AstValueIndex  => do_value_index  (&x.index)
-    #AstValueAccess => do_value_access (&x.access)
+    #AstValueIndex  => do_value_index  (x.index)
+    #AstValueAccess => do_value_access (x.access)
     else => DoValue {
       error ("invalid lvalue", x.ti)
       return value_new_poison (x.ti)
@@ -397,12 +397,12 @@ fail:
 }
 
 
-do_value_call = (x : *AstValueCall) -> *Value {
+do_value_call = (x : AstValueCall) -> *Value {
   f = do_value (x.func)
 
   if f.kind == #ValuePoison {return f}
 
-  args = do_args (f, &x.args, x.ti)
+  args = do_args (f, &(x.args to Var List), x.ti)
 
   t = f.type.func.to
   v = value_new (#ValueCall, t, x.ti)
@@ -470,7 +470,7 @@ do_args = (f : *Value, a : *List, ti : *TokenInfo) -> *List {
 
 
 
-do_value_index = (x : *AstValueIndex) -> *Value {
+do_value_index = (x : AstValueIndex) -> *Value {
   a = do_value (x.array)
   i = do_value (x.index)
 
@@ -509,7 +509,7 @@ fail:
 }
 
 
-do_value_access = (x : *AstValueAccess) -> *Value {
+do_value_access = (x : AstValueAccess) -> *Value {
   r = do_value (x.rec)
   field_id = x.field_id.str
 
