@@ -133,6 +133,39 @@ exist do_value_when : (x : AstValueWhen) -> *Value
 exist do_value_add : (x : AstValueAdd) -> *Value
 
 
+do_value_add = (x : AstValueAdd) -> *Value {return do_value_bin (#ValueAdd, x.left, x.right, x.ti)}
+
+do_value_sub = (x : AstValueSub) -> *Value {return do_value_bin (#ValueSub, x.left, x.right, x.ti)}
+
+do_value_mul = (x : AstValueMul) -> *Value {return do_value_bin (#ValueMul, x.left, x.right, x.ti)}
+
+do_value_div = (x : AstValueDiv) -> *Value {return do_value_bin (#ValueDiv, x.left, x.right, x.ti)}
+
+do_value_mod = (x : AstValueMod) -> *Value {return do_value_bin (#ValueMod, x.left, x.right, x.ti)}
+
+do_value_and = (x : AstValueAnd) -> *Value {return do_value_bin (#ValueAnd, x.left, x.right, x.ti)}
+
+do_value_or = (x : AstValueOr) -> *Value {return do_value_bin (#ValueOr, x.left, x.right, x.ti)}
+
+do_value_xor = (x : AstValueXor) -> *Value {return do_value_bin (#ValueXor, x.left, x.right, x.ti)}
+
+do_value_eq = (x : AstValueEq) -> *Value {return do_value_bin (#ValueEq, x.left, x.right, x.ti)}
+
+do_value_ne = (x : AstValueNe) -> *Value {return do_value_bin (#ValueNe, x.left, x.right, x.ti)}
+
+do_value_lt = (x : AstValueLt) -> *Value {return do_value_bin (#ValueLt, x.left, x.right, x.ti)}
+
+do_value_gt = (x : AstValueGt) -> *Value {return do_value_bin (#ValueGt, x.left, x.right, x.ti)}
+
+do_value_le = (x : AstValueLe) -> *Value {return do_value_bin (#ValueLe, x.left, x.right, x.ti)}
+
+do_value_ge = (x : AstValueGe) -> *Value {return do_value_bin (#ValueGe, x.left, x.right, x.ti)}
+
+do_value_shr = (x : AstValueShr) -> *Value {return do_value_shift (#ValueShr, x.left, x.right, x.ti)}
+
+do_value_shl = (x : AstValueShl) -> *Value {return do_value_shift (#ValueShl, x.left, x.right, x.ti)}
+
+
 
 do_value = DoValue {return do_valuex(x, true)}
 
@@ -153,22 +186,22 @@ do_valuex = DoValuex {
     AstValuePlus    => do_value_plus    (xx as AstValuePlus)
     AstValueNot     => do_value_not     (xx as AstValueNot)
 
-    AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueMul     => do_value_bin (#ValueMul, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueDiv     => do_value_bin (#ValueDiv, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueMod     => do_value_bin (#ValueMod, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueAnd     => do_value_bin (#ValueAnd, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueXor     => do_value_bin (#ValueXor, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueOr      => do_value_bin (#ValueOr, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueLt      => do_value_bin (#ValueLt, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueGt      => do_value_bin (#ValueGt, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueEq      => do_value_bin (#ValueEq, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueNe      => do_value_bin (#ValueNe, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueLe      => do_value_bin (#ValueLe, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueGe      => do_value_bin (#ValueGe, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
-    AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueAdd     => do_value_add (xx as AstValueAdd)
+    AstValueSub     => do_value_sub (xx as AstValueSub)
+    AstValueMul     => do_value_mul (xx as AstValueMul)
+    AstValueDiv     => do_value_div (xx as AstValueDiv)
+    AstValueMod     => do_value_mod (xx as AstValueMod)
+    AstValueAnd     => do_value_and (xx as AstValueAnd)
+    AstValueXor     => do_value_xor (xx as AstValueXor)
+    AstValueOr      => do_value_or (xx as AstValueOr)
+    AstValueLt      => do_value_lt (xx as AstValueLt)
+    AstValueGt      => do_value_gt (xx as AstValueGt)
+    AstValueEq      => do_value_eq (xx as AstValueEq)
+    AstValueNe      => do_value_ne (xx as AstValueNe)
+    AstValueLe      => do_value_le (xx as AstValueLe)
+    AstValueGe      => do_value_ge (xx as AstValueGe)
+    AstValueShl     => do_value_shl (xx as AstValueShl)
+    AstValueShr     => do_value_shr (xx as AstValueShr)
 
     AstValueCall    => do_value_call    (xx as AstValueCall)
     AstValueIndex   => do_value_index   (xx as AstValueIndex)
