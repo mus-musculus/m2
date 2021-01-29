@@ -341,7 +341,7 @@ parse_type0 = AstTypeParser {
     _to = parse_type()
 
     ft = ast_type_new(#AstTypeFunc, (from=from, to=_to, ti=&tk.ti) to AstTypeFunc, &tk.ti)
-    ft.func := (from=from, to=_to, ti=&tk.ti)
+    //ft.func := (from=from, to=_to, ti=&tk.ti)
     return ft
   }
 
@@ -370,9 +370,7 @@ parse_type1 = AstTypeParser {
       list_append(&types, t)
     }
 
-    tx = ast_type_new(#AstTypeUnion, (types=types, ti=&tk.ti) to AstTypeUnion, &tk.ti)
-    tx.union.types := types
-    return tx
+    return ast_type_new(#AstTypeUnion, (types=types, ti=&tk.ti) to AstTypeUnion, &tk.ti)
   }
 
   return t
@@ -382,26 +380,19 @@ parse_type2 = AstTypeParser {
   tk = ctok()
   if match("*") {
     pointer_to = parse_type2()
-
-    t = ast_type_new(#AstTypePointer, (to=pointer_to, ti=&tk.ti) to AstTypePointer, &tk.ti)
-    t.pointer := (to=pointer_to, ti=&tk.ti)
-    return t
+    return ast_type_new(#AstTypePointer, (to=pointer_to, ti=&tk.ti) to AstTypePointer, &tk.ti)
   } else if match("[") {
 
     if match("]") {
       of = parse_type2()
-      t = ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU, &tk.ti)
-      t.array_u := (of=of, ti=&tk.ti)
-      return t
+      return ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU, &tk.ti)
     }
 
     size = parse_value()
     need("]")
     of = parse_type2()
 
-    t = ast_type_new(#AstTypeArray, (of=of, size=size, ti=&tk.ti) to AstTypeArray, &tk.ti)
-    t.array := (of=of, size=size, ti=&tk.ti)
-    return t
+    return ast_type_new(#AstTypeArray, (of=of, size=size, ti=&tk.ti) to AstTypeArray, &tk.ti)
   }
 
   return parse_type3()
@@ -434,23 +425,17 @@ parse_type4 = AstTypeParser {
 
   if match("Tagged") {
     spec_type = parse_type()
-    t = ast_type_new(#AstTypeSpecial, (type=spec_type, ti=&tk.ti) to AstTypeSpecial, &tk.ti)
-    t.special := (type=spec_type, ti=&tk.ti)
-    return t
+    return ast_type_new(#AstTypeSpecial, (type=spec_type, ti=&tk.ti) to AstTypeSpecial, &tk.ti)
   }
 
   if match("Var") {
     var_type = parse_type()
-    t = ast_type_new(#AstTypeVar, (of=var_type, ti=&tk.ti) to AstTypeVar, &tk.ti)
-    t.var := (of=var_type)
-    return t
+    return ast_type_new(#AstTypeVar, (of=var_type, ti=&tk.ti) to AstTypeVar, &tk.ti)
   }
 
   name = parse_name()
-  //t = ast_type_new(#AstTypeNamed, (name=name, ti=&tk.ti) to AstTypeNamed, &tk.ti)
-  t = ast_type_new(#AstTypeNamed, name, &tk.ti)
-  t.name := name
-  return t
+
+  return ast_type_new(#AstTypeNamed, name, &tk.ti)
 }
 
 
@@ -490,9 +475,7 @@ parse_type_set = AstTypeParser {
     }
   }
 
-  t = ast_type_new(#AstTypeEnum, (constructors=constructors, ti=&tk.ti) to AstTypeEnum, &tk.ti)
-  t.enum.constructors := constructors
-  return t
+  return ast_type_new(#AstTypeEnum, (constructors=constructors, ti=&tk.ti) to AstTypeEnum, &tk.ti)
 }
 
 
@@ -519,9 +502,7 @@ parse_type_rec = AstTypeParser {
     list_append(&decls, fd)
   }
 
-  t = ast_type_new(#AstTypeRecord, (decls=decls, ti=&tk.ti) to AstTypeRecord, &tk.ti)
-  t.record := (decls=decls, ti=&tk.ti)
-  return t
+  return ast_type_new(#AstTypeRecord, (decls=decls, ti=&tk.ti) to AstTypeRecord, &tk.ti)
 }
 
 
