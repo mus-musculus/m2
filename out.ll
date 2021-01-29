@@ -173,29 +173,29 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstValueWhen = type {%union.1*, %List, %union.1*, %TokenInfo*}
 %AstValueRecord = type {%List, %TokenInfo*}
 %AstValueArray = type {%List, %TokenInfo*}
-%AstValueBinary = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueAdd = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueSub = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueMul = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueDiv = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueMod = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueAnd = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueOr = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueXor = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueEq = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueNe = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueLt = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueGt = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueLe = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueGe = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueShl = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueShr = type {%AstValueKind, %union.1*, %union.1*, %TokenInfo*}
-%AstValueUnary = type {%AstValueKind, %union.1*, %TokenInfo*}
-%AstValueRef = type {%AstValueKind, %union.1*, %TokenInfo*}
-%AstValueDeref = type {%AstValueKind, %union.1*, %TokenInfo*}
-%AstValueMinus = type {%AstValueKind, %union.1*, %TokenInfo*}
-%AstValuePlus = type {%AstValueKind, %union.1*, %TokenInfo*}
-%AstValueNot = type {%AstValueKind, %union.1*, %TokenInfo*}
+%AstValueBinary = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueAdd = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueSub = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueMul = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueDiv = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueMod = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueAnd = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueOr = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueXor = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueEq = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueNe = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueLt = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueGt = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueLe = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueGe = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueShl = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueShr = type {%union.1*, %union.1*, %TokenInfo*}
+%AstValueUnary = type {%union.1*, %TokenInfo*}
+%AstValueRef = type {%union.1*, %TokenInfo*}
+%AstValueDeref = type {%union.1*, %TokenInfo*}
+%AstValueMinus = type {%union.1*, %TokenInfo*}
+%AstValuePlus = type {%union.1*, %TokenInfo*}
+%AstValueNot = type {%union.1*, %TokenInfo*}
 %AstValueSizeof = type {%AstType*, %TokenInfo*}
 %AstValueAlignof = type {%AstType*, %TokenInfo*}
 %AstValueString = type {%Str, %TokenInfo*}
@@ -6975,28 +6975,27 @@ then_1:
 ;stmt7:
   %13 = call %union.1* () @func220 ()
 ;stmt8:
-  %14 = insertvalue %AstValueOr zeroinitializer, %AstValueKind 17, 0
-  %15 = insertvalue %AstValueOr %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueOr %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueOr %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueOr zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueOr %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueOr %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 20
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 20, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 20, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueOr*
-  store %AstValueOr %17, %AstValueOr* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueOr*
+  store %AstValueOr %16, %AstValueOr* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %24 = load %union.1*, %union.1** %1
-  ret %union.1* %24
+  %23 = load %union.1*, %union.1** %1
+  ret %union.1* %23
 }
 
 define %union.1* @func221 () {
@@ -7032,28 +7031,27 @@ then_1:
 ;stmt7:
   %13 = call %union.1* () @func221 ()
 ;stmt8:
-  %14 = insertvalue %AstValueXor zeroinitializer, %AstValueKind 18, 0
-  %15 = insertvalue %AstValueXor %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueXor %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueXor %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueXor zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueXor %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueXor %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 21
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 21, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 21, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueXor*
-  store %AstValueXor %17, %AstValueXor* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueXor*
+  store %AstValueXor %16, %AstValueXor* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %24 = load %union.1*, %union.1** %1
-  ret %union.1* %24
+  %23 = load %union.1*, %union.1** %1
+  ret %union.1* %23
 }
 
 define %union.1* @func222 () {
@@ -7089,28 +7087,27 @@ then_1:
 ;stmt7:
   %13 = call %union.1* () @func222 ()
 ;stmt8:
-  %14 = insertvalue %AstValueAnd zeroinitializer, %AstValueKind 19, 0
-  %15 = insertvalue %AstValueAnd %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueAnd %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueAnd %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueAnd zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueAnd %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueAnd %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 19
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 19, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 19, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueAnd*
-  store %AstValueAnd %17, %AstValueAnd* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueAnd*
+  store %AstValueAnd %16, %AstValueAnd* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %24 = load %union.1*, %union.1** %1
-  ret %union.1* %24
+  %23 = load %union.1*, %union.1** %1
+  ret %union.1* %23
 }
 
 define %union.1* @func223 () {
@@ -7151,50 +7148,48 @@ then_1:
 ;stmt8:
   %13 = call %union.1* () @func223 ()
 ;stmt9:
-  %14 = insertvalue %AstValueEq zeroinitializer, %AstValueKind 20, 0
-  %15 = insertvalue %AstValueEq %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueEq %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueEq %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueEq zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueEq %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueEq %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 22
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 22, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 22, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueEq*
-  store %AstValueEq %17, %AstValueEq* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueEq*
+  store %AstValueEq %16, %AstValueEq* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt10:
-  %24 = bitcast [3 x %Nat8]* @func223_str2 to %Str
-  %25 = call i1 (%Str) @func198 (%Str %24)
-  br i1 %25, label %then_2, label %else_2
+  %23 = bitcast [3 x %Nat8]* @func223_str2 to %Str
+  %24 = call i1 (%Str) @func198 (%Str %23)
+  br i1 %24, label %then_2, label %else_2
 then_2:
 ;stmt11:
   call void () @skip_nl ()
 ;stmt12:
-  %26 = load %union.1*, %union.1** %1
+  %25 = load %union.1*, %union.1** %1
 ;stmt13:
-  %27 = call %union.1* () @func223 ()
+  %26 = call %union.1* () @func223 ()
 ;stmt14:
-  %28 = insertvalue %AstValueNe zeroinitializer, %AstValueKind 21, 0
-  %29 = insertvalue %AstValueNe %28, %union.1* %26, 1
-  %30 = insertvalue %AstValueNe %29, %union.1* %27, 2
-  %31 = insertvalue %AstValueNe %30, %TokenInfo* %9, 3
-  %32 = alloca %union.1
+  %27 = insertvalue %AstValueNe zeroinitializer, %union.1* %25, 0
+  %28 = insertvalue %AstValueNe %27, %union.1* %26, 1
+  %29 = insertvalue %AstValueNe %28, %TokenInfo* %9, 2
+  %30 = alloca %union.1
 ; write variant 23
-  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
-  store %Int16 23, %Int16* %33, align 2
+  %31 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 0
+  store %Int16 23, %Int16* %31, align 2
 ; write data
-  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
-  %35 = bitcast [56 x %Nat8]* %34 to %AstValueNe*
-  store %AstValueNe %31, %AstValueNe* %35, align 8
-  %36 = load %union.1, %union.1* %32
-  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
-  store %union.1* %37, %union.1** %1, align 8
+  %32 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 1
+  %33 = bitcast [56 x %Nat8]* %32 to %AstValueNe*
+  store %AstValueNe %29, %AstValueNe* %33, align 8
+  %34 = load %union.1, %union.1* %30
+  %35 = call %union.1* (%union.1) @func219 (%union.1 %34)
+  store %union.1* %35, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt15:
@@ -7206,8 +7201,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt16:
-  %39 = load %union.1*, %union.1** %1
-  ret %union.1* %39
+  %37 = load %union.1*, %union.1** %1
+  ret %union.1* %37
 }
 
 define %union.1* @func224 () {
@@ -7248,108 +7243,104 @@ then_1:
 ;stmt8:
   %13 = call %union.1* () @func225 ()
 ;stmt9:
-  %14 = insertvalue %AstValueLt zeroinitializer, %AstValueKind 22, 0
-  %15 = insertvalue %AstValueLt %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueLt %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueLt %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueLt zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueLt %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueLt %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 24
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 24, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 24, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueLt*
-  store %AstValueLt %17, %AstValueLt* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueLt*
+  store %AstValueLt %16, %AstValueLt* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt10:
-  %24 = bitcast [2 x %Nat8]* @func224_str2 to %Str
-  %25 = call i1 (%Str) @func198 (%Str %24)
-  br i1 %25, label %then_2, label %else_2
+  %23 = bitcast [2 x %Nat8]* @func224_str2 to %Str
+  %24 = call i1 (%Str) @func198 (%Str %23)
+  br i1 %24, label %then_2, label %else_2
 then_2:
 ;stmt11:
   call void () @skip_nl ()
 ;stmt12:
-  %26 = load %union.1*, %union.1** %1
+  %25 = load %union.1*, %union.1** %1
 ;stmt13:
-  %27 = call %union.1* () @func225 ()
+  %26 = call %union.1* () @func225 ()
 ;stmt14:
-  %28 = insertvalue %AstValueGt zeroinitializer, %AstValueKind 23, 0
-  %29 = insertvalue %AstValueGt %28, %union.1* %26, 1
-  %30 = insertvalue %AstValueGt %29, %union.1* %27, 2
-  %31 = insertvalue %AstValueGt %30, %TokenInfo* %9, 3
-  %32 = alloca %union.1
+  %27 = insertvalue %AstValueGt zeroinitializer, %union.1* %25, 0
+  %28 = insertvalue %AstValueGt %27, %union.1* %26, 1
+  %29 = insertvalue %AstValueGt %28, %TokenInfo* %9, 2
+  %30 = alloca %union.1
 ; write variant 25
-  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
-  store %Int16 25, %Int16* %33, align 2
+  %31 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 0
+  store %Int16 25, %Int16* %31, align 2
 ; write data
-  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
-  %35 = bitcast [56 x %Nat8]* %34 to %AstValueGt*
-  store %AstValueGt %31, %AstValueGt* %35, align 8
-  %36 = load %union.1, %union.1* %32
-  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
-  store %union.1* %37, %union.1** %1, align 8
+  %32 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 1
+  %33 = bitcast [56 x %Nat8]* %32 to %AstValueGt*
+  store %AstValueGt %29, %AstValueGt* %33, align 8
+  %34 = load %union.1, %union.1* %30
+  %35 = call %union.1* (%union.1) @func219 (%union.1 %34)
+  store %union.1* %35, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt15:
-  %38 = bitcast [3 x %Nat8]* @func224_str3 to %Str
-  %39 = call i1 (%Str) @func198 (%Str %38)
-  br i1 %39, label %then_3, label %else_3
+  %36 = bitcast [3 x %Nat8]* @func224_str3 to %Str
+  %37 = call i1 (%Str) @func198 (%Str %36)
+  br i1 %37, label %then_3, label %else_3
 then_3:
 ;stmt16:
   call void () @skip_nl ()
 ;stmt17:
-  %40 = load %union.1*, %union.1** %1
+  %38 = load %union.1*, %union.1** %1
 ;stmt18:
-  %41 = call %union.1* () @func225 ()
+  %39 = call %union.1* () @func225 ()
 ;stmt19:
-  %42 = insertvalue %AstValueLe zeroinitializer, %AstValueKind 24, 0
-  %43 = insertvalue %AstValueLe %42, %union.1* %40, 1
-  %44 = insertvalue %AstValueLe %43, %union.1* %41, 2
-  %45 = insertvalue %AstValueLe %44, %TokenInfo* %9, 3
-  %46 = alloca %union.1
+  %40 = insertvalue %AstValueLe zeroinitializer, %union.1* %38, 0
+  %41 = insertvalue %AstValueLe %40, %union.1* %39, 1
+  %42 = insertvalue %AstValueLe %41, %TokenInfo* %9, 2
+  %43 = alloca %union.1
 ; write variant 26
-  %47 = getelementptr inbounds %union.1, %union.1* %46, i1 0, i32 0
-  store %Int16 26, %Int16* %47, align 2
+  %44 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 0
+  store %Int16 26, %Int16* %44, align 2
 ; write data
-  %48 = getelementptr inbounds %union.1, %union.1* %46, i1 0, i32 1
-  %49 = bitcast [56 x %Nat8]* %48 to %AstValueLe*
-  store %AstValueLe %45, %AstValueLe* %49, align 8
-  %50 = load %union.1, %union.1* %46
-  %51 = call %union.1* (%union.1) @func219 (%union.1 %50)
-  store %union.1* %51, %union.1** %1, align 8
+  %45 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 1
+  %46 = bitcast [56 x %Nat8]* %45 to %AstValueLe*
+  store %AstValueLe %42, %AstValueLe* %46, align 8
+  %47 = load %union.1, %union.1* %43
+  %48 = call %union.1* (%union.1) @func219 (%union.1 %47)
+  store %union.1* %48, %union.1** %1, align 8
   br label %endif_3
 else_3:
 ;stmt20:
-  %52 = bitcast [3 x %Nat8]* @func224_str4 to %Str
-  %53 = call i1 (%Str) @func198 (%Str %52)
-  br i1 %53, label %then_4, label %else_4
+  %49 = bitcast [3 x %Nat8]* @func224_str4 to %Str
+  %50 = call i1 (%Str) @func198 (%Str %49)
+  br i1 %50, label %then_4, label %else_4
 then_4:
 ;stmt21:
   call void () @skip_nl ()
 ;stmt22:
-  %54 = load %union.1*, %union.1** %1
+  %51 = load %union.1*, %union.1** %1
 ;stmt23:
-  %55 = call %union.1* () @func225 ()
+  %52 = call %union.1* () @func225 ()
 ;stmt24:
-  %56 = insertvalue %AstValueGe zeroinitializer, %AstValueKind 25, 0
-  %57 = insertvalue %AstValueGe %56, %union.1* %54, 1
-  %58 = insertvalue %AstValueGe %57, %union.1* %55, 2
-  %59 = insertvalue %AstValueGe %58, %TokenInfo* %9, 3
-  %60 = alloca %union.1
+  %53 = insertvalue %AstValueGe zeroinitializer, %union.1* %51, 0
+  %54 = insertvalue %AstValueGe %53, %union.1* %52, 1
+  %55 = insertvalue %AstValueGe %54, %TokenInfo* %9, 2
+  %56 = alloca %union.1
 ; write variant 27
-  %61 = getelementptr inbounds %union.1, %union.1* %60, i1 0, i32 0
-  store %Int16 27, %Int16* %61, align 2
+  %57 = getelementptr inbounds %union.1, %union.1* %56, i1 0, i32 0
+  store %Int16 27, %Int16* %57, align 2
 ; write data
-  %62 = getelementptr inbounds %union.1, %union.1* %60, i1 0, i32 1
-  %63 = bitcast [56 x %Nat8]* %62 to %AstValueGe*
-  store %AstValueGe %59, %AstValueGe* %63, align 8
-  %64 = load %union.1, %union.1* %60
-  %65 = call %union.1* (%union.1) @func219 (%union.1 %64)
-  store %union.1* %65, %union.1** %1, align 8
+  %58 = getelementptr inbounds %union.1, %union.1* %56, i1 0, i32 1
+  %59 = bitcast [56 x %Nat8]* %58 to %AstValueGe*
+  store %AstValueGe %55, %AstValueGe* %59, align 8
+  %60 = load %union.1, %union.1* %56
+  %61 = call %union.1* (%union.1) @func219 (%union.1 %60)
+  store %union.1* %61, %union.1** %1, align 8
   br label %endif_4
 else_4:
 ;stmt25:
@@ -7365,8 +7356,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt26:
-  %67 = load %union.1*, %union.1** %1
-  ret %union.1* %67
+  %63 = load %union.1*, %union.1** %1
+  ret %union.1* %63
 }
 
 define %union.1* @func225 () {
@@ -7407,50 +7398,48 @@ then_1:
 ;stmt8:
   %13 = call %union.1* () @func226 ()
 ;stmt9:
-  %14 = insertvalue %AstValueShl zeroinitializer, %AstValueKind 26, 0
-  %15 = insertvalue %AstValueShl %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueShl %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueShl %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueShl zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueShl %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueShl %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 28
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 28, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 28, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueShl*
-  store %AstValueShl %17, %AstValueShl* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueShl*
+  store %AstValueShl %16, %AstValueShl* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt10:
-  %24 = bitcast [3 x %Nat8]* @func225_str2 to %Str
-  %25 = call i1 (%Str) @func198 (%Str %24)
-  br i1 %25, label %then_2, label %else_2
+  %23 = bitcast [3 x %Nat8]* @func225_str2 to %Str
+  %24 = call i1 (%Str) @func198 (%Str %23)
+  br i1 %24, label %then_2, label %else_2
 then_2:
 ;stmt11:
   call void () @skip_nl ()
 ;stmt12:
-  %26 = load %union.1*, %union.1** %1
+  %25 = load %union.1*, %union.1** %1
 ;stmt13:
-  %27 = call %union.1* () @func226 ()
+  %26 = call %union.1* () @func226 ()
 ;stmt14:
-  %28 = insertvalue %AstValueShr zeroinitializer, %AstValueKind 27, 0
-  %29 = insertvalue %AstValueShr %28, %union.1* %26, 1
-  %30 = insertvalue %AstValueShr %29, %union.1* %27, 2
-  %31 = insertvalue %AstValueShr %30, %TokenInfo* %9, 3
-  %32 = alloca %union.1
+  %27 = insertvalue %AstValueShr zeroinitializer, %union.1* %25, 0
+  %28 = insertvalue %AstValueShr %27, %union.1* %26, 1
+  %29 = insertvalue %AstValueShr %28, %TokenInfo* %9, 2
+  %30 = alloca %union.1
 ; write variant 29
-  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
-  store %Int16 29, %Int16* %33, align 2
+  %31 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 0
+  store %Int16 29, %Int16* %31, align 2
 ; write data
-  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
-  %35 = bitcast [56 x %Nat8]* %34 to %AstValueShr*
-  store %AstValueShr %31, %AstValueShr* %35, align 8
-  %36 = load %union.1, %union.1* %32
-  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
-  store %union.1* %37, %union.1** %1, align 8
+  %32 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 1
+  %33 = bitcast [56 x %Nat8]* %32 to %AstValueShr*
+  store %AstValueShr %29, %AstValueShr* %33, align 8
+  %34 = load %union.1, %union.1* %30
+  %35 = call %union.1* (%union.1) @func219 (%union.1 %34)
+  store %union.1* %35, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt15:
@@ -7462,8 +7451,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt16:
-  %39 = load %union.1*, %union.1** %1
-  ret %union.1* %39
+  %37 = load %union.1*, %union.1** %1
+  ret %union.1* %37
 }
 
 define %union.1* @func226 () {
@@ -7504,50 +7493,48 @@ then_1:
 ;stmt8:
   %13 = call %union.1* () @func227 ()
 ;stmt9:
-  %14 = insertvalue %AstValueAdd zeroinitializer, %AstValueKind 12, 0
-  %15 = insertvalue %AstValueAdd %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueAdd %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueAdd %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueAdd zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueAdd %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueAdd %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 14
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 14, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 14, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueAdd*
-  store %AstValueAdd %17, %AstValueAdd* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueAdd*
+  store %AstValueAdd %16, %AstValueAdd* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt10:
-  %24 = bitcast [2 x %Nat8]* @func226_str2 to %Str
-  %25 = call i1 (%Str) @func198 (%Str %24)
-  br i1 %25, label %then_2, label %else_2
+  %23 = bitcast [2 x %Nat8]* @func226_str2 to %Str
+  %24 = call i1 (%Str) @func198 (%Str %23)
+  br i1 %24, label %then_2, label %else_2
 then_2:
 ;stmt11:
   call void () @skip_nl ()
 ;stmt12:
-  %26 = load %union.1*, %union.1** %1
+  %25 = load %union.1*, %union.1** %1
 ;stmt13:
-  %27 = call %union.1* () @func227 ()
+  %26 = call %union.1* () @func227 ()
 ;stmt14:
-  %28 = insertvalue %AstValueSub zeroinitializer, %AstValueKind 13, 0
-  %29 = insertvalue %AstValueSub %28, %union.1* %26, 1
-  %30 = insertvalue %AstValueSub %29, %union.1* %27, 2
-  %31 = insertvalue %AstValueSub %30, %TokenInfo* %9, 3
-  %32 = alloca %union.1
+  %27 = insertvalue %AstValueSub zeroinitializer, %union.1* %25, 0
+  %28 = insertvalue %AstValueSub %27, %union.1* %26, 1
+  %29 = insertvalue %AstValueSub %28, %TokenInfo* %9, 2
+  %30 = alloca %union.1
 ; write variant 15
-  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
-  store %Int16 15, %Int16* %33, align 2
+  %31 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 0
+  store %Int16 15, %Int16* %31, align 2
 ; write data
-  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
-  %35 = bitcast [56 x %Nat8]* %34 to %AstValueSub*
-  store %AstValueSub %31, %AstValueSub* %35, align 8
-  %36 = load %union.1, %union.1* %32
-  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
-  store %union.1* %37, %union.1** %1, align 8
+  %32 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 1
+  %33 = bitcast [56 x %Nat8]* %32 to %AstValueSub*
+  store %AstValueSub %29, %AstValueSub* %33, align 8
+  %34 = load %union.1, %union.1* %30
+  %35 = call %union.1* (%union.1) @func219 (%union.1 %34)
+  store %union.1* %35, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt15:
@@ -7559,8 +7546,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt16:
-  %39 = load %union.1*, %union.1** %1
-  ret %union.1* %39
+  %37 = load %union.1*, %union.1** %1
+  ret %union.1* %37
 }
 
 define %union.1* @func227 () {
@@ -7601,79 +7588,76 @@ then_1:
 ;stmt8:
   %13 = call %union.1* () @func228 ()
 ;stmt9:
-  %14 = insertvalue %AstValueMul zeroinitializer, %AstValueKind 14, 0
-  %15 = insertvalue %AstValueMul %14, %union.1* %12, 1
-  %16 = insertvalue %AstValueMul %15, %union.1* %13, 2
-  %17 = insertvalue %AstValueMul %16, %TokenInfo* %9, 3
-  %18 = alloca %union.1
+  %14 = insertvalue %AstValueMul zeroinitializer, %union.1* %12, 0
+  %15 = insertvalue %AstValueMul %14, %union.1* %13, 1
+  %16 = insertvalue %AstValueMul %15, %TokenInfo* %9, 2
+  %17 = alloca %union.1
 ; write variant 16
-  %19 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 0
-  store %Int16 16, %Int16* %19, align 2
+  %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
+  store %Int16 16, %Int16* %18, align 2
 ; write data
-  %20 = getelementptr inbounds %union.1, %union.1* %18, i1 0, i32 1
-  %21 = bitcast [56 x %Nat8]* %20 to %AstValueMul*
-  store %AstValueMul %17, %AstValueMul* %21, align 8
-  %22 = load %union.1, %union.1* %18
-  %23 = call %union.1* (%union.1) @func219 (%union.1 %22)
-  store %union.1* %23, %union.1** %1, align 8
+  %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
+  %20 = bitcast [56 x %Nat8]* %19 to %AstValueMul*
+  store %AstValueMul %16, %AstValueMul* %20, align 8
+  %21 = load %union.1, %union.1* %17
+  %22 = call %union.1* (%union.1) @func219 (%union.1 %21)
+  store %union.1* %22, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt10:
-  %24 = bitcast [2 x %Nat8]* @func227_str2 to %Str
-  %25 = call i1 (%Str) @func198 (%Str %24)
-  br i1 %25, label %then_2, label %else_2
+  %23 = bitcast [2 x %Nat8]* @func227_str2 to %Str
+  %24 = call i1 (%Str) @func198 (%Str %23)
+  br i1 %24, label %then_2, label %else_2
 then_2:
 ;stmt11:
   call void () @skip_nl ()
 ;stmt12:
-  %26 = load %union.1*, %union.1** %1
+  %25 = load %union.1*, %union.1** %1
 ;stmt13:
-  %27 = call %union.1* () @func228 ()
+  %26 = call %union.1* () @func228 ()
 ;stmt14:
-  %28 = insertvalue %AstValueDiv zeroinitializer, %AstValueKind 15, 0
-  %29 = insertvalue %AstValueDiv %28, %union.1* %26, 1
-  %30 = insertvalue %AstValueDiv %29, %union.1* %27, 2
-  %31 = insertvalue %AstValueDiv %30, %TokenInfo* %9, 3
-  %32 = alloca %union.1
+  %27 = insertvalue %AstValueDiv zeroinitializer, %union.1* %25, 0
+  %28 = insertvalue %AstValueDiv %27, %union.1* %26, 1
+  %29 = insertvalue %AstValueDiv %28, %TokenInfo* %9, 2
+  %30 = alloca %union.1
 ; write variant 17
-  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
-  store %Int16 17, %Int16* %33, align 2
+  %31 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 0
+  store %Int16 17, %Int16* %31, align 2
 ; write data
-  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
-  %35 = bitcast [56 x %Nat8]* %34 to %AstValueDiv*
-  store %AstValueDiv %31, %AstValueDiv* %35, align 8
-  %36 = load %union.1, %union.1* %32
-  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
-  store %union.1* %37, %union.1** %1, align 8
+  %32 = getelementptr inbounds %union.1, %union.1* %30, i1 0, i32 1
+  %33 = bitcast [56 x %Nat8]* %32 to %AstValueDiv*
+  store %AstValueDiv %29, %AstValueDiv* %33, align 8
+  %34 = load %union.1, %union.1* %30
+  %35 = call %union.1* (%union.1) @func219 (%union.1 %34)
+  store %union.1* %35, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt15:
-  %38 = bitcast [2 x %Nat8]* @func227_str3 to %Str
-  %39 = call i1 (%Str) @func198 (%Str %38)
-  br i1 %39, label %then_3, label %else_3
+  %36 = bitcast [2 x %Nat8]* @func227_str3 to %Str
+  %37 = call i1 (%Str) @func198 (%Str %36)
+  br i1 %37, label %then_3, label %else_3
 then_3:
 ;stmt16:
   call void () @skip_nl ()
 ;stmt17:
-  %40 = load %union.1*, %union.1** %1
+  %38 = load %union.1*, %union.1** %1
 ;stmt18:
-  %41 = call %union.1* () @func228 ()
+  %39 = call %union.1* () @func228 ()
 ;stmt19:
-  %42 = insertvalue %AstValueMod zeroinitializer, %AstValueKind 16, 0
-  %43 = insertvalue %AstValueMod %42, %union.1* %40, 1
-  %44 = insertvalue %AstValueMod %43, %union.1* %41, 2
-  %45 = insertvalue %AstValueMod %44, %TokenInfo* %9, 3
-  %46 = alloca %union.1
+  %40 = insertvalue %AstValueMod zeroinitializer, %union.1* %38, 0
+  %41 = insertvalue %AstValueMod %40, %union.1* %39, 1
+  %42 = insertvalue %AstValueMod %41, %TokenInfo* %9, 2
+  %43 = alloca %union.1
 ; write variant 18
-  %47 = getelementptr inbounds %union.1, %union.1* %46, i1 0, i32 0
-  store %Int16 18, %Int16* %47, align 2
+  %44 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 0
+  store %Int16 18, %Int16* %44, align 2
 ; write data
-  %48 = getelementptr inbounds %union.1, %union.1* %46, i1 0, i32 1
-  %49 = bitcast [56 x %Nat8]* %48 to %AstValueMod*
-  store %AstValueMod %45, %AstValueMod* %49, align 8
-  %50 = load %union.1, %union.1* %46
-  %51 = call %union.1* (%union.1) @func219 (%union.1 %50)
-  store %union.1* %51, %union.1** %1, align 8
+  %45 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 1
+  %46 = bitcast [56 x %Nat8]* %45 to %AstValueMod*
+  store %AstValueMod %42, %AstValueMod* %46, align 8
+  %47 = load %union.1, %union.1* %43
+  %48 = call %union.1* (%union.1) @func219 (%union.1 %47)
+  store %union.1* %48, %union.1** %1, align 8
   br label %endif_3
 else_3:
 ;stmt20:
@@ -7687,8 +7671,8 @@ endif_1:
   br label %continue_0
 break_0:
 ;stmt21:
-  %53 = load %union.1*, %union.1** %1
-  ret %union.1* %53
+  %50 = load %union.1*, %union.1** %1
+  ret %union.1* %50
 }
 
 define %union.1* @func228 () {
@@ -7814,203 +7798,198 @@ then_0:
 ;stmt3:
   %7 = call %union.1* () @func229 ()
 ;stmt4:
-  %8 = insertvalue %AstValueDeref zeroinitializer, %AstValueKind 8, 0
-  %9 = insertvalue %AstValueDeref %8, %union.1* %7, 1
-  %10 = insertvalue %AstValueDeref %9, %TokenInfo* %4, 2
-  %11 = alloca %union.1
+  %8 = insertvalue %AstValueDeref zeroinitializer, %union.1* %7, 0
+  %9 = insertvalue %AstValueDeref %8, %TokenInfo* %4, 1
+  %10 = alloca %union.1
 ; write variant 9
-  %12 = getelementptr inbounds %union.1, %union.1* %11, i1 0, i32 0
-  store %Int16 9, %Int16* %12, align 2
+  %11 = getelementptr inbounds %union.1, %union.1* %10, i1 0, i32 0
+  store %Int16 9, %Int16* %11, align 2
 ; write data
-  %13 = getelementptr inbounds %union.1, %union.1* %11, i1 0, i32 1
-  %14 = bitcast [56 x %Nat8]* %13 to %AstValueDeref*
-  store %AstValueDeref %10, %AstValueDeref* %14, align 8
-  %15 = load %union.1, %union.1* %11
-  %16 = call %union.1* (%union.1) @func219 (%union.1 %15)
-  store %union.1* %16, %union.1** %1, align 8
+  %12 = getelementptr inbounds %union.1, %union.1* %10, i1 0, i32 1
+  %13 = bitcast [56 x %Nat8]* %12 to %AstValueDeref*
+  store %AstValueDeref %9, %AstValueDeref* %13, align 8
+  %14 = load %union.1, %union.1* %10
+  %15 = call %union.1* (%union.1) @func219 (%union.1 %14)
+  store %union.1* %15, %union.1** %1, align 8
   br label %endif_0
 else_0:
 ;stmt5:
-  %17 = bitcast [2 x %Nat8]* @func229_str2 to %Str
-  %18 = call i1 (%Str) @func198 (%Str %17)
-  br i1 %18, label %then_1, label %else_1
+  %16 = bitcast [2 x %Nat8]* @func229_str2 to %Str
+  %17 = call i1 (%Str) @func198 (%Str %16)
+  br i1 %17, label %then_1, label %else_1
 then_1:
 ;stmt6:
-  %19 = call %union.1* () @func230 ()
+  %18 = call %union.1* () @func230 ()
 ;stmt7:
-  %20 = insertvalue %AstValueRef zeroinitializer, %AstValueKind 7, 0
-  %21 = insertvalue %AstValueRef %20, %union.1* %19, 1
-  %22 = insertvalue %AstValueRef %21, %TokenInfo* %4, 2
-  %23 = alloca %union.1
+  %19 = insertvalue %AstValueRef zeroinitializer, %union.1* %18, 0
+  %20 = insertvalue %AstValueRef %19, %TokenInfo* %4, 1
+  %21 = alloca %union.1
 ; write variant 8
-  %24 = getelementptr inbounds %union.1, %union.1* %23, i1 0, i32 0
-  store %Int16 8, %Int16* %24, align 2
+  %22 = getelementptr inbounds %union.1, %union.1* %21, i1 0, i32 0
+  store %Int16 8, %Int16* %22, align 2
 ; write data
-  %25 = getelementptr inbounds %union.1, %union.1* %23, i1 0, i32 1
-  %26 = bitcast [56 x %Nat8]* %25 to %AstValueRef*
-  store %AstValueRef %22, %AstValueRef* %26, align 8
-  %27 = load %union.1, %union.1* %23
-  %28 = call %union.1* (%union.1) @func219 (%union.1 %27)
-  store %union.1* %28, %union.1** %1, align 8
+  %23 = getelementptr inbounds %union.1, %union.1* %21, i1 0, i32 1
+  %24 = bitcast [56 x %Nat8]* %23 to %AstValueRef*
+  store %AstValueRef %20, %AstValueRef* %24, align 8
+  %25 = load %union.1, %union.1* %21
+  %26 = call %union.1* (%union.1) @func219 (%union.1 %25)
+  store %union.1* %26, %union.1** %1, align 8
   br label %endif_1
 else_1:
 ;stmt8:
-  %29 = bitcast [4 x %Nat8]* @func229_str3 to %Str
-  %30 = call i1 (%Str) @func198 (%Str %29)
-  br i1 %30, label %then_2, label %else_2
+  %27 = bitcast [4 x %Nat8]* @func229_str3 to %Str
+  %28 = call i1 (%Str) @func198 (%Str %27)
+  br i1 %28, label %then_2, label %else_2
 then_2:
 ;stmt9:
-  %31 = call %union.1* () @func229 ()
+  %29 = call %union.1* () @func229 ()
 ;stmt10:
-  %32 = insertvalue %AstValueNot zeroinitializer, %AstValueKind 9, 0
-  %33 = insertvalue %AstValueNot %32, %union.1* %31, 1
-  %34 = insertvalue %AstValueNot %33, %TokenInfo* %4, 2
-  %35 = alloca %union.1
+  %30 = insertvalue %AstValueNot zeroinitializer, %union.1* %29, 0
+  %31 = insertvalue %AstValueNot %30, %TokenInfo* %4, 1
+  %32 = alloca %union.1
 ; write variant 12
-  %36 = getelementptr inbounds %union.1, %union.1* %35, i1 0, i32 0
-  store %Int16 12, %Int16* %36, align 2
+  %33 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 0
+  store %Int16 12, %Int16* %33, align 2
 ; write data
-  %37 = getelementptr inbounds %union.1, %union.1* %35, i1 0, i32 1
-  %38 = bitcast [56 x %Nat8]* %37 to %AstValueNot*
-  store %AstValueNot %34, %AstValueNot* %38, align 8
-  %39 = load %union.1, %union.1* %35
-  %40 = call %union.1* (%union.1) @func219 (%union.1 %39)
-  store %union.1* %40, %union.1** %1, align 8
+  %34 = getelementptr inbounds %union.1, %union.1* %32, i1 0, i32 1
+  %35 = bitcast [56 x %Nat8]* %34 to %AstValueNot*
+  store %AstValueNot %31, %AstValueNot* %35, align 8
+  %36 = load %union.1, %union.1* %32
+  %37 = call %union.1* (%union.1) @func219 (%union.1 %36)
+  store %union.1* %37, %union.1** %1, align 8
   br label %endif_2
 else_2:
 ;stmt11:
-  %41 = bitcast [2 x %Nat8]* @func229_str4 to %Str
-  %42 = call i1 (%Str) @func198 (%Str %41)
-  br i1 %42, label %then_3, label %else_3
+  %38 = bitcast [2 x %Nat8]* @func229_str4 to %Str
+  %39 = call i1 (%Str) @func198 (%Str %38)
+  br i1 %39, label %then_3, label %else_3
 then_3:
 ;stmt12:
-  %43 = call %union.1* () @func229 ()
+  %40 = call %union.1* () @func229 ()
 ;stmt13:
-  %44 = insertvalue %AstValueMinus zeroinitializer, %AstValueKind 10, 0
-  %45 = insertvalue %AstValueMinus %44, %union.1* %43, 1
-  %46 = insertvalue %AstValueMinus %45, %TokenInfo* %4, 2
-  %47 = alloca %union.1
+  %41 = insertvalue %AstValueMinus zeroinitializer, %union.1* %40, 0
+  %42 = insertvalue %AstValueMinus %41, %TokenInfo* %4, 1
+  %43 = alloca %union.1
 ; write variant 10
-  %48 = getelementptr inbounds %union.1, %union.1* %47, i1 0, i32 0
-  store %Int16 10, %Int16* %48, align 2
+  %44 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 0
+  store %Int16 10, %Int16* %44, align 2
 ; write data
-  %49 = getelementptr inbounds %union.1, %union.1* %47, i1 0, i32 1
-  %50 = bitcast [56 x %Nat8]* %49 to %AstValueMinus*
-  store %AstValueMinus %46, %AstValueMinus* %50, align 8
-  %51 = load %union.1, %union.1* %47
-  %52 = call %union.1* (%union.1) @func219 (%union.1 %51)
-  store %union.1* %52, %union.1** %1, align 8
+  %45 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 1
+  %46 = bitcast [56 x %Nat8]* %45 to %AstValueMinus*
+  store %AstValueMinus %42, %AstValueMinus* %46, align 8
+  %47 = load %union.1, %union.1* %43
+  %48 = call %union.1* (%union.1) @func219 (%union.1 %47)
+  store %union.1* %48, %union.1** %1, align 8
   br label %endif_3
 else_3:
 ;stmt14:
-  %53 = bitcast [2 x %Nat8]* @func229_str5 to %Str
-  %54 = call i1 (%Str) @func198 (%Str %53)
-  br i1 %54, label %then_4, label %else_4
+  %49 = bitcast [2 x %Nat8]* @func229_str5 to %Str
+  %50 = call i1 (%Str) @func198 (%Str %49)
+  br i1 %50, label %then_4, label %else_4
 then_4:
 ;stmt15:
-  %55 = call %union.1* () @func229 ()
+  %51 = call %union.1* () @func229 ()
 ;stmt16:
-  %56 = insertvalue %AstValuePlus zeroinitializer, %AstValueKind 11, 0
-  %57 = insertvalue %AstValuePlus %56, %union.1* %55, 1
-  %58 = insertvalue %AstValuePlus %57, %TokenInfo* %4, 2
-  %59 = alloca %union.1
+  %52 = insertvalue %AstValuePlus zeroinitializer, %union.1* %51, 0
+  %53 = insertvalue %AstValuePlus %52, %TokenInfo* %4, 1
+  %54 = alloca %union.1
 ; write variant 11
-  %60 = getelementptr inbounds %union.1, %union.1* %59, i1 0, i32 0
-  store %Int16 11, %Int16* %60, align 2
+  %55 = getelementptr inbounds %union.1, %union.1* %54, i1 0, i32 0
+  store %Int16 11, %Int16* %55, align 2
 ; write data
-  %61 = getelementptr inbounds %union.1, %union.1* %59, i1 0, i32 1
-  %62 = bitcast [56 x %Nat8]* %61 to %AstValuePlus*
-  store %AstValuePlus %58, %AstValuePlus* %62, align 8
-  %63 = load %union.1, %union.1* %59
-  %64 = call %union.1* (%union.1) @func219 (%union.1 %63)
-  store %union.1* %64, %union.1** %1, align 8
+  %56 = getelementptr inbounds %union.1, %union.1* %54, i1 0, i32 1
+  %57 = bitcast [56 x %Nat8]* %56 to %AstValuePlus*
+  store %AstValuePlus %53, %AstValuePlus* %57, align 8
+  %58 = load %union.1, %union.1* %54
+  %59 = call %union.1* (%union.1) @func219 (%union.1 %58)
+  store %union.1* %59, %union.1** %1, align 8
   br label %endif_4
 else_4:
 ;stmt17:
-  %65 = bitcast [7 x %Nat8]* @func229_str6 to %Str
-  %66 = call i1 (%Str) @func198 (%Str %65)
-  br i1 %66, label %then_5, label %else_5
+  %60 = bitcast [7 x %Nat8]* @func229_str6 to %Str
+  %61 = call i1 (%Str) @func198 (%Str %60)
+  br i1 %61, label %then_5, label %else_5
 then_5:
 ;stmt18:
-  %67 = call %Token* () @func190 ()
-  %68 = getelementptr inbounds %Token, %Token* %67, i1 0, i32 1
+  %62 = call %Token* () @func190 ()
+  %63 = getelementptr inbounds %Token, %Token* %62, i1 0, i32 1
 ;stmt19:
-  %69 = call %AstType* () @func209 ()
+  %64 = call %AstType* () @func209 ()
 ;stmt20:; loadImmPtr
-  %70 = inttoptr i64 0 to%AstType*
-  %71 = icmp eq %AstType* %69, %70
-  br i1 %71, label %then_6, label %else_6
+  %65 = inttoptr i64 0 to%AstType*
+  %66 = icmp eq %AstType* %64, %65
+  br i1 %66, label %then_6, label %else_6
 then_6:
 ;stmt21:
-  %72 = bitcast [23 x %Nat8]* @func229_str7 to %Str
-  call void (%Str, %TokenInfo*) @error (%Str %72, %TokenInfo* %68)
+  %67 = bitcast [23 x %Nat8]* @func229_str7 to %Str
+  call void (%Str, %TokenInfo*) @error (%Str %67, %TokenInfo* %63)
 ;stmt22:; loadImmPtr
-  %73 = inttoptr i64 0 to%union.1*
-  ret %union.1* %73
+  %68 = inttoptr i64 0 to%union.1*
+  ret %union.1* %68
   br label %endif_6
 else_6:
   br label %endif_6
 endif_6:
 ;stmt23:
-  %75 = insertvalue %AstValueSizeof zeroinitializer, %AstType* %69, 0
-  %76 = insertvalue %AstValueSizeof %75, %TokenInfo* %4, 1
-  %77 = alloca %union.1
+  %70 = insertvalue %AstValueSizeof zeroinitializer, %AstType* %64, 0
+  %71 = insertvalue %AstValueSizeof %70, %TokenInfo* %4, 1
+  %72 = alloca %union.1
 ; write variant 37
-  %78 = getelementptr inbounds %union.1, %union.1* %77, i1 0, i32 0
-  store %Int16 37, %Int16* %78, align 2
+  %73 = getelementptr inbounds %union.1, %union.1* %72, i1 0, i32 0
+  store %Int16 37, %Int16* %73, align 2
 ; write data
-  %79 = getelementptr inbounds %union.1, %union.1* %77, i1 0, i32 1
-  %80 = bitcast [56 x %Nat8]* %79 to %AstValueSizeof*
-  store %AstValueSizeof %76, %AstValueSizeof* %80, align 8
-  %81 = load %union.1, %union.1* %77
-  %82 = call %union.1* (%union.1) @func219 (%union.1 %81)
-  store %union.1* %82, %union.1** %1, align 8
+  %74 = getelementptr inbounds %union.1, %union.1* %72, i1 0, i32 1
+  %75 = bitcast [56 x %Nat8]* %74 to %AstValueSizeof*
+  store %AstValueSizeof %71, %AstValueSizeof* %75, align 8
+  %76 = load %union.1, %union.1* %72
+  %77 = call %union.1* (%union.1) @func219 (%union.1 %76)
+  store %union.1* %77, %union.1** %1, align 8
   br label %endif_5
 else_5:
 ;stmt24:
-  %83 = bitcast [8 x %Nat8]* @func229_str8 to %Str
-  %84 = call i1 (%Str) @func198 (%Str %83)
-  br i1 %84, label %then_7, label %else_7
+  %78 = bitcast [8 x %Nat8]* @func229_str8 to %Str
+  %79 = call i1 (%Str) @func198 (%Str %78)
+  br i1 %79, label %then_7, label %else_7
 then_7:
 ;stmt25:
-  %85 = call %Token* () @func190 ()
-  %86 = getelementptr inbounds %Token, %Token* %85, i1 0, i32 1
+  %80 = call %Token* () @func190 ()
+  %81 = getelementptr inbounds %Token, %Token* %80, i1 0, i32 1
 ;stmt26:
-  %87 = call %AstType* () @func209 ()
+  %82 = call %AstType* () @func209 ()
 ;stmt27:; loadImmPtr
-  %88 = inttoptr i64 0 to%AstType*
-  %89 = icmp eq %AstType* %87, %88
-  br i1 %89, label %then_8, label %else_8
+  %83 = inttoptr i64 0 to%AstType*
+  %84 = icmp eq %AstType* %82, %83
+  br i1 %84, label %then_8, label %else_8
 then_8:
 ;stmt28:
-  %90 = bitcast [24 x %Nat8]* @func229_str9 to %Str
-  call void (%Str, %TokenInfo*) @error (%Str %90, %TokenInfo* %86)
+  %85 = bitcast [24 x %Nat8]* @func229_str9 to %Str
+  call void (%Str, %TokenInfo*) @error (%Str %85, %TokenInfo* %81)
 ;stmt29:; loadImmPtr
-  %91 = inttoptr i64 0 to%union.1*
-  ret %union.1* %91
+  %86 = inttoptr i64 0 to%union.1*
+  ret %union.1* %86
   br label %endif_8
 else_8:
   br label %endif_8
 endif_8:
 ;stmt30:
-  %93 = insertvalue %AstValueAlignof zeroinitializer, %AstType* %87, 0
-  %94 = insertvalue %AstValueAlignof %93, %TokenInfo* %4, 1
-  %95 = alloca %union.1
+  %88 = insertvalue %AstValueAlignof zeroinitializer, %AstType* %82, 0
+  %89 = insertvalue %AstValueAlignof %88, %TokenInfo* %4, 1
+  %90 = alloca %union.1
 ; write variant 38
-  %96 = getelementptr inbounds %union.1, %union.1* %95, i1 0, i32 0
-  store %Int16 38, %Int16* %96, align 2
+  %91 = getelementptr inbounds %union.1, %union.1* %90, i1 0, i32 0
+  store %Int16 38, %Int16* %91, align 2
 ; write data
-  %97 = getelementptr inbounds %union.1, %union.1* %95, i1 0, i32 1
-  %98 = bitcast [56 x %Nat8]* %97 to %AstValueAlignof*
-  store %AstValueAlignof %94, %AstValueAlignof* %98, align 8
-  %99 = load %union.1, %union.1* %95
-  %100 = call %union.1* (%union.1) @func219 (%union.1 %99)
-  store %union.1* %100, %union.1** %1, align 8
+  %92 = getelementptr inbounds %union.1, %union.1* %90, i1 0, i32 1
+  %93 = bitcast [56 x %Nat8]* %92 to %AstValueAlignof*
+  store %AstValueAlignof %89, %AstValueAlignof* %93, align 8
+  %94 = load %union.1, %union.1* %90
+  %95 = call %union.1* (%union.1) @func219 (%union.1 %94)
+  store %union.1* %95, %union.1** %1, align 8
   br label %endif_7
 else_7:
 ;stmt31:
-  %101 = call %union.1* () @func230 ()
-  store %union.1* %101, %union.1** %1, align 8
+  %96 = call %union.1* () @func230 ()
+  store %union.1* %96, %union.1** %1, align 8
   br label %endif_7
 endif_7:
   br label %endif_5
@@ -8026,8 +8005,8 @@ endif_1:
   br label %endif_0
 endif_0:
 ;stmt32:
-  %102 = load %union.1*, %union.1** %1
-  ret %union.1* %102
+  %97 = load %union.1*, %union.1** %1
+  ret %union.1* %97
 }
 
 define %union.1* @func230 () {
@@ -15602,144 +15581,144 @@ select_1_end:
 
 define %Value* @func440 (%AstValueAdd) {
 ;stmt0:
-  %2 = extractvalue %AstValueAdd %0, 1
-  %3 = extractvalue %AstValueAdd %0, 2
-  %4 = extractvalue %AstValueAdd %0, 3
+  %2 = extractvalue %AstValueAdd %0, 0
+  %3 = extractvalue %AstValueAdd %0, 1
+  %4 = extractvalue %AstValueAdd %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 18, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_sub (%AstValueSub) {
 ;stmt0:
-  %2 = extractvalue %AstValueSub %0, 1
-  %3 = extractvalue %AstValueSub %0, 2
-  %4 = extractvalue %AstValueSub %0, 3
+  %2 = extractvalue %AstValueSub %0, 0
+  %3 = extractvalue %AstValueSub %0, 1
+  %4 = extractvalue %AstValueSub %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 19, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_mul (%AstValueMul) {
 ;stmt0:
-  %2 = extractvalue %AstValueMul %0, 1
-  %3 = extractvalue %AstValueMul %0, 2
-  %4 = extractvalue %AstValueMul %0, 3
+  %2 = extractvalue %AstValueMul %0, 0
+  %3 = extractvalue %AstValueMul %0, 1
+  %4 = extractvalue %AstValueMul %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 20, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_div (%AstValueDiv) {
 ;stmt0:
-  %2 = extractvalue %AstValueDiv %0, 1
-  %3 = extractvalue %AstValueDiv %0, 2
-  %4 = extractvalue %AstValueDiv %0, 3
+  %2 = extractvalue %AstValueDiv %0, 0
+  %3 = extractvalue %AstValueDiv %0, 1
+  %4 = extractvalue %AstValueDiv %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 21, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_mod (%AstValueMod) {
 ;stmt0:
-  %2 = extractvalue %AstValueMod %0, 1
-  %3 = extractvalue %AstValueMod %0, 2
-  %4 = extractvalue %AstValueMod %0, 3
+  %2 = extractvalue %AstValueMod %0, 0
+  %3 = extractvalue %AstValueMod %0, 1
+  %4 = extractvalue %AstValueMod %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 22, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_and (%AstValueAnd) {
 ;stmt0:
-  %2 = extractvalue %AstValueAnd %0, 1
-  %3 = extractvalue %AstValueAnd %0, 2
-  %4 = extractvalue %AstValueAnd %0, 3
+  %2 = extractvalue %AstValueAnd %0, 0
+  %3 = extractvalue %AstValueAnd %0, 1
+  %4 = extractvalue %AstValueAnd %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 25, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_or (%AstValueOr) {
 ;stmt0:
-  %2 = extractvalue %AstValueOr %0, 1
-  %3 = extractvalue %AstValueOr %0, 2
-  %4 = extractvalue %AstValueOr %0, 3
+  %2 = extractvalue %AstValueOr %0, 0
+  %3 = extractvalue %AstValueOr %0, 1
+  %4 = extractvalue %AstValueOr %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 23, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_xor (%AstValueXor) {
 ;stmt0:
-  %2 = extractvalue %AstValueXor %0, 1
-  %3 = extractvalue %AstValueXor %0, 2
-  %4 = extractvalue %AstValueXor %0, 3
+  %2 = extractvalue %AstValueXor %0, 0
+  %3 = extractvalue %AstValueXor %0, 1
+  %4 = extractvalue %AstValueXor %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 24, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_eq (%AstValueEq) {
 ;stmt0:
-  %2 = extractvalue %AstValueEq %0, 1
-  %3 = extractvalue %AstValueEq %0, 2
-  %4 = extractvalue %AstValueEq %0, 3
+  %2 = extractvalue %AstValueEq %0, 0
+  %3 = extractvalue %AstValueEq %0, 1
+  %4 = extractvalue %AstValueEq %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 26, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_ne (%AstValueNe) {
 ;stmt0:
-  %2 = extractvalue %AstValueNe %0, 1
-  %3 = extractvalue %AstValueNe %0, 2
-  %4 = extractvalue %AstValueNe %0, 3
+  %2 = extractvalue %AstValueNe %0, 0
+  %3 = extractvalue %AstValueNe %0, 1
+  %4 = extractvalue %AstValueNe %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 27, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_lt (%AstValueLt) {
 ;stmt0:
-  %2 = extractvalue %AstValueLt %0, 1
-  %3 = extractvalue %AstValueLt %0, 2
-  %4 = extractvalue %AstValueLt %0, 3
+  %2 = extractvalue %AstValueLt %0, 0
+  %3 = extractvalue %AstValueLt %0, 1
+  %4 = extractvalue %AstValueLt %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 28, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_gt (%AstValueGt) {
 ;stmt0:
-  %2 = extractvalue %AstValueGt %0, 1
-  %3 = extractvalue %AstValueGt %0, 2
-  %4 = extractvalue %AstValueGt %0, 3
+  %2 = extractvalue %AstValueGt %0, 0
+  %3 = extractvalue %AstValueGt %0, 1
+  %4 = extractvalue %AstValueGt %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 29, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_le (%AstValueLe) {
 ;stmt0:
-  %2 = extractvalue %AstValueLe %0, 1
-  %3 = extractvalue %AstValueLe %0, 2
-  %4 = extractvalue %AstValueLe %0, 3
+  %2 = extractvalue %AstValueLe %0, 0
+  %3 = extractvalue %AstValueLe %0, 1
+  %4 = extractvalue %AstValueLe %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 30, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_ge (%AstValueGe) {
 ;stmt0:
-  %2 = extractvalue %AstValueGe %0, 1
-  %3 = extractvalue %AstValueGe %0, 2
-  %4 = extractvalue %AstValueGe %0, 3
+  %2 = extractvalue %AstValueGe %0, 0
+  %3 = extractvalue %AstValueGe %0, 1
+  %4 = extractvalue %AstValueGe %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func465 (%ValueKind 31, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_shr (%AstValueShr) {
 ;stmt0:
-  %2 = extractvalue %AstValueShr %0, 1
-  %3 = extractvalue %AstValueShr %0, 2
-  %4 = extractvalue %AstValueShr %0, 3
+  %2 = extractvalue %AstValueShr %0, 0
+  %3 = extractvalue %AstValueShr %0, 1
+  %4 = extractvalue %AstValueShr %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func504 (%ValueKind 34, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
 
 define %Value* @do_value_shl (%AstValueShl) {
 ;stmt0:
-  %2 = extractvalue %AstValueShl %0, 1
-  %3 = extractvalue %AstValueShl %0, 2
-  %4 = extractvalue %AstValueShl %0, 3
+  %2 = extractvalue %AstValueShl %0, 0
+  %3 = extractvalue %AstValueShl %0, 1
+  %4 = extractvalue %AstValueShl %0, 2
   %5 = call %Value* (%ValueKind, %union.1*, %union.1*, %TokenInfo*) @func504 (%ValueKind 33, %union.1* %2, %union.1* %3, %TokenInfo* %4)
   ret %Value* %5
 }
@@ -16650,7 +16629,7 @@ endif_0:
 
 define %Value* @func463 (%AstValueRef) {
 ;stmt0:
-  %2 = extractvalue %AstValueRef %0, 1
+  %2 = extractvalue %AstValueRef %0, 0
   %3 = call %Value* (%union.1*) @func456 (%union.1* %2)
 ;stmt1:
   %4 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
@@ -16703,16 +16682,16 @@ endif_1:
 ;stmt6:
   %26 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %27 = load %Type*, %Type** %26
-  %28 = extractvalue %AstValueRef %0, 2
+  %28 = extractvalue %AstValueRef %0, 1
   %29 = call %Type* (%Type*, %TokenInfo*) @func380 (%Type* %27, %TokenInfo* %28)
 ;stmt7:
-  %30 = extractvalue %AstValueRef %0, 2
+  %30 = extractvalue %AstValueRef %0, 1
   %31 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 13, %Type* %29, %TokenInfo* %30)
 ;stmt8:
   %32 = getelementptr inbounds %Value, %Value* %31, i1 0, i32 10
   %33 = insertvalue %ValueUn zeroinitializer, %Type* %29, 0
   %34 = insertvalue %ValueUn %33, %Value* %3, 1
-  %35 = extractvalue %AstValueRef %0, 2
+  %35 = extractvalue %AstValueRef %0, 1
   %36 = insertvalue %ValueUn %34, %TokenInfo* %35, 2
   store %ValueUn %36, %ValueUn* %32, align 8
 ;stmt9:
@@ -16721,7 +16700,7 @@ endif_1:
 
 define %Value* @func464 (%AstValueDeref) {
 ;stmt0:
-  %2 = extractvalue %AstValueDeref %0, 1
+  %2 = extractvalue %AstValueDeref %0, 0
   %3 = call %Value* (%union.1*) @func456 (%union.1* %2)
 ;stmt1:
   %4 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
@@ -16749,7 +16728,7 @@ then_1:
   %15 = load %TokenInfo*, %TokenInfo** %14
   call void (%Str, %TokenInfo*) @error (%Str %13, %TokenInfo* %15)
 ;stmt5:
-  %16 = extractvalue %AstValueDeref %0, 2
+  %16 = extractvalue %AstValueDeref %0, 1
   %17 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %16)
   ret %Value* %17
   br label %endif_1
@@ -16763,13 +16742,13 @@ endif_1:
   %22 = getelementptr inbounds %TypePointer, %TypePointer* %21, i1 0, i32 0
   %23 = load %Type*, %Type** %22
 ;stmt7:
-  %24 = extractvalue %AstValueDeref %0, 2
+  %24 = extractvalue %AstValueDeref %0, 1
   %25 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 14, %Type* %23, %TokenInfo* %24)
 ;stmt8:
   %26 = getelementptr inbounds %Value, %Value* %25, i1 0, i32 10
   %27 = insertvalue %ValueUn zeroinitializer, %Type* %23, 0
   %28 = insertvalue %ValueUn %27, %Value* %3, 1
-  %29 = extractvalue %AstValueDeref %0, 2
+  %29 = extractvalue %AstValueDeref %0, 1
   %30 = insertvalue %ValueUn %28, %TokenInfo* %29, 2
   store %ValueUn %30, %ValueUn* %26, align 8
 ;stmt9:
@@ -18500,7 +18479,7 @@ fail:
 
 define %Value* @func501 (%AstValuePlus) {
 ;stmt0:
-  %2 = extractvalue %AstValuePlus %0, 1
+  %2 = extractvalue %AstValuePlus %0, 0
   %3 = call %Value* (%union.1*) @func456 (%union.1* %2)
 ;stmt1:
   %4 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
@@ -18524,7 +18503,7 @@ then_1:
   %11 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 2
   %12 = getelementptr inbounds %ValueImm, %ValueImm* %11, i1 0, i32 1
   %13 = load %Int64, %Int64* %12
-  %14 = extractvalue %AstValuePlus %0, 2
+  %14 = extractvalue %AstValuePlus %0, 1
   %15 = call %Value* (%Type*, %Int64, %TokenInfo*) @func437 (%Type* %10, %Int64 %13, %TokenInfo* %14)
   ret %Value* %15
   br label %endif_1
@@ -18534,7 +18513,7 @@ endif_1:
 ;stmt5:
   %17 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %18 = load %Type*, %Type** %17
-  %19 = extractvalue %AstValuePlus %0, 2
+  %19 = extractvalue %AstValuePlus %0, 1
   %20 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 17, %Type* %18, %TokenInfo* %19)
 ;stmt6:
   %21 = getelementptr inbounds %Value, %Value* %20, i1 0, i32 10
@@ -18542,7 +18521,7 @@ endif_1:
   %23 = load %Type*, %Type** %22
   %24 = insertvalue %ValueUn zeroinitializer, %Type* %23, 0
   %25 = insertvalue %ValueUn %24, %Value* %3, 1
-  %26 = extractvalue %AstValuePlus %0, 2
+  %26 = extractvalue %AstValuePlus %0, 1
   %27 = insertvalue %ValueUn %25, %TokenInfo* %26, 2
   store %ValueUn %27, %ValueUn* %21, align 8
 ;stmt7:
@@ -18551,14 +18530,14 @@ endif_1:
   br label %fail
 fail:
 ;stmt9:
-  %29 = extractvalue %AstValuePlus %0, 2
+  %29 = extractvalue %AstValuePlus %0, 1
   %30 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %29)
   ret %Value* %30
 }
 
 define %Value* @func502 (%AstValueMinus) {
 ;stmt0:
-  %2 = extractvalue %AstValueMinus %0, 1
+  %2 = extractvalue %AstValueMinus %0, 0
   %3 = call %Value* (%union.1*) @func456 (%union.1* %2)
 ;stmt1:
   %4 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
@@ -18583,7 +18562,7 @@ then_1:
   %12 = getelementptr inbounds %ValueImm, %ValueImm* %11, i1 0, i32 1
   %13 = load %Int64, %Int64* %12
   %14 = sub nsw %Int64 0, %13
-  %15 = extractvalue %AstValueMinus %0, 2
+  %15 = extractvalue %AstValueMinus %0, 1
   %16 = call %Value* (%Type*, %Int64, %TokenInfo*) @func437 (%Type* %10, %Int64 %14, %TokenInfo* %15)
   ret %Value* %16
   br label %endif_1
@@ -18593,7 +18572,7 @@ endif_1:
 ;stmt5:
   %18 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %19 = load %Type*, %Type** %18
-  %20 = extractvalue %AstValueMinus %0, 2
+  %20 = extractvalue %AstValueMinus %0, 1
   %21 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 16, %Type* %19, %TokenInfo* %20)
 ;stmt6:
   %22 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 10
@@ -18601,7 +18580,7 @@ endif_1:
   %24 = load %Type*, %Type** %23
   %25 = insertvalue %ValueUn zeroinitializer, %Type* %24, 0
   %26 = insertvalue %ValueUn %25, %Value* %3, 1
-  %27 = extractvalue %AstValueMinus %0, 2
+  %27 = extractvalue %AstValueMinus %0, 1
   %28 = insertvalue %ValueUn %26, %TokenInfo* %27, 2
   store %ValueUn %28, %ValueUn* %22, align 8
 ;stmt7:
@@ -18610,14 +18589,14 @@ endif_1:
   br label %fail
 fail:
 ;stmt9:
-  %30 = extractvalue %AstValueMinus %0, 2
+  %30 = extractvalue %AstValueMinus %0, 1
   %31 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %30)
   ret %Value* %31
 }
 
 define %Value* @func503 (%AstValueNot) {
 ;stmt0:
-  %2 = extractvalue %AstValueNot %0, 1
+  %2 = extractvalue %AstValueNot %0, 0
   %3 = call %Value* (%union.1*) @func456 (%union.1* %2)
 ;stmt1:
   %4 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
@@ -18642,7 +18621,7 @@ then_1:
   %12 = getelementptr inbounds %ValueImm, %ValueImm* %11, i1 0, i32 1
   %13 = load %Int64, %Int64* %12
   %14 = xor %Int64 %13, -1
-  %15 = extractvalue %AstValueNot %0, 2
+  %15 = extractvalue %AstValueNot %0, 1
   %16 = call %Value* (%Type*, %Int64, %TokenInfo*) @func437 (%Type* %10, %Int64 %14, %TokenInfo* %15)
   ret %Value* %16
   br label %endif_1
@@ -18652,7 +18631,7 @@ endif_1:
 ;stmt5:
   %18 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %19 = load %Type*, %Type** %18
-  %20 = extractvalue %AstValueNot %0, 2
+  %20 = extractvalue %AstValueNot %0, 1
   %21 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func435 (%ValueKind 15, %Type* %19, %TokenInfo* %20)
 ;stmt6:
   %22 = getelementptr inbounds %Value, %Value* %21, i1 0, i32 10
@@ -18660,7 +18639,7 @@ endif_1:
   %24 = load %Type*, %Type** %23
   %25 = insertvalue %ValueUn zeroinitializer, %Type* %24, 0
   %26 = insertvalue %ValueUn %25, %Value* %3, 1
-  %27 = extractvalue %AstValueNot %0, 2
+  %27 = extractvalue %AstValueNot %0, 1
   %28 = insertvalue %ValueUn %26, %TokenInfo* %27, 2
   store %ValueUn %28, %ValueUn* %22, align 8
 ;stmt7:
@@ -18669,7 +18648,7 @@ endif_1:
   br label %fail
 fail:
 ;stmt9:
-  %30 = extractvalue %AstValueNot %0, 2
+  %30 = extractvalue %AstValueNot %0, 1
   %31 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %30)
   ret %Value* %31
 }

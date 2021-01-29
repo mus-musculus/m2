@@ -587,20 +587,6 @@ ast_value_new = (x : AstValue) -> *AstValue {
 }
 
 
-/*
-prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
-  nv = ast_value_new(k, (kind=k, value=v, ti=ti) to AstValueUnary, ti)
-  nv.un := (kind=k, value=v, ti=ti)
-  return nv
-}
-*/
-
-/*infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
-  v = ast_value_new(k, (kind=k, left=l, right=r, ti=ti) to AstValueBinary, ti)
-  //v.bin := (kind=k, left=l, right=r, ti=ti)
-  return v
-}*/
-
 exist parse_value2 : AstValueParser
 exist parse_value3 : AstValueParser
 exist parse_value4 : AstValueParser
@@ -615,16 +601,6 @@ exist parse_value12 : AstValueParser
 exist parse_value_term : AstValueParser
 
 parse_value = AstValueParser {
-  /*if is_it_type() {
-    ct = ctok()
-    t = parse_type()
-    v = parse_value()
-    nv = ast_value_new(#AstValueCast, t.ti)
-    nv.cast.value := v
-    nv.cast.type := t
-    return nv
-  }*/
-
   v = parse_value2() to Var *AstValue
   if v == nil {return nil}
   ti = &ctok().ti
@@ -632,7 +608,7 @@ parse_value = AstValueParser {
     skip_nl()
     l = v
     r = parse_value()
-    v := ast_value_new ((kind=#AstValueOr, left=l, right=r, ti=ti) to AstValueOr)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueOr)
   }
   return v
 }
@@ -647,7 +623,7 @@ parse_value2 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value2()
-    v := ast_value_new ((kind=#AstValueXor, left=l, right=r, ti=ti) to AstValueXor)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueXor)
   }
   return v
 }
@@ -661,7 +637,7 @@ parse_value3 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value3()
-    v := ast_value_new ((kind=#AstValueAnd, left=l, right=r, ti=ti) to AstValueAnd)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueAnd)
   }
   return v
 }
@@ -676,12 +652,12 @@ parse_value4 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value4()
-      v := ast_value_new ((kind=#AstValueEq, left=l, right=r, ti=ti) to AstValueEq)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueEq)
     } else if match("!=") {
       skip_nl()
       l = v
       r = parse_value4()
-      v := ast_value_new ((kind=#AstValueNe, left=l, right=r, ti=ti) to AstValueNe)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueNe)
     } else {
       break
     }
@@ -699,22 +675,22 @@ parse_value5 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value6()
-      v := ast_value_new ((kind=#AstValueLt, left=l, right=r, ti=ti) to AstValueLt)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueLt)
     } else if match(">") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := ast_value_new ((kind=#AstValueGt, left=l, right=r, ti=ti) to AstValueGt)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueGt)
     } else if match("<=") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := ast_value_new ((kind=#AstValueLe, left=l, right=r, ti=ti) to AstValueLe)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueLe)
     } else if match(">=") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := ast_value_new ((kind=#AstValueGe, left=l, right=r, ti=ti) to AstValueGe)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueGe)
     } else {
       break
     }
@@ -732,12 +708,12 @@ parse_value6 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value7()
-      v := ast_value_new ((kind=#AstValueShl, left=l, right=r, ti=ti) to AstValueShl)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueShl)
     } else if match(">>") {
       skip_nl()
       l = v
       r = parse_value7()
-      v := ast_value_new((kind=#AstValueShr, left=l, right=r, ti=ti) to AstValueShr)
+      v := ast_value_new((left=l, right=r, ti=ti) to AstValueShr)
     } else {
       break
     }
@@ -755,12 +731,12 @@ parse_value7 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value8()
-      v := ast_value_new ((kind=#AstValueAdd, left=l, right=r, ti=ti) to AstValueAdd)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueAdd)
     } else if match("-") {
       skip_nl()
       l = v
       r = parse_value8()
-      v := ast_value_new ((kind=#AstValueSub, left=l, right=r, ti=ti) to AstValueSub)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueSub)
     } else {
       break
     }
@@ -778,17 +754,17 @@ parse_value8 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value9()
-      v := ast_value_new ((kind=#AstValueMul, left=l, right=r, ti=ti) to AstValueMul)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueMul)
     } else if match("/") {
       skip_nl()
       l = v
       r = parse_value9()
-      v := ast_value_new ((kind=#AstValueDiv, left=l, right=r, ti=ti) to AstValueDiv)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueDiv)
     } else if match("%") {
       skip_nl()
       l = v
       r = parse_value9()
-      v := ast_value_new ((kind=#AstValueMod, left=l, right=r, ti=ti) to AstValueMod)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueMod)
     } else {
       break
     }
@@ -820,19 +796,19 @@ parse_value10 = AstValueParser {
   ti = &ctok().ti
   if match("*") {
     r = parse_value10()
-    v := ast_value_new ((kind=#AstValueDeref, value=r, ti=ti) to AstValueDeref)
+    v := ast_value_new ((value=r, ti=ti) to AstValueDeref)
   } else if match("&") {
     r = parse_value11()
-    v := ast_value_new ((kind=#AstValueRef, value=r, ti=ti) to AstValueRef)
+    v := ast_value_new ((value=r, ti=ti) to AstValueRef)
   } else if match("not") {
     r = parse_value10()
-    v := ast_value_new ((kind=#AstValueNot, value=r, ti=ti) to AstValueNot)
+    v := ast_value_new ((value=r, ti=ti) to AstValueNot)
   } else if match("-") {
     r = parse_value10()
-    v := ast_value_new ((kind=#AstValueMinus, value=r, ti=ti) to AstValueMinus)
+    v := ast_value_new ((value=r, ti=ti) to AstValueMinus)
   } else if match("+") {
     r = parse_value10()
-    v := ast_value_new ((kind=#AstValuePlus, value=r, ti=ti) to AstValuePlus)
+    v := ast_value_new ((value=r, ti=ti) to AstValuePlus)
   } else if match("sizeof") {
     ti_sizeof = &ctok().ti
     t = parse_type()
