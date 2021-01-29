@@ -825,19 +825,31 @@ parse_value10 = AstValueParser {
   ti = &ctok().ti
   if match("*") {
     r = parse_value10()
-    v := prefix(#AstValueDeref, r, ti)
+    //v := prefix(#AstValueDeref, r, ti)
+
+    v := ast_value_new(#AstValueDeref, (kind=#AstValueDeref, value=r, ti=ti) to AstValueDeref, ti)
+    v.un := (kind=#AstValueDeref, value=r, ti=ti)
+
   } else if match("&") {
     r = parse_value11()
-    v := prefix(#AstValueRef, r, ti)
+    //v := prefix(#AstValueRef, r, ti)
+    v := ast_value_new(#AstValueRef, (kind=#AstValueRef, value=r, ti=ti) to AstValueRef, ti)
+    v.un := (kind=#AstValueRef, value=r, ti=ti)
   } else if match("not") {
     r = parse_value10()
-    v := prefix(#AstValueNot, r, ti)
+    //v := prefix(#AstValueNot, r, ti)
+    v := ast_value_new(#AstValueNot, (kind=#AstValueNot, value=r, ti=ti) to AstValueNot, ti)
+    v.un := (kind=#AstValueNot, value=r, ti=ti)
   } else if match("-") {
     r = parse_value10()
-    v := prefix(#AstValueMinus, r, ti)
+    //v := prefix(#AstValueMinus, r, ti)
+    v := ast_value_new(#AstValueMinus, (kind=#AstValueMinus, value=r, ti=ti) to AstValueMinus, ti)
+    v.un := (kind=#AstValueMinus, value=r, ti=ti)
   } else if match("+") {
     r = parse_value10()
-    v := prefix(#AstValuePlus, r, ti)
+    //v := prefix(#AstValuePlus, r, ti)
+    v := ast_value_new(#AstValuePlus, (kind=#AstValuePlus, value=r, ti=ti) to AstValuePlus, ti)
+    v.un := (kind=#AstValuePlus, value=r, ti=ti)
   } else if match("sizeof") {
     ti_sizeof = &ctok().ti
     t = parse_type()

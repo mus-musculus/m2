@@ -169,7 +169,12 @@ AstValueRecord = (values : Map, ti : *TokenInfo)
 AstValueArray  = (items : List, ti : *TokenInfo)
 
 AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
-AstValueUnary  = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueUnary  = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueRef    = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueDeref  = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueMinus  = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValuePlus   = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueNot    = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 
 AstValueSizeof  = Tagged (type : *AstType, ti : *TokenInfo)
 AstValueAlignof = Tagged (type : *AstType, ti : *TokenInfo)
@@ -188,6 +193,11 @@ AstValue2 = AstValueName or
             AstValueNumber or
             AstValueFunc or
             AstValueUnary or
+            AstValueRef or
+            AstValueDeref or
+            AstValueMinus or
+            AstValuePlus or
+            AstValueNot or
             AstValueBinary or
             AstValueCall or
             AstValueIndex or

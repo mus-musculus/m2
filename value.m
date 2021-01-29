@@ -135,18 +135,18 @@ do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
   v = when x.kind {
-    #AstValueId      => do_value_named   (x.name)
-    #AstValueNum     => do_value_numeric (x.num)
+    #AstValueId      => do_value_named   (x.data as AstValueName)
+    #AstValueNum     => do_value_numeric (x.data as AstValueNumber)
     #AstValueFunc    => do_value_func    (&x.func)
-    #AstValueArr     => do_value_array   (x.arr)
-    #AstValueRec     => do_value_record  (x.rec)
-    #AstValueStr     => do_value_string  (x.str)
+    #AstValueArr     => do_value_array   (x.data as AstValueArray)
+    #AstValueRec     => do_value_record  (x.data as AstValueRecord)
+    #AstValueStr     => do_value_string  (x.data as AstValueString)
 
-    #AstValueRef     => do_value_ref     (x.un)
-    #AstValueDeref   => do_value_deref   (x.un)
-    #AstValueNot     => do_value_not     (x.un)
-    #AstValueMinus   => do_value_minus   (x.un)
-    #AstValuePlus    => do_value_plus    (x.un)
+    #AstValueRef     => do_value_ref     (x.data as AstValueUnary)
+    #AstValueDeref   => do_value_deref   (x.data as AstValueUnary)
+    #AstValueNot     => do_value_not     (x.data as AstValueUnary)
+    #AstValueMinus   => do_value_minus   (x.data as AstValueUnary)
+    #AstValuePlus    => do_value_plus    (x.data as AstValueUnary)
 
     #AstValueAdd     => do_value_bin (#ValueAdd, x.bin)
     #AstValueSub     => do_value_bin (#ValueSub, x.bin)
