@@ -154,30 +154,50 @@ AstValueKind = {
   #AstValueSizeof, #AstValueAlignof, #AstValueWhen
 }
 
-AstValueFunc = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
-AstValueCall = (func : *AstValue, args : List, ti : *TokenInfo)
-AstValueIndex = (array, index : *AstValue, ti : *TokenInfo)
+AstValueFunc   = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
+AstValueCall   = (func : *AstValue, args : List, ti : *TokenInfo)
+AstValueIndex  = (array, index : *AstValue, ti : *TokenInfo)
 AstValueAccess = (rec : *AstValue, field_id : *AstId, ti : *TokenInfo)
-AstValueCast = (value : *AstValue, type : *AstType, ti : *TokenInfo)
-AstValueIs = (value : *AstValue, type : *AstType, ti : *TokenInfo)
-AstValueAs = (value : *AstValue, type : *AstType, ti : *TokenInfo)
+AstValueCast   = Tagged (value : *AstValue, type : *AstType, ti : *TokenInfo)
+AstValueIs     = Tagged (value : *AstValue, type : *AstType, ti : *TokenInfo)
+AstValueAs     = Tagged (value : *AstValue, type : *AstType, ti : *TokenInfo)
 
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue, ti : *TokenInfo)
-AstValueWhen = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenInfo)
+AstValueWhen   = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenInfo)
 
 AstValueRecord = (values : Map, ti : *TokenInfo)
-AstValueArray = (items : List, ti : *TokenInfo)
+AstValueArray  = (items : List, ti : *TokenInfo)
 
 AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
-AstValueUnary = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
+AstValueUnary  = (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 
-AstValueSizeof = (type : *AstType, ti : *TokenInfo)
-AstValueAlignof = (type : *AstType, ti : *TokenInfo)
+AstValueSizeof  = Tagged (type : *AstType, ti : *TokenInfo)
+AstValueAlignof = Tagged (type : *AstType, ti : *TokenInfo)
 
-AstValueString = (string : Str, ti : *TokenInfo)
-AstValueNumber = (string : Str, ti : *TokenInfo)
+AstValueString = Tagged (string : Str, ti : *TokenInfo)
+AstValueNumber = Tagged (string : Str, ti : *TokenInfo)
 
 AstValueName = AstName
+
+
+AstValue2 = AstValueName or
+            AstValueRecord or
+            AstValueArray or
+            AstValueString or
+            AstValueNumber or
+            AstValueFunc or
+            AstValueUnary or
+            AstValueBinary or
+            AstValueCall or
+            AstValueIndex or
+            AstValueAccess or
+            AstValueCast or
+            AstValueIs or
+            AstValueAs or
+            AstValueWhen or
+            AstValueSizeof or
+            AstValueAlignof
+
 
 AstValue = (
   kind : AstValueKind
