@@ -208,7 +208,7 @@ AstValueParserError = {#Error}
 
 
 
-AstValue2 = AstValueParserError or
+AstValue =  AstValueParserError or
             AstValueName or
             AstValueRecord or
             AstValueArray or
@@ -253,7 +253,7 @@ AstValue2 = AstValueParserError or
 
 
 
-AstValue = (
+/*AstValue = (
   kind : AstValueKind
 
   data : AstValue2
@@ -283,7 +283,7 @@ AstValue = (
 
 
   ti : *TokenInfo
-)
+)*/
 
 
 

@@ -12,7 +12,7 @@ exist ctok : () -> *Token
 exist separator : () -> Bool
 exist parse_import : () -> *AstNode
 exist parse_decl : (arghack : Bool) -> *AstDecl
-exist ast_value_new : (k : AstValueKind, x : AstValue2, ti : *TokenInfo) -> *AstValue
+exist ast_value_new : (x : AstValue) -> *AstValue
 exist parse_bind_type : () -> *AstNodeBindType
 exist parse_bind_value : () -> *AstNodeBindValue
 
@@ -245,8 +245,7 @@ parse = (filename : Str) -> *AstModule or Unit {
 
       decl.type.func.arghack := xarghack
 
-      v = ast_value_new (#AstValueFunc, (type=decl.type, block_stmt=unit) to AstValueFunc, decl.ti)
-      v.func := (type=decl.type, block_stmt=unit) to AstValueFunc
+      v = ast_value_new ((type=decl.type, block_stmt=unit) to AstValueFunc)
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
@@ -580,10 +579,10 @@ parse_decl = (arghack : Bool) -> *AstDecl {
 AstValueParser = () -> *AstValue
 
 
-ast_value_new = (k : AstValueKind, x : AstValue2, ti : *TokenInfo) -> *AstValue {
+ast_value_new = (x : AstValue) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
-  assert(v != nil, "ast_value_new malloc")
-  *v := (kind=k, ti=ti, data=x)
+  assert(v != nil, "ast_value_new malloc fail")
+  *v := x
   return v
 }
 
@@ -598,7 +597,7 @@ prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
 
 /*infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
   v = ast_value_new(k, (kind=k, left=l, right=r, ti=ti) to AstValueBinary, ti)
-  v.bin := (kind=k, left=l, right=r, ti=ti)
+  //v.bin := (kind=k, left=l, right=r, ti=ti)
   return v
 }*/
 
@@ -633,9 +632,7 @@ parse_value = AstValueParser {
     skip_nl()
     l = v
     r = parse_value()
-    //v := infix(#AstValueOr, l, r, ti)
-    v := ast_value_new(#AstValueOr, (kind=#AstValueOr, left=l, right=r, ti=ti) to AstValueOr, ti)
-    v.bin := (kind=#AstValueOr, left=l, right=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueOr, left=l, right=r, ti=ti) to AstValueOr)
   }
   return v
 }
@@ -650,9 +647,7 @@ parse_value2 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value2()
-    //v := infix(#AstValueXor, l, r, ti)
-    v := ast_value_new(#AstValueXor, (kind=#AstValueXor, left=l, right=r, ti=ti) to AstValueXor, ti)
-    v.bin := (kind=#AstValueXor, left=l, right=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueXor, left=l, right=r, ti=ti) to AstValueXor)
   }
   return v
 }
@@ -666,9 +661,7 @@ parse_value3 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value3()
-    //v := infix(#AstValueAnd, l, r, ti)
-    v := ast_value_new(#AstValueAnd, (kind=#AstValueAnd, left=l, right=r, ti=ti) to AstValueAnd, ti)
-    v.bin := (kind=#AstValueAnd, left=l, right=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueAnd, left=l, right=r, ti=ti) to AstValueAnd)
   }
   return v
 }
@@ -683,16 +676,12 @@ parse_value4 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value4()
-      //v := infix(#AstValueEq, l, r, ti)
-      v := ast_value_new(#AstValueEq, (kind=#AstValueEq, left=l, right=r, ti=ti) to AstValueEq, ti)
-      v.bin := (kind=#AstValueEq, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueEq, left=l, right=r, ti=ti) to AstValueEq)
     } else if match("!=") {
       skip_nl()
       l = v
       r = parse_value4()
-      //v := infix(#AstValueNe, l, r, ti)
-      v := ast_value_new(#AstValueNe, (kind=#AstValueNe, left=l, right=r, ti=ti) to AstValueNe, ti)
-      v.bin := (kind=#AstValueNe, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueNe, left=l, right=r, ti=ti) to AstValueNe)
     } else {
       break
     }
@@ -710,30 +699,22 @@ parse_value5 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value6()
-      //v := infix(#AstValueLt, l, r, ti)
-      v := ast_value_new(#AstValueLt, (kind=#AstValueLt, left=l, right=r, ti=ti) to AstValueLt, ti)
-      v.bin := (kind=#AstValueLt, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueLt, left=l, right=r, ti=ti) to AstValueLt)
     } else if match(">") {
       skip_nl()
       l = v
       r = parse_value6()
-      //v := infix(#AstValueGt, l, r, ti)
-      v := ast_value_new(#AstValueGt, (kind=#AstValueGt, left=l, right=r, ti=ti) to AstValueGt, ti)
-      v.bin := (kind=#AstValueGt, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueGt, left=l, right=r, ti=ti) to AstValueGt)
     } else if match("<=") {
       skip_nl()
       l = v
       r = parse_value6()
-      //v := infix(#AstValueLe, l, r, ti)
-      v := ast_value_new(#AstValueLe, (kind=#AstValueLe, left=l, right=r, ti=ti) to AstValueLe, ti)
-      v.bin := (kind=#AstValueLe, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueLe, left=l, right=r, ti=ti) to AstValueLe)
     } else if match(">=") {
       skip_nl()
       l = v
       r = parse_value6()
-      //v := infix(#AstValueGe, l, r, ti)
-      v := ast_value_new(#AstValueGe, (kind=#AstValueGe, left=l, right=r, ti=ti) to AstValueGe, ti)
-      v.bin := (kind=#AstValueGe, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueGe, left=l, right=r, ti=ti) to AstValueGe)
     } else {
       break
     }
@@ -751,16 +732,12 @@ parse_value6 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value7()
-      //v := infix(#AstValueShl, l, r, ti)
-      v := ast_value_new(#AstValueShl, (kind=#AstValueShl, left=l, right=r, ti=ti) to AstValueShl, ti)
-      v.bin := (kind=#AstValueShl, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueShl, left=l, right=r, ti=ti) to AstValueShl)
     } else if match(">>") {
       skip_nl()
       l = v
       r = parse_value7()
-      //v := infix(#AstValueShr, l, r, ti)
-      v := ast_value_new(#AstValueShr, (kind=#AstValueShr, left=l, right=r, ti=ti) to AstValueShr, ti)
-      v.bin := (kind=#AstValueShr, left=l, right=r, ti=ti)
+      v := ast_value_new((kind=#AstValueShr, left=l, right=r, ti=ti) to AstValueShr)
     } else {
       break
     }
@@ -778,16 +755,12 @@ parse_value7 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value8()
-      //v := infix(#AstValueAdd, l, r, ti)
-      v := ast_value_new(#AstValueAdd, (kind=#AstValueAdd, left=l, right=r, ti=ti) to AstValueAdd, ti)
-      v.bin := (kind=#AstValueAdd, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueAdd, left=l, right=r, ti=ti) to AstValueAdd)
     } else if match("-") {
       skip_nl()
       l = v
       r = parse_value8()
-      //v := infix(#AstValueSub, l, r, ti)
-      v := ast_value_new(#AstValueSub, (kind=#AstValueSub, left=l, right=r, ti=ti) to AstValueSub, ti)
-      v.bin := (kind=#AstValueSub, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueSub, left=l, right=r, ti=ti) to AstValueSub)
     } else {
       break
     }
@@ -805,23 +778,17 @@ parse_value8 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value9()
-      //v := infix(#AstValueMul, l, r, ti)
-      v := ast_value_new(#AstValueMul, (kind=#AstValueMul, left=l, right=r, ti=ti) to AstValueMul, ti)
-      v.bin := (kind=#AstValueMul, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueMul, left=l, right=r, ti=ti) to AstValueMul)
     } else if match("/") {
       skip_nl()
       l = v
       r = parse_value9()
-      //v := infix(#AstValueDiv, l, r, ti)
-      v := ast_value_new(#AstValueDiv, (kind=#AstValueDiv, left=l, right=r, ti=ti) to AstValueDiv, ti)
-      v.bin := (kind=#AstValueDiv, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueDiv, left=l, right=r, ti=ti) to AstValueDiv)
     } else if match("%") {
       skip_nl()
       l = v
       r = parse_value9()
-      //v := infix(#AstValueMod, l, r, ti)
-      v := ast_value_new(#AstValueMod, (kind=#AstValueMod, left=l, right=r, ti=ti) to AstValueMod, ti)
-      v.bin := (kind=#AstValueMod, left=l, right=r, ti=ti)
+      v := ast_value_new ((kind=#AstValueMod, left=l, right=r, ti=ti) to AstValueMod)
     } else {
       break
     }
@@ -836,19 +803,13 @@ parse_value9 = AstValueParser {
   ti = &ctok().ti
   if match("to") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueCast, (value=v, type=t, ti=ti) to AstValueCast, ti)
-    nv.cast := (value=v, type=t, ti=ti)
-    v := nv
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueCast)
   } else if match("is") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueIs, (value=v, type=t, ti=ti) to AstValueIs, ti)
-    nv.is := (value=v, type=t, ti=ti)
-    v := nv
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueIs)
   } else if match("as") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueAs, (value=v, type=t, ti=ti) to AstValueAs, ti)
-    nv.as := (value=v, type=t, ti=ti)
-    v := nv
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueAs)
   }
   return v
 }
@@ -859,30 +820,19 @@ parse_value10 = AstValueParser {
   ti = &ctok().ti
   if match("*") {
     r = parse_value10()
-    //v := prefix(#AstValueDeref, r, ti)
-    v := ast_value_new(#AstValueDeref, (kind=#AstValueDeref, value=r, ti=ti) to AstValueDeref, ti)
-    v.un := (kind=#AstValueDeref, value=r, ti=ti)
-
+    v := ast_value_new ((kind=#AstValueDeref, value=r, ti=ti) to AstValueDeref)
   } else if match("&") {
     r = parse_value11()
-    //v := prefix(#AstValueRef, r, ti)
-    v := ast_value_new(#AstValueRef, (kind=#AstValueRef, value=r, ti=ti) to AstValueRef, ti)
-    v.un := (kind=#AstValueRef, value=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueRef, value=r, ti=ti) to AstValueRef)
   } else if match("not") {
     r = parse_value10()
-    //v := prefix(#AstValueNot, r, ti)
-    v := ast_value_new(#AstValueNot, (kind=#AstValueNot, value=r, ti=ti) to AstValueNot, ti)
-    v.un := (kind=#AstValueNot, value=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueNot, value=r, ti=ti) to AstValueNot)
   } else if match("-") {
     r = parse_value10()
-    //v := prefix(#AstValueMinus, r, ti)
-    v := ast_value_new(#AstValueMinus, (kind=#AstValueMinus, value=r, ti=ti) to AstValueMinus, ti)
-    v.un := (kind=#AstValueMinus, value=r, ti=ti)
+    v := ast_value_new ((kind=#AstValueMinus, value=r, ti=ti) to AstValueMinus)
   } else if match("+") {
     r = parse_value10()
-    //v := prefix(#AstValuePlus, r, ti)
-    v := ast_value_new(#AstValuePlus, (kind=#AstValuePlus, value=r, ti=ti) to AstValuePlus, ti)
-    v.un := (kind=#AstValuePlus, value=r, ti=ti)
+    v := ast_value_new ((kind=#AstValuePlus, value=r, ti=ti) to AstValuePlus)
   } else if match("sizeof") {
     ti_sizeof = &ctok().ti
     t = parse_type()
@@ -890,9 +840,7 @@ parse_value10 = AstValueParser {
       error("sizeof expected <type>", ti_sizeof)
       return nil
     }
-    nv = ast_value_new(#AstValueSizeof, (type=t, ti=ti) to AstValueSizeof, ti)
-    nv.sizeof := (type=t, ti=ti)
-    v := nv
+    v := ast_value_new ((type=t, ti=ti) to AstValueSizeof)
 
   } else if match("alignof") {
     ti_alignof = &ctok().ti
@@ -901,9 +849,7 @@ parse_value10 = AstValueParser {
       error("alignof expected <type>", ti_alignof)
       return nil
     }
-    nv = ast_value_new(#AstValueAlignof, (type=t, ti=ti) to AstValueAlignof, ti)
-    nv.alignof := (type=t, ti=ti)
-    v := nv
+    v := ast_value_new ((type=t, ti=ti) to AstValueAlignof)
   } else {
     v := parse_value11()
   }
@@ -940,20 +886,14 @@ parse_value11 = AstValueParser {
         }
       }
 
-      nv = ast_value_new (#AstValueCall, (func=v, args=*arglist, ti=ti) to AstValueCall, ti)
-      nv.call := (func=v, args=*arglist, ti=ti)
-      v := nv
+      v := ast_value_new ((func=v, args=*arglist, ti=ti) to AstValueCall)
     } else if match("[") {
       i = parse_value()
       match("]")
-      nv = ast_value_new (#AstValueIndex, (array=v, index=i, ti=ti) to AstValueIndex, ti)
-      nv.index := (array=v, index=i, ti=ti)
-      v := nv
+      v := ast_value_new ((array=v, index=i, ti=ti) to AstValueIndex)
     } else if match(".") {
       fid = parse_id()
-      nv = ast_value_new (#AstValueAccess, (rec=v, field_id=fid, ti=ti) to AstValueAccess, ti)
-      nv.access := (rec=v, field_id=fid, ti=ti)
-      v := nv
+      v := ast_value_new ((rec=v, field_id=fid, ti=ti) to AstValueAccess)
     } else {
       break
     }
@@ -1036,10 +976,7 @@ parse_value_id = AstValueParser {
   id = parse_id()
   if id == nil {return nil}
 
-  name = (id=id, ti=ti) to AstValueName
-  v = ast_value_new (#AstValueId, name, ti)
-  v.name := name
-  return v
+  return ast_value_new ((id=id, ti=ti) to AstValueName)
 
 fail:
   return nil
@@ -1083,9 +1020,7 @@ parse_value_when = AstValueParser {
     list_append(&variants, va)
   }
 
-  v = ast_value_new (#AstValueWhen, (x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen, &token.ti)
-  v.when := (x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen
-  return v
+  return ast_value_new ((x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen)
 }
 
 
@@ -1095,10 +1030,7 @@ parse_value_str = AstValueParser {
   len = strlen(text) + 1  // используй готовую инфу из токенинфо!
   str = dup(text)
   skip()
-
-  v = ast_value_new (#AstValueStr, (string=str, ti=&token.ti) to AstValueString, &token.ti)
-  v.str := (string=str, ti=&token.ti)
-  return v
+  return ast_value_new ((string=str, ti=&token.ti) to AstValueString)
 }
 
 
@@ -1117,9 +1049,7 @@ parse_value_rec = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueRec, (values=fields, ti=ti) to AstValueRecord, ti)
-  v.rec := (values=fields, ti=ti)
-  return v
+  return ast_value_new ((values=fields, ti=ti) to AstValueRecord)
 }
 
 
@@ -1139,9 +1069,7 @@ parse_value_array = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueArr, (items=items, ti=ti) to AstValueArray, ti)
-  v.arr := (items=items, ti=ti)
-  return v
+  return ast_value_new ((items=items, ti=ti) to AstValueArray)
 }
 
 
@@ -1156,23 +1084,15 @@ parse_value_func = AstValueParser {
   skip_nl()
   block_ti = &ctok().ti
   need("{")
-
   b = parse_stmt_block(block_ti)
-
-  v = ast_value_new (#AstValueFunc, (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc, func_ti)
-  v.func := (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc
-  return v
+  return ast_value_new ((type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc)
 }
 
 
 parse_value_extern = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
-
-  v = ast_value_new (#AstValueFunc, (type=t, block_stmt=unit, ti=ti) to AstValueFunc, ti)
-  v.func := (type=t, block_stmt=unit, ti=ti) to AstValueFunc
-  //v.extern := true
-  return v
+  return ast_value_new ((type=t, block_stmt=unit, ti=ti) to AstValueFunc)
 }
 
 
@@ -1183,9 +1103,7 @@ parse_value_num = AstValueParser {
   str = dup(&tok.text[0] to Str)
   skip()
 
-  v = ast_value_new (#AstValueNum, (string=str, ti=ti) to AstValueNumber, ti)
-  v.num := (string=str, ti=ti)
-  return v
+  return ast_value_new ((string=str, ti=ti) to AstValueNumber)
 }
 
 
@@ -1197,7 +1115,7 @@ parse_value_num = AstValueParser {
 // размещаем значение AstStmt в куче
 ast_stmt_boxing = (x : AstStmt) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
-  assert(s != nil, "ast_value_new malloc")
+  assert(s != nil, "ast_stmt_boxing malloc")
   *s := x
   return s
 }

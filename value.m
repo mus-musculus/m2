@@ -170,8 +170,7 @@ do_value_shl = (x : AstValueShl) -> *Value {return do_value_shift (#ValueShl, x.
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
-
-  xx = x.data
+  xx = *x
   v = when xx {
     AstValueName    => do_value_named   (xx as AstValueName)
     AstValueNumber  => do_value_numeric (xx as AstValueNumber)
@@ -225,25 +224,19 @@ do_valuex = DoValuex {
 
 
 do_lvalue = DoValue {
-  xx = x.data
+  xx = *x
   return when xx {
     AstValueName   => do_value_named  (xx to AstValueName)
     AstValueDeref  => do_value_deref  (xx to AstValueDeref)
     AstValueIndex  => do_value_index  (xx to AstValueIndex)
     AstValueAccess => do_value_access (xx to AstValueAccess)
     else => DoValue {
-      error ("invalid lvalue", x.ti)
-      return value_new_poison (x.ti)
+      error ("invalid lvalue12", nil)
+      return value_new_poison (nil)
     } (x)
   }
 }
 
-
-do_value_forbidden = DoValue {
-  error ("do_value_forbidden", x.ti)
-  fatal ("stop.")
-  return value_new_poison (x.ti)
-}
 
 
 do_value_when = (x : AstValueWhen) -> *Value {
