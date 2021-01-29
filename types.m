@@ -227,7 +227,6 @@ AstValue = (
   sizeof  : AstValueSizeof
   alignof : AstValueAlignof
 
-  extern  : Bool
 
   ti : *TokenInfo
 )

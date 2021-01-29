@@ -246,7 +246,7 @@ parse = (filename : Str) -> *AstModule or Unit {
       v = ast_value_new(#AstValueFunc, #Error, decl.ti)
       v.func.type := decl.type
       v.func.type.func.arghack := xarghack
-      v.extern := true
+      //v.extern := true
       v.func.block_stmt := unit
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
@@ -1121,7 +1121,7 @@ parse_value_extern = AstValueParser {
 
   v = ast_value_new(#AstValueFunc, #Error, ti)
   v.func := (type=t, block_stmt=unit, ti=ti) to AstValueFunc
-  v.extern := true
+  //v.extern := true
   return v
 }
 
