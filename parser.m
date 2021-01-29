@@ -309,10 +309,10 @@ parse_bind_value = () -> *AstNodeBindValue {
 /*                             Parse Type                                    */
 /*****************************************************************************/
 
-ast_type_new = (kind : AstTypeKind, ti : *TokenInfo) -> *AstType {
+ast_type_new = (kind : AstTypeKind, x : AstType2, ti : *TokenInfo) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  *t := (kind=kind, ti=ti)
+  *t := (kind=kind, ti=ti, data=x)
   return t
 }
 
@@ -340,7 +340,7 @@ parse_type0 = AstTypeParser {
     from = t
     _to = parse_type()
 
-    ft = ast_type_new(#AstTypeFunc, &tk.ti)
+    ft = ast_type_new(#AstTypeFunc, (from=from, to=_to, ti=&tk.ti) to AstTypeFunc, &tk.ti)
     ft.func := (from=from, to=_to, ti=&tk.ti)
     return ft
   }
@@ -353,22 +353,25 @@ parse_type1 = AstTypeParser {
 
   tk = ctok()
   if match("or") {
-    tx = ast_type_new(#AstTypeUnion, &tk.ti)
-    list_init(&tx.union.types)
 
-    list_append(&tx.union.types, t)
+    types = 0 to Var List
+    list_init(&types)
+
+    list_append(&types, t)
 
     skip_nl()
     t = parse_type2()
 
-    list_append(&tx.union.types, t)
+    list_append(&types, t)
 
     while match("or") {
       skip_nl()
       t = parse_type2()
-      list_append(&tx.union.types, t)
+      list_append(&types, t)
     }
 
+    tx = ast_type_new(#AstTypeUnion, (types=types, ti=&tk.ti) to AstTypeUnion, &tk.ti)
+    tx.union.types := types
     return tx
   }
 
@@ -380,22 +383,23 @@ parse_type2 = AstTypeParser {
   if match("*") {
     pointer_to = parse_type2()
 
-    t = ast_type_new(#AstTypePointer, &tk.ti)
+    t = ast_type_new(#AstTypePointer, (to=pointer_to, ti=&tk.ti) to AstTypePointer, &tk.ti)
     t.pointer := (to=pointer_to, ti=&tk.ti)
     return t
   } else if match("[") {
 
     if match("]") {
-      t = ast_type_new(#AstTypeArrayU, &tk.ti)
       of = parse_type2()
+      t = ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU, &tk.ti)
       t.array_u := (of=of, ti=&tk.ti)
       return t
     }
 
-    t = ast_type_new(#AstTypeArray, &tk.ti)
     size = parse_value()
     need("]")
     of = parse_type2()
+
+    t = ast_type_new(#AstTypeArray, (of=of, size=size, ti=&tk.ti) to AstTypeArray, &tk.ti)
     t.array := (of=of, size=size, ti=&tk.ti)
     return t
   }
@@ -430,20 +434,22 @@ parse_type4 = AstTypeParser {
 
   if match("Tagged") {
     spec_type = parse_type()
-    t = ast_type_new(#AstTypeSpecial, &tk.ti)
+    t = ast_type_new(#AstTypeSpecial, (type=spec_type, ti=&tk.ti) to AstTypeSpecial, &tk.ti)
     t.special := (type=spec_type, ti=&tk.ti)
     return t
   }
 
   if match("Var") {
     var_type = parse_type()
-    t = ast_type_new(#AstTypeVar, &tk.ti)
+    t = ast_type_new(#AstTypeVar, (of=var_type, ti=&tk.ti) to AstTypeVar, &tk.ti)
     t.var := (of=var_type)
     return t
   }
 
-  t = ast_type_new(#AstTypeNamed, &tk.ti)
-  t.name := parse_name()
+  name = parse_name()
+  //t = ast_type_new(#AstTypeNamed, (name=name, ti=&tk.ti) to AstTypeNamed, &tk.ti)
+  t = ast_type_new(#AstTypeNamed, name, &tk.ti)
+  t.name := name
   return t
 }
 
@@ -458,7 +464,9 @@ parse_type = parse_type0
 parse_type_set = AstTypeParser {
   tk = ctok()
   //need("{")
-  t = ast_type_new(#AstTypeEnum, &tk.ti)
+
+  constructors = 0 to Var List
+  list_init(&constructors)
 
   skip_nl()
   while true {
@@ -467,7 +475,7 @@ parse_type_set = AstTypeParser {
     ti = &ctok().ti
     cons = parse_id()
 
-    list_append(&t.enum.constructors, cons to *Unit)
+    list_append(&constructors, cons to *Unit)
 
     ti_sep = &ctok().ti
     if match(",") {continue}
@@ -482,6 +490,8 @@ parse_type_set = AstTypeParser {
     }
   }
 
+  t = ast_type_new(#AstTypeEnum, (constructors=constructors, ti=&tk.ti) to AstTypeEnum, &tk.ti)
+  t.enum.constructors := constructors
   return t
 }
 
@@ -509,29 +519,30 @@ parse_type_rec = AstTypeParser {
     list_append(&decls, fd)
   }
 
-  t = ast_type_new(#AstTypeRecord, &tk.ti)
+  t = ast_type_new(#AstTypeRecord, #AstTypeParserError, &tk.ti)
   t.record := (decls=decls, ti=&tk.ti)
   return t
 }
 
 
-parse_type_ptr = AstTypeParser {
+/*parse_type_ptr = AstTypeParser {
   tk = ctok()
   need("*")
   t = parse_type()
 
-  pt = ast_type_new(#AstTypePointer, &tk.ti)
+  pt = ast_type_new(#AstTypePointer, (to=t, ti=&tk.ti) to AstTypePointer, &tk.ti)
   pt.pointer := (to=t, ti=&tk.ti)
   return pt
-}
+}*/
 
 
+/*
 parse_type_array = AstTypeParser {
   tk = ctok()
   need("[")
   if match("]") {
-    t = ast_type_new(#AstTypeArrayU, &tk.ti)
     of = parse_type()
+    t = ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU &tk.ti)
     t.array_u := (of=of, ti=&tk.ti)
     return t
   }
@@ -544,6 +555,7 @@ parse_type_array = AstTypeParser {
   t.array := (size=size, of=of, ti=&tk.ti)
   return t
 }
+*/
 
 
 

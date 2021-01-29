@@ -79,7 +79,7 @@ AstTypeKind = {
   #AstTypeUnion
 }
 
-AstTypeNamed   = Tagged AstName
+AstTypeNamed   = AstName
 AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
 AstTypeRecord  = Tagged (decls : List /* of *AstDecl */, ti : *TokenInfo)
 AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
@@ -107,6 +107,8 @@ AstType2 = AstTypeParserError or
 
 AstType = (
   kind : AstTypeKind
+
+  data : AstType2
 
   name    : AstName
   enum    : AstTypeEnum
