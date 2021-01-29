@@ -519,7 +519,7 @@ parse_type_rec = AstTypeParser {
     list_append(&decls, fd)
   }
 
-  t = ast_type_new(#AstTypeRecord, #AstTypeParserError, &tk.ti)
+  t = ast_type_new(#AstTypeRecord, (decls=decls, ti=&tk.ti) to AstTypeRecord, &tk.ti)
   t.record := (decls=decls, ti=&tk.ti)
   return t
 }

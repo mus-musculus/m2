@@ -139,9 +139,9 @@ exist do_type_union : (x : AstTypeUnion) -> *Type
 do_type = DoType {
   xx = x.data
 
-  t = when xx {
+  return when xx {
     AstTypeNamed   => do_type_named   (x.name)
-    AstTypeFunc => do_type_func (x.func)
+    AstTypeFunc    => do_type_func    (x.func)
     AstTypeVar     => do_type_var     (x.var)
     AstTypeSpecial => do_type_special (x.special)
     AstTypeArray   => do_type_array   (x.array)
@@ -150,22 +150,7 @@ do_type = DoType {
     AstTypeEnum    => do_type_enum    (x.enum)
     AstTypeRecord  => do_type_record  (x.record)
     AstTypeUnion   => do_type_union   (x.union)
-    else => nil
-  }
-
-  if t != nil {return t}
-  return when x.kind {
-    #AstTypeNamed   => do_type_named   (x.name)
-    #AstTypeFunc    => do_type_func    (x.func)
-    #AstTypeVar     => do_type_var     (x.var)
-    #AstTypeSpecial => do_type_special (x.special)
-    #AstTypeArray   => do_type_array   (x.array)
-    #AstTypeArrayU  => do_type_array_u (x.array_u)
-    #AstTypePointer => do_type_pointer (x.pointer)
-    #AstTypeEnum    => do_type_enum    (x.enum)
-    #AstTypeRecord  => do_type_record  (x.record)
-    #AstTypeUnion   => do_type_union   (x.union)
-    else => type_new (#TypePoison, 0, x.ti)
+    else => () -> *Type {fatal("unknown type kind"); return nil} ()
   }
 }
 
