@@ -125,18 +125,30 @@ type_is_maybe_ptr = (t : *Type) -> Bool {
 }
 
 
+exist do_type_named : (x : AstTypeNamed) -> *Type
+exist do_type_var : (x : AstTypeVar) -> *Type
+exist do_type_special : (x : AstTypeSpecial) -> *Type
+exist do_type_func : (x : AstTypeFunc) -> *Type
+exist do_type_array_u : (x : AstTypeArrayU) -> *Type
+exist do_type_array : (x : AstTypeArray) -> *Type
+exist do_type_pointer : (x : AstTypePointer) -> *Type
+exist do_type_record : (x : AstTypeRecord) -> *Type
+exist do_type_enum : (x : AstTypeEnum) -> *Type
+exist do_type_union : (x : AstTypeUnion) -> *Type
+
 do_type = DoType {
+  xx = x.data
   return when x.kind {
-    #AstTypeNamed   => do_type_named   (x)
-    #AstTypeFunc    => do_type_func    (x)
-    #AstTypeVar     => do_type_var     (x)
-    #AstTypeSpecial => do_type_special (x)
-    #AstTypeArray   => do_type_array   (x)
-    #AstTypeArrayU  => do_type_array_u (x)
-    #AstTypePointer => do_type_pointer (x)
-    #AstTypeEnum    => do_type_enum    (x)
-    #AstTypeRecord  => do_type_record  (x)
-    #AstTypeUnion   => do_type_union   (x)
+    #AstTypeNamed   => do_type_named   (x.name)
+    #AstTypeFunc    => do_type_func    (x.func)
+    #AstTypeVar     => do_type_var     (x.var)
+    #AstTypeSpecial => do_type_special (x.special)
+    #AstTypeArray   => do_type_array   (x.array)
+    #AstTypeArrayU  => do_type_array_u (x.array_u)
+    #AstTypePointer => do_type_pointer (x.pointer)
+    #AstTypeEnum    => do_type_enum    (x.enum)
+    #AstTypeRecord  => do_type_record  (x.record)
+    #AstTypeUnion   => do_type_union   (x.union)
     else => type_new (#TypePoison, 0, x.ti)
   }
 }
@@ -144,8 +156,8 @@ do_type = DoType {
 
 // Tagged (NewType)
 spec_type_uid = 0 to Var Nat32
-do_type_special = DoType {
-  spec_type = do_type(x.special.type)
+do_type_special = (x : AstTypeSpecial) -> *Type {
+  spec_type = do_type(x.type)
   // создем новый (!) tagged тип на основе полученного
   nt = type_new (#TypePoison, 0, x.ti)
   memcpy(nt, spec_type, sizeof Type)
@@ -155,19 +167,19 @@ do_type_special = DoType {
 }
 
 
-do_type_var = DoType {
-  of = do_type (x.var.of)
+do_type_var = (x : AstTypeVar) -> *Type {
+  of = do_type (x.of)
   return type_var_new (of, x.ti)
 }
 
 
-do_type_named = DoType {
-  id = x.name.id.str
+do_type_named = (x : AstTypeNamed) -> *Type {
+  id = x.id.str
   xt = get_type (id)
   if xt == nil {
     // создаем неопределенный тип если типа с таким именем не было
     nt = type_new (#TypeUndefined, 0, x.ti)
-    nt.ti := x.name.ti
+    nt.ti := x.ti
     bind_type (&module.private, id, nt)
     return nt
   }
@@ -175,36 +187,37 @@ do_type_named = DoType {
   return xt
 }
 
-do_type_func = DoType {
-  from = do_type (x.func.from)
+do_type_func = (x : AstTypeFunc) -> *Type {
+  from = do_type (x.from)
   if from.kind == #TypePoison {return from}
 
-  _to = do_type (x.func.to)
+  _to = do_type (x.to)
   if _to.kind == #TypePoison {return _to}
 
   arghack = false
   return type_func_new (from, _to, arghack, x.ti)
 }
 
-do_type_array_u = DoType {
-  of = do_type (x.array_u.of)
+
+do_type_array_u = (x : AstTypeArrayU) -> *Type {
+  of = do_type (x.of)
   if of.kind == #TypePoison {return of}
   return type_array_u_new (of, x.ti)
 }
 
-do_type_array = DoType {
-  of = do_type (x.array.of)
+do_type_array = (x : AstTypeArray) -> *Type {
+  of = do_type (x.of)
   if of.kind == #TypePoison {return of}
 
-  size = do_valuex (x.array.size, false)
+  size = do_valuex (x.size, false)
   if size.kind == #ValuePoison {return type_new (#TypePoison, 0, x.ti)}
 
   return type_array_new (of, size.imm.value to Nat32, x.ti)
 }
 
 
-do_type_pointer = DoType {
-  _to = do_type (x.pointer.to)
+do_type_pointer = (x : AstTypePointer) -> *Type {
+  _to = do_type (x.to)
   if _to.kind == #TypePoison {return _to}
   return type_pointer_new (_to, x.ti)
 }
@@ -226,7 +239,7 @@ type_record_field_new = (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl {
   return f
 }
 
-do_type_record = DoType {
+do_type_record = (x : AstTypeRecord) -> *Type {
   old_ctype = ctype
   t = type_new (#TypeRecord, 0, x.ti)
   ctype := t
@@ -255,7 +268,7 @@ do_type_record = DoType {
     }
     list_foreach (&fieldsdef.ids, process_field_in_decl, &ctx)
   }
-  list_foreach(&x.record.decls, process_decl, &ctx0)
+  list_foreach(&(x.decls to Var List), process_decl, &ctx0)
 
   ctype := old_ctype
 
@@ -308,7 +321,7 @@ do_type_record = DoType {
 }
 
 
-do_type_enum = DoType {
+do_type_enum = (x : AstTypeEnum) -> *Type {
   constructors = list_new ()
   hc = ListForeachHandler {
     cons_id = data to *AstId
@@ -317,7 +330,7 @@ do_type_enum = DoType {
     *ec := (id=cons_id, d=index, ti=nil to *TokenInfo)
     list_append (cons_list, ec)
   }
-  list_foreach (&x.enum.constructors, hc, constructors)
+  list_foreach (&(x.constructors to Var List), hc, constructors)
 
   return type_enum_new (constructors, x.ti)
 }
@@ -346,7 +359,7 @@ propagation = (x : Nat) -> Nat {
   }
 }
 
-do_type_union = DoType {
+do_type_union = (x : AstTypeUnion) -> *Type {
   xuid = str_new(10)
   sprintf(&xuid[0], "%d", union_id)
   aka = cat("union.", xuid)
@@ -382,7 +395,7 @@ do_type_union = DoType {
 
     list_append(c.tlist, t)
   }
-  list_foreach(&x.union.types, do_variant, &ctx)
+  list_foreach(&(x.types to Var List), do_variant, &ctx)
 
   size = propagation(align(ctx.max_size + 2, 4))
 

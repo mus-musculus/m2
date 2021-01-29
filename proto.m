@@ -35,16 +35,7 @@ exist getIntByPower : (power : Nat) -> *Type
 
 
 exist do_type : DoType
-exist do_type_var : DoType
-exist do_type_special : DoType
-exist do_type_named : DoType
-exist do_type_func : DoType
-exist do_type_array_u : DoType
-exist do_type_array : DoType
-exist do_type_pointer : DoType
-exist do_type_record : DoType
-exist do_type_enum : DoType
-exist do_type_union : DoType
+
 
 
 exist type_union_get_variant : (union, type : *Type) -> Nat
