@@ -109,13 +109,13 @@ exist do_value_record  : (x : AstValueRecord) -> *Value
 exist do_value_string  : (x : AstValueString) -> *Value
 
 exist do_value_ref   : (x : AstValueUnary) -> *Value
-exist do_value_deref : (x : *AstValueUnary) -> *Value
-exist do_value_minus : (x : *AstValueUnary) -> *Value
-exist do_value_plus  : (x : *AstValueUnary) -> *Value
-exist do_value_not   : (x : *AstValueUnary) -> *Value
+exist do_value_deref : (x : AstValueUnary) -> *Value
+exist do_value_minus : (x : AstValueUnary) -> *Value
+exist do_value_plus  : (x : AstValueUnary) -> *Value
+exist do_value_not   : (x : AstValueUnary) -> *Value
 
-exist do_value_bin    : (k : ValueKind, x : *AstValueBinary) -> *Value
-exist do_value_shift  : (k : ValueKind, x : *AstValueBinary) -> *Value
+exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
+exist do_value_shift  : (k : ValueKind, x : AstValueBinary) -> *Value
 exist do_value_call   : (x : *AstValueCall) -> *Value
 exist do_value_index  : (x : *AstValueIndex) -> *Value
 exist do_value_access : (x : *AstValueAccess) -> *Value
@@ -143,27 +143,27 @@ do_valuex = DoValuex {
     #AstValueStr     => do_value_string  (x.str)
 
     #AstValueRef     => do_value_ref     (x.un)
-    #AstValueDeref   => do_value_deref   (&x.un)
-    #AstValueNot     => do_value_not     (&x.un)
-    #AstValueMinus   => do_value_minus   (&x.un)
-    #AstValuePlus    => do_value_plus    (&x.un)
+    #AstValueDeref   => do_value_deref   (x.un)
+    #AstValueNot     => do_value_not     (x.un)
+    #AstValueMinus   => do_value_minus   (x.un)
+    #AstValuePlus    => do_value_plus    (x.un)
 
-    #AstValueAdd     => do_value_bin (#ValueAdd, &x.bin)
-    #AstValueSub     => do_value_bin (#ValueSub, &x.bin)
-    #AstValueMul     => do_value_bin (#ValueMul, &x.bin)
-    #AstValueDiv     => do_value_bin (#ValueDiv, &x.bin)
-    #AstValueMod     => do_value_bin (#ValueMod, &x.bin)
-    #AstValueAnd     => do_value_bin (#ValueAnd, &x.bin)
-    #AstValueXor     => do_value_bin (#ValueXor, &x.bin)
-    #AstValueOr      => do_value_bin (#ValueOr, &x.bin)
-    #AstValueLt      => do_value_bin (#ValueLt, &x.bin)
-    #AstValueGt      => do_value_bin (#ValueGt, &x.bin)
-    #AstValueEq      => do_value_bin (#ValueEq, &x.bin)
-    #AstValueNe      => do_value_bin (#ValueNe, &x.bin)
-    #AstValueLe      => do_value_bin (#ValueLe, &x.bin)
-    #AstValueGe      => do_value_bin (#ValueGe, &x.bin)
-    #AstValueShl     => do_value_shift (#ValueShl, &x.bin)
-    #AstValueShr     => do_value_shift (#ValueShr, &x.bin)
+    #AstValueAdd     => do_value_bin (#ValueAdd, x.bin)
+    #AstValueSub     => do_value_bin (#ValueSub, x.bin)
+    #AstValueMul     => do_value_bin (#ValueMul, x.bin)
+    #AstValueDiv     => do_value_bin (#ValueDiv, x.bin)
+    #AstValueMod     => do_value_bin (#ValueMod, x.bin)
+    #AstValueAnd     => do_value_bin (#ValueAnd, x.bin)
+    #AstValueXor     => do_value_bin (#ValueXor, x.bin)
+    #AstValueOr      => do_value_bin (#ValueOr, x.bin)
+    #AstValueLt      => do_value_bin (#ValueLt, x.bin)
+    #AstValueGt      => do_value_bin (#ValueGt, x.bin)
+    #AstValueEq      => do_value_bin (#ValueEq, x.bin)
+    #AstValueNe      => do_value_bin (#ValueNe, x.bin)
+    #AstValueLe      => do_value_bin (#ValueLe, x.bin)
+    #AstValueGe      => do_value_bin (#ValueGe, x.bin)
+    #AstValueShl     => do_value_shift (#ValueShl, x.bin)
+    #AstValueShr     => do_value_shift (#ValueShr, x.bin)
 
     #AstValueCall    => do_value_call    (&x.call)
     #AstValueIndex   => do_value_index   (&x.index)
@@ -195,7 +195,7 @@ do_valuex = DoValuex {
 do_lvalue = DoValue {
   return when x.kind {
     #AstValueId     => do_value_named  (x.name)
-    #AstValueDeref  => do_value_deref  (&x.un)
+    #AstValueDeref  => do_value_deref  (x.un)
     #AstValueIndex  => do_value_index  (&x.index)
     #AstValueAccess => do_value_access (&x.access)
     else => DoValue {
@@ -323,7 +323,7 @@ do_value_ref = (x : AstValueUnary) -> *Value {
 }
 
 
-do_value_deref = (x : *AstValueUnary) -> *Value {
+do_value_deref = (x : AstValueUnary) -> *Value {
   // eval & load pointer
   v = do_value (x.value)
 
@@ -342,7 +342,7 @@ do_value_deref = (x : *AstValueUnary) -> *Value {
 
 
 
-do_value_bin = (k : ValueKind, x : *AstValueBinary) -> *Value {
+do_value_bin = (k : ValueKind, x : AstValueBinary) -> *Value {
   lv = do_value (x.left)
   rv = do_value (x.right)
 
@@ -976,7 +976,7 @@ fail:
 }
 
 
-do_value_plus = (x : *AstValueUnary) -> *Value {
+do_value_plus = (x : AstValueUnary) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
@@ -994,7 +994,7 @@ fail:
 }
 
 
-do_value_minus = (x : *AstValueUnary) -> *Value {
+do_value_minus = (x : AstValueUnary) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
@@ -1012,7 +1012,7 @@ fail:
 }
 
 
-do_value_not = (x : *AstValueUnary) -> *Value {
+do_value_not = (x : AstValueUnary) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
@@ -1031,7 +1031,7 @@ fail:
 
 
 // shl, shr слишком отличны чтобы входить в bin
-do_value_shift = (k : ValueKind, x : *AstValueBinary) -> *Value {
+do_value_shift = (k : ValueKind, x : AstValueBinary) -> *Value {
   l = do_value (x.left)
   r = do_value (x.right)
 
