@@ -168,7 +168,26 @@ AstValueWhen   = (x : *AstValue, variants : List, other : *AstValue, ti : *Token
 AstValueRecord = (values : Map, ti : *TokenInfo)
 AstValueArray  = (items : List, ti : *TokenInfo)
 
-AstValueBinary = (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueBinary = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueAdd = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueSub = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueMul = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueDiv = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueMod = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueAnd = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueOr  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueXor = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueEq  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueNe  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueLt  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueGt  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueLe  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueGe  = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueShl = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+AstValueShr = Tagged (kind : AstValueKind, left, right : *AstValue, ti : *TokenInfo)
+
+
+
 AstValueUnary  = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 AstValueRef    = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
 AstValueDeref  = Tagged (kind : AstValueKind, value : *AstValue, ti : *TokenInfo)
@@ -193,12 +212,29 @@ AstValue2 = AstValueName or
             AstValueNumber or
             AstValueFunc or
             AstValueUnary or
+
             AstValueRef or
             AstValueDeref or
             AstValueMinus or
             AstValuePlus or
             AstValueNot or
             AstValueBinary or
+            AstValueAdd or
+            AstValueSub or
+            AstValueMul or
+            AstValueDiv or
+            AstValueMod or
+            AstValueAnd or
+            AstValueOr or
+            AstValueXor or
+            AstValueEq or
+            AstValueNe or
+            AstValueLt or
+            AstValueGt or
+            AstValueLe or
+            AstValueGe or
+            AstValueShl or
+            AstValueShr or
             AstValueCall or
             AstValueIndex or
             AstValueAccess or

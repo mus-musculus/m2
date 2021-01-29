@@ -174,6 +174,22 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstValueRecord = type {%List, %TokenInfo*}
 %AstValueArray = type {%List, %TokenInfo*}
 %AstValueBinary = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueAdd = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueSub = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueMul = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueDiv = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueMod = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueAnd = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueOr = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueXor = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueEq = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueNe = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueLt = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueGt = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueLe = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueGe = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueShl = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
+%AstValueShr = type {%AstValueKind, %AstValue*, %AstValue*, %TokenInfo*}
 %AstValueUnary = type {%AstValueKind, %AstValue*, %TokenInfo*}
 %AstValueRef = type {%AstValueKind, %AstValue*, %TokenInfo*}
 %AstValueDeref = type {%AstValueKind, %AstValue*, %TokenInfo*}
@@ -7569,9 +7585,9 @@ then_1:
   %15 = insertvalue %AstValueCast %14, %AstType* %12, 1
   %16 = insertvalue %AstValueCast %15, %TokenInfo* %9, 2
   %17 = alloca %union.1
-; write variant 16
+; write variant 32
   %18 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 0
-  store %Int16 16, %Int16* %18, align 2
+  store %Int16 32, %Int16* %18, align 2
 ; write data
   %19 = getelementptr inbounds %union.1, %union.1* %17, i1 0, i32 1
   %20 = bitcast [56 x %Nat8]* %19 to %AstValueCast*
@@ -7602,9 +7618,9 @@ then_2:
   %33 = insertvalue %AstValueIs %32, %AstType* %30, 1
   %34 = insertvalue %AstValueIs %33, %TokenInfo* %9, 2
   %35 = alloca %union.1
-; write variant 17
+; write variant 33
   %36 = getelementptr inbounds %union.1, %union.1* %35, i1 0, i32 0
-  store %Int16 17, %Int16* %36, align 2
+  store %Int16 33, %Int16* %36, align 2
 ; write data
   %37 = getelementptr inbounds %union.1, %union.1* %35, i1 0, i32 1
   %38 = bitcast [56 x %Nat8]* %37 to %AstValueIs*
@@ -7635,9 +7651,9 @@ then_3:
   %51 = insertvalue %AstValueAs %50, %AstType* %48, 1
   %52 = insertvalue %AstValueAs %51, %TokenInfo* %9, 2
   %53 = alloca %union.1
-; write variant 18
+; write variant 34
   %54 = getelementptr inbounds %union.1, %union.1* %53, i1 0, i32 0
-  store %Int16 18, %Int16* %54, align 2
+  store %Int16 34, %Int16* %54, align 2
 ; write data
   %55 = getelementptr inbounds %union.1, %union.1* %53, i1 0, i32 1
   %56 = bitcast [56 x %Nat8]* %55 to %AstValueAs*
@@ -7858,9 +7874,9 @@ endif_6:
   %100 = insertvalue %AstValueSizeof zeroinitializer, %AstType* %94, 0
   %101 = insertvalue %AstValueSizeof %100, %TokenInfo* %4, 1
   %102 = alloca %union.1
-; write variant 20
+; write variant 36
   %103 = getelementptr inbounds %union.1, %union.1* %102, i1 0, i32 0
-  store %Int16 20, %Int16* %103, align 2
+  store %Int16 36, %Int16* %103, align 2
 ; write data
   %104 = getelementptr inbounds %union.1, %union.1* %102, i1 0, i32 1
   %105 = bitcast [56 x %Nat8]* %104 to %AstValueSizeof*
@@ -7905,9 +7921,9 @@ endif_8:
   %121 = insertvalue %AstValueAlignof zeroinitializer, %AstType* %115, 0
   %122 = insertvalue %AstValueAlignof %121, %TokenInfo* %4, 1
   %123 = alloca %union.1
-; write variant 21
+; write variant 37
   %124 = getelementptr inbounds %union.1, %union.1* %123, i1 0, i32 0
-  store %Int16 21, %Int16* %124, align 2
+  store %Int16 37, %Int16* %124, align 2
 ; write data
   %125 = getelementptr inbounds %union.1, %union.1* %123, i1 0, i32 1
   %126 = bitcast [56 x %Nat8]* %125 to %AstValueAlignof*
@@ -8055,9 +8071,9 @@ break_1:
   %41 = insertvalue %AstValueCall %39, %List %40, 1
   %42 = insertvalue %AstValueCall %41, %TokenInfo* %9, 2
   %43 = alloca %union.1
-; write variant 13
+; write variant 29
   %44 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 0
-  store %Int16 13, %Int16* %44, align 2
+  store %Int16 29, %Int16* %44, align 2
 ; write data
   %45 = getelementptr inbounds %union.1, %union.1* %43, i1 0, i32 1
   %46 = bitcast [56 x %Nat8]* %45 to %AstValueCall*
@@ -8092,9 +8108,9 @@ then_6:
   %62 = insertvalue %AstValueIndex %61, %AstValue* %57, 1
   %63 = insertvalue %AstValueIndex %62, %TokenInfo* %9, 2
   %64 = alloca %union.1
-; write variant 14
+; write variant 30
   %65 = getelementptr inbounds %union.1, %union.1* %64, i1 0, i32 0
-  store %Int16 14, %Int16* %65, align 2
+  store %Int16 30, %Int16* %65, align 2
 ; write data
   %66 = getelementptr inbounds %union.1, %union.1* %64, i1 0, i32 1
   %67 = bitcast [56 x %Nat8]* %66 to %AstValueIndex*
@@ -8125,9 +8141,9 @@ then_7:
   %80 = insertvalue %AstValueAccess %79, %AstId* %77, 1
   %81 = insertvalue %AstValueAccess %80, %TokenInfo* %9, 2
   %82 = alloca %union.1
-; write variant 15
+; write variant 31
   %83 = getelementptr inbounds %union.1, %union.1* %82, i1 0, i32 0
-  store %Int16 15, %Int16* %83, align 2
+  store %Int16 31, %Int16* %83, align 2
 ; write data
   %84 = getelementptr inbounds %union.1, %union.1* %82, i1 0, i32 1
   %85 = bitcast [56 x %Nat8]* %84 to %AstValueAccess*
@@ -8385,9 +8401,9 @@ define %AstValue* @func238 () {
   %1 = call %Token* () @func190 ()
 ;stmt1:
   %2 = alloca %union.1
-; write variant 22
+; write variant 38
   %3 = getelementptr inbounds %union.1, %union.1* %2, i1 0, i32 0
-  store %Int16 22, %Int16* %3, align 2
+  store %Int16 38, %Int16* %3, align 2
 ; write data
   %4 = getelementptr inbounds %union.1, %union.1* %2, i1 0, i32 1
   %5 = bitcast [56 x %Nat8]* %4 to %AstValueParserError*
