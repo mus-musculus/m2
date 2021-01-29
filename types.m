@@ -208,7 +208,8 @@ AstValueParserError = {#Error}
 
 
 
-AstValue2 = AstValueName or
+AstValue2 = AstValueParserError or
+            AstValueName or
             AstValueRecord or
             AstValueArray or
             AstValueString or
@@ -245,8 +246,8 @@ AstValue2 = AstValueName or
             AstValueAs or
             AstValueWhen or
             AstValueSizeof or
-            AstValueAlignof or
-            AstValueParserError
+            AstValueAlignof
+
 
 
 

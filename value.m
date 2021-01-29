@@ -138,8 +138,8 @@ do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
 
-  v0 = when x.data {
-    //AstValueName      => do_value_named   (x.data as AstValueName)
+  v = when x.data {
+    AstValueName      => do_value_named   (x.name/*data as AstValueName*/)
     AstValueNumber  => do_value_numeric (x.data as AstValueNumber)
     AstValueFunc    => do_value_func    (x.data as AstValueFunc)
     AstValueArray   => do_value_array   (x.data as AstValueArray)
@@ -178,23 +178,10 @@ do_valuex = DoValuex {
     AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
     AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
     AstValueWhen    => do_value_when    (x.data as AstValueWhen)
-    else => nil
+    else => () -> *Value {fatal("do_value : v == nil"); return nil} ()
   }
-
-  if v0 != nil {return v0}
-
-
-  v = when x.kind {
-    #AstValueId      => do_value_named   (x.data as AstValueName)
-
-    else => value_new_poison (x.ti)
-  }
-
-  assert(v != nil, "do_value : v == nil")
 
   if v.kind == #ValuePoison {return v}
-
-  //return v
 
   return when load {
     true => dold (v)
