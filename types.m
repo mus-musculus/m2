@@ -110,16 +110,9 @@ AstType = (
 
   data : AstType2
 
-  name    : AstName
-  enum    : AstTypeEnum
-  array   : AstTypeArray
-  array_u : AstTypeArrayU
-  pointer : AstTypePointer
-  record  : AstTypeRecord
+
   func    : AstTypeFunc
-  var     : AstTypeVar
-  union   : AstTypeUnion
-  special : AstTypeSpecial
+
 
   ti : *TokenInfo
 )

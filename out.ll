@@ -157,7 +157,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstTypeUnion = type {%List, %TokenInfo*}
 %AstTypeParserError = type i16
 %AstType2 = type %union.0
-%AstType = type {%AstTypeKind, %union.0, %AstName, %AstTypeEnum, %AstTypeArray, %AstTypeArrayU, %AstTypePointer, %AstTypeRecord, %AstTypeFunc, %AstTypeVar, %AstTypeUnion, %AstTypeSpecial, %TokenInfo*}
+%AstType = type {%AstTypeKind, %union.0, %AstTypeFunc, %TokenInfo*}
 %AstDecl = type {%List, %AstType*, %TokenInfo*, i1, i1}
 %AstNodeComment = type {%Str, %TokenInfo*}
 %AstNodeImport = type {%Str, %TokenInfo*}
@@ -6184,7 +6184,7 @@ then_9:
 ;stmt44:
   %80 = getelementptr inbounds %AstDecl, %AstDecl* %79, i1 0, i32 1
   %81 = load %AstType*, %AstType** %80
-  %82 = getelementptr inbounds %AstType, %AstType* %81, i1 0, i32 8
+  %82 = getelementptr inbounds %AstType, %AstType* %81, i1 0, i32 2
   %83 = getelementptr inbounds %AstTypeFunc, %AstTypeFunc* %82, i1 0, i32 2
   store i1 %50, i1* %83, align 1
 ;stmt45:
@@ -6366,7 +6366,7 @@ define %AstNodeBindValue* @func207 () {
 
 define %AstType* @ast_type_new (%AstTypeKind, %union.0, %TokenInfo*) {
 ;stmt0:
-  %4 = call %Unit* (%Nat32) @malloc (%Nat32 448)
+  %4 = call %Unit* (%Nat32) @malloc (%Nat32 192)
   %5 = bitcast %Unit* %4 to %AstType*
 ;stmt1:; loadImmPtr
   %6 = inttoptr i64 0 to%AstType*
@@ -6375,7 +6375,7 @@ define %AstType* @ast_type_new (%AstTypeKind, %union.0, %TokenInfo*) {
   call void (i1, %Str) @assert (i1 %7, %Str %8)
 ;stmt2:
   %9 = insertvalue %AstType zeroinitializer, %AstTypeKind %0, 0
-  %10 = insertvalue %AstType %9, %TokenInfo* %2, 12
+  %10 = insertvalue %AstType %9, %TokenInfo* %2, 3
   %11 = insertvalue %AstType %10, %union.0 %1, 1
   store %AstType %11, %AstType* %5, align 64
 ;stmt3:
@@ -18070,7 +18070,7 @@ then_1:
 ;stmt4:
   %11 = bitcast [20 x %Nat8]* @func490_str1 to %Str
   %12 = extractvalue %AstValueSizeof %0, 0
-  %13 = getelementptr inbounds %AstType, %AstType* %12, i1 0, i32 12
+  %13 = getelementptr inbounds %AstType, %AstType* %12, i1 0, i32 3
   %14 = load %TokenInfo*, %TokenInfo** %13
   call void (%Str, %TokenInfo*) @error (%Str %11, %TokenInfo* %14)
 ;stmt5:
@@ -18123,7 +18123,7 @@ then_1:
 ;stmt4:
   %11 = bitcast [21 x %Nat8]* @func491_str1 to %Str
   %12 = extractvalue %AstValueAlignof %0, 0
-  %13 = getelementptr inbounds %AstType, %AstType* %12, i1 0, i32 12
+  %13 = getelementptr inbounds %AstType, %AstType* %12, i1 0, i32 3
   %14 = load %TokenInfo*, %TokenInfo** %13
   call void (%Str, %TokenInfo*) @error (%Str %11, %TokenInfo* %14)
 ;stmt5:
