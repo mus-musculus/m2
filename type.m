@@ -140,10 +140,10 @@ do_type = DoType {
   xx = x.data
 
   t = when xx {
+    AstTypeNamed   => do_type_named   (x.name)
     AstTypeFunc => do_type_func (x.func)
     AstTypeVar     => do_type_var     (x.var)
     AstTypeSpecial => do_type_special (x.special)
-    AstTypeArray   => do_type_array   (x.array)
     AstTypeArray   => do_type_array   (x.array)
     AstTypeArrayU  => do_type_array_u (x.array_u)
     AstTypePointer => do_type_pointer (x.pointer)
@@ -152,6 +152,7 @@ do_type = DoType {
     AstTypeUnion   => do_type_union   (x.union)
     else => nil
   }
+
   if t != nil {return t}
   return when x.kind {
     #AstTypeNamed   => do_type_named   (x.name)
