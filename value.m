@@ -137,20 +137,30 @@ exist do_value_add : (x : AstValueAdd) -> *Value
 do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
+
+  v0 = when x.data {
+    //AstValueName      => do_value_named   (x.data as AstValueName)
+    AstValueNumber     => do_value_numeric (x.data as AstValueNumber)
+    AstValueFunc    => do_value_func    (x.data as AstValueFunc)
+    AstValueArray     => do_value_array   (x.data as AstValueArray)
+    AstValueRecord     => do_value_record  (x.data as AstValueRecord)
+    AstValueString     => do_value_string  (x.data as AstValueString)
+
+    AstValueRef     => do_value_ref     (x.data as AstValueRef)
+    AstValueDeref   => do_value_deref   (x.data as AstValueDeref)
+    AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
+    AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
+
+    else => nil
+  }
+
+  if v0 != nil {return v0}
+
+
   v = when x.kind {
     #AstValueId      => do_value_named   (x.data as AstValueName)
-    #AstValueNum     => do_value_numeric (x.data as AstValueNumber)
-    #AstValueFunc    => do_value_func    (x.data as AstValueFunc)
-    #AstValueArr     => do_value_array   (x.data as AstValueArray)
-    #AstValueRec     => do_value_record  (x.data as AstValueRecord)
-    #AstValueStr     => do_value_string  (x.data as AstValueString)
 
-    #AstValueRef     => do_value_ref     (x.data as AstValueRef)
-    #AstValueDeref   => do_value_deref   (x.data as AstValueDeref)
     #AstValueNot     => do_value_not     (x.data as AstValueNot)
-    #AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
-    #AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
-
 
     #AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
     #AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
