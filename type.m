@@ -138,18 +138,17 @@ exist do_type_union : (x : AstTypeUnion) -> *Type
 
 do_type = DoType {
   xx = x.data
-
   return when xx {
-    AstTypeNamed   => do_type_named   (x.name)
-    AstTypeFunc    => do_type_func    (x.func)
-    AstTypeVar     => do_type_var     (x.var)
-    AstTypeSpecial => do_type_special (x.special)
-    AstTypeArray   => do_type_array   (x.array)
-    AstTypeArrayU  => do_type_array_u (x.array_u)
-    AstTypePointer => do_type_pointer (x.pointer)
-    AstTypeEnum    => do_type_enum    (x.enum)
-    AstTypeRecord  => do_type_record  (x.record)
-    AstTypeUnion   => do_type_union   (x.union)
+    AstTypeNamed   => do_type_named   (xx as AstTypeNamed)
+    AstTypeRecord  => do_type_record  (xx as AstTypeRecord)
+    AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
+    AstTypeVar     => do_type_var     (xx as AstTypeVar)
+    AstTypeSpecial => do_type_special (xx as AstTypeSpecial)
+    AstTypeArray   => do_type_array   (xx as AstTypeArray)
+    AstTypeArrayU  => do_type_array_u (xx as AstTypeArrayU)
+    AstTypePointer => do_type_pointer (xx as AstTypePointer)
+    AstTypeEnum    => do_type_enum    (xx as AstTypeEnum)
+    AstTypeUnion   => do_type_union   (xx as AstTypeUnion)
     else => () -> *Type {fatal("unknown type kind"); return nil} ()
   }
 }
