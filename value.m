@@ -168,6 +168,16 @@ do_valuex = DoValuex {
     AstValueGe      => do_value_bin (#ValueGe, x.bin.left, x.bin.right, x.bin.ti)
     AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
     AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
+
+    AstValueCall    => do_value_call    (x.data as AstValueCall)
+    AstValueIndex   => do_value_index   (x.data as AstValueIndex)
+    AstValueAccess  => do_value_access  (x.data as AstValueAccess)
+    AstValueCast    => do_value_cast    (x.data as AstValueCast)
+    AstValueIs      => do_value_is      (x.data as AstValueIs)
+    AstValueAs      => do_value_as      (x.data as AstValueAs)
+    AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
+    AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
+    AstValueWhen    => do_value_when    (x.data as AstValueWhen)
     else => nil
   }
 
@@ -177,18 +187,6 @@ do_valuex = DoValuex {
   v = when x.kind {
     #AstValueId      => do_value_named   (x.data as AstValueName)
 
-
-    #AstValueCall    => do_value_call    (x.data as AstValueCall)
-    #AstValueIndex   => do_value_index   (x.data as AstValueIndex)
-    #AstValueAccess  => do_value_access  (x.data as AstValueAccess)
-    #AstValueCast    => do_value_cast    (x.data as AstValueCast)
-    #AstValueIs      => do_value_is      (x.data as AstValueIs)
-    #AstValueAs      => do_value_as      (x.data as AstValueAs)
-    #AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
-    #AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
-    #AstValueWhen    => do_value_when    (x.data as AstValueWhen)
-
-    #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
   }
 
