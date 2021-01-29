@@ -302,7 +302,7 @@ exist print_val : (op : LLVM_Value) -> ()
 
 exist create_array : (x : LLVM_Value) -> LLVM_Value
 
-exist print_block : (b : *StmtBlock) -> ()
+exist print_block : (b : StmtBlock) -> ()
 
 exist eval : Eval
 exist reval : Eval
@@ -435,7 +435,7 @@ funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
     stmtno := 0
     blockno := 0
 
-    print_block (b)
+    print_block (*b)
     if isvoid {o ("\n  ret void")}
     o ("\n}")
   }
@@ -1402,7 +1402,7 @@ print_stmt = (s : *Stmt) -> () {
   }
 
   when k {
-    #StmtBlock    => print_block         (&s.block)
+    #StmtBlock    => print_block         (s.block)
     #StmtExpr     => print_stmt_expr     (&s.expr)
     #StmtAssign   => print_stmt_assign   (s.assign)
     #StmtVarDef   => print_stmt_var      (&s.v)
@@ -1521,12 +1521,12 @@ print_stmt_label = (l : Str) -> () {
 }
 
 
-print_block = (b : *StmtBlock) -> () {
+print_block = (b : StmtBlock) -> () {
   for_stmt = ListForeachHandler {
     blockno := blockno + 1
     print_stmt (data to *Stmt)
   }
-  list_foreach (&b.stmts, for_stmt, nil)
+  list_foreach (&(b.stmts to Var List), for_stmt, nil)
 }
 
 

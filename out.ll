@@ -942,7 +942,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func460_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func461_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func463_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
-@func464_str1 = private unnamed_addr constant [17 x i8] c"type cast error0\00", align 1
+@func464_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func465_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func467_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
 @func468_str1 = private unnamed_addr constant [16 x i8] c"type cast error\00", align 1
@@ -10276,20 +10276,21 @@ then_5:
 ;stmt30:
   store %Nat32 0, %Nat32* @blockno, align 4
 ;stmt31:
-  call void (%StmtBlock*) @func367 (%StmtBlock* %2)
+  %57 = load %StmtBlock, %StmtBlock* %2
+  call void (%StmtBlock) @func367 (%StmtBlock %57)
 ;stmt32:
   br i1 %38, label %then_6, label %else_6
 then_6:
 ;stmt33:
-  %57 = bitcast [12 x %Nat8]* @func296_str13 to %Str
-  call void (%Str) @o (%Str %57)
+  %58 = bitcast [12 x %Nat8]* @func296_str13 to %Str
+  call void (%Str) @o (%Str %58)
   br label %endif_6
 else_6:
   br label %endif_6
 endif_6:
 ;stmt34:
-  %58 = bitcast [3 x %Nat8]* @func296_str14 to %Str
-  call void (%Str) @o (%Str %58)
+  %59 = bitcast [3 x %Nat8]* @func296_str14 to %Str
+  call void (%Str) @o (%Str %59)
   br label %endif_5
 else_5:
   br label %endif_5
@@ -12700,86 +12701,87 @@ select_1_0:
   br i1 %11, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
   %12 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 3
-  call void (%StmtBlock*) @func367 (%StmtBlock* %12)
+  %13 = load %StmtBlock, %StmtBlock* %12
+  call void (%StmtBlock) @func367 (%StmtBlock %13)
   br label %select_1_end
 select_1_1:
-  %13 = icmp eq %StmtKind %3, 1
-  br i1 %13, label %select_1_1_ok, label %select_1_2
+  %14 = icmp eq %StmtKind %3, 1
+  br i1 %14, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
-  %14 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
-  call void (%StmtExpr*) @func359 (%StmtExpr* %14)
+  %15 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
+  call void (%StmtExpr*) @func359 (%StmtExpr* %15)
   br label %select_1_end
 select_1_2:
-  %15 = icmp eq %StmtKind %3, 4
-  br i1 %15, label %select_1_2_ok, label %select_1_3
+  %16 = icmp eq %StmtKind %3, 4
+  br i1 %16, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
-  %16 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 2
-  %17 = load %StmtAssign, %StmtAssign* %16
-  call void (%StmtAssign) @func357 (%StmtAssign %17)
+  %17 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 2
+  %18 = load %StmtAssign, %StmtAssign* %17
+  call void (%StmtAssign) @func357 (%StmtAssign %18)
   br label %select_1_end
 select_1_3:
-  %18 = icmp eq %StmtKind %3, 3
-  br i1 %18, label %select_1_3_ok, label %select_1_4
+  %19 = icmp eq %StmtKind %3, 3
+  br i1 %19, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
-  %19 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 4
-  call void (%Decl*) @func358 (%Decl* %19)
+  %20 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 4
+  call void (%Decl*) @func358 (%Decl* %20)
   br label %select_1_end
 select_1_4:
-  %20 = icmp eq %StmtKind %3, 5
-  br i1 %20, label %select_1_4_ok, label %select_1_5
+  %21 = icmp eq %StmtKind %3, 5
+  br i1 %21, label %select_1_4_ok, label %select_1_5
 select_1_4_ok:
-  %21 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 5
-  %22 = load %StmtIf, %StmtIf* %21
-  call void (%StmtIf) @func360 (%StmtIf %22)
+  %22 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 5
+  %23 = load %StmtIf, %StmtIf* %22
+  call void (%StmtIf) @func360 (%StmtIf %23)
   br label %select_1_end
 select_1_5:
-  %23 = icmp eq %StmtKind %3, 6
-  br i1 %23, label %select_1_5_ok, label %select_1_6
+  %24 = icmp eq %StmtKind %3, 6
+  br i1 %24, label %select_1_5_ok, label %select_1_6
 select_1_5_ok:
-  %24 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 6
-  %25 = load %StmtWhile, %StmtWhile* %24
-  call void (%StmtWhile) @func361 (%StmtWhile %25)
+  %25 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 6
+  %26 = load %StmtWhile, %StmtWhile* %25
+  call void (%StmtWhile) @func361 (%StmtWhile %26)
   br label %select_1_end
 select_1_6:
-  %26 = icmp eq %StmtKind %3, 7
-  br i1 %26, label %select_1_6_ok, label %select_1_7
+  %27 = icmp eq %StmtKind %3, 7
+  br i1 %27, label %select_1_6_ok, label %select_1_7
 select_1_6_ok:
-  %27 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 7
-  %28 = load %StmtReturn, %StmtReturn* %27
-  call void (%StmtReturn) @func362 (%StmtReturn %28)
+  %28 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 7
+  %29 = load %StmtReturn, %StmtReturn* %28
+  call void (%StmtReturn) @func362 (%StmtReturn %29)
   br label %select_1_end
 select_1_7:
-  %29 = icmp eq %StmtKind %3, 8
-  br i1 %29, label %select_1_7_ok, label %select_1_8
+  %30 = icmp eq %StmtKind %3, 8
+  br i1 %30, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
   call void () @func363 ()
   br label %select_1_end
 select_1_8:
-  %30 = icmp eq %StmtKind %3, 9
-  br i1 %30, label %select_1_8_ok, label %select_1_9
+  %31 = icmp eq %StmtKind %3, 9
+  br i1 %31, label %select_1_8_ok, label %select_1_9
 select_1_8_ok:
   call void () @func364 ()
   br label %select_1_end
 select_1_9:
-  %31 = icmp eq %StmtKind %3, 10
-  br i1 %31, label %select_1_9_ok, label %select_1_10
+  %32 = icmp eq %StmtKind %3, 10
+  br i1 %32, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
-  %32 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 12
-  %33 = load %Str, %Str* %32
-  call void (%Str) @func365 (%Str %33)
+  %33 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 12
+  %34 = load %Str, %Str* %33
+  call void (%Str) @func365 (%Str %34)
   br label %select_1_end
 select_1_10:
-  %34 = icmp eq %StmtKind %3, 11
-  br i1 %34, label %select_1_10_ok, label %select_1_11
+  %35 = icmp eq %StmtKind %3, 11
+  br i1 %35, label %select_1_10_ok, label %select_1_11
 select_1_10_ok:
-  %35 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 12
-  %36 = load %Str, %Str* %35
-  call void (%Str) @func366 (%Str %36)
+  %36 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 12
+  %37 = load %Str, %Str* %36
+  call void (%Str) @func366 (%Str %37)
   br label %select_1_end
 select_1_11:
-  %37 = load %FILE*, %FILE** @fout
-  %38 = bitcast [22 x %Nat8]* @func356_str2 to %Str
-  %39 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %37, %Str %38)
+  %38 = load %FILE*, %FILE** @fout
+  %39 = bitcast [22 x %Nat8]* @func356_str2 to %Str
+  %40 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %38, %Str %39)
   br label %select_1_end
 select_1_end:
   ret void
@@ -13047,11 +13049,15 @@ define void @func368 (%Unit*, %Unit*, %Nat32, %Node*) {
   ret void
 }
 
-define void @func367 (%StmtBlock*) {
+define void @func367 (%StmtBlock) {
 ;stmt0:
-  %2 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 2; loadImmPtr
-  %3 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %2, %ListForeachHandler @func368, %Unit* %3)
+  %2 = alloca %List
+  %3 = extractvalue %StmtBlock %0, 2
+  store %List %3, %List* %2, align 8
+;stmt1:
+  %4 = getelementptr inbounds %List, %List* %2, i1 0; loadImmPtr
+  %5 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %4, %ListForeachHandler @func368, %Unit* %5)
   ret void
 }
 
@@ -16863,7 +16869,7 @@ define %Value* @do_value_cast_set (%Value*, %Type*, %TokenInfo*) {
   br i1 %6, label %then_0, label %else_0
 then_0:
 ;stmt1:
-  %7 = bitcast [17 x %Nat8]* @func464_str1 to %Str
+  %7 = bitcast [16 x %Nat8]* @func464_str1 to %Str
   call void (%Str, %TokenInfo*) @error (%Str %7, %TokenInfo* %2)
   br label %endif_0
 else_0:
