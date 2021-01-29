@@ -203,7 +203,10 @@ AstValueNumber = Tagged (string : Str, ti : *TokenInfo)
 
 AstValueName = AstName
 
+
 AstValueParserError = {#Error}
+
+
 
 AstValue2 = AstValueName or
             AstValueRecord or
@@ -244,6 +247,9 @@ AstValue2 = AstValueName or
             AstValueSizeof or
             AstValueAlignof or
             AstValueParserError
+
+
+
 
 
 AstValue = (

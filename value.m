@@ -114,8 +114,9 @@ exist do_value_minus : (x : AstValueMinus) -> *Value
 exist do_value_plus  : (x : AstValuePlus) -> *Value
 exist do_value_not   : (x : AstValueNot) -> *Value
 
-exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
-exist do_value_shift  : (k : ValueKind, x : AstValueBinary) -> *Value
+exist do_value_bin : (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value
+//exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
+exist do_value_shift  : (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value
 exist do_value_call   : (x : AstValueCall) -> *Value
 exist do_value_index  : (x : AstValueIndex) -> *Value
 exist do_value_access : (x : AstValueAccess) -> *Value
@@ -151,22 +152,22 @@ do_valuex = DoValuex {
     #AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
 
 
-    #AstValueAdd     => do_value_bin (#ValueAdd, x.data as AstValueBinary)
-    #AstValueSub     => do_value_bin (#ValueSub, x.data as AstValueBinary)
-    #AstValueMul     => do_value_bin (#ValueMul, x.data as AstValueBinary)
-    #AstValueDiv     => do_value_bin (#ValueDiv, x.data as AstValueBinary)
-    #AstValueMod     => do_value_bin (#ValueMod, x.data as AstValueBinary)
-    #AstValueAnd     => do_value_bin (#ValueAnd, x.data as AstValueBinary)
-    #AstValueXor     => do_value_bin (#ValueXor, x.data as AstValueBinary)
-    #AstValueOr      => do_value_bin (#ValueOr, x.data as AstValueBinary)
-    #AstValueLt      => do_value_bin (#ValueLt, x.data as AstValueBinary)
-    #AstValueGt      => do_value_bin (#ValueGt, x.data as AstValueBinary)
-    #AstValueEq      => do_value_bin (#ValueEq, x.data as AstValueBinary)
-    #AstValueNe      => do_value_bin (#ValueNe, x.data as AstValueBinary)
-    #AstValueLe      => do_value_bin (#ValueLe, x.data as AstValueBinary)
-    #AstValueGe      => do_value_bin (#ValueGe, x.data as AstValueBinary)
-    #AstValueShl     => do_value_shift (#ValueShl, x.data as AstValueBinary)
-    #AstValueShr     => do_value_shift (#ValueShr, x.data as AstValueBinary)
+    #AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueMul     => do_value_bin (#ValueMul, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueDiv     => do_value_bin (#ValueDiv, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueMod     => do_value_bin (#ValueMod, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueAnd     => do_value_bin (#ValueAnd, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueXor     => do_value_bin (#ValueXor, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueOr      => do_value_bin (#ValueOr, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueLt      => do_value_bin (#ValueLt, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueGt      => do_value_bin (#ValueGt, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueEq      => do_value_bin (#ValueEq, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueNe      => do_value_bin (#ValueNe, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueLe      => do_value_bin (#ValueLe, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueGe      => do_value_bin (#ValueGe, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
+    #AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
 
     #AstValueCall    => do_value_call    (x.data as AstValueCall)
     #AstValueIndex   => do_value_index   (x.data as AstValueIndex)
@@ -344,14 +345,11 @@ do_value_deref = (x : AstValueDeref) -> *Value {
 }
 
 
-do_value_add = (x : AstValueAdd) -> *Value {
-  return do_value_bin (#ValueAdd, (kind=#ValueAdd, left=x.left, right=x.right, ti=x.ti) to AstValueBinary)
-}
 
 
-do_value_bin = (k : ValueKind, x : AstValueBinary) -> *Value {
-  lv = do_value (x.left)
-  rv = do_value (x.right)
+do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value {
+  lv = do_value (left)
+  rv = do_value (right)
 
   if lv.kind == #ValuePoison {return lv}
   if rv.kind == #ValuePoison {return rv}
@@ -359,10 +357,10 @@ do_value_bin = (k : ValueKind, x : AstValueBinary) -> *Value {
   l = implicit_cast (lv, rv.type)
   r = implicit_cast (rv, l.type)
 
-  if not type_check (l.type, r.type, x.ti) {goto fail}
+  if not type_check (l.type, r.type, ti) {goto fail}
 
   if not typeValidForBin (k, l.type) {
-    error("binary type error", x.ti)
+    error("binary type error", ti)
     goto fail
   }
 
@@ -392,15 +390,15 @@ do_value_bin = (k : ValueKind, x : AstValueBinary) -> *Value {
       else => 0
     }
 
-    return value_new_imm (typ, imm, x.ti)
+    return value_new_imm (typ, imm, ti)
   }
 
-  v = value_new (k, typ, x.ti)
-  v.bin := (type=typ, kind=k, left=l, right=r, ti=x.ti)
+  v = value_new (k, typ, ti)
+  v.bin := (type=typ, kind=k, left=l, right=r, ti=ti)
   return v
 
 fail:
-  return value_new_poison (x.ti)
+  return value_new_poison (ti)
 }
 
 
@@ -1038,9 +1036,9 @@ fail:
 
 
 // shl, shr слишком отличны чтобы входить в bin
-do_value_shift = (k : ValueKind, x : AstValueBinary) -> *Value {
-  l = do_value (x.left)
-  r = do_value (x.right)
+do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value {
+  l = do_value (left)
+  r = do_value (right)
 
   if l.kind == #ValuePoison {goto fail}
   if r.kind == #ValuePoison {goto fail}
@@ -1054,7 +1052,7 @@ do_value_shift = (k : ValueKind, x : AstValueBinary) -> *Value {
       else => l.imm.value >> r.imm.value
     }
 
-    return value_new_imm (l.type, d, x.ti)
+    return value_new_imm (l.type, d, ti)
   }
 
   l2 = implicit_cast_int (l)
@@ -1064,12 +1062,12 @@ do_value_shift = (k : ValueKind, x : AstValueBinary) -> *Value {
   r2 = cast (r, l.type, r.ti)
 
   t = l.type
-  v = value_new (k, t, x.ti)
-  v.bin := (type=t, kind=k, left=l2, right=r2, ti=x.ti)
+  v = value_new (k, t, ti)
+  v.bin := (type=t, kind=k, left=l2, right=r2, ti=ti)
   return v
 
 fail:
-  return value_new_poison (x.ti)
+  return value_new_poison (ti)
 }
 
 
