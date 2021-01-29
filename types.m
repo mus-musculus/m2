@@ -204,6 +204,8 @@ AstValue2 = AstValueName or
 AstValue = (
   kind : AstValueKind
 
+  data : AstValue2
+
   //str     : Str // string representation of #AstValueId, #AstValueNum, #AstValueStr
   name    : AstValueName // #AstValueId
 

@@ -243,11 +243,10 @@ parse = (filename : Str) -> *AstModule or Unit {
     } else if match("extern") {
       decl = parse_decl(false)
 
-      v = ast_value_new(#AstValueFunc, #Error, decl.ti)
-      v.func.type := decl.type
-      v.func.type.func.arghack := xarghack
-      //v.extern := true
-      v.func.block_stmt := unit
+      decl.type.func.arghack := xarghack
+
+      v = ast_value_new (#AstValueFunc, (type=decl.type, block_stmt=unit) to AstValueFunc, decl.ti)
+      v.func := (type=decl.type, block_stmt=unit) to AstValueFunc
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
@@ -584,21 +583,19 @@ AstValueParser = () -> *AstValue
 ast_value_new = (k : AstValueKind, x : AstValue2, ti : *TokenInfo) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
   assert(v != nil, "ast_value_new malloc")
-  *v := (kind=k, ti=ti)
+  *v := (kind=k, ti=ti, data=x)
   return v
 }
 
 
 prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
-  nv = ast_value_new(k, #Error, ti)
+  nv = ast_value_new(k, (kind=k, value=v, ti=ti) to AstValueUnary, ti)
   nv.un := (kind=k, value=v, ti=ti)
   return nv
 }
 
 infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
-  v = ast_value_new(k, #Error, ti)
-  //v.operand[0] := l
-  //v.operand[1] := r
+  v = ast_value_new(k, (kind=k, left=l, right=r, ti=ti) to AstValueBinary, ti)
   v.bin := (kind=k, left=l, right=r, ti=ti)
   return v
 }
@@ -805,17 +802,17 @@ parse_value9 = AstValueParser {
   ti = &ctok().ti
   if match("to") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueCast, #Error, ti)
+    nv = ast_value_new (#AstValueCast, (value=v, type=t, ti=ti) to AstValueCast, ti)
     nv.cast := (value=v, type=t, ti=ti)
     v := nv
   } else if match("is") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueIs, #Error, ti)
+    nv = ast_value_new (#AstValueIs, (value=v, type=t, ti=ti) to AstValueIs, ti)
     nv.is := (value=v, type=t, ti=ti)
     v := nv
   } else if match("as") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueAs, #Error, ti)
+    nv = ast_value_new (#AstValueAs, (value=v, type=t, ti=ti) to AstValueAs, ti)
     nv.as := (value=v, type=t, ti=ti)
     v := nv
   }
@@ -848,7 +845,7 @@ parse_value10 = AstValueParser {
       error("sizeof expected <type>", ti_sizeof)
       return nil
     }
-    nv = ast_value_new(#AstValueSizeof, #Error, ti)
+    nv = ast_value_new(#AstValueSizeof, (type=t, ti=ti) to AstValueSizeof, ti)
     nv.sizeof := (type=t, ti=ti)
     v := nv
 
@@ -859,7 +856,7 @@ parse_value10 = AstValueParser {
       error("alignof expected <type>", ti_alignof)
       return nil
     }
-    nv = ast_value_new(#AstValueAlignof, #Error, ti)
+    nv = ast_value_new(#AstValueAlignof, (type=t, ti=ti) to AstValueAlignof, ti)
     nv.alignof := (type=t, ti=ti)
     v := nv
   } else {
@@ -898,18 +895,18 @@ parse_value11 = AstValueParser {
         }
       }
 
-      nv = ast_value_new(#AstValueCall, #Error, ti)
+      nv = ast_value_new (#AstValueCall, (func=v, args=*arglist, ti=ti) to AstValueCall, ti)
       nv.call := (func=v, args=*arglist, ti=ti)
       v := nv
     } else if match("[") {
       i = parse_value()
       match("]")
-      nv = ast_value_new(#AstValueIndex, #Error, ti)
+      nv = ast_value_new (#AstValueIndex, (array=v, index=i, ti=ti) to AstValueIndex, ti)
       nv.index := (array=v, index=i, ti=ti)
       v := nv
     } else if match(".") {
       fid = parse_id()
-      nv = ast_value_new(#AstValueAccess, #Error, ti)
+      nv = ast_value_new (#AstValueAccess, (rec=v, field_id=fid, ti=ti) to AstValueAccess, ti)
       nv.access := (rec=v, field_id=fid, ti=ti)
       v := nv
     } else {
@@ -994,7 +991,7 @@ parse_value_id = AstValueParser {
   id = parse_id()
   if id == nil {return nil}
 
-  v = ast_value_new(#AstValueId, #Error, ti)
+  v = ast_value_new (#AstValueId, (id=id, ti=ti, ti=ti) to AstValueName, ti)
   v.name := (id=id, ti=ti, ti=ti)
   return v
 
@@ -1046,7 +1043,7 @@ parse_value_str = AstValueParser {
   str = dup(text)
   skip()
 
-  v = ast_value_new(#AstValueStr, #Error, &token.ti)
+  v = ast_value_new (#AstValueStr, (string=str, ti=&token.ti) to AstValueString, &token.ti)
   v.str := (string=str, ti=&token.ti)
   return v
 }
@@ -1067,7 +1064,7 @@ parse_value_rec = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueRec, #Error, ti)
+  v = ast_value_new (#AstValueRec, (values=fields, ti=ti) to AstValueRecord, ti)
   v.rec := (values=fields, ti=ti)
   return v
 }
@@ -1089,7 +1086,7 @@ parse_value_array = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueArr, #Error, ti)
+  v = ast_value_new (#AstValueArr, (items=items, ti=ti) to AstValueArray, ti)
   v.arr := (items=items, ti=ti)
   return v
 }
@@ -1109,7 +1106,7 @@ parse_value_func = AstValueParser {
 
   b = parse_stmt_block(block_ti)
 
-  v = ast_value_new(#AstValueFunc, #Error, func_ti)
+  v = ast_value_new (#AstValueFunc, (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc, func_ti)
   v.func := (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc
   return v
 }
@@ -1119,7 +1116,7 @@ parse_value_extern = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
 
-  v = ast_value_new(#AstValueFunc, #Error, ti)
+  v = ast_value_new (#AstValueFunc, (type=t, block_stmt=unit, ti=ti) to AstValueFunc, ti)
   v.func := (type=t, block_stmt=unit, ti=ti) to AstValueFunc
   //v.extern := true
   return v
@@ -1133,7 +1130,7 @@ parse_value_num = AstValueParser {
   str = dup(&tok.text[0] to Str)
   skip()
 
-  v = ast_value_new(#AstValueNum, #Error, ti)
+  v = ast_value_new (#AstValueNum, (string=str, ti=ti) to AstValueNumber, ti)
   v.num := (string=str, ti=ti)
   return v
 }
