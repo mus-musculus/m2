@@ -138,19 +138,20 @@ do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
 
-  v = when x.data {
-    AstValueName    => do_value_named   (x.data as AstValueName)
-    AstValueNumber  => do_value_numeric (x.data as AstValueNumber)
-    AstValueFunc    => do_value_func    (x.data as AstValueFunc)
-    AstValueArray   => do_value_array   (x.data as AstValueArray)
-    AstValueRecord  => do_value_record  (x.data as AstValueRecord)
-    AstValueString  => do_value_string  (x.data as AstValueString)
+  xx = x.data
+  v = when xx {
+    AstValueName    => do_value_named   (xx as AstValueName)
+    AstValueNumber  => do_value_numeric (xx as AstValueNumber)
+    AstValueFunc    => do_value_func    (xx as AstValueFunc)
+    AstValueArray   => do_value_array   (xx as AstValueArray)
+    AstValueRecord  => do_value_record  (xx as AstValueRecord)
+    AstValueString  => do_value_string  (xx as AstValueString)
 
-    AstValueRef     => do_value_ref     (x.data as AstValueRef)
-    AstValueDeref   => do_value_deref   (x.data as AstValueDeref)
-    AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
-    AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
-    AstValueNot     => do_value_not     (x.data as AstValueNot)
+    AstValueRef     => do_value_ref     (xx as AstValueRef)
+    AstValueDeref   => do_value_deref   (xx as AstValueDeref)
+    AstValueMinus   => do_value_minus   (xx as AstValueMinus)
+    AstValuePlus    => do_value_plus    (xx as AstValuePlus)
+    AstValueNot     => do_value_not     (xx as AstValueNot)
 
     AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
     AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
@@ -169,15 +170,15 @@ do_valuex = DoValuex {
     AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
     AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
 
-    AstValueCall    => do_value_call    (x.data as AstValueCall)
-    AstValueIndex   => do_value_index   (x.data as AstValueIndex)
-    AstValueAccess  => do_value_access  (x.data as AstValueAccess)
-    AstValueCast    => do_value_cast    (x.data as AstValueCast)
-    AstValueIs      => do_value_is      (x.data as AstValueIs)
-    AstValueAs      => do_value_as      (x.data as AstValueAs)
-    AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
-    AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
-    AstValueWhen    => do_value_when    (x.data as AstValueWhen)
+    AstValueCall    => do_value_call    (xx as AstValueCall)
+    AstValueIndex   => do_value_index   (xx as AstValueIndex)
+    AstValueAccess  => do_value_access  (xx as AstValueAccess)
+    AstValueCast    => do_value_cast    (xx as AstValueCast)
+    AstValueIs      => do_value_is      (xx as AstValueIs)
+    AstValueAs      => do_value_as      (xx as AstValueAs)
+    AstValueSizeof  => do_value_sizeof  (xx as AstValueSizeof)
+    AstValueAlignof => do_value_alignof (xx as AstValueAlignof)
+    AstValueWhen    => do_value_when    (xx as AstValueWhen)
     else => () -> *Value {fatal("do_value : v == nil"); return nil} ()
   }
 
@@ -191,11 +192,12 @@ do_valuex = DoValuex {
 
 
 do_lvalue = DoValue {
-  return when x.data {
-    AstValueName   => do_value_named  (x.data to AstValueName)
-    AstValueDeref  => do_value_deref  (x.data to AstValueDeref)
-    AstValueIndex  => do_value_index  (x.data to AstValueIndex)
-    AstValueAccess => do_value_access (x.data to AstValueAccess)
+  xx = x.data
+  return when xx {
+    AstValueName   => do_value_named  (xx to AstValueName)
+    AstValueDeref  => do_value_deref  (xx to AstValueDeref)
+    AstValueIndex  => do_value_index  (xx to AstValueIndex)
+    AstValueAccess => do_value_access (xx to AstValueAccess)
     else => DoValue {
       error ("invalid lvalue", x.ti)
       return value_new_poison (x.ti)
