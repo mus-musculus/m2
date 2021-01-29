@@ -233,15 +233,11 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
 
   stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
-    va = malloc(sizeof Decl) to *Decl
-    va.id := id
-    va.init_value := dold(init_value)
-    va.type := t
-
     s = stmt_new(#StmtVarDef, ti)
-    s.v := va
+    s.v := (id=id, type=t, init_value=dold (init_value))
     return s
   }
+
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
   v = value_new(#ValueLocalVar, t, ti)
@@ -254,7 +250,7 @@ create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo
   stmtAdd = (s : *Stmt) -> () {list_append(&fctx.cblock.stmts, s)}
 
   stmtAdd(vd)
-  v.vardef := vd.v
+  v.vardef := &vd.v
 
   return v
 }

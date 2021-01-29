@@ -113,7 +113,6 @@ AstDecl = (
   type : *AstType
   ti : *TokenInfo /* of `:` */
   extern, arghack : Bool
-  _ : [10]Nat8
 )
 
 AstNodeComment   = (text : Str, ti : *TokenInfo)
@@ -547,7 +546,7 @@ Stmt = (
   assign   : StmtAssign
   block    : StmtBlock
 
-  v        : *Decl    // var definition
+  v        : Decl    // var definition
   if       : StmtIf
   while    : StmtWhile
   return   : StmtReturn
@@ -603,7 +602,7 @@ DefFunc  = (id : Str, type : *Type, block : *StmtBlock)
 DefVar   = (id : Str, type : *Type, init_value : *Value)
 DefAlias = (id : Str, type : *Type, org : Str)
 
-/*Definition = DefType or
+/*Definition2 = DefType or
              DefConst or
              DefStr or
              DefArray or
