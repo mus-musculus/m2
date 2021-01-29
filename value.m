@@ -139,7 +139,7 @@ do_value = DoValue {return do_valuex(x, true)}
 do_valuex = DoValuex {
 
   v = when x.data {
-    AstValueName      => do_value_named   (x.name/*data as AstValueName*/)
+    AstValueName    => do_value_named   (x.data as AstValueName)
     AstValueNumber  => do_value_numeric (x.data as AstValueNumber)
     AstValueFunc    => do_value_func    (x.data as AstValueFunc)
     AstValueArray   => do_value_array   (x.data as AstValueArray)
@@ -191,11 +191,11 @@ do_valuex = DoValuex {
 
 
 do_lvalue = DoValue {
-  return when x.kind {
-    #AstValueId     => do_value_named  (x.name)
-    #AstValueDeref  => do_value_deref  (x.data to AstValueDeref)
-    #AstValueIndex  => do_value_index  (x.index)
-    #AstValueAccess => do_value_access (x.access)
+  return when x.data {
+    AstValueName   => do_value_named  (x.data to AstValueName)
+    AstValueDeref  => do_value_deref  (x.data to AstValueDeref)
+    AstValueIndex  => do_value_index  (x.data to AstValueIndex)
+    AstValueAccess => do_value_access (x.data to AstValueAccess)
     else => DoValue {
       error ("invalid lvalue", x.ti)
       return value_new_poison (x.ti)
