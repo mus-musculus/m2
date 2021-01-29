@@ -177,7 +177,7 @@ do_valuex = DoValuex {
     #AstValueAs      => do_value_as      (x.data as AstValueAs)
     #AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
     #AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
-    #AstValueWhen    => do_value_when    (x.when)
+    #AstValueWhen    => do_value_when    (x.data as AstValueWhen)
 
     #AstValueForbidden => do_value_forbidden (x)
     else => value_new_poison (x.ti)
