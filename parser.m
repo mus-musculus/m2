@@ -1036,8 +1036,9 @@ parse_value_id = AstValueParser {
   id = parse_id()
   if id == nil {return nil}
 
-  v = ast_value_new (#AstValueId, (id=id, ti=ti) to AstValueName, ti)
-  v.name := (id=id, ti=ti)
+  name = (id=id, ti=ti) to AstValueName
+  v = ast_value_new (#AstValueId, name, ti)
+  v.name := name
   return v
 
 fail:

@@ -140,11 +140,11 @@ do_valuex = DoValuex {
 
   v0 = when x.data {
     //AstValueName      => do_value_named   (x.data as AstValueName)
-    AstValueNumber     => do_value_numeric (x.data as AstValueNumber)
+    AstValueNumber  => do_value_numeric (x.data as AstValueNumber)
     AstValueFunc    => do_value_func    (x.data as AstValueFunc)
-    AstValueArray     => do_value_array   (x.data as AstValueArray)
-    AstValueRecord     => do_value_record  (x.data as AstValueRecord)
-    AstValueString     => do_value_string  (x.data as AstValueString)
+    AstValueArray   => do_value_array   (x.data as AstValueArray)
+    AstValueRecord  => do_value_record  (x.data as AstValueRecord)
+    AstValueString  => do_value_string  (x.data as AstValueString)
 
     AstValueRef     => do_value_ref     (x.data as AstValueRef)
     AstValueDeref   => do_value_deref   (x.data as AstValueDeref)

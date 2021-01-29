@@ -8653,6 +8653,7 @@ endif_4:
 ;stmt12:
   %24 = insertvalue %AstName zeroinitializer, %AstId* %19, 0
   %25 = insertvalue %AstName %24, %TokenInfo* %2, 2
+;stmt13:
   %26 = alloca %union.1
 ; write variant 0
   %27 = getelementptr inbounds %union.1, %union.1* %26, i1 0, i32 0
@@ -8663,19 +8664,17 @@ endif_4:
   store %AstName %25, %AstName* %29, align 8
   %30 = load %union.1, %union.1* %26
   %31 = call %AstValue* (%AstValueKind, %union.1, %TokenInfo*) @func219 (%AstValueKind 3, %union.1 %30, %TokenInfo* %2)
-;stmt13:
-  %32 = getelementptr inbounds %AstValue, %AstValue* %31, i1 0, i32 2
-  %33 = insertvalue %AstName zeroinitializer, %AstId* %19, 0
-  %34 = insertvalue %AstName %33, %TokenInfo* %2, 2
-  store %AstName %34, %AstName* %32, align 8
 ;stmt14:
-  ret %AstValue* %31
+  %32 = getelementptr inbounds %AstValue, %AstValue* %31, i1 0, i32 2
+  store %AstName %25, %AstName* %32, align 8
 ;stmt15:
+  ret %AstValue* %31
+;stmt16:
   br label %fail
 fail:
-;stmt16:; loadImmPtr
-  %36 = inttoptr i64 0 to%AstValue*
-  ret %AstValue* %36
+;stmt17:; loadImmPtr
+  %34 = inttoptr i64 0 to%AstValue*
+  ret %AstValue* %34
 }
 
 define %AstValue* @func236 () {
