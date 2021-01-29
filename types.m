@@ -168,7 +168,6 @@ AstValueWhen   = (x : *AstValue, variants : List, other : *AstValue, ti : *Token
 AstValueRecord = (values : Map, ti : *TokenInfo)
 AstValueArray  = (items : List, ti : *TokenInfo)
 
-AstValueBinary = Tagged (left, right : *AstValue, ti : *TokenInfo)
 AstValueAdd = Tagged (left, right : *AstValue, ti : *TokenInfo)
 AstValueSub = Tagged (left, right : *AstValue, ti : *TokenInfo)
 AstValueMul = Tagged (left, right : *AstValue, ti : *TokenInfo)
@@ -186,9 +185,6 @@ AstValueGe  = Tagged (left, right : *AstValue, ti : *TokenInfo)
 AstValueShl = Tagged (left, right : *AstValue, ti : *TokenInfo)
 AstValueShr = Tagged (left, right : *AstValue, ti : *TokenInfo)
 
-
-
-AstValueUnary  = Tagged (value : *AstValue, ti : *TokenInfo)
 AstValueRef    = Tagged (value : *AstValue, ti : *TokenInfo)
 AstValueDeref  = Tagged (value : *AstValue, ti : *TokenInfo)
 AstValueMinus  = Tagged (value : *AstValue, ti : *TokenInfo)
@@ -209,19 +205,20 @@ AstValueParserError = {#Error}
 
 
 AstValue =  AstValueParserError or
+
             AstValueName or
             AstValueRecord or
             AstValueArray or
             AstValueString or
             AstValueNumber or
             AstValueFunc or
-            AstValueUnary or
+
             AstValueRef or
             AstValueDeref or
             AstValueMinus or
             AstValuePlus or
             AstValueNot or
-            AstValueBinary or
+
             AstValueAdd or
             AstValueSub or
             AstValueMul or
@@ -238,6 +235,7 @@ AstValue =  AstValueParserError or
             AstValueGe or
             AstValueShl or
             AstValueShr or
+
             AstValueCall or
             AstValueIndex or
             AstValueAccess or
