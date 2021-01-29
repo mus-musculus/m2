@@ -403,19 +403,19 @@ do_type_union = DoType {
 
 
 
-type_eq_numeric = (a, b : *TypeNumeric) -> Bool {
+type_eq_numeric = (a, b : TypeNumeric) -> Bool {
   return a.power == b.power and a.signed == b.signed
 }
 
-type_eq_array = (a, b : *TypeArray) -> Bool {
+type_eq_array = (a, b : TypeArray) -> Bool {
   return a.volume == b.volume and type_eq (a.of, b.of)
 }
 
-type_eq_func = (a, b : *TypeFunc) -> Bool {
+type_eq_func = (a, b : TypeFunc) -> Bool {
   return type_eq (a.from, b.from) and type_eq (a.to, b.to)
 }
 
-type_eq_record = (a, b : *TypeRecord) -> Bool {
+type_eq_record = (a, b : TypeRecord) -> Bool {
   check_fields = ListCompareHandler {
     f1 = data1 to *Decl
     f2 = data2 to *Decl
@@ -425,14 +425,14 @@ type_eq_record = (a, b : *TypeRecord) -> Bool {
   return list_compare (a.decls, b.decls, check_fields, nil)
 }
 
-type_eq_union = (a, b : *TypeUnion) -> Bool {
+type_eq_union = (a, b : TypeUnion) -> Bool {
   if a.types.volume != b.types.volume {return false}
   check_types = ListCompareHandler {
     t1 = data1 to *Type
     t2 = data2 to *Type
     return type_eq (t1, t2)
   }
-  return list_compare (&a.types, &b.types, check_types, nil)
+  return list_compare (&(a.types to Var List), &(b.types to Var List), check_types, nil)
 }
 
 
@@ -446,14 +446,14 @@ type_eq = (a, b : *Type) -> Bool {
   if a.kind != b.kind {return false}
 
   return when a.kind {
-    #TypeNumeric => type_eq_numeric (&a.num, &b.num)
+    #TypeNumeric => type_eq_numeric (a.num, b.num)
     #TypeVar     => type_eq         (a.var.of, b.var.of)
     #TypePointer => type_eq         (a.pointer.to, b.pointer.to)
-    #TypeArray   => type_eq_array   (&a.array, &b.array)
+    #TypeArray   => type_eq_array   (a.array, b.array)
     #TypeArrayU  => type_eq         (a.array_u.of, b.array_u.of)
-    #TypeFunc    => type_eq_func    (&a.func, &b.func)
-    #TypeRecord  => type_eq_record  (&a.record, &b.record)
-    #TypeUnion   => type_eq_union   (&a.union, &b.union)
+    #TypeFunc    => type_eq_func    (a.func, b.func)
+    #TypeRecord  => type_eq_record  (a.record, b.record)
+    #TypeUnion   => type_eq_union   (a.union, b.union)
     #TypeEnum    => false
     #TypeBool    => true
     else => false
