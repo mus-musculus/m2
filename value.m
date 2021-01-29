@@ -103,7 +103,7 @@ dold = (x : *Value) -> *Value {
 
 exist do_value_named   : (x : AstValueName) -> *Value
 exist do_value_numeric : (x : AstValueNumber) -> *Value
-exist do_value_func    : (x : *AstValueFunc) -> *Value
+exist do_value_func    : (x : AstValueFunc) -> *Value
 exist do_value_array   : (x : AstValueArray) -> *Value
 exist do_value_record  : (x : AstValueRecord) -> *Value
 exist do_value_string  : (x : AstValueString) -> *Value
@@ -137,7 +137,7 @@ do_valuex = DoValuex {
   v = when x.kind {
     #AstValueId      => do_value_named   (x.data as AstValueName)
     #AstValueNum     => do_value_numeric (x.data as AstValueNumber)
-    #AstValueFunc    => do_value_func    (&x.func)
+    #AstValueFunc    => do_value_func    (x.data as AstValueFunc)
     #AstValueArr     => do_value_array   (x.data as AstValueArray)
     #AstValueRec     => do_value_record  (x.data as AstValueRecord)
     #AstValueStr     => do_value_string  (x.data as AstValueString)
@@ -165,14 +165,14 @@ do_valuex = DoValuex {
     #AstValueShl     => do_value_shift (#ValueShl, x.bin)
     #AstValueShr     => do_value_shift (#ValueShr, x.bin)
 
-    #AstValueCall    => do_value_call    (x.call)
-    #AstValueIndex   => do_value_index   (x.index)
-    #AstValueAccess  => do_value_access  (x.access)
-    #AstValueCast    => do_value_cast    (x.cast)
-    #AstValueIs      => do_value_is      (x.is)
-    #AstValueAs      => do_value_as      (x.as)
-    #AstValueSizeof  => do_value_sizeof  (x.sizeof)
-    #AstValueAlignof => do_value_alignof (x.alignof)
+    #AstValueCall    => do_value_call    (x.data as AstValueCall)
+    #AstValueIndex   => do_value_index   (x.data as AstValueIndex)
+    #AstValueAccess  => do_value_access  (x.data as AstValueAccess)
+    #AstValueCast    => do_value_cast    (x.data as AstValueCast)
+    #AstValueIs      => do_value_is      (x.data as AstValueIs)
+    #AstValueAs      => do_value_as      (x.data as AstValueAs)
+    #AstValueSizeof  => do_value_sizeof  (x.data as AstValueSizeof)
+    #AstValueAlignof => do_value_alignof (x.data as AstValueAlignof)
     #AstValueWhen    => do_value_when    (&x.when)
 
     #AstValueForbidden => do_value_forbidden (x)
@@ -854,7 +854,7 @@ do_value_string = (x : AstValueString) -> *Value {
 
 fuid = 0 to Var Nat
 // портал из мира Value в мир Stmt
-do_value_func = (x : *AstValueFunc) -> *Value {
+do_value_func = (x : AstValueFunc) -> *Value {
   t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
