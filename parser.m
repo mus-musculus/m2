@@ -12,7 +12,7 @@ exist ctok : () -> *Token
 exist separator : () -> Bool
 exist parse_import : () -> *AstNode
 exist parse_decl : (arghack : Bool) -> *AstDecl
-exist ast_value_new : (k : AstValueKind, ti : *TokenInfo) -> *AstValue
+exist ast_value_new : (k : AstValueKind, x : AstValue2, ti : *TokenInfo) -> *AstValue
 exist parse_bind_type : () -> *AstNodeBindType
 exist parse_bind_value : () -> *AstNodeBindValue
 
@@ -243,17 +243,14 @@ parse = (filename : Str) -> *AstModule or Unit {
     } else if match("extern") {
       decl = parse_decl(false)
 
-      v = ast_value_new(#AstValueFunc, decl.ti)
+      v = ast_value_new(#AstValueFunc, #Error, decl.ti)
       v.func.type := decl.type
       v.func.type.func.arghack := xarghack
       v.extern := true
       v.func.block_stmt := unit
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
-      bv.id := decl.ids.first.data to *AstId
-      bv.value := v
-      bv.ti := decl.ti
-
+      *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
       list_append(&m.nodes, ast_node_new(#AstNodeBindValue, bv))
       continue
     }
@@ -584,7 +581,7 @@ parse_decl = (arghack : Bool) -> *AstDecl {
 AstValueParser = () -> *AstValue
 
 
-ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
+ast_value_new = (k : AstValueKind, x : AstValue2, ti : *TokenInfo) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
   assert(v != nil, "ast_value_new malloc")
   *v := (kind=k, ti=ti)
@@ -593,13 +590,13 @@ ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
 
 
 prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
-  nv = ast_value_new(k, ti)
+  nv = ast_value_new(k, #Error, ti)
   nv.un := (kind=k, value=v, ti=ti)
   return nv
 }
 
 infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
-  v = ast_value_new(k, ti)
+  v = ast_value_new(k, #Error, ti)
   //v.operand[0] := l
   //v.operand[1] := r
   v.bin := (kind=k, left=l, right=r, ti=ti)
@@ -808,17 +805,17 @@ parse_value9 = AstValueParser {
   ti = &ctok().ti
   if match("to") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueCast, ti)
+    nv = ast_value_new (#AstValueCast, #Error, ti)
     nv.cast := (value=v, type=t, ti=ti)
     v := nv
   } else if match("is") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueIs, ti)
+    nv = ast_value_new (#AstValueIs, #Error, ti)
     nv.is := (value=v, type=t, ti=ti)
     v := nv
   } else if match("as") {
     t = parse_type ()
-    nv = ast_value_new (#AstValueAs, ti)
+    nv = ast_value_new (#AstValueAs, #Error, ti)
     nv.as := (value=v, type=t, ti=ti)
     v := nv
   }
@@ -851,7 +848,7 @@ parse_value10 = AstValueParser {
       error("sizeof expected <type>", ti_sizeof)
       return nil
     }
-    nv = ast_value_new(#AstValueSizeof, ti)
+    nv = ast_value_new(#AstValueSizeof, #Error, ti)
     nv.sizeof := (type=t, ti=ti)
     v := nv
 
@@ -862,7 +859,7 @@ parse_value10 = AstValueParser {
       error("alignof expected <type>", ti_alignof)
       return nil
     }
-    nv = ast_value_new(#AstValueAlignof, ti)
+    nv = ast_value_new(#AstValueAlignof, #Error, ti)
     nv.alignof := (type=t, ti=ti)
     v := nv
   } else {
@@ -901,18 +898,18 @@ parse_value11 = AstValueParser {
         }
       }
 
-      nv = ast_value_new(#AstValueCall, ti)
+      nv = ast_value_new(#AstValueCall, #Error, ti)
       nv.call := (func=v, args=*arglist, ti=ti)
       v := nv
     } else if match("[") {
       i = parse_value()
       match("]")
-      nv = ast_value_new(#AstValueIndex, ti)
+      nv = ast_value_new(#AstValueIndex, #Error, ti)
       nv.index := (array=v, index=i, ti=ti)
       v := nv
     } else if match(".") {
       fid = parse_id()
-      nv = ast_value_new(#AstValueAccess, ti)
+      nv = ast_value_new(#AstValueAccess, #Error, ti)
       nv.access := (rec=v, field_id=fid, ti=ti)
       v := nv
     } else {
@@ -997,7 +994,7 @@ parse_value_id = AstValueParser {
   id = parse_id()
   if id == nil {return nil}
 
-  v = ast_value_new(#AstValueId, ti)
+  v = ast_value_new(#AstValueId, #Error, ti)
   v.name := (id=id, ti=ti, ti=ti)
   return v
 
@@ -1007,7 +1004,7 @@ fail:
 
 parse_value_when = AstValueParser {
   token = ctok()
-  v = ast_value_new(#AstValueWhen, &token.ti)
+  v = ast_value_new(#AstValueWhen, #Error, &token.ti)
   list_init(&v.when.variants)
   v.when.x := parse_value()
   skip_nl()
@@ -1049,7 +1046,7 @@ parse_value_str = AstValueParser {
   str = dup(text)
   skip()
 
-  v = ast_value_new(#AstValueStr, &token.ti)
+  v = ast_value_new(#AstValueStr, #Error, &token.ti)
   v.str := (string=str, ti=&token.ti)
   return v
 }
@@ -1070,7 +1067,7 @@ parse_value_rec = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueRec, ti)
+  v = ast_value_new (#AstValueRec, #Error, ti)
   v.rec := (values=fields, ti=ti)
   return v
 }
@@ -1092,7 +1089,7 @@ parse_value_array = AstValueParser {
     need(",")
   }
 
-  v = ast_value_new (#AstValueArr, ti)
+  v = ast_value_new (#AstValueArr, #Error, ti)
   v.arr := (items=items, ti=ti)
   return v
 }
@@ -1112,7 +1109,7 @@ parse_value_func = AstValueParser {
 
   b = parse_stmt_block(block_ti)
 
-  v = ast_value_new(#AstValueFunc, func_ti)
+  v = ast_value_new(#AstValueFunc, #Error, func_ti)
   v.func := (type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc
   return v
 }
@@ -1122,7 +1119,7 @@ parse_value_extern = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
 
-  v = ast_value_new(#AstValueFunc, ti)
+  v = ast_value_new(#AstValueFunc, #Error, ti)
   v.func := (type=t, block_stmt=unit, ti=ti) to AstValueFunc
   v.extern := true
   return v
@@ -1136,7 +1133,7 @@ parse_value_num = AstValueParser {
   str = dup(&tok.text[0] to Str)
   skip()
 
-  v = ast_value_new(#AstValueNum, ti)
+  v = ast_value_new(#AstValueNum, #Error, ti)
   v.num := (string=str, ti=ti)
   return v
 }
