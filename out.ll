@@ -14100,15 +14100,23 @@ define %Type* @func399 (%AstType*) {
   %4 = load %AstType*, %AstType** %3
   %5 = call %Type* (%AstType*) @func398 (%AstType* %4)
 ;stmt1:
-  %6 = getelementptr inbounds %Type, %Type* %5, i1 0, i32 1
-  %7 = load %Nat32, %Nat32* @spec_type_uid
-  store %Nat32 %7, %Nat32* %6, align 4
+  %6 = getelementptr inbounds %AstType, %AstType* %0, i1 0, i32 11
+  %7 = load %TokenInfo*, %TokenInfo** %6
+  %8 = call %Type* (%TypeKind, %Nat32, %TokenInfo*) @func378 (%TypeKind 2, %Nat32 0, %TokenInfo* %7)
 ;stmt2:
-  %8 = load %Nat32, %Nat32* @spec_type_uid
-  %9 = add %Nat32 %8, 1
-  store %Nat32 %9, %Nat32* @spec_type_uid, align 4
+  %9 = bitcast %Type* %8 to %Unit*
+  %10 = bitcast %Type* %5 to %Unit*
+  %11 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %9, %Unit* %10, %Nat32 176)
 ;stmt3:
-  ret %Type* %5
+  %12 = getelementptr inbounds %Type, %Type* %8, i1 0, i32 1
+  %13 = load %Nat32, %Nat32* @spec_type_uid
+  store %Nat32 %13, %Nat32* %12, align 4
+;stmt4:
+  %14 = load %Nat32, %Nat32* @spec_type_uid
+  %15 = add %Nat32 %14, 1
+  store %Nat32 %15, %Nat32* @spec_type_uid, align 4
+;stmt5:
+  ret %Type* %8
 }
 
 define %Type* @func400 (%AstType*) {

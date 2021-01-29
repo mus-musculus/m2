@@ -144,9 +144,12 @@ do_type = DoType {
 spec_type_uid = 0 to Var Nat32
 do_type_special = DoType {
   spec_type = do_type(x.special.type)
-  spec_type.uid := spec_type_uid
+  // создем новый (!) tagged тип на основе полученного
+  nt = type_new (#TypePoison, 0, x.ti)
+  memcpy(nt, spec_type, sizeof Type)
+  nt.uid := spec_type_uid
   spec_type_uid := spec_type_uid + 1
-  return spec_type
+  return nt
 }
 
 
