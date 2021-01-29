@@ -126,34 +126,6 @@ AstNodeDeclValue = (decl : *AstDecl)
 
 
 
-AstValueKind = {
-  #AstValueForbidden,
-
-  // Literal Values
-  #AstValueNum, #AstValueStr,
-  #AstValueId, #AstValueFunc, #AstValueArr, #AstValueRec,
-
-  /* Operations */
-
-  // unary
-  #AstValueRef, #AstValueDeref, #AstValueNot, #AstValueMinus, #AstValuePlus,
-
-  // binary
-  #AstValueAdd, #AstValueSub,
-  #AstValueMul, #AstValueDiv, #AstValueMod,
-  #AstValueOr, #AstValueXor, #AstValueAnd,
-
-  #AstValueEq, #AstValueNe,
-  #AstValueLt, #AstValueGt,
-  #AstValueLe, #AstValueGe,
-
-  // special
-  #AstValueShl, #AstValueShr,
-  #AstValueCall, #AstValueIndex, #AstValueAccess,
-  #AstValueCast, #AstValueIs, #AstValueAs,
-  #AstValueSizeof, #AstValueAlignof, #AstValueWhen
-}
-
 AstValueFunc   = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
 AstValueCall   = (func : *AstValue, args : List, ti : *TokenInfo)
 AstValueIndex  = (array, index : *AstValue, ti : *TokenInfo)
@@ -188,12 +160,12 @@ AstValueGe  = Tagged AstValueBinary
 AstValueShl = Tagged AstValueBinary
 AstValueShr = Tagged AstValueBinary
 
-AstTypeUnary = (value : *AstValue, ti : *TokenInfo)
-AstValueRef   = Tagged AstTypeUnary
-AstValueDeref = Tagged AstTypeUnary
-AstValueMinus = Tagged AstTypeUnary
-AstValuePlus  = Tagged AstTypeUnary
-AstValueNot   = Tagged AstTypeUnary
+AstValueUnary = (value : *AstValue, ti : *TokenInfo)
+AstValueRef   = Tagged AstValueUnary
+AstValueDeref = Tagged AstValueUnary
+AstValueMinus = Tagged AstValueUnary
+AstValuePlus  = Tagged AstValueUnary
+AstValueNot   = Tagged AstValueUnary
 
 AstValueSizeof  = Tagged (type : *AstType, ti : *TokenInfo)
 AstValueAlignof = Tagged (type : *AstType, ti : *TokenInfo)
@@ -205,7 +177,6 @@ AstValueName = AstName
 
 
 AstValueParserError = {#Error}
-
 
 
 AstValue =  AstValueParserError or
