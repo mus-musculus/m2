@@ -439,7 +439,9 @@ type_eq_union = (a, b : *TypeUnion) -> Bool {
 type_eq = (a, b : *Type) -> Bool {
   if a == b {return true}
 
+  // uid используется для размеченных типов (Tagged)
   if a.uid != b.uid {return false}
+  if a.uid > 0 {return true}
 
   if a.kind != b.kind {return false}
 
