@@ -101,14 +101,14 @@ dold = (x : *Value) -> *Value {
 }
 
 
-exist do_value_named   : (x : *AstValueName) -> *Value
-exist do_value_numeric : (x : *AstValueNumber) -> *Value
+exist do_value_named   : (x : AstValueName) -> *Value
+exist do_value_numeric : (x : AstValueNumber) -> *Value
 exist do_value_func    : (x : *AstValueFunc) -> *Value
-exist do_value_array   : (x : *AstValueArray) -> *Value
-exist do_value_record  : (x : *AstValueRecord) -> *Value
-exist do_value_string  : (x : *AstValueString) -> *Value
+exist do_value_array   : (x : AstValueArray) -> *Value
+exist do_value_record  : (x : AstValueRecord) -> *Value
+exist do_value_string  : (x : AstValueString) -> *Value
 
-exist do_value_ref   : (x : *AstValueUnary) -> *Value
+exist do_value_ref   : (x : AstValueUnary) -> *Value
 exist do_value_deref : (x : *AstValueUnary) -> *Value
 exist do_value_minus : (x : *AstValueUnary) -> *Value
 exist do_value_plus  : (x : *AstValueUnary) -> *Value
@@ -135,14 +135,14 @@ do_value = DoValue {return do_valuex(x, true)}
 
 do_valuex = DoValuex {
   v = when x.kind {
-    #AstValueId      => do_value_named   (&x.name)
-    #AstValueNum     => do_value_numeric (&x.num)
+    #AstValueId      => do_value_named   (x.name)
+    #AstValueNum     => do_value_numeric (x.num)
     #AstValueFunc    => do_value_func    (&x.func)
-    #AstValueArr     => do_value_array   (&x.arr)
-    #AstValueRec     => do_value_record  (&x.rec)
-    #AstValueStr     => do_value_string  (&x.str)
+    #AstValueArr     => do_value_array   (x.arr)
+    #AstValueRec     => do_value_record  (x.rec)
+    #AstValueStr     => do_value_string  (x.str)
 
-    #AstValueRef     => do_value_ref     (&x.un)
+    #AstValueRef     => do_value_ref     (x.un)
     #AstValueDeref   => do_value_deref   (&x.un)
     #AstValueNot     => do_value_not     (&x.un)
     #AstValueMinus   => do_value_minus   (&x.un)
@@ -194,7 +194,7 @@ do_valuex = DoValuex {
 
 do_lvalue = DoValue {
   return when x.kind {
-    #AstValueId     => do_value_named  (&x.name)
+    #AstValueId     => do_value_named  (x.name)
     #AstValueDeref  => do_value_deref  (&x.un)
     #AstValueIndex  => do_value_index  (&x.index)
     #AstValueAccess => do_value_access (&x.access)
@@ -304,7 +304,7 @@ do_value_when = (x : *AstValueWhen) -> *Value {
 
 
 // не загружает переменную - просто пока отбрасывает ее Var тип
-do_value_ref = (x : *AstValueUnary) -> *Value {
+do_value_ref = (x : AstValueUnary) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {return v}
@@ -811,7 +811,7 @@ fail:
 }
 
 
-do_value_named = (x : *AstValueName) -> *Value {
+do_value_named = (x : AstValueName) -> *Value {
   id = x.id.str
   v = get_value (id)
 
@@ -828,7 +828,7 @@ do_value_named = (x : *AstValueName) -> *Value {
 }
 
 
-do_value_numeric = (x : *AstValueNumber) -> *Value {
+do_value_numeric = (x : AstValueNumber) -> *Value {
   str = x.string
   d = 0 to Var Int64
   if str[0] == "0"[0] and str[1] == "x"[0] {
@@ -841,7 +841,7 @@ do_value_numeric = (x : *AstValueNumber) -> *Value {
 }
 
 
-do_value_string = (x : *AstValueString) -> *Value {
+do_value_string = (x : AstValueString) -> *Value {
   s = x.string
   len = strlen (s) + 1
   typ = type_pointer_new (type_array_new (typeChar, len, x.ti), x.ti)
@@ -930,14 +930,14 @@ fail:
 }
 
 
-do_value_array = (x : *AstValueArray) -> *Value {
+do_value_array = (x : AstValueArray) -> *Value {
   fatal("do_value_array")
 fail:
   return value_new_poison (x.ti)
 }
 
 
-do_value_record = (x : *AstValueRecord) -> *Value {
+do_value_record = (x : AstValueRecord) -> *Value {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
@@ -964,7 +964,7 @@ do_value_record = (x : *AstValueRecord) -> *Value {
     // получили поле, на его основе строим поля для Generic типа
     map_append(&c.vl, field_id, v)
   }
-  map_foreach(&x.values, field_value_handle, &ctx)
+  map_foreach(&(x.values to Var Map), field_value_handle, &ctx)
 
 
   vx = value_new (#ValueGenericRecord, t, x.ti)
