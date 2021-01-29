@@ -141,6 +141,8 @@ do_type = DoType {
   }
 }
 
+
+// Tagged (NewType)
 spec_type_uid = 0 to Var Nat32
 do_type_special = DoType {
   spec_type = do_type(x.special.type)
