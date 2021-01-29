@@ -108,11 +108,11 @@ exist do_value_array   : (x : AstValueArray) -> *Value
 exist do_value_record  : (x : AstValueRecord) -> *Value
 exist do_value_string  : (x : AstValueString) -> *Value
 
-exist do_value_ref   : (x : AstValueUnary) -> *Value
-exist do_value_deref : (x : AstValueUnary) -> *Value
-exist do_value_minus : (x : AstValueUnary) -> *Value
-exist do_value_plus  : (x : AstValueUnary) -> *Value
-exist do_value_not   : (x : AstValueUnary) -> *Value
+exist do_value_ref   : (x : AstValueRef) -> *Value
+exist do_value_deref : (x : AstValueDeref) -> *Value
+exist do_value_minus : (x : AstValueMinus) -> *Value
+exist do_value_plus  : (x : AstValuePlus) -> *Value
+exist do_value_not   : (x : AstValueNot) -> *Value
 
 exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
 exist do_value_shift  : (k : ValueKind, x : AstValueBinary) -> *Value
@@ -142,11 +142,11 @@ do_valuex = DoValuex {
     #AstValueRec     => do_value_record  (x.data as AstValueRecord)
     #AstValueStr     => do_value_string  (x.data as AstValueString)
 
-    #AstValueRef     => do_value_ref     (x.data as AstValueUnary)
-    #AstValueDeref   => do_value_deref   (x.data as AstValueUnary)
-    #AstValueNot     => do_value_not     (x.data as AstValueUnary)
-    #AstValueMinus   => do_value_minus   (x.data as AstValueUnary)
-    #AstValuePlus    => do_value_plus    (x.data as AstValueUnary)
+    #AstValueRef     => do_value_ref     (x.data as AstValueRef)
+    #AstValueDeref   => do_value_deref   (x.data as AstValueDeref)
+    #AstValueNot     => do_value_not     (x.data as AstValueNot)
+    #AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
+    #AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
 
     #AstValueAdd     => do_value_bin (#ValueAdd, x.bin)
     #AstValueSub     => do_value_bin (#ValueSub, x.bin)
@@ -195,7 +195,7 @@ do_valuex = DoValuex {
 do_lvalue = DoValue {
   return when x.kind {
     #AstValueId     => do_value_named  (x.name)
-    #AstValueDeref  => do_value_deref  (x.un)
+    #AstValueDeref  => do_value_deref  (x.data to AstValueDeref)
     #AstValueIndex  => do_value_index  (x.index)
     #AstValueAccess => do_value_access (x.access)
     else => DoValue {
@@ -304,7 +304,7 @@ do_value_when = (x : *AstValueWhen) -> *Value {
 
 
 // не загружает переменную - просто пока отбрасывает ее Var тип
-do_value_ref = (x : AstValueUnary) -> *Value {
+do_value_ref = (x : AstValueRef) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {return v}
@@ -323,7 +323,7 @@ do_value_ref = (x : AstValueUnary) -> *Value {
 }
 
 
-do_value_deref = (x : AstValueUnary) -> *Value {
+do_value_deref = (x : AstValueDeref) -> *Value {
   // eval & load pointer
   v = do_value (x.value)
 
@@ -976,7 +976,7 @@ fail:
 }
 
 
-do_value_plus = (x : AstValueUnary) -> *Value {
+do_value_plus = (x : AstValuePlus) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
@@ -994,7 +994,7 @@ fail:
 }
 
 
-do_value_minus = (x : AstValueUnary) -> *Value {
+do_value_minus = (x : AstValueMinus) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
@@ -1012,7 +1012,7 @@ fail:
 }
 
 
-do_value_not = (x : AstValueUnary) -> *Value {
+do_value_not = (x : AstValueNot) -> *Value {
   v = do_value (x.value)
 
   if v.kind == #ValuePoison {goto fail}
