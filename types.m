@@ -70,7 +70,6 @@ AstTypeKind = {
   #AstTypeNamed
   #AstTypeEnum
   #AstTypeRecord
-  #AstTypeGenericRecord  // по сути нигде и не используется...
   #AstTypeArray
   #AstTypeArrayU
   #AstTypeFunc
@@ -80,15 +79,31 @@ AstTypeKind = {
   #AstTypeUnion
 }
 
-AstTypeEnum    = (constructors : List, ti : *TokenInfo)
-AstTypeRecord  = (decls : List /* of *AstDecl */, ti : *TokenInfo)
-AstTypeArray   = (of : *AstType, size : *AstValue, ti : *TokenInfo)
-AstTypeArrayU  = (of : *AstType, ti : *TokenInfo)
-AstTypePointer = (to : *AstType, ti : *TokenInfo)
-AstTypeFunc    = (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
-AstTypeVar     = (of : *AstType, ti : *TokenInfo)
-AstTypeSpecial = (type : *AstType, ti : *TokenInfo)
-AstTypeUnion   = (types : List /* of *AstType */, ti : *TokenInfo)
+AstTypeNamed   = Tagged AstName
+AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
+AstTypeRecord  = Tagged (decls : List /* of *AstDecl */, ti : *TokenInfo)
+AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
+AstTypeArrayU  = Tagged (of : *AstType, ti : *TokenInfo)
+AstTypePointer = Tagged (to : *AstType, ti : *TokenInfo)
+AstTypeFunc    = Tagged (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
+AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
+AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
+AstTypeUnion   = Tagged (types : List /* of *AstType */, ti : *TokenInfo)
+
+AstTypeParserError = {#AstTypeParserError}
+
+AstType2 = AstTypeParserError or
+          AstTypeNamed or
+          AstTypeEnum or
+          AstTypeRecord or
+          AstTypeArray or
+          AstTypeArrayU or
+          AstTypePointer or
+          AstTypeFunc or
+          AstTypeVar or
+          AstTypeSpecial or
+          AstTypeUnion
+
 
 AstType = (
   kind : AstTypeKind
@@ -176,7 +191,7 @@ AstValueNumber = Tagged (string : Str, ti : *TokenInfo)
 AstValueName = AstName
 
 
-AstValueParserError = {#Error}
+AstValueParserError = {#AstValueParserError}
 
 
 AstValue =  AstValueParserError or
