@@ -129,6 +129,8 @@ exist do_value_alignof : (x : AstValueAlignof) -> *Value
 exist do_value_when : (x : *AstValueWhen) -> *Value
 
 
+exist do_value_add : (x : AstValueAdd) -> *Value
+
 
 
 do_value = DoValue {return do_valuex(x, true)}
@@ -147,6 +149,7 @@ do_valuex = DoValuex {
     #AstValueNot     => do_value_not     (x.data as AstValueNot)
     #AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
     #AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
+
 
     #AstValueAdd     => do_value_bin (#ValueAdd, x.data as AstValueBinary)
     #AstValueSub     => do_value_bin (#ValueSub, x.data as AstValueBinary)
@@ -340,6 +343,10 @@ do_value_deref = (x : AstValueDeref) -> *Value {
   return vx
 }
 
+
+do_value_add = (x : AstValueAdd) -> *Value {
+  return do_value_bin (#ValueAdd, (kind=#ValueAdd, left=x.left, right=x.right, ti=x.ti) to AstValueBinary)
+}
 
 
 do_value_bin = (k : ValueKind, x : AstValueBinary) -> *Value {
