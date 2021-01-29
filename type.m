@@ -125,16 +125,16 @@ type_is_maybe_ptr = (t : *Type) -> Bool {
 }
 
 
-exist do_type_named : (x : AstTypeNamed) -> *Type
-exist do_type_var : (x : AstTypeVar) -> *Type
+exist do_type_named   : (x : AstTypeNamed) -> *Type
+exist do_type_var     : (x : AstTypeVar) -> *Type
 exist do_type_special : (x : AstTypeSpecial) -> *Type
-exist do_type_func : (x : AstTypeFunc) -> *Type
+exist do_type_func    : (x : AstTypeFunc) -> *Type
 exist do_type_array_u : (x : AstTypeArrayU) -> *Type
-exist do_type_array : (x : AstTypeArray) -> *Type
+exist do_type_array   : (x : AstTypeArray) -> *Type
 exist do_type_pointer : (x : AstTypePointer) -> *Type
-exist do_type_record : (x : AstTypeRecord) -> *Type
-exist do_type_enum : (x : AstTypeEnum) -> *Type
-exist do_type_union : (x : AstTypeUnion) -> *Type
+exist do_type_record  : (x : AstTypeRecord) -> *Type
+exist do_type_enum    : (x : AstTypeEnum) -> *Type
+exist do_type_union   : (x : AstTypeUnion) -> *Type
 
 do_type = DoType {
   xx = x.data
