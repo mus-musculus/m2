@@ -150,7 +150,24 @@ do_valuex = DoValuex {
     AstValueDeref   => do_value_deref   (x.data as AstValueDeref)
     AstValueMinus   => do_value_minus   (x.data as AstValueMinus)
     AstValuePlus    => do_value_plus    (x.data as AstValuePlus)
+    AstValueNot     => do_value_not     (x.data as AstValueNot)
 
+    AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueMul     => do_value_bin (#ValueMul, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueDiv     => do_value_bin (#ValueDiv, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueMod     => do_value_bin (#ValueMod, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueAnd     => do_value_bin (#ValueAnd, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueXor     => do_value_bin (#ValueXor, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueOr      => do_value_bin (#ValueOr, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueLt      => do_value_bin (#ValueLt, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueGt      => do_value_bin (#ValueGt, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueEq      => do_value_bin (#ValueEq, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueNe      => do_value_bin (#ValueNe, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueLe      => do_value_bin (#ValueLe, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueGe      => do_value_bin (#ValueGe, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
+    AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
     else => nil
   }
 
@@ -160,24 +177,6 @@ do_valuex = DoValuex {
   v = when x.kind {
     #AstValueId      => do_value_named   (x.data as AstValueName)
 
-    #AstValueNot     => do_value_not     (x.data as AstValueNot)
-
-    #AstValueAdd     => do_value_bin (#ValueAdd, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueSub     => do_value_bin (#ValueSub, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueMul     => do_value_bin (#ValueMul, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueDiv     => do_value_bin (#ValueDiv, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueMod     => do_value_bin (#ValueMod, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueAnd     => do_value_bin (#ValueAnd, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueXor     => do_value_bin (#ValueXor, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueOr      => do_value_bin (#ValueOr, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueLt      => do_value_bin (#ValueLt, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueGt      => do_value_bin (#ValueGt, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueEq      => do_value_bin (#ValueEq, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueNe      => do_value_bin (#ValueNe, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueLe      => do_value_bin (#ValueLe, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueGe      => do_value_bin (#ValueGe, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueShl     => do_value_shift (#ValueShl, x.bin.left, x.bin.right, x.bin.ti)
-    #AstValueShr     => do_value_shift (#ValueShr, x.bin.left, x.bin.right, x.bin.ti)
 
     #AstValueCall    => do_value_call    (x.data as AstValueCall)
     #AstValueIndex   => do_value_index   (x.data as AstValueIndex)
