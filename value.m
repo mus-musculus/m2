@@ -119,12 +119,12 @@ exist do_value_shift  : (k : ValueKind, x : AstValueBinary) -> *Value
 exist do_value_call   : (x : AstValueCall) -> *Value
 exist do_value_index  : (x : AstValueIndex) -> *Value
 exist do_value_access : (x : AstValueAccess) -> *Value
-exist do_value_cast   : (x : *AstValueCast) -> *Value
-exist do_value_is     : (x : *AstValueIs) -> *Value
-exist do_value_as     : (x : *AstValueAs) -> *Value
+exist do_value_cast   : (x : AstValueCast) -> *Value
+exist do_value_is     : (x : AstValueIs) -> *Value
+exist do_value_as     : (x : AstValueAs) -> *Value
 
-exist do_value_sizeof  : (x : *AstValueSizeof) -> *Value
-exist do_value_alignof : (x : *AstValueAlignof) -> *Value
+exist do_value_sizeof  : (x : AstValueSizeof) -> *Value
+exist do_value_alignof : (x : AstValueAlignof) -> *Value
 
 exist do_value_when : (x : *AstValueWhen) -> *Value
 
@@ -168,11 +168,11 @@ do_valuex = DoValuex {
     #AstValueCall    => do_value_call    (x.call)
     #AstValueIndex   => do_value_index   (x.index)
     #AstValueAccess  => do_value_access  (x.access)
-    #AstValueCast    => do_value_cast    (&x.cast)
-    #AstValueIs      => do_value_is      (&x.is)
-    #AstValueAs      => do_value_as      (&x.as)
-    #AstValueSizeof  => do_value_sizeof  (&x.sizeof)
-    #AstValueAlignof => do_value_alignof (&x.alignof)
+    #AstValueCast    => do_value_cast    (x.cast)
+    #AstValueIs      => do_value_is      (x.is)
+    #AstValueAs      => do_value_as      (x.as)
+    #AstValueSizeof  => do_value_sizeof  (x.sizeof)
+    #AstValueAlignof => do_value_alignof (x.alignof)
     #AstValueWhen    => do_value_when    (&x.when)
 
     #AstValueForbidden => do_value_forbidden (x)
@@ -670,7 +670,7 @@ fail:
 }
 
 
-do_value_cast = (x : *AstValueCast) -> *Value {
+do_value_cast = (x : AstValueCast) -> *Value {
   v = do_value (x.value)
   t = do_type (x.type)
 
@@ -717,7 +717,7 @@ fail:
 
 
 
-do_value_is = (x : *AstValueIs) -> *Value {
+do_value_is = (x : AstValueIs) -> *Value {
   v = do_value (x.value)
   t = do_type (x.type)
 
@@ -743,7 +743,7 @@ fail:
 }
 
 
-do_value_as = (x : *AstValueAs) -> *Value {
+do_value_as = (x : AstValueAs) -> *Value {
   v = do_value (x.value)
   t = do_type (x.type)
   ti = x.ti
@@ -777,7 +777,7 @@ fail:
 
 
 
-do_value_sizeof = (x : *AstValueSizeof) -> *Value {
+do_value_sizeof = (x : AstValueSizeof) -> *Value {
   t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
@@ -794,7 +794,7 @@ fail:
 }
 
 
-do_value_alignof = (x : *AstValueAlignof) -> *Value {
+do_value_alignof = (x : AstValueAlignof) -> *Value {
   t = do_type (x.type)
 
   if t.kind == #TypePoison {goto fail}
