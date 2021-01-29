@@ -1046,18 +1046,22 @@ fail:
 
 parse_value_when = AstValueParser {
   token = ctok()
-  v = ast_value_new(#AstValueWhen, #Error, &token.ti)
-  list_init(&v.when.variants)
-  v.when.x := parse_value()
+
+  variants = 0 to Var List
+  list_init(&variants)
+  other = 0 to Var *AstValue
+
+  when_arg = parse_value()
+
   skip_nl()
+  ti = &ctok().ti
   need("{")
   skip_nl()
   while not match("}") {
 
     if match("else") {
       need("=>")
-      // otherwise
-      v.when.other := parse_value()
+      other := parse_value()
       skip_nl()
       continue
     }
@@ -1075,8 +1079,11 @@ parse_value_when = AstValueParser {
     need("=>")
     va.y := parse_value()
     skip_nl()
-    list_append(&v.when.variants, va)
+    list_append(&variants, va)
   }
+
+  v = ast_value_new (#AstValueWhen, (x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen, &token.ti)
+  v.when := (x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen
   return v
 }
 
