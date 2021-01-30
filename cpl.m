@@ -89,8 +89,8 @@ do_import = (x : AstNodeImport) -> () {
   fname = cat (line, ".m")
   if exists (fname) {
     m = parse (fname)
-    if m is *AstModule {
-      compile (*(m as *AstModule))
+    if m is AstModule {
+      compile (m as AstModule)
     }
     return
   }
@@ -99,8 +99,8 @@ do_import = (x : AstNodeImport) -> () {
   lib_fname = cat4 (lib_path, "/", line, ".m")
   if exists (lib_fname) {
     m = parse (lib_fname)
-    if m is *AstModule {
-      compile (*(m as *AstModule))
+    if m is AstModule {
+      compile (m as AstModule)
     }
     return
   }

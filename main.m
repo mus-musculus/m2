@@ -48,11 +48,11 @@ main = (argc : Nat, argv : []Str) -> Int32 {
   m = parse ("main.m")
 
 
-  if m is Unit {return errcnt}
+  if m is ParserError {return errcnt}
 
   compiler_init ()
 
-  a = compile (*(m as *AstModule))
+  a = compile (m as AstModule)
 
   if a != nil {
     printf ("lines: %d\n", lines)

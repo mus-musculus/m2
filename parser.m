@@ -187,9 +187,11 @@ ast_node_boxing = (x : AstNode) -> *AstNode {
 
 
 parse = (filename : Str) -> ParserResult {
-  m = malloc(sizeof AstModule) to *AstModule
-  memset(m, 0, sizeof AstModule)
-  list_init(&m.nodes)
+  //m = malloc(sizeof AstModule) to *AstModule
+  //memset(m, 0, sizeof AstModule)
+
+  nodes = 0 to Var AstNodeList
+  list_init(&nodes)
 
   pstat.src := tokenize(filename)
 
@@ -206,7 +208,7 @@ parse = (filename : Str) -> ParserResult {
     if match("import") {
       imp = parse_import()
       boxed_imp = ast_node_boxing (imp)
-      list_append(&m.nodes, boxed_imp)
+      list_append(&nodes, boxed_imp)
       continue
     } else {
       break
@@ -230,13 +232,13 @@ parse = (filename : Str) -> ParserResult {
         dv = malloc(sizeof AstNodeDeclType) to *AstNodeDeclType
         dv.id := id
         typdecl = ast_node_boxing ((id=id) to AstNodeDeclType)
-        list_append(&m.nodes, typdecl)
+        list_append(&nodes, typdecl)
       } else {
         // exist <id> : <Type>  // exist value
         dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
         dv.decl := parse_decl(false)
         valdecl = ast_node_boxing ((decl=dv.decl) to AstNodeDeclValue)
-        list_append(&m.nodes, valdecl)
+        list_append(&nodes, valdecl)
       }
       continue
     } else if match("extern") {
@@ -247,7 +249,7 @@ parse = (filename : Str) -> ParserResult {
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
       valbind = ast_node_boxing ((id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue)
-      list_append(&m.nodes, valbind)
+      list_append(&nodes, valbind)
       continue
     }
 
@@ -256,17 +258,18 @@ parse = (filename : Str) -> ParserResult {
       if isUpperCase (tok.text[0]) {
         bt = parse_bind_type ()
         bindtyp = ast_node_boxing (bt)
-        list_append (&m.nodes, bindtyp)
+        list_append (&nodes, bindtyp)
       } else {
         bv = parse_bind_value ()
         bindval = ast_node_boxing (bv)
-        list_append (&m.nodes, bindval)
+        list_append (&nodes, bindval)
       }
     }
   }
 
-  if errcnt > 0 {return unit}
-  return m
+  if errcnt > 0 {return #ParserError}
+
+  return (nodes=nodes, src=pstat.src) to AstModule
 }
 
 

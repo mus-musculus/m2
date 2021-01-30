@@ -60,7 +60,9 @@ AstNodeList = List
 
 AstModule = (nodes : AstNodeList, src : *Source)
 
-ParserResult = *AstModule or Unit
+ParserError = {#ParserError}
+
+ParserResult = AstModule or ParserError
 
 
 AstId = (str : Str, ti : *TokenInfo)
