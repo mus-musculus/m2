@@ -99,16 +99,19 @@ AstNode = AstNodeComment or
 /*                           Parser Type (AST)                               */
 /*****************************************************************************/
 
+AstDeclList = List
+AstTypeList = List
+
 AstTypeNamed   = AstName
-AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
-AstTypeRecord  = Tagged (decls : List /* of *AstDecl */, ti : *TokenInfo)
+AstTypeEnum    = Tagged (items : List, ti : *TokenInfo)
+AstTypeRecord  = Tagged (decls : AstDeclList, ti : *TokenInfo)
 AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
 AstTypeArrayU  = Tagged (of : *AstType, ti : *TokenInfo)
 AstTypePointer = Tagged (to : *AstType, ti : *TokenInfo)
 AstTypeFunc    = Tagged (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
 AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
 AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
-AstTypeUnion   = Tagged (types : List /* of *AstType */, ti : *TokenInfo)
+AstTypeUnion   = Tagged (types : AstTypeList, ti : *TokenInfo)
 
 AstTypeParserError = {#AstTypeParserError}
 
@@ -223,6 +226,7 @@ AstValue =  AstValueParserError or
             AstValueWhen or
             AstValueSizeof or
             AstValueAlignof
+
 
 /*****************************************************************************/
 /*                        Parser Statement (AST)                             */

@@ -37,7 +37,7 @@ type_array_new = (of : *Type, volume : Nat32, ti : *TokenInfo) -> *Type {
   return t
 }
 
-type_enum_new = (constructors : *List, ti : *TokenInfo) -> *Type {
+type_enum_new = (items : *List, ti : *TokenInfo) -> *Type {
   t = type_new (#TypeEnum, cfgEnumSize, ti)
   create_constructor = ListForeachHandler {
     cons = data to *EnumConstructor
@@ -45,7 +45,7 @@ type_enum_new = (constructors : *List, ti : *TokenInfo) -> *Type {
     v = value_new_imm (enum_type, cons.d to Int64, cons.ti)
     bind_value (&module.public, cons.id.str, v)
   }
-  list_foreach (constructors, create_constructor, t)
+  list_foreach (items, create_constructor, t)
   return t
 }
 
@@ -322,7 +322,7 @@ do_type_record = (x : AstTypeRecord) -> *Type {
 
 
 do_type_enum = (x : AstTypeEnum) -> *Type {
-  constructors = list_new ()
+  items = list_new ()
   hc = ListForeachHandler {
     cons_id = data to *AstId
     cons_list = ctx to *List
@@ -330,9 +330,9 @@ do_type_enum = (x : AstTypeEnum) -> *Type {
     *ec := (id=cons_id, d=index, ti=nil to *TokenInfo)
     list_append (cons_list, ec)
   }
-  list_foreach (&(x.constructors to Var List), hc, constructors)
+  list_foreach (&(x.items to Var List), hc, items)
 
-  return type_enum_new (constructors, x.ti)
+  return type_enum_new (items, x.ti)
 }
 
 
@@ -503,7 +503,7 @@ type_init = () -> () {
   typeUnit.aka := "Unit"
   builtin_type_bind ("Unit", typeUnit)
 
-  // Bool is an enum with false & true constructors
+  // Bool is an enum with false & true items
   typeBool := type_new (#TypeBool, 1, nil)
   builtin_type_bind ("Bool", typeBool)
 

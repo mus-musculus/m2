@@ -445,8 +445,8 @@ parse_type_set = AstTypeParser {
   tk = ctok()
   //need("{")
 
-  constructors = 0 to Var List
-  list_init(&constructors)
+  items = 0 to Var List
+  list_init(&items)
 
   skip_nl()
   while true {
@@ -455,7 +455,7 @@ parse_type_set = AstTypeParser {
     ti = &ctok().ti
     cons = parse_id()
 
-    list_append(&constructors, cons to *Unit)
+    list_append(&items, cons to *Unit)
 
     ti_sep = &ctok().ti
     if match(",") {continue}
@@ -470,7 +470,7 @@ parse_type_set = AstTypeParser {
     }
   }
 
-  return ast_type_new ((constructors=constructors, ti=&tk.ti) to AstTypeEnum)
+  return ast_type_new ((items=items, ti=&tk.ti) to AstTypeEnum)
 }
 
 
