@@ -810,7 +810,7 @@ do_value_sizeof = (x : AstValueSizeof) -> *Value {
   if t.kind == #TypePoison {goto fail}
 
   if t.kind == #TypeUndefined {
-    error ("sizeof unknown type", x.type.ti)
+    error ("sizeof unknown type", x.ti)
     return value_new_poison (x.ti)
   }
 
@@ -827,7 +827,7 @@ do_value_alignof = (x : AstValueAlignof) -> *Value {
   if t.kind == #TypePoison {goto fail}
 
   if t.kind == #TypeUndefined {
-    error ("alignof unknown type", x.type.ti)
+    error ("alignof unknown type", x.ti)
     return value_new_poison (x.ti)
   }
 

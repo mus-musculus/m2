@@ -243,7 +243,12 @@ parse = (filename : Str) -> *AstModule or Unit {
     } else if match("extern") {
       decl = parse_decl(false)
 
-      decl.type.func.arghack := xarghack
+      // меняем значение arghack в типе функии
+      // для этого нам нужно создать новое значение
+      // (может можно как то через указатель?)
+      ft = decl.type.data as AstTypeFunc
+      nft = (from=ft.from, to=ft.to, ti=ft.ti, arghack=xarghack) to AstTypeFunc
+      decl.type.data := nft
 
       v = ast_value_new ((type=decl.type, block_stmt=unit) to AstValueFunc)
 
@@ -309,10 +314,10 @@ parse_bind_value = () -> *AstNodeBindValue {
 /*                             Parse Type                                    */
 /*****************************************************************************/
 
-ast_type_new = (kind : AstTypeKind, x : AstType2, ti : *TokenInfo) -> *AstType {
+ast_type_new = (x : AstType2) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  *t := (kind=kind, ti=ti, data=x)
+  *t := (data=x)
   return t
 }
 
@@ -340,7 +345,7 @@ parse_type0 = AstTypeParser {
     from = t
     _to = parse_type()
 
-    ft = ast_type_new(#AstTypeFunc, (from=from, to=_to, ti=&tk.ti) to AstTypeFunc, &tk.ti)
+    ft = ast_type_new ((from=from, to=_to, ti=&tk.ti) to AstTypeFunc)
     //ft.func := (from=from, to=_to, ti=&tk.ti)
     return ft
   }
@@ -370,7 +375,7 @@ parse_type1 = AstTypeParser {
       list_append(&types, t)
     }
 
-    return ast_type_new(#AstTypeUnion, (types=types, ti=&tk.ti) to AstTypeUnion, &tk.ti)
+    return ast_type_new ((types=types, ti=&tk.ti) to AstTypeUnion)
   }
 
   return t
@@ -380,19 +385,19 @@ parse_type2 = AstTypeParser {
   tk = ctok()
   if match("*") {
     pointer_to = parse_type2()
-    return ast_type_new(#AstTypePointer, (to=pointer_to, ti=&tk.ti) to AstTypePointer, &tk.ti)
+    return ast_type_new ((to=pointer_to, ti=&tk.ti) to AstTypePointer)
   } else if match("[") {
 
     if match("]") {
       of = parse_type2()
-      return ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU, &tk.ti)
+      return ast_type_new ((of=of, ti=&tk.ti) to AstTypeArrayU)
     }
 
     size = parse_value()
     need("]")
     of = parse_type2()
 
-    return ast_type_new(#AstTypeArray, (of=of, size=size, ti=&tk.ti) to AstTypeArray, &tk.ti)
+    return ast_type_new ((of=of, size=size, ti=&tk.ti) to AstTypeArray)
   }
 
   return parse_type3()
@@ -425,17 +430,17 @@ parse_type4 = AstTypeParser {
 
   if match("Tagged") {
     spec_type = parse_type()
-    return ast_type_new(#AstTypeSpecial, (type=spec_type, ti=&tk.ti) to AstTypeSpecial, &tk.ti)
+    return ast_type_new ((type=spec_type, ti=&tk.ti) to AstTypeSpecial)
   }
 
   if match("Var") {
     var_type = parse_type()
-    return ast_type_new(#AstTypeVar, (of=var_type, ti=&tk.ti) to AstTypeVar, &tk.ti)
+    return ast_type_new ((of=var_type, ti=&tk.ti) to AstTypeVar)
   }
 
   name = parse_name()
 
-  return ast_type_new(#AstTypeNamed, name, &tk.ti)
+  return ast_type_new (name)
 }
 
 
@@ -475,7 +480,7 @@ parse_type_set = AstTypeParser {
     }
   }
 
-  return ast_type_new(#AstTypeEnum, (constructors=constructors, ti=&tk.ti) to AstTypeEnum, &tk.ti)
+  return ast_type_new ((constructors=constructors, ti=&tk.ti) to AstTypeEnum)
 }
 
 
@@ -502,7 +507,7 @@ parse_type_rec = AstTypeParser {
     list_append(&decls, fd)
   }
 
-  return ast_type_new(#AstTypeRecord, (decls=decls, ti=&tk.ti) to AstTypeRecord, &tk.ti)
+  return ast_type_new ((decls=decls, ti=&tk.ti) to AstTypeRecord)
 }
 
 
@@ -511,7 +516,7 @@ parse_type_rec = AstTypeParser {
   need("*")
   t = parse_type()
 
-  pt = ast_type_new(#AstTypePointer, (to=t, ti=&tk.ti) to AstTypePointer, &tk.ti)
+  pt = ast_type_new (#AstTypePointer, (to=t, ti=&tk.ti) to AstTypePointer, &tk.ti)
   pt.pointer := (to=t, ti=&tk.ti)
   return pt
 }*/
@@ -523,7 +528,7 @@ parse_type_array = AstTypeParser {
   need("[")
   if match("]") {
     of = parse_type()
-    t = ast_type_new(#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU &tk.ti)
+    t = ast_type_new (#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU &tk.ti)
     t.array_u := (of=of, ti=&tk.ti)
     return t
   }
@@ -532,7 +537,7 @@ parse_type_array = AstTypeParser {
   need("]")
   of = parse_type()
 
-  t = ast_type_new(#AstTypeArray, &tk.ti)
+  t = ast_type_new (#AstTypeArray, &tk.ti)
   t.array := (size=size, of=of, ti=&tk.ti)
   return t
 }

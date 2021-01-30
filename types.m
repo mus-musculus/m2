@@ -106,15 +106,15 @@ AstType2 = AstTypeParserError or
 
 
 AstType = (
-  kind : AstTypeKind
+  //kind : AstTypeKind
 
   data : AstType2
 
 
-  func    : AstTypeFunc
+  //func    : AstTypeFunc
 
 
-  ti : *TokenInfo
+  //ti : *TokenInfo
 )
 
 
