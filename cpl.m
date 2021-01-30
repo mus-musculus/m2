@@ -60,12 +60,12 @@ exist do_value_decl : (x : AstNodeDeclValue) -> ()
 compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
-    e = ast_node.entity
-    when ast_node.data {
-      AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
-      AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
-      AstNodeDeclValue => do_value_decl (ast_node.data as AstNodeDeclValue)
-      AstNodeImport => do_import (ast_node.data as AstNodeImport)
+    e = *ast_node
+    when e {
+      AstNodeBindType => do_type_bind (e as AstNodeBindType)
+      AstNodeBindValue => do_value_bind (e as AstNodeBindValue)
+      AstNodeDeclValue => do_value_decl (e as AstNodeDeclValue)
+      AstNodeImport => do_import (e as AstNodeImport)
       else => () -> () {} ()
     }
   }

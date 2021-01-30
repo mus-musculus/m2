@@ -81,20 +81,13 @@ AstNodeDeclValue = Tagged (decl : *AstDecl)
 AstNodeDeclVar   = Tagged (decl : *AstDecl)
 
 
-AstNode2 = AstNodeComment or
+AstNode = AstNodeComment or
           AstNodeImport or
           AstNodeBindType or
           AstNodeBindValue or
           AstNodeDeclType or
           AstNodeDeclValue or
           AstNodeDeclVar
-
-AstNode = (
-  kind : AstNodeKind
-  entity : *Unit
-  data : AstNode2
-)
-
 
 
 

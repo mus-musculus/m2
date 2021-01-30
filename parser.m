@@ -177,10 +177,10 @@ parse_name = () -> AstName {
 /*                            Parse Module                                   */
 /*****************************************************************************/
 
-ast_node_new = (x : AstNode2) -> *AstNode {
+ast_node_new = (x : AstNode) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
   assert(n != nil, "ast_node_new")
-  *n := (data=x)
+  *n := x
   return n
 }
 
