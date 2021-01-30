@@ -10,9 +10,10 @@ xarghack = false to Var Bool
 exist match : (s : Str) -> Bool
 exist ctok : () -> *Token
 exist separator : () -> Bool
-exist parse_import : () -> *AstNode
 exist parse_decl : (arghack : Bool) -> *AstDecl
 exist ast_value_new : (x : AstValue) -> *AstValue
+
+exist parse_import : () -> AstNodeImport
 exist parse_bind_type : () -> AstNodeBindType
 exist parse_bind_value : () -> AstNodeBindValue
 
@@ -202,8 +203,9 @@ parse = (filename : Str) -> *AstModule or Unit {
 
     // firstly, do imports
     if match("import") {
-      imp = parse_import()  // #AstNodeImport
-      list_append(&m.nodes, imp)
+      imp = parse_import()
+      boxed_imp = ast_node_boxing (imp)
+      list_append(&m.nodes, boxed_imp)
       continue
     } else {
       break
@@ -267,13 +269,12 @@ parse = (filename : Str) -> *AstModule or Unit {
 }
 
 
-parse_import = () -> *AstNode {
-  i = malloc(sizeof AstNodeImport) to *AstNodeImport
+parse_import = () -> AstNodeImport {
   tk = ctok()
-  i.line := dup(&tk.text[0] to Str)
-  i.ti := &tk.ti
+  line = dup(&tk.text[0] to Str)
+  ti = &tk.ti
   skip()
-  return ast_node_boxing ((line=i.line, ti=i.ti) to AstNodeImport)
+  return (line=line, ti=ti) to AstNodeImport
 }
 
 
