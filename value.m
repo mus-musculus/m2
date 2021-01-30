@@ -134,35 +134,20 @@ exist do_value_add : (x : AstValueAdd) -> *Value
 
 
 do_value_add = (x : AstValueAdd) -> *Value {return do_value_bin (#ValueAdd, x.left, x.right, x.ti)}
-
 do_value_sub = (x : AstValueSub) -> *Value {return do_value_bin (#ValueSub, x.left, x.right, x.ti)}
-
 do_value_mul = (x : AstValueMul) -> *Value {return do_value_bin (#ValueMul, x.left, x.right, x.ti)}
-
 do_value_div = (x : AstValueDiv) -> *Value {return do_value_bin (#ValueDiv, x.left, x.right, x.ti)}
-
 do_value_mod = (x : AstValueMod) -> *Value {return do_value_bin (#ValueMod, x.left, x.right, x.ti)}
-
 do_value_and = (x : AstValueAnd) -> *Value {return do_value_bin (#ValueAnd, x.left, x.right, x.ti)}
-
 do_value_or = (x : AstValueOr) -> *Value {return do_value_bin (#ValueOr, x.left, x.right, x.ti)}
-
 do_value_xor = (x : AstValueXor) -> *Value {return do_value_bin (#ValueXor, x.left, x.right, x.ti)}
-
 do_value_eq = (x : AstValueEq) -> *Value {return do_value_bin (#ValueEq, x.left, x.right, x.ti)}
-
 do_value_ne = (x : AstValueNe) -> *Value {return do_value_bin (#ValueNe, x.left, x.right, x.ti)}
-
 do_value_lt = (x : AstValueLt) -> *Value {return do_value_bin (#ValueLt, x.left, x.right, x.ti)}
-
 do_value_gt = (x : AstValueGt) -> *Value {return do_value_bin (#ValueGt, x.left, x.right, x.ti)}
-
 do_value_le = (x : AstValueLe) -> *Value {return do_value_bin (#ValueLe, x.left, x.right, x.ti)}
-
 do_value_ge = (x : AstValueGe) -> *Value {return do_value_bin (#ValueGe, x.left, x.right, x.ti)}
-
 do_value_shr = (x : AstValueShr) -> *Value {return do_value_shift (#ValueShr, x.left, x.right, x.ti)}
-
 do_value_shl = (x : AstValueShl) -> *Value {return do_value_shift (#ValueShl, x.left, x.right, x.ti)}
 
 
