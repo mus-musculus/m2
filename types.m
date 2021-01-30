@@ -182,12 +182,7 @@ AstValueNumber = Tagged (string : Str, ti : *TokenInfo)
 AstValueName = AstName
 
 
-AstValueParserError = {#AstValueParserError}
-
-
-AstValue =  AstValueParserError or
-
-            AstValueName or
+AstValue =  AstValueName or
             AstValueRecord or
             AstValueArray or
             AstValueString or
@@ -226,6 +221,12 @@ AstValue =  AstValueParserError or
             AstValueWhen or
             AstValueSizeof or
             AstValueAlignof
+
+
+ValueParserError = {#AstValueParserError}
+
+// TODO
+ValueParserResult = AstValue or ValueParserError
 
 
 /*****************************************************************************/
