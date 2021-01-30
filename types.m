@@ -736,19 +736,6 @@ LLVM_ValueReg = (
              LLVM_ValueReg*/
 
 
-// Операнд - тип значения и его местоположение
-// Является результатом вычисления
-// Операнды Global, Local & Address нуждаются в загрузке (load)
-// перед использованием справа (rval)
-LLVM_Value = (
-  kind : LLVM_ValueKind
-
-  type : *Type
-
-  imm  : Int64  // #LLVM_ValueImmediate
-  id   : Str    // #LLVM_ValueGlobalConst, #LLVM_ValueLocalVar, #LLVM_ValueGlobalVar
-  reg  : Nat32  // #LLVM_ValueRegister, #LLVM_ValueAddress
-)
 
 
 // обрабатывает lval
