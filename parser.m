@@ -246,9 +246,9 @@ parse = (filename : Str) -> *AstModule or Unit {
       // меняем значение arghack в типе функии
       // для этого нам нужно создать новое значение
       // (может можно как то через указатель?)
-      ft = decl.type.data as AstTypeFunc
+      /*ft = *decl.type as AstTypeFunc
       nft = (from=ft.from, to=ft.to, ti=ft.ti, arghack=xarghack) to AstTypeFunc
-      decl.type.data := nft
+      decl.type := nft*/
 
       v = ast_value_new ((type=decl.type, block_stmt=unit) to AstValueFunc)
 
@@ -314,10 +314,10 @@ parse_bind_value = () -> *AstNodeBindValue {
 /*                             Parse Type                                    */
 /*****************************************************************************/
 
-ast_type_new = (x : AstType2) -> *AstType {
+ast_type_new = (x : AstType) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  *t := (data=x)
+  *t := x
   return t
 }
 

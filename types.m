@@ -92,7 +92,7 @@ AstTypeUnion   = Tagged (types : List /* of *AstType */, ti : *TokenInfo)
 
 AstTypeParserError = {#AstTypeParserError}
 
-AstType2 = AstTypeParserError or
+AstType = AstTypeParserError or
           AstTypeNamed or
           AstTypeEnum or
           AstTypeRecord or
@@ -104,18 +104,6 @@ AstType2 = AstTypeParserError or
           AstTypeSpecial or
           AstTypeUnion
 
-
-AstType = (
-  //kind : AstTypeKind
-
-  data : AstType2
-
-
-  //func    : AstTypeFunc
-
-
-  //ti : *TokenInfo
-)
 
 
 AstDecl = (
