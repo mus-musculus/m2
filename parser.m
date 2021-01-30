@@ -274,7 +274,7 @@ parse_import = () -> AstNodeImport {
   line = dup(&tk.text[0] to Str)
   ti = &tk.ti
   skip()
-  return (line=line, ti=ti) to AstNodeImport
+  return (line=line, ti=ti)
 }
 
 
@@ -283,7 +283,6 @@ parse_bind_type = () -> AstNodeBindType {
   ti = &ctok().ti
   need("=")
   t = parse_type()
-
   return (id=id, type=t, ti=ti)
 }
 
