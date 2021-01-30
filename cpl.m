@@ -57,7 +57,7 @@ exist do_value_decl : (x : AstNodeDeclValue) -> ()
 //exist do_var_decl : (x : *AstDecl) -> ()
 //exist do_type_decl : (x : *AstNodeDeclType) -> ()
 
-compile = (a : *AstModule) -> *Assembly {
+compile = (a : AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
     e = *ast_node
@@ -69,7 +69,7 @@ compile = (a : *AstModule) -> *Assembly {
       else => () -> () {} ()
     }
   }
-  list_foreach(&a.nodes, do_node, nil)
+  list_foreach(&(a.nodes to Var List), do_node, nil)
 
   if errcnt > 0 {return nil}
   return &asm0
@@ -90,7 +90,7 @@ do_import = (x : AstNodeImport) -> () {
   if exists (fname) {
     m = parse (fname)
     if m is *AstModule {
-      compile (m as *AstModule)
+      compile (*(m as *AstModule))
     }
     return
   }
@@ -100,7 +100,7 @@ do_import = (x : AstNodeImport) -> () {
   if exists (lib_fname) {
     m = parse (lib_fname)
     if m is *AstModule {
-      compile (m as *AstModule)
+      compile (*(m as *AstModule))
     }
     return
   }

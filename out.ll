@@ -20909,26 +20909,30 @@ select_1_end:
   ret void
 }
 
-define %Assembly* @func555 (%AstModule*) {
+define %Assembly* @func555 (%AstModule) {
 ;stmt0:
-  %2 = getelementptr inbounds %AstModule, %AstModule* %0, i1 0, i32 0; loadImmPtr
-  %3 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %2, %ListForeachHandler @func556, %Unit* %3)
+  %2 = alloca %List
+  %3 = extractvalue %AstModule %0, 0
+  store %List %3, %List* %2, align 8
 ;stmt1:
-  %4 = load %Int32, %Int32* @errcnt
-  %5 = icmp sgt %Int32 %4, 0
-  br i1 %5, label %then_0, label %else_0
+  %4 = getelementptr inbounds %List, %List* %2, i1 0; loadImmPtr
+  %5 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %4, %ListForeachHandler @func556, %Unit* %5)
+;stmt2:
+  %6 = load %Int32, %Int32* @errcnt
+  %7 = icmp sgt %Int32 %6, 0
+  br i1 %7, label %then_0, label %else_0
 then_0:
-;stmt2:; loadImmPtr
-  %6 = inttoptr i64 0 to%Assembly*
-  ret %Assembly* %6
+;stmt3:; loadImmPtr
+  %8 = inttoptr i64 0 to%Assembly*
+  ret %Assembly* %8
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-;stmt3:
-  %8 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
-  ret %Assembly* %8
+;stmt4:
+  %10 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
+  ret %Assembly* %10
 }
 
 define void @func558 (%AstNodeImport) {
@@ -20969,7 +20973,8 @@ then_1:
 then_2:
 ;stmt8:
   %19 = bitcast %union.0 %15 to %AstModule*
-  %20 = call %Assembly* (%AstModule*) @func555 (%AstModule* %19)
+  %20 = load %AstModule, %AstModule* %19
+  %21 = call %Assembly* (%AstModule) @func555 (%AstModule %20)
   br label %endif_2
 else_2:
   br label %endif_2
@@ -20981,27 +20986,28 @@ else_1:
   br label %endif_1
 endif_1:
 ;stmt10:
-  %22 = bitcast [10 x %Nat8]* @cfgLibraryVar to %Str
-  %23 = call %Str (%Str) @getenv (%Str %22)
+  %23 = bitcast [10 x %Nat8]* @cfgLibraryVar to %Str
+  %24 = call %Str (%Str) @getenv (%Str %23)
 ;stmt11:
-  %24 = bitcast [2 x %Nat8]* @func558_str2 to %Str
-  %25 = bitcast [3 x %Nat8]* @func558_str3 to %Str
-  %26 = call %Str (%Str, %Str, %Str, %Str) @cat4 (%Str %23, %Str %24, %Str %2, %Str %25)
+  %25 = bitcast [2 x %Nat8]* @func558_str2 to %Str
+  %26 = bitcast [3 x %Nat8]* @func558_str3 to %Str
+  %27 = call %Str (%Str, %Str, %Str, %Str) @cat4 (%Str %24, %Str %25, %Str %2, %Str %26)
 ;stmt12:
-  %27 = call i1 (%Str) @exists (%Str %26)
-  br i1 %27, label %then_3, label %else_3
+  %28 = call i1 (%Str) @exists (%Str %27)
+  br i1 %28, label %then_3, label %else_3
 then_3:
 ;stmt13:
-  %28 = call %union.0 (%Str) @parse (%Str %26)
+  %29 = call %union.0 (%Str) @parse (%Str %27)
 ;stmt14:
-  %29 = bitcast %Int64 0 to %Int64
-  %30 = ptrtoint %union.0 %28 to %Int64
-  %31 = icmp ne %Int64 %30, %29
-  br i1 %31, label %then_4, label %else_4
+  %30 = bitcast %Int64 0 to %Int64
+  %31 = ptrtoint %union.0 %29 to %Int64
+  %32 = icmp ne %Int64 %31, %30
+  br i1 %32, label %then_4, label %else_4
 then_4:
 ;stmt15:
-  %32 = bitcast %union.0 %28 to %AstModule*
-  %33 = call %Assembly* (%AstModule*) @func555 (%AstModule* %32)
+  %33 = bitcast %union.0 %29 to %AstModule*
+  %34 = load %AstModule, %AstModule* %33
+  %35 = call %Assembly* (%AstModule) @func555 (%AstModule %34)
   br label %endif_4
 else_4:
   br label %endif_4
@@ -21013,9 +21019,9 @@ else_3:
   br label %endif_3
 endif_3:
 ;stmt17:
-  %35 = bitcast [15 x %Nat8]* @func558_str4 to %Str
-  %36 = extractvalue %AstNodeImport %0, 1
-  call void (%Str, %TokenInfo*) @error (%Str %35, %TokenInfo* %36)
+  %37 = bitcast [15 x %Nat8]* @func558_str4 to %Str
+  %38 = extractvalue %AstNodeImport %0, 1
+  call void (%Str, %TokenInfo*) @error (%Str %37, %TokenInfo* %38)
   ret void
 }
 
@@ -21363,26 +21369,27 @@ endif_0:
   call void () @compiler_init ()
 ;stmt5:
   %12 = bitcast %union.0 %6 to %AstModule*
-  %13 = call %Assembly* (%AstModule*) @func555 (%AstModule* %12)
+  %13 = load %AstModule, %AstModule* %12
+  %14 = call %Assembly* (%AstModule) @func555 (%AstModule %13)
 ;stmt6:; loadImmPtr
-  %14 = inttoptr i64 0 to%Assembly*
-  %15 = icmp ne %Assembly* %13, %14
-  br i1 %15, label %then_1, label %else_1
+  %15 = inttoptr i64 0 to%Assembly*
+  %16 = icmp ne %Assembly* %14, %15
+  br i1 %16, label %then_1, label %else_1
 then_1:
 ;stmt7:
-  %16 = bitcast [11 x %Nat8]* @func569_str3 to %Str
-  %17 = load %Nat32, %Nat32* @lines
-  %18 = call %Int32 (%Str, ...) @printf (%Str %16, %Nat32 %17)
+  %17 = bitcast [11 x %Nat8]* @func569_str3 to %Str
+  %18 = load %Nat32, %Nat32* @lines
+  %19 = call %Int32 (%Str, ...) @printf (%Str %17, %Nat32 %18)
 ;stmt8:
-  %19 = bitcast [7 x %Nat8]* @func569_str4 to %Str
-  call void (%Assembly*, %Str) @func278 (%Assembly* %13, %Str %19)
+  %20 = bitcast [7 x %Nat8]* @func569_str4 to %Str
+  call void (%Assembly*, %Str) @func278 (%Assembly* %14, %Str %20)
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
 ;stmt9:
-  %20 = load %Int32, %Int32* @errcnt
-  ret %Int32 %20
+  %21 = load %Int32, %Int32* @errcnt
+  ret %Int32 %21
 }
 
 ;aliases:

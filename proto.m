@@ -4,7 +4,7 @@
 exist unwrap_var : (x : *Value) -> *Value
 
 
-exist compile : (a : *AstModule) -> *Assembly
+exist compile : (a : AstModule) -> *Assembly
 
 exist value_decl_global : (id : *AstId, t : *Type) -> ()
 exist type_new : (k : TypeKind, size : Nat, align : Nat, ti : *TokenInfo) -> *Type

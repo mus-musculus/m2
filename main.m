@@ -52,7 +52,7 @@ main = (argc : Nat, argv : []Str) -> Int32 {
 
   compiler_init ()
 
-  a = compile (m as *AstModule)
+  a = compile (*(m as *AstModule))
 
   if a != nil {
     printf ("lines: %d\n", lines)
