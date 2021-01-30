@@ -61,13 +61,11 @@ compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
     e = ast_node.entity
-    when ast_node.kind {
-      //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
-      #AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
-      #AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
-      //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
-      #AstNodeDeclValue => do_value_decl (ast_node.data as AstNodeDeclValue)
-      #AstNodeImport => do_import (ast_node.data as AstNodeImport)
+    when ast_node.data {
+      AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
+      AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
+      AstNodeDeclValue => do_value_decl (ast_node.data as AstNodeDeclValue)
+      AstNodeImport => do_import (ast_node.data as AstNodeImport)
       else => () -> () {} ()
     }
   }
