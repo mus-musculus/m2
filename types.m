@@ -100,16 +100,22 @@ AstDecl = (
   extern, arghack : Bool
 )
 
-AstNodeComment   = (text : Str, ti : *TokenInfo)
-AstNodeImport    = (line : Str, ti : *TokenInfo)
-AstNodeBindType  = (id : *AstId, type : *AstType, ti : *TokenInfo)
-AstNodeBindValue = (id : *AstId, value : *AstValue, ti : *TokenInfo)
-AstNodeDeclVar   = (decl : *AstDecl)
-AstNodeDeclType  = (id : *AstId)
-AstNodeDeclValue = (decl : *AstDecl)
+AstNodeComment   = Tagged (text : Str, ti : *TokenInfo)
+AstNodeImport    = Tagged (line : Str, ti : *TokenInfo)
+AstNodeBindType  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstNodeBindValue = Tagged (id : *AstId, value : *AstValue, ti : *TokenInfo)
+AstNodeDeclVar   = Tagged (decl : *AstDecl)
+AstNodeDeclType  = Tagged (id : *AstId)
+AstNodeDeclValue = Tagged (decl : *AstDecl)
 
 
-//AstNode2 = AstNodeComment
+AstNode2 = AstNodeComment or
+          AstNodeImport or
+          AstNodeBindType or
+          AstNodeBindValue or
+          AstNodeDeclType or
+          AstNodeDeclValue or
+          AstNodeDeclVar
 
 AstNode = (
   kind : AstNodeKind
