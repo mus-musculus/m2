@@ -12430,48 +12430,40 @@ then_0:
   %20 = call %LLVM_Value (%Value*) @func301 (%Value* %19)
 ;stmt5:
   %21 = bitcast [8 x %Nat8]* @func339_func340_str2 to %Str
-  %22 = extractvalue %LLVM_Value %20, 1
-  %23 = call %Nat32 (%Str, %Type*) @func295 (%Str %21, %Type* %22)
+  %22 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 0
+  %23 = load %LLVM_Value, %LLVM_Value* %22
+  %24 = extractvalue %LLVM_Value %20, 1
+  %25 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func327 (%Str %21, %LLVM_Value %23, %LLVM_Value %20, %Type* %24)
 ;stmt6:
-  call void () @space ()
-;stmt7:
-  %24 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 0
-  %25 = load %LLVM_Value, %LLVM_Value* %24
-  call void (%LLVM_Value) @func349 (%LLVM_Value %25)
-;stmt8:
-  call void () @comma ()
-;stmt9:
-  call void (%LLVM_Value) @func349 (%LLVM_Value %20)
-;stmt10:
   %26 = load %FILE*, %FILE** @fout
   %27 = bitcast [14 x %Nat8]* @func339_func340_str3 to %Str
-  %28 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %26, %Str %27, %Nat32 %23)
+  %28 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %26, %Str %27, %Nat32 %25)
   br label %endif_0
 else_0:
-;stmt11:
+;stmt7:
   %29 = call %Type* (%Nat32) @func427 (%Nat32 2)
-;stmt12:
+;stmt8:
   %30 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 4, 0
   %31 = insertvalue %LLVM_Value %30, %Type* %29, 1
   %32 = getelementptr inbounds %ValueWhenVariant, %ValueWhenVariant* %5, i1 0, i32 3
   %33 = load %Nat32, %Nat32* %32
   %34 = sext %Nat32 %33 to %Int64
   %35 = insertvalue %LLVM_Value %31, %Int64 %34, 2
-;stmt13:
+;stmt9:
   %36 = load %Type*, %Type** @typeBaseInt
   %37 = call %LLVM_Value (%LLVM_Value, %Type*) @func336 (%LLVM_Value %35, %Type* %36)
-;stmt14:
+;stmt10:
   %38 = bitcast [8 x %Nat8]* @func339_func340_str4 to %Str
   %39 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 1
   %40 = load %LLVM_Value, %LLVM_Value* %39
   %41 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func327 (%Str %38, %LLVM_Value %40, %LLVM_Value %37, %Type* %29)
-;stmt15:
+;stmt11:
   %42 = load %FILE*, %FILE** @fout
   %43 = bitcast [14 x %Nat8]* @func339_func340_str5 to %Str
   %44 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %42, %Str %43, %Nat32 %41)
   br label %endif_0
 endif_0:
-;stmt16:
+;stmt12:
   %45 = load %FILE*, %FILE** @fout
   %46 = bitcast [48 x %Nat8]* @func339_func340_str6 to %Str
   %47 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 2
@@ -12484,7 +12476,7 @@ endif_0:
   %54 = load %Nat32, %Nat32* %53
   %55 = add %Nat32 %54, 1
   %56 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %45, %Str %46, %Nat32 %48, %Nat32 %50, %Nat32 %52, %Nat32 %55)
-;stmt17:
+;stmt13:
   %57 = load %FILE*, %FILE** @fout
   %58 = bitcast [18 x %Nat8]* @func339_func340_str7 to %Str
   %59 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 2
@@ -12492,27 +12484,27 @@ endif_0:
   %61 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 3
   %62 = load %Nat32, %Nat32* %61
   %63 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %57, %Str %58, %Nat32 %60, %Nat32 %62)
-;stmt18:
+;stmt14:
   %64 = getelementptr inbounds %ValueWhenVariant, %ValueWhenVariant* %5, i1 0, i32 2
   %65 = load %Value*, %Value** %64
   %66 = call %LLVM_Value (%Value*) @func301 (%Value* %65)
-;stmt19:
+;stmt15:
   %67 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 5
   %68 = load %Type*, %Type** %67
   %69 = call %LLVM_Value (%LLVM_Value, %Type*) @loadIfImmAs (%LLVM_Value %66, %Type* %68)
-;stmt20:
+;stmt16:
   %70 = load %FILE*, %FILE** @fout
   %71 = bitcast [28 x %Nat8]* @func339_func340_str8 to %Str
   %72 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 2
   %73 = load %Nat32, %Nat32* %72
   %74 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %70, %Str %71, %Nat32 %73)
-;stmt21:
+;stmt17:
   %75 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 4
 ; index array
   %76 = getelementptr inbounds [256 x %Nat32], [256 x %Nat32]* %75, i1 0, %Nat32 %2
   %77 = extractvalue %LLVM_Value %69, 4
   store %Nat32 %77, %Nat32* %76, align 4
-;stmt22:
+;stmt18:
   %78 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 3
   %79 = getelementptr inbounds %func339.type2, %func339.type2* %6, i1 0, i32 3
   %80 = load %Nat32, %Nat32* %79

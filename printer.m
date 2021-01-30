@@ -1158,12 +1158,8 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
     if va.x != nil {
       // when по значению
       s0 = reval (va.x)
-      reg = operation_with_type ("icmp eq", s0.type)
-      space ()
-      print_val (c.sel)
-      comma ()
-      print_val (s0)
-      fprintf (fout, "\n  br i1 %%%d", reg)
+      regno = llvm_binary ("icmp eq", c.sel, s0, s0.type)
+      fprintf (fout, "\n  br i1 %%%d", regno)
     } else {
       // when по типу
 
