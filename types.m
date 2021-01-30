@@ -670,31 +670,6 @@ Assembly = (
 Arch = {#Arch_Unknown, #Arch-x64, #Arch-ARM-CM3}
 
 
-LLVM_ValueKind = {
-  #LLVM_ValueInvalid    // An error occurred while evaluation
-
-  #LLVM_ValueUndef      // for llvm `undef` value
-  #LLVM_ValueZero       // for llvm `zeroinitializer` value
-
-  #LLVM_ValueEmpty      // Unit () 'value'
-
-  #LLVM_ValueImmediate  // Numeric value in imm field
-
-  /*
-   * Global Immutable LLVM_Valueect used by name
-   * such as funcs, strings, literal arrays & records
-   */
-  #LLVM_ValueGlobalConst
-
-  // variables
-  #LLVM_ValueLocalVar
-  #LLVM_ValueGlobalVar
-
-  // register
-  #LLVM_ValueAddress    // address of value in register
-  #LLVM_ValueRegister   // value in register
-}
-
 
 /*LLVM_ValueSpecialKind = {
   #LLVM_ValueUndef2      // for llvm `undef` value

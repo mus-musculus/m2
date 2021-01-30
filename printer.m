@@ -13,6 +13,34 @@ import "types"
 import "proto"
 
 
+
+
+LLVM_ValueKind = {
+  #LLVM_ValueInvalid    // An error occurred while evaluation
+
+  #LLVM_ValueUndef      // for llvm `undef` value
+  #LLVM_ValueZero       // for llvm `zeroinitializer` value
+
+  #LLVM_ValueEmpty      // Unit () 'value'
+
+  #LLVM_ValueImmediate  // Numeric value in imm field
+
+  /*
+   * Global Immutable LLVM_Valueect used by name
+   * such as funcs, strings, literal arrays & records
+   */
+  #LLVM_ValueGlobalConst
+
+  // variables
+  #LLVM_ValueLocalVar
+  #LLVM_ValueGlobalVar
+
+  // register
+  #LLVM_ValueAddress    // address of value in register
+  #LLVM_ValueRegister   // value in register
+}
+
+
 // Операнд - тип значения и его местоположение
 // Является результатом вычисления
 // Операнды Global, Local & Address нуждаются в загрузке (load)
@@ -23,10 +51,30 @@ LLVM_Value = (
   type : *Type
 
   imm  : Int64  // #LLVM_ValueImmediate
-  id   : Str    // #LLVM_ValueGlobalConst, #LLVM_ValueLocalVar, #LLVM_ValueGlobalVar
-  reg  : Nat32  // #LLVM_ValueRegister, #LLVM_ValueAddress
+  id   : Str    // #LLVM_ValueGlobalConst, #LLVM_ValueGlobalVar
+  reg  : Nat32  // #LLVM_ValueRegister, #LLVM_ValueAddress, #LLVM_ValueLocalVar
 )
 
+
+LLVM_ValueUndef = (undef : Bool)
+LLVM_ValueZero = (zero : Bool)
+LLVM_ValueEmpty = (empty : Bool)
+LLVM_ValueImmediate = Tagged (type : *Type, imm : Int64)
+LLVM_ValueGlobalConst = Tagged (type : *Type, id : Str)
+LLVM_ValueGlobalVar = Tagged (type : *Type, id : Str)
+LLVM_ValueLocalVar = Tagged (type : *Type, reg : Nat32)
+LLVM_ValueAddress = Tagged (type : *Type, reg : Nat32)
+LLVM_ValueRegister = Tagged (type : *Type, reg : Nat32)
+
+LLVM_Value2 = LLVM_ValueUndef or
+              LLVM_ValueZero or
+              LLVM_ValueEmpty or
+              LLVM_ValueImmediate or
+              LLVM_ValueGlobalConst or
+              LLVM_ValueGlobalVar or
+              LLVM_ValueLocalVar or
+              LLVM_ValueAddress or
+              LLVM_ValueRegister
 
 exist loadImmAs : (x : LLVM_Value, t : *Type) -> LLVM_Value
 
