@@ -1134,14 +1134,14 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
   n = x.variants.volume
 
   Ctx = (
-    sel : LLVM_Value
-    when_is_sel : LLVM_Value
-    sno : Nat
-    case : Nat
-    regs : [maxSelectorEntry]Nat32
+    sel : LLVM_Value // значение варианта при селекте по значению
+    when_is_sel : LLVM_Value // значение номера типа (варианта) при селекте по типу
+    sno : Nat // номер селекта для данной функции
+    case : Nat  // текущий номер входа селектора
+    regs : [maxSelectorEntry]Nat32 // список номеров регистров с результатами
     // тип возврата оператора select
     // нужно для правильного приведения imm-констант значений селектора
-    type : *Type
+    type : *Type // результирующий тип селекта
   )
 
   typ = x.type
@@ -1162,7 +1162,6 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
       fprintf (fout, "\n  br i1 %%%d", regno)
     } else {
       // when по типу
-
       // загружаем номер сравниваемого типа (imm) в регистр
       t16 = getIntByPower(2)
       variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=va.t_no to Int64) to LLVM_Value
@@ -1170,7 +1169,6 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
 
       // сравниваем его c полученым в начале when реальным значением селектора
       regno = llvm_binary ("icmp eq", c.when_is_sel, variant, t16)
-
       fprintf (fout, "\n  br i1 %%%d", regno)
     }
 
