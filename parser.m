@@ -177,10 +177,10 @@ parse_name = () -> AstName {
 /*                            Parse Module                                   */
 /*****************************************************************************/
 
-ast_node_new = (kind : AstNodeKind, entity : *Unit) -> *AstNode {
+ast_node_new = (kind : AstNodeKind, x : AstNode2, entity : *Unit) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
   assert(n != nil, "ast_node_new")
-  *n := (kind=kind, entity=entity)
+  *n := (kind=kind, entity=entity, data=x)
   return n
 }
 
@@ -232,12 +232,14 @@ parse = (filename : Str) -> *AstModule or Unit {
         id = parse_id()
         dv = malloc(sizeof AstNodeDeclType) to *AstNodeDeclType
         dv.id := id
-        list_append(&m.nodes, ast_node_new(#AstNodeDeclType, dv))
+        typdecl = ast_node_new (#AstNodeDeclType, (id=id) to AstNodeDeclType, dv)
+        list_append(&m.nodes, typdecl)
       } else {
         // exist <id> : <Type>  // exist value
         dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
         dv.decl := parse_decl(false)
-        list_append(&m.nodes, ast_node_new(#AstNodeDeclValue, dv))
+        valdecl = ast_node_new (#AstNodeDeclValue, (decl=dv.decl) to AstNodeDeclValue, dv)
+        list_append(&m.nodes, valdecl)
       }
       continue
     } else if match("extern") {
@@ -254,7 +256,8 @@ parse = (filename : Str) -> *AstModule or Unit {
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
-      list_append(&m.nodes, ast_node_new(#AstNodeBindValue, bv))
+      valbind = ast_node_new (#AstNodeBindValue, (id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue, bv)
+      list_append(&m.nodes, valbind)
       continue
     }
 
@@ -262,13 +265,14 @@ parse = (filename : Str) -> *AstModule or Unit {
     if isAlpha (tok.text[0]) {
       if isUpperCase (tok.text[0]) {
         bt = parse_bind_type ()
-        list_append (&m.nodes, ast_node_new(#AstNodeBindType, bt))
+        bindtyp = ast_node_new (#AstNodeBindType, *bt, bt)
+        list_append (&m.nodes, bindtyp)
       } else {
         bv = parse_bind_value ()
-        list_append (&m.nodes, ast_node_new(#AstNodeBindValue, bv))
+        bindval = ast_node_new (#AstNodeBindValue, *bv, bv)
+        list_append (&m.nodes, bindval)
       }
     }
-
   }
 
   if errcnt > 0 {return unit}
@@ -282,7 +286,7 @@ parse_import = () -> *AstNode {
   i.line := dup(&tk.text[0] to Str)
   i.ti := &tk.ti
   skip()
-  return ast_node_new(#AstNodeImport, i)
+  return ast_node_new (#AstNodeImport, (line=i.line, ti=i.ti) to AstNodeImport, i)
 }
 
 

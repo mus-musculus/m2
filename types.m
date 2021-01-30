@@ -104,9 +104,9 @@ AstNodeComment   = Tagged (text : Str, ti : *TokenInfo)
 AstNodeImport    = Tagged (line : Str, ti : *TokenInfo)
 AstNodeBindType  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
 AstNodeBindValue = Tagged (id : *AstId, value : *AstValue, ti : *TokenInfo)
-AstNodeDeclVar   = Tagged (decl : *AstDecl)
 AstNodeDeclType  = Tagged (id : *AstId)
 AstNodeDeclValue = Tagged (decl : *AstDecl)
+AstNodeDeclVar   = Tagged (decl : *AstDecl)
 
 
 AstNode2 = AstNodeComment or
@@ -120,6 +120,7 @@ AstNode2 = AstNodeComment or
 AstNode = (
   kind : AstNodeKind
   entity : *Unit
+  data : AstNode2
 )
 
 
