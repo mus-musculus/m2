@@ -5,6 +5,10 @@ import "data/list"
 import "data/map"
 
 
+/*****************************************************************************/
+/*                               Lexer                                       */
+/*****************************************************************************/
+
 tokenMaxLen = 255
 
 TokenKind = {#TokenEOF, #TokenId, #TokenNum, #TokenSym, #TokenString, #TokenComment, #TokenNL}

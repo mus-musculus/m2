@@ -515,7 +515,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func200_str1 = private unnamed_addr constant [11 x i8] c"ast_id_new\00", align 1
 @func201_str1 = private unnamed_addr constant [13 x i8] c"expected id1\00", align 1
 @func202_str1 = private unnamed_addr constant [2 x i8] c".\00", align 1
-@func203_str1 = private unnamed_addr constant [13 x i8] c"ast_node_new\00", align 1
+@func203_str1 = private unnamed_addr constant [16 x i8] c"ast_node_boxing\00", align 1
 @func204_str1 = private unnamed_addr constant [7 x i8] c"import\00", align 1
 @func204_str2 = private unnamed_addr constant [8 x i8] c"arghack\00", align 1
 @func204_str3 = private unnamed_addr constant [6 x i8] c"exist\00", align 1
@@ -5966,14 +5966,14 @@ endif_0:
   ret %AstName %14
 }
 
-define %union.0* @ast_node_new (%union.0) {
+define %union.0* @ast_node_boxing (%union.0) {
 ;stmt0:
   %2 = call %Unit* (%Nat32) @malloc (%Nat32 32)
   %3 = bitcast %Unit* %2 to %union.0*
 ;stmt1:; loadImmPtr
   %4 = inttoptr i64 0 to%union.0*
   %5 = icmp ne %union.0* %3, %4
-  %6 = bitcast [13 x %Nat8]* @func203_str1 to %Str
+  %6 = bitcast [16 x %Nat8]* @func203_str1 to %Str
   call void (i1, %Str) @assert (i1 %5, %Str %6)
 ;stmt2:
   store %union.0 %0, %union.0* %3, align 32
@@ -6155,7 +6155,7 @@ then_8:
   %66 = bitcast [24 x %Nat8]* %65 to %AstNodeDeclType*
   store %AstNodeDeclType %62, %AstNodeDeclType* %66, align 8
   %67 = load %union.0, %union.0* %63
-  %68 = call %union.0* (%union.0) @ast_node_new (%union.0 %67)
+  %68 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %67)
 ;stmt38:
   %69 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
   %70 = bitcast %union.0* %68 to %Unit*
@@ -6182,7 +6182,7 @@ else_8:
   %82 = bitcast [24 x %Nat8]* %81 to %AstNodeDeclValue*
   store %AstNodeDeclValue %78, %AstNodeDeclValue* %82, align 8
   %83 = load %union.0, %union.0* %79
-  %84 = call %union.0* (%union.0) @ast_node_new (%union.0 %83)
+  %84 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %83)
 ;stmt42:
   %85 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
   %86 = bitcast %union.0* %84 to %Unit*
@@ -6249,7 +6249,7 @@ then_9:
   %126 = bitcast [24 x %Nat8]* %125 to %AstNodeBindValue*
   store %AstNodeBindValue %122, %AstNodeBindValue* %126, align 8
   %127 = load %union.0, %union.0* %123
-  %128 = call %union.0* (%union.0) @ast_node_new (%union.0 %127)
+  %128 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %127)
 ;stmt50:
   %129 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
   %130 = bitcast %union.0* %128 to %Unit*
@@ -6279,43 +6279,41 @@ then_10:
   br i1 %140, label %then_11, label %else_11
 then_11:
 ;stmt54:
-  %141 = call %AstNodeBindType* () @func206 ()
+  %141 = call %AstNodeBindType () @func206 ()
 ;stmt55:
-  %142 = load %AstNodeBindType, %AstNodeBindType* %141
-  %143 = alloca %union.0
+  %142 = alloca %union.0
 ; write variant 2
-  %144 = getelementptr inbounds %union.0, %union.0* %143, i1 0, i32 0
-  store %Int16 2, %Int16* %144, align 2
+  %143 = getelementptr inbounds %union.0, %union.0* %142, i1 0, i32 0
+  store %Int16 2, %Int16* %143, align 2
 ; write data
-  %145 = getelementptr inbounds %union.0, %union.0* %143, i1 0, i32 1
-  %146 = bitcast [24 x %Nat8]* %145 to %AstNodeBindType*
-  store %AstNodeBindType %142, %AstNodeBindType* %146, align 8
-  %147 = load %union.0, %union.0* %143
-  %148 = call %union.0* (%union.0) @ast_node_new (%union.0 %147)
+  %144 = getelementptr inbounds %union.0, %union.0* %142, i1 0, i32 1
+  %145 = bitcast [24 x %Nat8]* %144 to %AstNodeBindType*
+  store %AstNodeBindType %141, %AstNodeBindType* %145, align 8
+  %146 = load %union.0, %union.0* %142
+  %147 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %146)
 ;stmt56:
-  %149 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
-  %150 = bitcast %union.0* %148 to %Unit*
-  %151 = call i1 (%List*, %Unit*) @list_append (%List* %149, %Unit* %150)
+  %148 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
+  %149 = bitcast %union.0* %147 to %Unit*
+  %150 = call i1 (%List*, %Unit*) @list_append (%List* %148, %Unit* %149)
   br label %endif_11
 else_11:
 ;stmt57:
-  %152 = call %AstNodeBindValue* () @func207 ()
+  %151 = call %AstNodeBindValue () @func207 ()
 ;stmt58:
-  %153 = load %AstNodeBindValue, %AstNodeBindValue* %152
-  %154 = alloca %union.0
+  %152 = alloca %union.0
 ; write variant 3
-  %155 = getelementptr inbounds %union.0, %union.0* %154, i1 0, i32 0
-  store %Int16 3, %Int16* %155, align 2
+  %153 = getelementptr inbounds %union.0, %union.0* %152, i1 0, i32 0
+  store %Int16 3, %Int16* %153, align 2
 ; write data
-  %156 = getelementptr inbounds %union.0, %union.0* %154, i1 0, i32 1
-  %157 = bitcast [24 x %Nat8]* %156 to %AstNodeBindValue*
-  store %AstNodeBindValue %153, %AstNodeBindValue* %157, align 8
-  %158 = load %union.0, %union.0* %154
-  %159 = call %union.0* (%union.0) @ast_node_new (%union.0 %158)
+  %154 = getelementptr inbounds %union.0, %union.0* %152, i1 0, i32 1
+  %155 = bitcast [24 x %Nat8]* %154 to %AstNodeBindValue*
+  store %AstNodeBindValue %151, %AstNodeBindValue* %155, align 8
+  %156 = load %union.0, %union.0* %152
+  %157 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %156)
 ;stmt59:
-  %160 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
-  %161 = bitcast %union.0* %159 to %Unit*
-  %162 = call i1 (%List*, %Unit*) @list_append (%List* %160, %Unit* %161)
+  %158 = getelementptr inbounds %AstModule, %AstModule* %3, i1 0, i32 0
+  %159 = bitcast %union.0* %157 to %Unit*
+  %160 = call i1 (%List*, %Unit*) @list_append (%List* %158, %Unit* %159)
   br label %endif_11
 endif_11:
   br label %endif_10
@@ -6325,20 +6323,20 @@ endif_10:
   br label %continue_1
 break_1:
 ;stmt60:
-  %163 = load %Int32, %Int32* @errcnt
-  %164 = icmp sgt %Int32 %163, 0
-  br i1 %164, label %then_12, label %else_12
+  %161 = load %Int32, %Int32* @errcnt
+  %162 = icmp sgt %Int32 %161, 0
+  br i1 %162, label %then_12, label %else_12
 then_12:
 ;stmt61:
-  %165 = inttoptr %Unit zeroinitializer to %union.10
-  ret %union.10 %165
+  %163 = inttoptr %Unit zeroinitializer to %union.10
+  ret %union.10 %163
   br label %endif_12
 else_12:
   br label %endif_12
 endif_12:
 ;stmt62:
-  %167 = bitcast %AstModule* %3 to %union.10
-  ret %union.10 %167
+  %165 = bitcast %AstModule* %3 to %union.10
+  ret %union.10 %165
 }
 
 define %union.0* @func205 () {
@@ -6377,11 +6375,11 @@ define %union.0* @func205 () {
   %20 = bitcast [24 x %Nat8]* %19 to %AstNodeImport*
   store %AstNodeImport %16, %AstNodeImport* %20, align 8
   %21 = load %union.0, %union.0* %17
-  %22 = call %union.0* (%union.0) @ast_node_new (%union.0 %21)
+  %22 = call %union.0* (%union.0) @ast_node_boxing (%union.0 %21)
   ret %union.0* %22
 }
 
-define %AstNodeBindType* @func206 () {
+define %AstNodeBindType @func206 () {
 ;stmt0:
   %1 = call %AstId* () @parse_id ()
 ;stmt1:
@@ -6393,18 +6391,13 @@ define %AstNodeBindType* @func206 () {
 ;stmt3:
   %6 = call %union.1* () @func209 ()
 ;stmt4:
-  %7 = call %Unit* (%Nat32) @malloc (%Nat32 24)
-  %8 = bitcast %Unit* %7 to %AstNodeBindType*
-;stmt5:
-  %9 = insertvalue %AstNodeBindType zeroinitializer, %AstId* %1, 0
-  %10 = insertvalue %AstNodeBindType %9, %union.1* %6, 1
-  %11 = insertvalue %AstNodeBindType %10, %TokenInfo* %3, 2
-  store %AstNodeBindType %11, %AstNodeBindType* %8, align 8
-;stmt6:
-  ret %AstNodeBindType* %8
+  %7 = insertvalue %AstNodeBindType zeroinitializer, %AstId* %1, 0
+  %8 = insertvalue %AstNodeBindType %7, %union.1* %6, 1
+  %9 = insertvalue %AstNodeBindType %8, %TokenInfo* %3, 2
+  ret %AstNodeBindType %9
 }
 
-define %AstNodeBindValue* @func207 () {
+define %AstNodeBindValue @func207 () {
 ;stmt0:
   %1 = call %AstId* () @parse_id ()
 ;stmt1:
@@ -6416,15 +6409,10 @@ define %AstNodeBindValue* @func207 () {
 ;stmt3:
   %6 = call %union.3* () @func218 ()
 ;stmt4:
-  %7 = call %Unit* (%Nat32) @malloc (%Nat32 24)
-  %8 = bitcast %Unit* %7 to %AstNodeBindValue*
-;stmt5:
-  %9 = insertvalue %AstNodeBindValue zeroinitializer, %AstId* %1, 0
-  %10 = insertvalue %AstNodeBindValue %9, %union.3* %6, 1
-  %11 = insertvalue %AstNodeBindValue %10, %TokenInfo* %3, 2
-  store %AstNodeBindValue %11, %AstNodeBindValue* %8, align 8
-;stmt6:
-  ret %AstNodeBindValue* %8
+  %7 = insertvalue %AstNodeBindValue zeroinitializer, %AstId* %1, 0
+  %8 = insertvalue %AstNodeBindValue %7, %union.3* %6, 1
+  %9 = insertvalue %AstNodeBindValue %8, %TokenInfo* %3, 2
+  ret %AstNodeBindValue %9
 }
 
 define %union.1* @ast_type_new (%union.1) {

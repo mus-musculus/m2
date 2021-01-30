@@ -13,8 +13,8 @@ exist separator : () -> Bool
 exist parse_import : () -> *AstNode
 exist parse_decl : (arghack : Bool) -> *AstDecl
 exist ast_value_new : (x : AstValue) -> *AstValue
-exist parse_bind_type : () -> *AstNodeBindType
-exist parse_bind_value : () -> *AstNodeBindValue
+exist parse_bind_type : () -> AstNodeBindType
+exist parse_bind_value : () -> AstNodeBindValue
 
 exist parse_type : () -> *AstType
 exist parse_value : () -> *AstValue
@@ -177,9 +177,9 @@ parse_name = () -> AstName {
 /*                            Parse Module                                   */
 /*****************************************************************************/
 
-ast_node_new = (x : AstNode) -> *AstNode {
+ast_node_boxing = (x : AstNode) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
-  assert(n != nil, "ast_node_new")
+  assert(n != nil, "ast_node_boxing")
   *n := x
   return n
 }
@@ -219,12 +219,6 @@ parse = (filename : Str) -> *AstModule or Unit {
 
     xarghack = match("arghack")
 
-    /*if match("var") {
-      dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
-      dv.decl := parse_decl(false)
-      list_append(&m.nodes, ast_node_new(#AstNodeDeclVar, dv))
-      continue
-    } else*/
     if match("exist") {
       tok = ctok()
       if isUpperCase(tok.text[0]) {
@@ -232,31 +226,24 @@ parse = (filename : Str) -> *AstModule or Unit {
         id = parse_id()
         dv = malloc(sizeof AstNodeDeclType) to *AstNodeDeclType
         dv.id := id
-        typdecl = ast_node_new ((id=id) to AstNodeDeclType)
+        typdecl = ast_node_boxing ((id=id) to AstNodeDeclType)
         list_append(&m.nodes, typdecl)
       } else {
         // exist <id> : <Type>  // exist value
         dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
         dv.decl := parse_decl(false)
-        valdecl = ast_node_new ((decl=dv.decl) to AstNodeDeclValue)
+        valdecl = ast_node_boxing ((decl=dv.decl) to AstNodeDeclValue)
         list_append(&m.nodes, valdecl)
       }
       continue
     } else if match("extern") {
       decl = parse_decl(false)
 
-      // меняем значение arghack в типе функии
-      // для этого нам нужно создать новое значение
-      // (может можно как то через указатель?)
-      /*ft = *decl.type as AstTypeFunc
-      nft = (from=ft.from, to=ft.to, ti=ft.ti, arghack=xarghack) to AstTypeFunc
-      decl.type := nft*/
-
       v = ast_value_new ((type=decl.type, block_stmt=unit) to AstValueFunc)
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
-      valbind = ast_node_new ((id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue)
+      valbind = ast_node_boxing ((id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue)
       list_append(&m.nodes, valbind)
       continue
     }
@@ -265,11 +252,11 @@ parse = (filename : Str) -> *AstModule or Unit {
     if isAlpha (tok.text[0]) {
       if isUpperCase (tok.text[0]) {
         bt = parse_bind_type ()
-        bindtyp = ast_node_new (*bt)
+        bindtyp = ast_node_boxing (bt)
         list_append (&m.nodes, bindtyp)
       } else {
         bv = parse_bind_value ()
-        bindval = ast_node_new (*bv)
+        bindval = ast_node_boxing (bv)
         list_append (&m.nodes, bindval)
       }
     }
@@ -286,31 +273,26 @@ parse_import = () -> *AstNode {
   i.line := dup(&tk.text[0] to Str)
   i.ti := &tk.ti
   skip()
-  return ast_node_new ((line=i.line, ti=i.ti) to AstNodeImport)
+  return ast_node_boxing ((line=i.line, ti=i.ti) to AstNodeImport)
 }
 
 
-parse_bind_type = () -> *AstNodeBindType {
+parse_bind_type = () -> AstNodeBindType {
   id = parse_id()
   ti = &ctok().ti
   need("=")
   t = parse_type()
 
-  bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
-  *bt := (id=id, type=t, ti=ti)
-  return bt
+  return (id=id, type=t, ti=ti)
 }
 
 
-parse_bind_value = () -> *AstNodeBindValue {
+parse_bind_value = () -> AstNodeBindValue {
   id = parse_id()
   ti = &ctok().ti
   need("=")
   v = parse_value()
-
-  bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
-  *bv := (id=id, value=v, ti=ti)
-  return bv
+  return (id=id, value=v, ti=ti)
 }
 
 
