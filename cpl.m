@@ -49,13 +49,20 @@ def_getname = (d : *Definition) -> Str {
 }
 
 
+exist do_import : (x : *AstNodeImport) -> ()
+exist do_var_decl : (x : *AstDecl) -> ()
+exist do_type_bind : (x : AstNodeBindType) -> ()
+exist do_value_bind : (x : *AstNodeBindValue) -> ()
+exist do_type_decl : (x : *AstNodeDeclType) -> ()
+exist do_value_decl : (x : *AstNodeDeclValue) -> ()
+
 compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
     e = ast_node.entity
     when ast_node.kind {
       //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
-      #AstNodeBindType => do_type_bind (e to *AstNodeBindType)
+      #AstNodeBindType => do_type_bind (*(e to *AstNodeBindType))
       #AstNodeBindValue => do_value_bind (e to *AstNodeBindValue)
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
       #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)
@@ -122,7 +129,7 @@ do_var_decl = (x : *AstDecl) -> () {
 }*/
 
 
-do_type_bind = (x : *AstNodeBindType) -> () {
+do_type_bind = (x : AstNodeBindType) -> () {
   id = x.id.str
   t = do_type(x.type)
 

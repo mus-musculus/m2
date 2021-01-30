@@ -5,12 +5,7 @@ exist unwrap_var : (x : *Value) -> *Value
 
 
 exist compile : (a : *AstModule) -> *Assembly
-exist do_import : (x : *AstNodeImport) -> ()
-exist do_var_decl : (x : *AstDecl) -> ()
-exist do_type_bind : (x : *AstNodeBindType) -> ()
-exist do_value_bind : (x : *AstNodeBindValue) -> ()
-exist do_type_decl : (x : *AstNodeDeclType) -> ()
-exist do_value_decl : (x : *AstNodeDeclValue) -> ()
+
 exist value_decl_global : (id : *AstId, t : *Type) -> ()
 exist type_new : (k : TypeKind, size : Nat, align : Nat, ti : *TokenInfo) -> *Type
 exist type_numeric_new : (id : Str, power : Nat, signed : Bool) -> *Type
