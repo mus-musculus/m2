@@ -68,11 +68,12 @@ ParserResult = AstModule or ParserError
 AstId = (str : Str, ti : *TokenInfo)
 AstName = (id, namespace : *AstId, ti : *TokenInfo)
 
+AstIdList = List
 
 AstDecl = (
-  ids : List /* of *AstId */
+  ids : AstIdList
   type : *AstType
-  ti : *TokenInfo /* of `:` */
+  ti : *TokenInfo
   extern, arghack : Bool
 )
 

@@ -146,6 +146,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %ParserResult = type %union.0
 %AstId = type {%Str, %TokenInfo*}
 %AstName = type {%AstId*, %AstId*, %TokenInfo*}
+%AstIdList = type {%Node*, %Node*, %Nat64, %Nat32}
 %AstDecl = type {%List, %union.2*, %TokenInfo*, i1, i1}
 %AstNodeComment = type {%Str, %TokenInfo*}
 %AstNodeImport = type {%Str, %TokenInfo*}

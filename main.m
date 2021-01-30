@@ -47,7 +47,6 @@ main = (argc : Nat, argv : []Str) -> Int32 {
 
   m = parse ("main.m")
 
-
   if m is ParserError {return errcnt}
 
   compiler_init ()
