@@ -62,7 +62,7 @@ compile = (a : *AstModule) -> *Assembly {
     e = ast_node.entity
     when ast_node.kind {
       //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
-      #AstNodeBindType => do_type_bind (*(e to *AstNodeBindType))
+      #AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
       #AstNodeBindValue => do_value_bind (e to *AstNodeBindValue)
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
       #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)

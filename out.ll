@@ -20889,30 +20889,35 @@ select_1_0:
   %10 = icmp eq %AstNodeKind %9, 2
   br i1 %10, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
-  %11 = bitcast %Unit* %7 to %AstNodeBindType*
-  %12 = load %AstNodeBindType, %AstNodeBindType* %11
-  call void (%AstNodeBindType) @func559 (%AstNodeBindType %12)
+  %11 = getelementptr inbounds %AstNode, %AstNode* %5, i1 0, i32 2
+  %12 = load %union.1, %union.1* %11
+  %13 = alloca %union.1
+  store %union.1 %12, %union.1* %13, align 32
+  %14 = getelementptr inbounds %union.1, %union.1* %13, i1 0, i32 1
+  %15 = bitcast [24 x %Nat8]* %14 to %AstNodeBindType*
+  %16 = load %AstNodeBindType, %AstNodeBindType* %15
+  call void (%AstNodeBindType) @func559 (%AstNodeBindType %16)
   br label %select_1_end
 select_1_1:
-  %13 = icmp eq %AstNodeKind %9, 3
-  br i1 %13, label %select_1_1_ok, label %select_1_2
+  %17 = icmp eq %AstNodeKind %9, 3
+  br i1 %17, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
-  %14 = bitcast %Unit* %7 to %AstNodeBindValue*
-  call void (%AstNodeBindValue*) @func561 (%AstNodeBindValue* %14)
+  %18 = bitcast %Unit* %7 to %AstNodeBindValue*
+  call void (%AstNodeBindValue*) @func561 (%AstNodeBindValue* %18)
   br label %select_1_end
 select_1_2:
-  %15 = icmp eq %AstNodeKind %9, 5
-  br i1 %15, label %select_1_2_ok, label %select_1_3
+  %19 = icmp eq %AstNodeKind %9, 5
+  br i1 %19, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
-  %16 = bitcast %Unit* %7 to %AstNodeDeclValue*
-  call void (%AstNodeDeclValue*) @func562 (%AstNodeDeclValue* %16)
+  %20 = bitcast %Unit* %7 to %AstNodeDeclValue*
+  call void (%AstNodeDeclValue*) @func562 (%AstNodeDeclValue* %20)
   br label %select_1_end
 select_1_3:
-  %17 = icmp eq %AstNodeKind %9, 1
-  br i1 %17, label %select_1_3_ok, label %select_1_4
+  %21 = icmp eq %AstNodeKind %9, 1
+  br i1 %21, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
-  %18 = bitcast %Unit* %7 to %AstNodeImport*
-  call void (%AstNodeImport*) @func558 (%AstNodeImport* %18)
+  %22 = bitcast %Unit* %7 to %AstNodeImport*
+  call void (%AstNodeImport*) @func558 (%AstNodeImport* %22)
   br label %select_1_end
 select_1_4:
   call void () @func557 ()
