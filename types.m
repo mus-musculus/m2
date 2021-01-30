@@ -459,7 +459,7 @@ ValueAs     = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
 ValueIs     = (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
 
 ValueWhenVariant = (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
-ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
+ValueWhen   = (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
 

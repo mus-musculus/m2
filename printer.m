@@ -1112,6 +1112,22 @@ cond_next:
 eval_when = (x : *ValueWhen) -> LLVM_Value {
   sel = reval (x.x)
 
+  when_is_sel = 0 to Var LLVM_Value
+
+  if x.iss {
+    // when is..
+
+    // сразу загружаем в регистр вариант селект-значения
+    reg = lab_get ()
+    fprintf (fout, "\n  %%%d = extractvalue %%%s ", reg, sel.type.aka)
+    print_val (sel)
+    o(", 0")
+
+    when_is_sel := (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+  }
+
+
+
   select_no := select_no + 1
   sno = select_no
 
@@ -1119,6 +1135,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
 
   Ctx = (
     sel : LLVM_Value
+    when_is_sel : LLVM_Value
     sno : Nat
     case : Nat
     regs : [maxSelectorEntry]Nat32
@@ -1129,7 +1146,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
 
   typ = x.type
 
-  ctx = (sel=sel, case=0, sno=sno, type=typ) to Var Ctx
+  ctx = (sel=sel, when_is_sel=when_is_sel, case=0, sno=sno, type=typ) to Var Ctx
 
   fprintf (fout, "\n  br label %%select_%d_0", sno)
 
@@ -1138,10 +1155,9 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
     c = ctx to *Ctx
     fprintf (fout, "\nselect_%d_%d:", c.sno, c.case)
 
-    s0 = reval (va.x)
-
-    if va.x.kind != #ValueIs {
+    if va.x != nil {
       // when по значению
+      s0 = reval (va.x)
       reg = operation_with_type ("icmp eq", s0.type)
       space ()
       print_val (c.sel)
@@ -1150,10 +1166,16 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
       fprintf (fout, "\n  br i1 %%%d", reg)
     } else {
       // when по типу
-      // если это сравнение с типом то не нужно сравнивать значение
-      // is операции (WhenVariant#x) со значением селектора when
-      // оно булево и уже несет всю инфу
-      fprintf (fout, "\n  br i1 %%%d", s0.reg)
+
+      // загружаем номер сравниваемого типа (imm) в регистр
+      t16 = getIntByPower(2)
+      variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=va.t_no to Int64) to LLVM_Value
+      variant = loadImmAs(variant_reg, typeBaseInt)
+
+      // сравниваем его c полученым в начале when реальным значением селектора
+      regno = llvm_binary ("icmp eq", c.when_is_sel, variant, t16)
+
+      fprintf (fout, "\n  br i1 %%%d", regno)
     }
 
     fprintf (fout, ", label %%select_%d_%d_ok, label %%select_%d_%d", c.sno, c.case, c.sno, c.case + 1)

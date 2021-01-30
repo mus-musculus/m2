@@ -256,7 +256,6 @@ do_value_when = (x : AstValueWhen) -> *Value {
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
       *v := (x=key, y=val, ti=variant.ti)
-
       list_append (&kit.variants, v)
 
     } else {
@@ -289,13 +288,12 @@ do_value_when = (x : AstValueWhen) -> *Value {
       }
 
       // Создаю локальное выражение is
-      vx = value_new(#ValueIs, typeBool, tx.ti)
+      //vx = value_new(#ValueIs, typeBool, tx.ti)
+      //vx.is := (type=typeBool, value=kit.val, variant=vari, ti=tx.ti)
       vari = type_union_get_variant (kit.val.type, tx)
-      vx.is := (type=typeBool, value=kit.val, variant=vari, ti=tx.ti)
 
       v = malloc(sizeof ValueWhenVariant) to *ValueWhenVariant
-      *v := (x=vx, y=val, ti=variant.ti)
-
+      *v := (x=nil, t_no=vari, y=val, ti=variant.ti)
       list_append (&kit.variants, v)
     }
   }
@@ -309,7 +307,8 @@ do_value_when = (x : AstValueWhen) -> *Value {
   other = implicit_cast (do_value(x.other), kit.type)
 
   v = value_new (#ValueWhen, kit.type, x.ti)
-  v.when := (x=val, variants=kit.variants, other=other, type=kit.type, ti=x.ti)
+  iss = val.type.kind == #TypeUnion
+  v.when := (x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti)
   return v
 }
 
