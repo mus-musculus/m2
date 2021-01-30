@@ -58,26 +58,13 @@ AstModule = (nodes : AstNodeList, src : *Source)
 
 AstNodeKind = {#AstNodeComment, #AstNodeImport, #AstNodeBindType, #AstNodeBindValue, #AstNodeDeclType, #AstNodeDeclValue, #AstNodeDeclVar}
 
-AstNode = (kind : AstNodeKind, entity : *Unit)
+
 
 
 AstId = (str : Str, ti : *TokenInfo)
 AstName = (id, namespace : *AstId, ti : *TokenInfo)
 
 
-AstTypeKind = {
-  #AstTypeUnknown
-  #AstTypeNamed
-  #AstTypeEnum
-  #AstTypeRecord
-  #AstTypeArray
-  #AstTypeArrayU
-  #AstTypeFunc
-  #AstTypePointer
-  #AstTypeVar            // тип обертка для изменяемого значения
-  #AstTypeSpecial        // тип обертка для уникального типа
-  #AstTypeUnion
-}
 
 AstTypeNamed   = AstName
 AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
@@ -120,6 +107,14 @@ AstNodeBindValue = (id : *AstId, value : *AstValue, ti : *TokenInfo)
 AstNodeDeclVar   = (decl : *AstDecl)
 AstNodeDeclType  = (id : *AstId)
 AstNodeDeclValue = (decl : *AstDecl)
+
+
+//AstNode2 = AstNodeComment
+
+AstNode = (
+  kind : AstNodeKind
+  entity : *Unit
+)
 
 
 
