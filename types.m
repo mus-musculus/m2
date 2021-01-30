@@ -65,34 +65,6 @@ AstId = (str : Str, ti : *TokenInfo)
 AstName = (id, namespace : *AstId, ti : *TokenInfo)
 
 
-
-AstTypeNamed   = AstName
-AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
-AstTypeRecord  = Tagged (decls : List /* of *AstDecl */, ti : *TokenInfo)
-AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
-AstTypeArrayU  = Tagged (of : *AstType, ti : *TokenInfo)
-AstTypePointer = Tagged (to : *AstType, ti : *TokenInfo)
-AstTypeFunc    = Tagged (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
-AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
-AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
-AstTypeUnion   = Tagged (types : List /* of *AstType */, ti : *TokenInfo)
-
-AstTypeParserError = {#AstTypeParserError}
-
-AstType = AstTypeParserError or
-          AstTypeNamed or
-          AstTypeEnum or
-          AstTypeRecord or
-          AstTypeArray or
-          AstTypeArrayU or
-          AstTypePointer or
-          AstTypeFunc or
-          AstTypeVar or
-          AstTypeSpecial or
-          AstTypeUnion
-
-
-
 AstDecl = (
   ids : List /* of *AstId */
   type : *AstType
@@ -122,6 +94,36 @@ AstNode = (
   entity : *Unit
   data : AstNode2
 )
+
+
+
+
+
+AstTypeNamed   = AstName
+AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
+AstTypeRecord  = Tagged (decls : List /* of *AstDecl */, ti : *TokenInfo)
+AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
+AstTypeArrayU  = Tagged (of : *AstType, ti : *TokenInfo)
+AstTypePointer = Tagged (to : *AstType, ti : *TokenInfo)
+AstTypeFunc    = Tagged (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
+AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
+AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
+AstTypeUnion   = Tagged (types : List /* of *AstType */, ti : *TokenInfo)
+
+AstTypeParserError = {#AstTypeParserError}
+
+AstType = AstTypeParserError or
+          AstTypeNamed or
+          AstTypeEnum or
+          AstTypeRecord or
+          AstTypeArray or
+          AstTypeArrayU or
+          AstTypePointer or
+          AstTypeFunc or
+          AstTypeVar or
+          AstTypeSpecial or
+          AstTypeUnion
+
 
 
 
