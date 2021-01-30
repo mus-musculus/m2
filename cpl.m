@@ -54,7 +54,7 @@ exist do_var_decl : (x : *AstDecl) -> ()
 exist do_type_bind : (x : AstNodeBindType) -> ()
 exist do_value_bind : (x : AstNodeBindValue) -> ()
 exist do_type_decl : (x : *AstNodeDeclType) -> ()
-exist do_value_decl : (x : *AstNodeDeclValue) -> ()
+exist do_value_decl : (x : AstNodeDeclValue) -> ()
 
 compile = (a : *AstModule) -> *Assembly {
   do_node = ListForeachHandler {
@@ -65,7 +65,7 @@ compile = (a : *AstModule) -> *Assembly {
       #AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
       #AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
-      #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)
+      #AstNodeDeclValue => do_value_decl (ast_node.data as AstNodeDeclValue)
       #AstNodeImport => do_import (e to *AstNodeImport)
       else => () -> () {} ()
     }
@@ -208,7 +208,7 @@ do_value_bind = (x : AstNodeBindValue) -> () {
 
 // декларация значения - создается запись значения #ValueUndefined
 // про которое известен лишь его тип, но мы не знаем больше ничего
-do_value_decl = (x : *AstNodeDeclValue) -> () {
+do_value_decl = (x : AstNodeDeclValue) -> () {
   decl = x.decl
   t = do_type(decl.type)
   de = ListForeachHandler {

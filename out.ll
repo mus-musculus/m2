@@ -20915,15 +20915,21 @@ select_1_2:
   %24 = icmp eq %AstNodeKind %9, 5
   br i1 %24, label %select_1_2_ok, label %select_1_3
 select_1_2_ok:
-  %25 = bitcast %Unit* %7 to %AstNodeDeclValue*
-  call void (%AstNodeDeclValue*) @func562 (%AstNodeDeclValue* %25)
+  %25 = getelementptr inbounds %AstNode, %AstNode* %5, i1 0, i32 2
+  %26 = load %union.1, %union.1* %25
+  %27 = alloca %union.1
+  store %union.1 %26, %union.1* %27, align 32
+  %28 = getelementptr inbounds %union.1, %union.1* %27, i1 0, i32 1
+  %29 = bitcast [24 x %Nat8]* %28 to %AstNodeDeclValue*
+  %30 = load %AstNodeDeclValue, %AstNodeDeclValue* %29
+  call void (%AstNodeDeclValue) @func562 (%AstNodeDeclValue %30)
   br label %select_1_end
 select_1_3:
-  %26 = icmp eq %AstNodeKind %9, 1
-  br i1 %26, label %select_1_3_ok, label %select_1_4
+  %31 = icmp eq %AstNodeKind %9, 1
+  br i1 %31, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
-  %27 = bitcast %Unit* %7 to %AstNodeImport*
-  call void (%AstNodeImport*) @func558 (%AstNodeImport* %27)
+  %32 = bitcast %Unit* %7 to %AstNodeImport*
+  call void (%AstNodeImport*) @func558 (%AstNodeImport* %32)
   br label %select_1_end
 select_1_4:
   call void () @func557 ()
@@ -21273,18 +21279,17 @@ endif_0:
   ret void
 }
 
-define void @func562 (%AstNodeDeclValue*) {
+define void @func562 (%AstNodeDeclValue) {
 ;stmt0:
-  %2 = getelementptr inbounds %AstNodeDeclValue, %AstNodeDeclValue* %0, i1 0, i32 0
-  %3 = load %AstDecl*, %AstDecl** %2
+  %2 = extractvalue %AstNodeDeclValue %0, 0
 ;stmt1:
-  %4 = getelementptr inbounds %AstDecl, %AstDecl* %3, i1 0, i32 1
-  %5 = load %union.0*, %union.0** %4
-  %6 = call %Type* (%union.0*) @func396 (%union.0* %5)
+  %3 = getelementptr inbounds %AstDecl, %AstDecl* %2, i1 0, i32 1
+  %4 = load %union.0*, %union.0** %3
+  %5 = call %Type* (%union.0*) @func396 (%union.0* %4)
 ;stmt2:
-  %7 = getelementptr inbounds %AstDecl, %AstDecl* %3, i1 0, i32 0
-  %8 = bitcast %Type* %6 to %Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %7, %ListForeachHandler @func563, %Unit* %8)
+  %6 = getelementptr inbounds %AstDecl, %AstDecl* %2, i1 0, i32 0
+  %7 = bitcast %Type* %5 to %Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %6, %ListForeachHandler @func563, %Unit* %7)
   ret void
 }
 
