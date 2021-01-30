@@ -49,7 +49,7 @@ def_getname = (d : *Definition) -> Str {
 }
 
 
-exist do_import : (x : *AstNodeImport) -> ()
+exist do_import : (x : AstNodeImport) -> ()
 exist do_var_decl : (x : *AstDecl) -> ()
 exist do_type_bind : (x : AstNodeBindType) -> ()
 exist do_value_bind : (x : AstNodeBindValue) -> ()
@@ -66,7 +66,7 @@ compile = (a : *AstModule) -> *Assembly {
       #AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
       #AstNodeDeclValue => do_value_decl (ast_node.data as AstNodeDeclValue)
-      #AstNodeImport => do_import (e to *AstNodeImport)
+      #AstNodeImport => do_import (ast_node.data as AstNodeImport)
       else => () -> () {} ()
     }
   }
@@ -79,7 +79,7 @@ compile = (a : *AstModule) -> *Assembly {
 
 
 imp_list = 0 to Var Map
-do_import = (x : *AstNodeImport) -> () {
+do_import = (x : AstNodeImport) -> () {
   line = x.line
 
   /* include guard */
