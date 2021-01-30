@@ -56,9 +56,6 @@ AstNodeList = List
 
 AstModule = (nodes : AstNodeList, src : *Source)
 
-AstNodeKind = {#AstNodeComment, #AstNodeImport, #AstNodeBindType, #AstNodeBindValue, #AstNodeDeclType, #AstNodeDeclValue, #AstNodeDeclVar}
-
-
 
 
 AstId = (str : Str, ti : *TokenInfo)
@@ -90,7 +87,9 @@ AstNode = AstNodeComment or
           AstNodeDeclVar
 
 
-
+/*****************************************************************************/
+/*                           Parser Type (AST)                               */
+/*****************************************************************************/
 
 AstTypeNamed   = AstName
 AstTypeEnum    = Tagged (constructors : List, ti : *TokenInfo)
@@ -118,8 +117,9 @@ AstType = AstTypeParserError or
           AstTypeUnion
 
 
-
-
+/*****************************************************************************/
+/*                           Parser Value (AST)                              */
+/*****************************************************************************/
 
 AstValueFunc   = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
 AstValueCall   = (func : *AstValue, args : List, ti : *TokenInfo)
@@ -216,45 +216,9 @@ AstValue =  AstValueParserError or
             AstValueSizeof or
             AstValueAlignof
 
-
-
-
-
-
-/*AstValue = (
-  kind : AstValueKind
-
-  data : AstValue2
-
-  //str     : Str // string representation of #AstValueId, #AstValueNum, #AstValueStr
-  name    : AstValueName // #AstValueId
-
-  rec     : AstValueRecord
-  arr     : AstValueArray
-  str     : AstValueString
-  num     : AstValueNumber
-
-  func    : AstValueFunc
-
-  un      : AstValueUnary
-  bin     : AstValueBinary
-
-  call    : AstValueCall
-  index   : AstValueIndex
-  access  : AstValueAccess
-  cast    : AstValueCast
-  is      : AstValueIs
-  as      : AstValueAs
-  when    : AstValueWhen
-  sizeof  : AstValueSizeof
-  alignof : AstValueAlignof
-
-
-  ti : *TokenInfo
-)*/
-
-
-
+/*****************************************************************************/
+/*                        Parser Statement (AST)                             */
+/*****************************************************************************/
 
 AstStmtValueBind = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
 AstStmtTypeBind  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)

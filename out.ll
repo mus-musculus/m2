@@ -142,7 +142,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 %ParserState = type {%Source*, %Node*}
 %AstNodeList = type {%Node*, %Node*, %Nat64, %Nat32}
 %AstModule = type {%List, %Source*}
-%AstNodeKind = type i16
 %AstId = type {%Str, %TokenInfo*}
 %AstName = type {%AstId*, %AstId*, %TokenInfo*}
 %AstDecl = type {%List, %union.1*, %TokenInfo*, i1, i1}
