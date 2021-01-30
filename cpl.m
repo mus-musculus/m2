@@ -52,7 +52,7 @@ def_getname = (d : *Definition) -> Str {
 exist do_import : (x : *AstNodeImport) -> ()
 exist do_var_decl : (x : *AstDecl) -> ()
 exist do_type_bind : (x : AstNodeBindType) -> ()
-exist do_value_bind : (x : *AstNodeBindValue) -> ()
+exist do_value_bind : (x : AstNodeBindValue) -> ()
 exist do_type_decl : (x : *AstNodeDeclType) -> ()
 exist do_value_decl : (x : *AstNodeDeclValue) -> ()
 
@@ -63,7 +63,7 @@ compile = (a : *AstModule) -> *Assembly {
     when ast_node.kind {
       //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
       #AstNodeBindType => do_type_bind (ast_node.data as AstNodeBindType)
-      #AstNodeBindValue => do_value_bind (e to *AstNodeBindValue)
+      #AstNodeBindValue => do_value_bind (ast_node.data as AstNodeBindValue)
       //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
       #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)
       #AstNodeImport => do_import (e to *AstNodeImport)
@@ -169,7 +169,7 @@ unwrap_var = (x : *Value) -> *Value {
 
 
 // top level value bind
-do_value_bind = (x : *AstNodeBindValue) -> () {
+do_value_bind = (x : AstNodeBindValue) -> () {
   id = x.id.str
   v0 = do_valuex(x.value, false/*do not load*/)
 
