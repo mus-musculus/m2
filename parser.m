@@ -185,7 +185,8 @@ ast_node_boxing = (x : AstNode) -> *AstNode {
   return n
 }
 
-parse = (filename : Str) -> *AstModule or Unit {
+
+parse = (filename : Str) -> ParserResult {
   m = malloc(sizeof AstModule) to *AstModule
   memset(m, 0, sizeof AstModule)
   list_init(&m.nodes)
