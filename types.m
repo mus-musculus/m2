@@ -458,7 +458,7 @@ ValueCast   = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
 ValueAs     = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
 ValueIs     = (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
 
-ValueWhenVariant = (tx : *Type, x, y : *Value, ti : *TokenInfo)
+ValueWhenVariant = (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
 ValueWhen   = (type : *Type, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
