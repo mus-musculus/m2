@@ -579,6 +579,7 @@ Stmt = (
   data : Stmt2
 
 //union (
+  no       : Nat
   expr     : StmtValBind
   assign   : StmtAssign
   block    : StmtBlock

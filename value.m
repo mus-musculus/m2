@@ -870,6 +870,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if t.kind == #TypePoison {goto fail}
 
+  old_nocnt = nocnt
   nocnt := 0 // !сбрасываем id локальных имен
 
   // get func 'name'
@@ -934,6 +935,8 @@ do_value_func = (x : AstValueFunc) -> *Value {
   fv.def := asmFuncAdd (&asm0, uid, t, &bx.block)
 
   fctx := old_fctx  // restore func context before exit
+
+  nocnt := old_nocnt
 
   return fv
 
