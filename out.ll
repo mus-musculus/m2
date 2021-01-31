@@ -261,11 +261,11 @@ target triple = "x86_64-apple-macosx10.15.0"
 %ValueIs = type {%Type*, %Value*, %Nat32, %TokenInfo*}
 %ValueWhenVariant = type {%Type*, %Value*, %Value*, %Nat32, %TokenInfo*}
 %ValueWhen = type {%Type*, i1, %Value*, %List, %Value*, %TokenInfo*}
-%Value = type {%ValueKind, %Type*, %ValueImm, %ValueMention, %ValueRecord, %ValueArray, %Definition*, %Decl*, %Decl*, %StmtExpr*, %ValueUn, %ValueBin, %ValueIndex, %ValueAccess, %ValueCast, %ValueAs, %ValueIs, %ValueCall, %ValueWhen, %TokenInfo*}
+%Value = type {%ValueKind, %Type*, %ValueImm, %ValueMention, %ValueRecord, %ValueArray, %Definition*, %Decl*, %Decl*, %StmtValBind*, %ValueUn, %ValueBin, %ValueIndex, %ValueAccess, %ValueCast, %ValueAs, %ValueIs, %ValueCall, %ValueWhen, %TokenInfo*}
 %StmtKind = type i16
 %Index = type {%List, %List}
 %StmtBlock = type {%StmtBlock*, %Index, %List, %List, %TokenInfo*}
-%StmtExpr = type {%Value*, %Nat32, %TokenInfo*}
+%StmtValBind = type {%Value*, %Nat32, %TokenInfo*}
 %StmtAssign = type {%Value*, %Value*, %TokenInfo*}
 %StmtIf = type {%Value*, %Stmt*, %union.10, %TokenInfo*}
 %StmtWhile = type {%Value*, %Stmt*, %TokenInfo*}
@@ -274,7 +274,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %StmtAgain = type {%TokenInfo*}
 %StmtGoto = type {%Str, %TokenInfo*}
 %StmtLabel = type {%Str, %TokenInfo*}
-%Stmt = type {%StmtKind, %StmtExpr, %StmtAssign, %StmtBlock, %Decl, %StmtIf, %StmtWhile, %StmtReturn, %StmtGoto, %StmtLabel, %StmtBreak, %StmtAgain, %Str, %TokenInfo*}
+%Stmt = type {%StmtKind, %StmtValBind, %StmtAssign, %StmtBlock, %Decl, %StmtIf, %StmtWhile, %StmtReturn, %StmtGoto, %StmtLabel, %StmtBreak, %StmtAgain, %Str, %TokenInfo*}
 %Module = type {%Index, %Index, %Index}
 %FuncContext = type {%Str, %Value*, %StmtBlock*, %Nat32, %Nat32, %Nat32, %Nat32, %Nat32}
 %DefinitionKind = type i16
@@ -10822,8 +10822,8 @@ select_1_4_ok:
   %34 = load %Type*, %Type** %33
   %35 = insertvalue %LLVM_Value %32, %Type* %34, 1
   %36 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 9
-  %37 = load %StmtExpr*, %StmtExpr** %36
-  %38 = getelementptr inbounds %StmtExpr, %StmtExpr* %37, i1 0, i32 1
+  %37 = load %StmtValBind*, %StmtValBind** %36
+  %38 = getelementptr inbounds %StmtValBind, %StmtValBind* %37, i1 0, i32 1
   %39 = load %Nat32, %Nat32* %38
   %40 = insertvalue %LLVM_Value %35, %Nat32 %39, 4
   br label %select_1_end
@@ -13128,7 +13128,7 @@ select_1_1:
   br i1 %14, label %select_1_1_ok, label %select_1_2
 select_1_1_ok:
   %15 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
-  call void (%StmtExpr*) @func355 (%StmtExpr* %15)
+  call void (%StmtValBind*) @func355 (%StmtValBind* %15)
   br label %select_1_end
 select_1_2:
   %16 = icmp eq %StmtKind %3, 4
@@ -13247,13 +13247,13 @@ endif_0:
   ret void
 }
 
-define void @func355 (%StmtExpr*) {
+define void @func355 (%StmtValBind*) {
 ;stmt0:
-  %2 = getelementptr inbounds %StmtExpr, %StmtExpr* %0, i1 0, i32 0
+  %2 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 0
   %3 = load %Value*, %Value** %2
   %4 = call %LLVM_Value (%Value*) @func301 (%Value* %3)
 ;stmt1:
-  %5 = getelementptr inbounds %StmtExpr, %StmtExpr* %0, i1 0, i32 1
+  %5 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 1
   %6 = extractvalue %LLVM_Value %4, 4
   store %Nat32 %6, %Nat32* %5, align 4
   ret void
@@ -20045,7 +20045,7 @@ endif_0:
   %26 = call %Stmt* (%StmtKind, %TokenInfo*) @func519 (%StmtKind 1, %TokenInfo* %25)
 ;stmt9:
   %27 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
-  %28 = getelementptr inbounds %StmtExpr, %StmtExpr* %27, i1 0, i32 0
+  %28 = getelementptr inbounds %StmtValBind, %StmtValBind* %27, i1 0, i32 0
   %29 = call %Value* (%Value*) @dold (%Value* %6)
   store %Value* %29, %Value** %28, align 8
 ;stmt10:
@@ -20056,7 +20056,7 @@ endif_0:
 ;stmt11:
   %34 = getelementptr inbounds %Value, %Value* %33, i1 0, i32 9
   %35 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
-  store %StmtExpr* %35, %StmtExpr** %34, align 8
+  store %StmtValBind* %35, %StmtValBind** %34, align 8
 ;stmt12:
   call void (%Str, %Value*) @func143 (%Str %4, %Value* %33)
 ;stmt13:
@@ -20178,8 +20178,8 @@ endif_1:
   %15 = call %Stmt* (%StmtKind, %TokenInfo*) @func519 (%StmtKind 1, %TokenInfo* %14)
 ;stmt5:
   %16 = getelementptr inbounds %Stmt, %Stmt* %15, i1 0, i32 1
-  %17 = insertvalue %StmtExpr zeroinitializer, %Value* %3, 0
-  store %StmtExpr %17, %StmtExpr* %16, align 8
+  %17 = insertvalue %StmtValBind zeroinitializer, %Value* %3, 0
+  store %StmtValBind %17, %StmtValBind* %16, align 8
 ;stmt6:
   %18 = bitcast %Stmt* %15 to %union.34
   ret %union.34 %18

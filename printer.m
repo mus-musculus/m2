@@ -1469,7 +1469,7 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 exist print_stmt        : (s : *Stmt) -> ()
 exist print_stmt_assign : (x : StmtAssign) -> ()
 exist print_stmt_var    : (v : *Decl) -> ()
-exist print_stmt_expr   : (e : *StmtExpr) -> ()
+exist print_stmt_valbind   : (e : *StmtValBind) -> ()
 exist print_stmt_if     : (i : StmtIf) -> ()
 exist print_stmt_while  : (w : StmtWhile) -> ()
 
@@ -1490,7 +1490,7 @@ print_stmt = (s : *Stmt) -> () {
 
   when k {
     #StmtBlock    => print_block         (s.block)
-    #StmtExpr     => print_stmt_expr     (&s.expr)
+    #StmtValBind  => print_stmt_valbind  (&s.expr)
     #StmtAssign   => print_stmt_assign   (s.assign)
     #StmtVarDef   => print_stmt_var      (&s.v)
     #StmtIf       => print_stmt_if       (s.if)
@@ -1525,7 +1525,7 @@ print_stmt_var = (v : *Decl) -> () {
 }
 
 
-print_stmt_expr = (x : *StmtExpr) -> () {
+print_stmt_valbind = (x : *StmtValBind) -> () {
   o = reval (x.v)
   // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
   // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)

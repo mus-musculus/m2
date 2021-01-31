@@ -103,7 +103,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   // инициализируемые в рантайме
 
 
-  se = stmt_new (#StmtExpr, x.ti)
+  se = stmt_new (#StmtValBind, x.ti)
   se.expr.v := dold (v)
 
   v0 = value_new (#ValueLocalConst, v.type, x.ti)
@@ -162,7 +162,7 @@ do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
     //warning("ignoring value", x.ti)
   }
 
-  s = stmt_new (#StmtExpr, x.ti)
+  s = stmt_new (#StmtValBind, x.ti)
   s.expr := (v=v)
   return s
 }

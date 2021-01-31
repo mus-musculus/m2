@@ -484,7 +484,8 @@ Value = (
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
   param  : *Decl        // ValueParam (Decl#offset)
-  expr   : *StmtExpr     // ValueLocalConst   ??
+  expr   : *StmtValBind    // ValueLocalConst  ссылается на стейтмент где была объявлена
+  // и там в объявлении ей выставляется reg
 
   // operation info
   un     : ValueUn
@@ -511,7 +512,7 @@ Value = (
 
 StmtKind = {
   #StmtForbidden
-  #StmtExpr
+  #StmtValBind
   #StmtBlock
   #StmtVarDef
   #StmtAssign
@@ -541,7 +542,7 @@ StmtBlock = Tagged (
   ti : *TokenInfo
 )
 
-StmtExpr     = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
+StmtValBind     = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
 StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
 StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
@@ -552,7 +553,7 @@ StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
 StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
 
-/*Stmt2 = StmtExpr or
+/*Stmt2 = StmtValBind or
         StmtBlock or
         StmtAssign or
         StmtIf or
@@ -568,7 +569,7 @@ Stmt = (
   kind : StmtKind
 
 //union (
-  expr     : StmtExpr
+  expr     : StmtValBind
   assign   : StmtAssign
   block    : StmtBlock
 
