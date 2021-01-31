@@ -874,7 +874,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func352_str1 = private unnamed_addr constant [10 x i8] c"\0A;stmt%d:\00", align 1
 @func352_str2 = private unnamed_addr constant [22 x i8] c"<print::stmt_unknown>\00", align 1
 @func354_str1 = private unnamed_addr constant [7 x i8] c"alloca\00", align 1
-@func355_str1 = private unnamed_addr constant [8 x i8] c"NO: %d\0A\00", align 1
 @func356_str1 = private unnamed_addr constant [10 x i8] c"\0A  br i1 \00", align 1
 @func356_str2 = private unnamed_addr constant [35 x i8] c", label %%then_%d, label %%else_%d\00", align 1
 @func356_str3 = private unnamed_addr constant [10 x i8] c"\0Athen_%d:\00", align 1
@@ -13302,14 +13301,9 @@ define void @func355 (%StmtValBind*) {
   %3 = load %Value*, %Value** %2
   %4 = call %LLVM_Value (%Value*) @func301 (%Value* %3)
 ;stmt1:
-  %5 = bitcast [8 x %Nat8]* @func355_str1 to %Str
-  %6 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 1
-  %7 = load %Nat32, %Nat32* %6
-  %8 = call %Int32 (%Str, ...) @printf (%Str %5, %Nat32 %7)
-;stmt2:
-  %9 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 2
-  %10 = extractvalue %LLVM_Value %4, 4
-  store %Nat32 %10, %Nat32* %9, align 4
+  %5 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 2
+  %6 = extractvalue %LLVM_Value %4, 4
+  store %Nat32 %6, %Nat32* %5, align 4
   ret void
 }
 
