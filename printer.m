@@ -1476,8 +1476,8 @@ exist print_stmt_while  : (w : StmtWhile) -> ()
 exist print_stmt_return   : (x : StmtReturn) -> ()
 exist print_stmt_break    : () -> ()
 exist print_stmt_again    : () -> ()
-exist print_stmt_goto     : (l : Str) -> ()
-exist print_stmt_label    : (l : Str) -> ()
+exist print_stmt_goto     : (x : StmtGoto) -> ()
+exist print_stmt_label    : (x : StmtLabel) -> ()
 
 
 print_stmt = (s : *Stmt) -> () {
@@ -1491,15 +1491,15 @@ print_stmt = (s : *Stmt) -> () {
   when s.data {
     StmtBlock    => print_block         (s.block)
     StmtValBind  => print_stmt_valbind  (&s.expr)
-    StmtAssign   => print_stmt_assign   (s.assign)
+    StmtAssign   => print_stmt_assign   (s.data as StmtAssign)
     StmtVarDef   => print_stmt_var      (&s.v)
-    StmtIf       => print_stmt_if       (s.if)
-    StmtWhile    => print_stmt_while    (s.while)
-    StmtReturn   => print_stmt_return   (s.return)
+    StmtIf       => print_stmt_if       (s.data as StmtIf)
+    StmtWhile    => print_stmt_while    (s.data as StmtWhile)
+    StmtReturn   => print_stmt_return   (s.data as StmtReturn)
     StmtBreak    => print_stmt_break    ()
-    StmtAgain    => print_stmt_again ()
-    StmtGoto     => print_stmt_goto     (s.l)
-    StmtLabel    => print_stmt_label    (s.l)
+    StmtAgain    => print_stmt_again    ()
+    StmtGoto     => print_stmt_goto     (s.data as StmtGoto)
+    StmtLabel    => print_stmt_label    (s.data as StmtLabel)
     else => fprintf (fout, "<print::stmt_unknown>") to ()
   }
 }
@@ -1596,15 +1596,15 @@ print_stmt_again = () -> () {
 }
 
 
-print_stmt_goto = (l : Str) -> () {
+print_stmt_goto = (x : StmtGoto) -> () {
   lab_get ()  // for LLVM
-  fprintf (fout, "\n  br label %%%s", l)
+  fprintf (fout, "\n  br label %%%s", x.label)
 }
 
 
-print_stmt_label = (l : Str) -> () {
-  fprintf (fout, "\n  br label %%%s", l)
-  fprintf (fout, "\n%s:", l)
+print_stmt_label = (x : StmtLabel) -> () {
+  fprintf (fout, "\n  br label %%%s", x.label)
+  fprintf (fout, "\n%s:", x.label)
 }
 
 
