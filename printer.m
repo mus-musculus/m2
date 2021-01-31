@@ -1488,18 +1488,18 @@ print_stmt = (s : *Stmt) -> () {
     stmtno := stmtno + 1
   }
 
-  when k {
-    #StmtBlock    => print_block         (s.block)
-    #StmtValBind  => print_stmt_valbind  (&s.expr)
-    #StmtAssign   => print_stmt_assign   (s.assign)
-    #StmtVarDef   => print_stmt_var      (&s.v)
-    #StmtIf       => print_stmt_if       (s.if)
-    #StmtWhile    => print_stmt_while    (s.while)
-    #StmtReturn   => print_stmt_return   (s.return)
-    #StmtBreak    => print_stmt_break    ()
-    #StmtAgain    => print_stmt_again ()
-    #StmtGoto     => print_stmt_goto     (s.l)
-    #StmtLabel    => print_stmt_label    (s.l)
+  when s.data {
+    StmtBlock    => print_block         (s.block)
+    StmtValBind  => print_stmt_valbind  (&s.expr)
+    StmtAssign   => print_stmt_assign   (s.assign)
+    StmtVarDef   => print_stmt_var      (&s.v)
+    StmtIf       => print_stmt_if       (s.if)
+    StmtWhile    => print_stmt_while    (s.while)
+    StmtReturn   => print_stmt_return   (s.return)
+    StmtBreak    => print_stmt_break    ()
+    StmtAgain    => print_stmt_again ()
+    StmtGoto     => print_stmt_goto     (s.l)
+    StmtLabel    => print_stmt_label    (s.l)
     else => fprintf (fout, "<print::stmt_unknown>") to ()
   }
 }

@@ -150,6 +150,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 
   fctx.cblock := b.parent  // restore old cblock value
 
+  s.data := (stmts=s.block.stmts, parent=s.block.parent, index=s.block.index, local_funcs=s.block.local_funcs, ti=x.ti) to StmtBlock
   return s
 }
 
