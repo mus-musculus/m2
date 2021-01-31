@@ -20046,22 +20046,21 @@ endif_0:
 ;stmt9:
   %27 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
   %28 = getelementptr inbounds %StmtValBind, %StmtValBind* %27, i1 0, i32 0
-  %29 = call %Value* (%Value*) @dold (%Value* %6)
-  store %Value* %29, %Value** %28, align 8
+  store %Value* %6, %Value** %28, align 8
 ;stmt10:
-  %30 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
-  %31 = load %Type*, %Type** %30
-  %32 = extractvalue %AstStmtValueBind %0, 2
-  %33 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func434 (%ValueKind 11, %Type* %31, %TokenInfo* %32)
+  %29 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
+  %30 = load %Type*, %Type** %29
+  %31 = extractvalue %AstStmtValueBind %0, 2
+  %32 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func434 (%ValueKind 11, %Type* %30, %TokenInfo* %31)
 ;stmt11:
-  %34 = getelementptr inbounds %Value, %Value* %33, i1 0, i32 9
-  %35 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
-  store %StmtValBind* %35, %StmtValBind** %34, align 8
+  %33 = getelementptr inbounds %Value, %Value* %32, i1 0, i32 9
+  %34 = getelementptr inbounds %Stmt, %Stmt* %26, i1 0, i32 1
+  store %StmtValBind* %34, %StmtValBind** %33, align 8
 ;stmt12:
-  call void (%Str, %Value*) @func143 (%Str %4, %Value* %33)
+  call void (%Str, %Value*) @func143 (%Str %4, %Value* %32)
 ;stmt13:
-  %36 = bitcast %Stmt* %26 to %union.32
-  ret %union.32 %36
+  %35 = bitcast %Stmt* %26 to %union.32
+  ret %union.32 %35
 }
 
 define %StmtBlock* @func523 (%StmtBlock*, %StmtBlock*) {
