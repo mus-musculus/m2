@@ -98,8 +98,7 @@ exist value_is_readonly : (v : *Value) -> Bool
 exist valueIsMutable : (v : *Value) -> Bool
 exist value_init : () -> ()
 
-exist stmt_new : (kind : StmtKind, ti : *TokenInfo) -> *Stmt
-//exist stmt_assign_new : (l, r : *Value, ti : *TokenInfo) -> *Stmt
+
 exist stmt_block_init : (b, parent : *StmtBlock) -> *StmtBlock
 
 

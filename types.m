@@ -509,23 +509,7 @@ Value = (
 /*                              Statement                                    */
 /*****************************************************************************/
 
-StmtKind = {
-  #StmtForbidden
-  #StmtValBind
-  #StmtBlock
-  #StmtVarDef
-  #StmtAssign
-  #StmtIf
-  #StmtWhile
-  #StmtReturn
-  #StmtBreak
-  #StmtAgain
-  #StmtGoto
-  #StmtLabel
-}
-
 Index = (types, values : Map)
-
 
 
 // Compound Statement
@@ -572,7 +556,6 @@ Stmt2 = StmtValBind or
 
 
 Stmt = (
-  //kind : StmtKind
 
   data : Stmt2
 
