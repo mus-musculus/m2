@@ -3,10 +3,10 @@
 /*****************************************************************************/
 
 
-stmt_new = (kind : StmtKind, x : Stmt2, ti : *TokenInfo) -> *Stmt {
+stmt_new = (x : Stmt2) -> *Stmt {
   s = malloc (sizeof Stmt) to *Stmt
   assert (s != nil, "stmt_new")
-  *s := (kind=kind, ti=ti, data=x)
+  *s := (data=x)
   return s
 }
 
@@ -77,7 +77,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
     return unit
   }
 
-  s = stmt_new (#StmtAssign, (l=lval, r=rval, ti=x.ti) to StmtAssign, x.ti)
+  s = stmt_new ((l=lval, r=rval, ti=x.ti) to StmtAssign)
   s.assign := (l=lval, r=rval, ti=x.ti)
   return s
 }
@@ -87,7 +87,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 
 // used in cpl
 stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
-  s = stmt_new (#StmtVarDef, (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef, ti)
+  s = stmt_new ((id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef)
   s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)
   nocnt := nocnt + 1
   return s
@@ -114,7 +114,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   // инициализируемые в рантайме
 
   // создаем стейтмент который в принтере назначит регистр выражению
-  se = stmt_new (#StmtValBind, (v=v, no=nocnt2, ti=x.ti) to StmtValBind, x.ti)
+  se = stmt_new ((v=v, no=nocnt2, ti=x.ti) to StmtValBind)
   se.expr.v := v
   se.expr.no := nocnt2
 
@@ -140,7 +140,7 @@ stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
 
 
 do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
-  s = stmt_new (#StmtBlock, #Nothing, x.ti)
+  s = stmt_new (#Nothing)
 
   b = stmt_block_init (&s.block, fctx.cblock)
 
@@ -179,7 +179,7 @@ do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
     //warning("ignoring value", x.ti)
   }
 
-  s = stmt_new (#StmtValBind, (v=v, ti=x.ti) to StmtValBind, x.ti)
+  s = stmt_new ((v=v, ti=x.ti) to StmtValBind)
   s.expr := (v=v, ti=x.ti)
   return s
 }
@@ -211,7 +211,7 @@ do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
 
   if then is Unit {return unit}
 
-  s = stmt_new (#StmtIf, (cond=cond, then=then as *Stmt, else=_else, ti=x.ti) to StmtIf, x.ti)
+  s = stmt_new ((cond=cond, then=then as *Stmt, else=_else, ti=x.ti) to StmtIf)
   s.if := (cond=cond, then=then as *Stmt, else=_else, ti=x.ti)
   return s
 }
@@ -232,7 +232,7 @@ do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
 
   if block is Unit {return unit}
 
-  s = stmt_new (#StmtWhile, (cond=cond, stmt=block as *Stmt, ti=x.ti) to StmtWhile, x.ti)
+  s = stmt_new ((cond=cond, stmt=block as *Stmt, ti=x.ti) to StmtWhile)
   s.while := (cond=cond, stmt=block as *Stmt, ti=x.ti)
   return s
 }
@@ -248,7 +248,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
       return unit
     }
 
-    s = stmt_new (#StmtReturn, (value=unit, ti=x.ti) to StmtReturn, x.ti)
+    s = stmt_new ((value=unit, ti=x.ti) to StmtReturn)
     s.return := (value=unit, ti=x.ti) to StmtReturn
     return s
   }
@@ -258,7 +258,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
   v = implicit_cast (v0, func_to)
   if not type_check (func_to, v.type, v0.ti) {}
 
-  s = stmt_new (#StmtReturn, (value=v, ti=x.ti) to StmtReturn, x.ti)
+  s = stmt_new ((value=v, ti=x.ti) to StmtReturn)
   s.return := (value=v, ti=x.ti) to StmtReturn
   return s
 }
@@ -298,25 +298,25 @@ do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
 
 do_stmt_break = (x : AstStmtBreak) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside a loop context", nil)}
-  return stmt_new (#StmtBreak, (ti=x.ti) to StmtBreak, x.ti)
+  return stmt_new ((ti=x.ti) to StmtBreak)
 }
 
 
 do_stmt_again = (x : AstStmtAgain) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`again` outside a loop context", nil)}
-  return stmt_new (#StmtAgain, (ti=x.ti) to StmtAgain, x.ti)
+  return stmt_new ((ti=x.ti) to StmtAgain)
 }
 
 
 do_stmt_goto = (x : AstStmtGoto) -> *Stmt or Unit {
-  s = stmt_new (#StmtGoto, (label=x.label.str, ti=x.ti) to StmtGoto, x.ti)
+  s = stmt_new ((label=x.label.str, ti=x.ti) to StmtGoto)
   s.l := x.label.str
   return s
 }
 
 
 do_stmt_label = (x : AstStmtLabel) -> *Stmt or Unit {
-  s = stmt_new (#StmtLabel, (label=x.label.str, ti=x.ti) to StmtLabel, x.ti)
+  s = stmt_new ((label=x.label.str, ti=x.ti) to StmtLabel)
   s.l := x.label.str
   return s
 }
