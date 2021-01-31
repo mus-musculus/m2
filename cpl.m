@@ -254,8 +254,8 @@ create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo
   stmtAdd = (s : *Stmt) -> () {list_append(&fctx.cblock.stmts, s)}
 
   stmtAdd(vd)
-  v.vardef := &vd.v
-  v.no := vd.v.no
+
+  v.no := (vd.data as StmtVarDef).no
 
   return v
 }

@@ -20602,20 +20602,10 @@ define %Stmt* @stmt_new_vardef (%AstId*, %Type*, %Value*, %TokenInfo*) {
   %16 = load %union.12, %union.12* %12
   %17 = call %Stmt* (%union.12) @func519 (%union.12 %16)
 ;stmt1:
-  %18 = getelementptr inbounds %Stmt, %Stmt* %17, i1 0, i32 6
-  %19 = insertvalue %Decl zeroinitializer, %AstId* %0, 0
-  %20 = load %Nat32, %Nat32* @nocnt
-  %21 = insertvalue %Decl %19, %Nat32 %20, 4
-  %22 = insertvalue %Decl %21, %Type* %1, 1
-  %23 = call %Value* (%Value*) @dold (%Value* %2)
-  %24 = insertvalue %Decl %22, %Value* %23, 5
-  %25 = insertvalue %Decl %24, %TokenInfo* %3, 6
-  store %Decl %25, %Decl* %18, align 8
+  %18 = load %Nat32, %Nat32* @nocnt
+  %19 = add %Nat32 %18, 1
+  store %Nat32 %19, %Nat32* @nocnt, align 4
 ;stmt2:
-  %26 = load %Nat32, %Nat32* @nocnt
-  %27 = add %Nat32 %26, 1
-  store %Nat32 %27, %Nat32* @nocnt, align 4
-;stmt3:
   ret %Stmt* %17
 }
 
@@ -22106,16 +22096,17 @@ define %Value* @func567 (%AstId*, %Type*, %Value*, %TokenInfo*) {
 ;stmt3:
   call void (%Stmt*) @func568 (%Stmt* %9)
 ;stmt4:
-  %10 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 8
-  %11 = getelementptr inbounds %Stmt, %Stmt* %9, i1 0, i32 6
-  store %Decl* %11, %Decl** %10, align 8
+  %10 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 6
+  %11 = getelementptr inbounds %Stmt, %Stmt* %9, i1 0, i32 1
+  %12 = load %union.12, %union.12* %11
+  %13 = alloca %union.12
+  store %union.12 %12, %union.12* %13, align 256
+  %14 = getelementptr inbounds %union.12, %union.12* %13, i1 0, i32 1
+  %15 = bitcast [144 x %Nat8]* %14 to %StmtVarDef*
+  %16 = load %StmtVarDef, %StmtVarDef* %15
+  %17 = extractvalue %StmtVarDef %16, 1
+  store %Nat32 %17, %Nat32* %10, align 4
 ;stmt5:
-  %12 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 6
-  %13 = getelementptr inbounds %Stmt, %Stmt* %9, i1 0, i32 6
-  %14 = getelementptr inbounds %Decl, %Decl* %13, i1 0, i32 4
-  %15 = load %Nat32, %Nat32* %14
-  store %Nat32 %15, %Nat32* %12, align 4
-;stmt6:
   ret %Value* %5
 }
 

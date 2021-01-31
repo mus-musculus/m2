@@ -86,7 +86,6 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 // used in cpl
 stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
   s = stmt_new ((id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef)
-  s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)  //!!!!!!!!????
   nocnt := nocnt + 1
   return s
 }
