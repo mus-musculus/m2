@@ -13209,47 +13209,61 @@ select_1_7:
   %57 = icmp eq %Int16 %13, %56
   br i1 %57, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
-  call void () @func359 ()
+  %58 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
+  %59 = load %union.12, %union.12* %58
+  %60 = alloca %union.12
+  store %union.12 %59, %union.12* %60, align 256
+  %61 = getelementptr inbounds %union.12, %union.12* %60, i1 0, i32 1
+  %62 = bitcast [144 x %Nat8]* %61 to %StmtBreak*
+  %63 = load %StmtBreak, %StmtBreak* %62
+  call void (%StmtBreak) @func359 (%StmtBreak %63)
   br label %select_1_end
 select_1_8:
-  %58 = bitcast %Int16 7 to %Int16
-  %59 = icmp eq %Int16 %13, %58
-  br i1 %59, label %select_1_8_ok, label %select_1_9
+  %64 = bitcast %Int16 7 to %Int16
+  %65 = icmp eq %Int16 %13, %64
+  br i1 %65, label %select_1_8_ok, label %select_1_9
 select_1_8_ok:
-  call void () @func360 ()
+  %66 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
+  %67 = load %union.12, %union.12* %66
+  %68 = alloca %union.12
+  store %union.12 %67, %union.12* %68, align 256
+  %69 = getelementptr inbounds %union.12, %union.12* %68, i1 0, i32 1
+  %70 = bitcast [144 x %Nat8]* %69 to %StmtAgain*
+  %71 = load %StmtAgain, %StmtAgain* %70
+  call void (%StmtAgain) @func360 (%StmtAgain %71)
   br label %select_1_end
 select_1_9:
-  %60 = bitcast %Int16 8 to %Int16
-  %61 = icmp eq %Int16 %13, %60
-  br i1 %61, label %select_1_9_ok, label %select_1_10
+  %72 = bitcast %Int16 8 to %Int16
+  %73 = icmp eq %Int16 %13, %72
+  br i1 %73, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
-  %62 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
-  %63 = load %union.12, %union.12* %62
-  %64 = alloca %union.12
-  store %union.12 %63, %union.12* %64, align 256
-  %65 = getelementptr inbounds %union.12, %union.12* %64, i1 0, i32 1
-  %66 = bitcast [144 x %Nat8]* %65 to %StmtGoto*
-  %67 = load %StmtGoto, %StmtGoto* %66
-  call void (%StmtGoto) @func361 (%StmtGoto %67)
+  %74 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
+  %75 = load %union.12, %union.12* %74
+  %76 = alloca %union.12
+  store %union.12 %75, %union.12* %76, align 256
+  %77 = getelementptr inbounds %union.12, %union.12* %76, i1 0, i32 1
+  %78 = bitcast [144 x %Nat8]* %77 to %StmtGoto*
+  %79 = load %StmtGoto, %StmtGoto* %78
+  call void (%StmtGoto) @func361 (%StmtGoto %79)
   br label %select_1_end
 select_1_10:
-  %68 = bitcast %Int16 9 to %Int16
-  %69 = icmp eq %Int16 %13, %68
-  br i1 %69, label %select_1_10_ok, label %select_1_11
+  %80 = bitcast %Int16 9 to %Int16
+  %81 = icmp eq %Int16 %13, %80
+  br i1 %81, label %select_1_10_ok, label %select_1_11
 select_1_10_ok:
-  %70 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
-  %71 = load %union.12, %union.12* %70
-  %72 = alloca %union.12
-  store %union.12 %71, %union.12* %72, align 256
-  %73 = getelementptr inbounds %union.12, %union.12* %72, i1 0, i32 1
-  %74 = bitcast [144 x %Nat8]* %73 to %StmtLabel*
-  %75 = load %StmtLabel, %StmtLabel* %74
-  call void (%StmtLabel) @func362 (%StmtLabel %75)
+  %82 = getelementptr inbounds %Stmt, %Stmt* %0, i1 0, i32 1
+  %83 = load %union.12, %union.12* %82
+  %84 = alloca %union.12
+  store %union.12 %83, %union.12* %84, align 256
+  %85 = getelementptr inbounds %union.12, %union.12* %84, i1 0, i32 1
+  %86 = bitcast [144 x %Nat8]* %85 to %StmtLabel*
+  %87 = load %StmtLabel, %StmtLabel* %86
+  call void (%StmtLabel) @func362 (%StmtLabel %87)
   br label %select_1_end
 select_1_11:
-  %76 = load %FILE*, %FILE** @fout
-  %77 = bitcast [22 x %Nat8]* @func352_str2 to %Str
-  %78 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %76, %Str %77)
+  %88 = load %FILE*, %FILE** @fout
+  %89 = bitcast [22 x %Nat8]* @func352_str2 to %Str
+  %90 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %88, %Str %89)
   br label %select_1_end
 select_1_end:
   ret void
@@ -13462,25 +13476,25 @@ endif_0:
   ret void
 }
 
-define void @func359 () {
+define void @func359 (%StmtBreak) {
 ;stmt0:
-  %1 = call %Nat32 () @lab_get ()
+  %2 = call %Nat32 () @lab_get ()
 ;stmt1:
-  %2 = load %FILE*, %FILE** @fout
-  %3 = bitcast [23 x %Nat8]* @func359_str1 to %Str
-  %4 = load %Nat32, %Nat32* @while_id
-  %5 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %2, %Str %3, %Nat32 %4)
+  %3 = load %FILE*, %FILE** @fout
+  %4 = bitcast [23 x %Nat8]* @func359_str1 to %Str
+  %5 = load %Nat32, %Nat32* @while_id
+  %6 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %3, %Str %4, %Nat32 %5)
   ret void
 }
 
-define void @func360 () {
+define void @func360 (%StmtAgain) {
 ;stmt0:
-  %1 = call %Nat32 () @lab_get ()
+  %2 = call %Nat32 () @lab_get ()
 ;stmt1:
-  %2 = load %FILE*, %FILE** @fout
-  %3 = bitcast [23 x %Nat8]* @func360_str1 to %Str
-  %4 = load %Nat32, %Nat32* @while_id
-  %5 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %2, %Str %3, %Nat32 %4)
+  %3 = load %FILE*, %FILE** @fout
+  %4 = bitcast [23 x %Nat8]* @func360_str1 to %Str
+  %5 = load %Nat32, %Nat32* @while_id
+  %6 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %3, %Str %4, %Nat32 %5)
   ret void
 }
 

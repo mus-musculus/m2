@@ -1474,8 +1474,8 @@ exist print_stmt_if     : (i : StmtIf) -> ()
 exist print_stmt_while  : (w : StmtWhile) -> ()
 
 exist print_stmt_return   : (x : StmtReturn) -> ()
-exist print_stmt_break    : () -> ()
-exist print_stmt_again    : () -> ()
+exist print_stmt_break    : (x : StmtBreak) -> ()
+exist print_stmt_again    : (x : StmtAgain) -> ()
 exist print_stmt_goto     : (x : StmtGoto) -> ()
 exist print_stmt_label    : (x : StmtLabel) -> ()
 
@@ -1496,8 +1496,8 @@ print_stmt = (s : *Stmt) -> () {
     StmtIf       => print_stmt_if       (s.data as StmtIf)
     StmtWhile    => print_stmt_while    (s.data as StmtWhile)
     StmtReturn   => print_stmt_return   (s.data as StmtReturn)
-    StmtBreak    => print_stmt_break    ()
-    StmtAgain    => print_stmt_again    ()
+    StmtBreak    => print_stmt_break    (s.data as StmtBreak)
+    StmtAgain    => print_stmt_again    (s.data as StmtAgain)
     StmtGoto     => print_stmt_goto     (s.data as StmtGoto)
     StmtLabel    => print_stmt_label    (s.data as StmtLabel)
     else => fprintf (fout, "<print::stmt_unknown>") to ()
@@ -1584,13 +1584,13 @@ print_stmt_return = (x : StmtReturn) -> () {
 }
 
 
-print_stmt_break = () -> () {
+print_stmt_break = (x : StmtBreak) -> () {
   lab_get ()  // for LLVM
   fprintf (fout, "\n  br label %%break_%d", while_id)
 }
 
 
-print_stmt_again = () -> () {
+print_stmt_again = (x : StmtAgain) -> () {
   lab_get ()  // for LLVM
   fprintf (fout, "\n  br label %%again_%d", while_id)
 }
