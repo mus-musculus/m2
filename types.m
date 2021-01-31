@@ -542,18 +542,23 @@ StmtBlock = Tagged (
   ti : *TokenInfo
 )
 
-StmtValBind     = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
+// ?пока нужно но потом?
+StmtVarDef   = Tagged (id : *AstId, type : *Type, init_value : *Value, ti : *TokenInfo)
+
+StmtValBind  = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
 StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
 StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
 StmtReturn   = Tagged (value : *Value or Unit, ti : *TokenInfo)
 StmtBreak    = Tagged (ti : *TokenInfo)
-StmtAgain = Tagged (ti : *TokenInfo)
+StmtAgain    = Tagged (ti : *TokenInfo)
 StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
 StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
 
-/*Stmt2 = StmtValBind or
+Nothing = {#Nothing}
+
+Stmt2 = StmtValBind or
         StmtBlock or
         StmtAssign or
         StmtIf or
@@ -562,11 +567,15 @@ StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
         StmtBreak or
         StmtAgain or
         StmtGoto or
-        StmtLabel*/
+        StmtLabel or
+        StmtVarDef or
+        Nothing
 
 
 Stmt = (
   kind : StmtKind
+
+  data : Stmt2
 
 //union (
   expr     : StmtValBind

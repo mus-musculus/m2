@@ -239,8 +239,8 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
 
   stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
-    s = stmt_new(#StmtVarDef, ti)
-    s.v := (id=id, type=t, init_value=dold (init_value))
+    s = stmt_new (#StmtVarDef, (id=id, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef, ti)
+    s.v := (id=id, type=t, init_value=dold (init_value), ti=ti)
     return s
   }
 
