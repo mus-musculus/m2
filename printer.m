@@ -1473,7 +1473,7 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 
 exist print_stmt         : (s : *Stmt) -> ()
 exist print_stmt_assign  : (x : StmtAssign) -> ()
-exist print_stmt_var     : (v : Decl) -> ()
+exist print_stmt_var     : (v : StmtVarDef) -> ()
 exist print_stmt_valbind : (x : StmtValBind) -> ()
 exist print_stmt_if      : (i : StmtIf) -> ()
 exist print_stmt_while   : (w : StmtWhile) -> ()
@@ -1497,7 +1497,7 @@ print_stmt = (s : *Stmt) -> () {
     StmtBlock    => print_block         (s.data as StmtBlock)
     StmtValBind  => print_stmt_valbind  (s.data as StmtValBind)
     StmtAssign   => print_stmt_assign   (s.data as StmtAssign)
-    StmtVarDef   => print_stmt_var      (s.v)
+    StmtVarDef   => print_stmt_var      (s.data as StmtVarDef)
     StmtIf       => print_stmt_if       (s.data as StmtIf)
     StmtWhile    => print_stmt_while    (s.data as StmtWhile)
     StmtReturn   => print_stmt_return   (s.data as StmtReturn)
@@ -1517,7 +1517,7 @@ print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 // или непосредственная константа (которая никак не вычисляется в LLVM)
 
 
-print_stmt_var = (v : Decl) -> () {
+print_stmt_var = (v : StmtVarDef) -> () {
   reg = operation_with_type ("alloca", v.type)
   // сохраняем номер полученного регистра по нашему номеру
   local_vars_map[v.no] :=reg
