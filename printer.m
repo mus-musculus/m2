@@ -1475,7 +1475,7 @@ exist print_stmt_while  : (w : StmtWhile) -> ()
 
 exist print_stmt_return   : (x : StmtReturn) -> ()
 exist print_stmt_break    : () -> ()
-exist print_stmt_continue : () -> ()
+exist print_stmt_again    : () -> ()
 exist print_stmt_goto     : (l : Str) -> ()
 exist print_stmt_label    : (l : Str) -> ()
 
@@ -1497,7 +1497,7 @@ print_stmt = (s : *Stmt) -> () {
     #StmtWhile    => print_stmt_while    (s.while)
     #StmtReturn   => print_stmt_return   (s.return)
     #StmtBreak    => print_stmt_break    ()
-    #StmtContinue => print_stmt_continue ()
+    #StmtContinue => print_stmt_again ()
     #StmtGoto     => print_stmt_goto     (s.l)
     #StmtLabel    => print_stmt_label    (s.l)
     else => fprintf (fout, "<print::stmt_unknown>") to ()
@@ -1555,15 +1555,15 @@ print_stmt_while = (x : StmtWhile) -> () {
   old_while_id = while_id
   while_id := global_while_id
   global_while_id := global_while_id + 1
-  fprintf (fout, "\n  br label %%continue_%d", while_id)
-  fprintf (fout, "\ncontinue_%d:", while_id)
+  fprintf (fout, "\n  br label %%again_%d", while_id)
+  fprintf (fout, "\nagain_%d:", while_id)
   c = reval (x.cond)
   fprintf (fout, "\n  br i1 ")
   print_val (c)
   fprintf (fout, ", label %%body_%d, label %%break_%d", while_id, while_id)
   fprintf (fout, "\nbody_%d:", while_id)
   print_stmt (x.stmt)
-  fprintf (fout, "\n  br label %%continue_%d", while_id)
+  fprintf (fout, "\n  br label %%again_%d", while_id)
   fprintf (fout, "\nbreak_%d:", while_id)
   while_id := old_while_id
 }
@@ -1590,9 +1590,9 @@ print_stmt_break = () -> () {
 }
 
 
-print_stmt_continue = () -> () {
+print_stmt_again = () -> () {
   lab_get ()  // for LLVM
-  fprintf (fout, "\n  br label %%continue_%d", while_id)
+  fprintf (fout, "\n  br label %%again_%d", while_id)
 }
 
 

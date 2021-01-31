@@ -127,6 +127,8 @@ AstType = AstTypeParserError or
           AstTypeSpecial or
           AstTypeUnion
 
+AstTypeParser = () -> *AstType
+
 
 /*****************************************************************************/
 /*                           Parser Value (AST)                              */
@@ -228,6 +230,8 @@ ValueParserError = {#AstValueParserError}
 // TODO
 ValueParserResult = AstValue or ValueParserError
 
+AstValueParser = () -> *AstValue
+
 
 /*****************************************************************************/
 /*                        Parser Statement (AST)                             */
@@ -266,6 +270,8 @@ AstStmt = AstStmtAssign or
           AstStmtBreak or
           AstStmtContinue
 
+
+AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
 
 
 /*****************************************************************************/

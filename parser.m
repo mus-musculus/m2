@@ -201,15 +201,15 @@ parse = (filename : Str) -> ParserResult {
     tok = ctok()
 
     if tok.kind == #TokenEOF {break}
-    if tok.kind == #TokenNL {skip(); continue}
-    if tok.kind == #TokenComment {skip(); continue}
+    if tok.kind == #TokenNL {skip(); again}
+    if tok.kind == #TokenComment {skip(); again}
 
     // firstly, do imports
     if match("import") {
       imp = parse_import()
       boxed_imp = ast_node_boxing (imp)
       list_append(&nodes, boxed_imp)
-      continue
+      again
     } else {
       break
     }
@@ -219,8 +219,8 @@ parse = (filename : Str) -> ParserResult {
     tok = ctok()
 
     if tok.kind == #TokenEOF {break}
-    if tok.kind == #TokenNL {skip(); continue}
-    if tok.kind == #TokenComment {skip(); continue}
+    if tok.kind == #TokenNL {skip(); again}
+    if tok.kind == #TokenComment {skip(); again}
 
     xarghack = match("arghack")
 
@@ -240,7 +240,7 @@ parse = (filename : Str) -> ParserResult {
         valdecl = ast_node_boxing ((decl=dv.decl) to AstNodeDeclValue)
         list_append(&nodes, valdecl)
       }
-      continue
+      again
     } else if match("extern") {
       decl = parse_decl(false)
 
@@ -250,7 +250,7 @@ parse = (filename : Str) -> ParserResult {
       *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
       valbind = ast_node_boxing ((id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue)
       list_append(&nodes, valbind)
-      continue
+      again
     }
 
 
@@ -311,12 +311,9 @@ ast_type_new = (x : AstType) -> *AstType {
   return t
 }
 
-AstTypeParser = () -> *AstType
 
-exist parse_type_ptr   : AstTypeParser
 exist parse_type_set   : AstTypeParser
 exist parse_type_rec   : AstTypeParser
-exist parse_type_array : AstTypeParser
 
 exist parse_type   : AstTypeParser
 exist parse_type0  : AstTypeParser
@@ -458,7 +455,7 @@ parse_type_set = AstTypeParser {
     list_append(&items, cons to *Unit)
 
     ti_sep = &ctok().ti
-    if match(",") {continue}
+    if match(",") {again}
 
     nl_sep_present = match("\n")
 
@@ -501,40 +498,6 @@ parse_type_rec = AstTypeParser {
 }
 
 
-/*parse_type_ptr = AstTypeParser {
-  tk = ctok()
-  need("*")
-  t = parse_type()
-
-  pt = ast_type_new (#AstTypePointer, (to=t, ti=&tk.ti) to AstTypePointer, &tk.ti)
-  pt.pointer := (to=t, ti=&tk.ti)
-  return pt
-}*/
-
-
-/*
-parse_type_array = AstTypeParser {
-  tk = ctok()
-  need("[")
-  if match("]") {
-    of = parse_type()
-    t = ast_type_new (#AstTypeArrayU, (of=of, ti=&tk.ti) to AstTypeArrayU &tk.ti)
-    t.array_u := (of=of, ti=&tk.ti)
-    return t
-  }
-
-  size = parse_value()
-  need("]")
-  of = parse_type()
-
-  t = ast_type_new (#AstTypeArray, &tk.ti)
-  t.array := (size=size, of=of, ti=&tk.ti)
-  return t
-}
-*/
-
-
-
 // syntax: <id> [,<id>] ':' <type>
 // *AstDecl
 parse_decl = (arghack : Bool) -> *AstDecl {
@@ -562,9 +525,6 @@ parse_decl = (arghack : Bool) -> *AstDecl {
 /*****************************************************************************/
 /*                             Parse Value                                    */
 /*****************************************************************************/
-
-// нужно передавать сюда стартовый токен
-AstValueParser = () -> *AstValue
 
 
 ast_value_new = (x : AstValue) -> *AstValue {
@@ -834,7 +794,7 @@ parse_value11 = AstValueParser {
         if a == nil {
           skipto(",)")
           if match(",") {
-            continue
+            again
           } else if match(")") {
             break
           } else {
@@ -965,7 +925,7 @@ parse_value_when = AstValueParser {
       need("=>")
       other := parse_value()
       skip_nl()
-      continue
+      again
     }
 
     // parse each variant
@@ -1037,8 +997,7 @@ parse_value_array = AstValueParser {
 }
 
 
-AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
-exist parse_stmt       : AstStmtParser
+
 exist parse_stmt_block : AstStmtParser
 
 
@@ -1085,26 +1044,20 @@ ast_stmt_boxing = (x : AstStmt) -> *AstStmt {
 }
 
 
-
 exist parse_stmt_if       : AstStmtParser
 exist parse_stmt_while    : AstStmtParser
 exist parse_stmt_return   : AstStmtParser
 exist parse_stmt_goto     : AstStmtParser
-//exist parse_stmt_vardef : AstStmtParser
 exist parse_stmt_valbind  : AstStmtParser
 exist parse_stmt_typebind : AstStmtParser
 exist parse_stmt_expr     : AstStmtParser
 exist parse_stmt_break    : AstStmtParser
-exist parse_stmt_continue : AstStmtParser
+exist parse_stmt_again : AstStmtParser
 
 
-parse_stmt_break = AstStmtParser {
-  return ast_stmt_boxing ((ti=ti) to AstStmtBreak)
-}
+parse_stmt_break = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtBreak)}
 
-parse_stmt_continue = AstStmtParser {
-  return ast_stmt_boxing ((ti=ti) to AstStmtContinue)
-}
+parse_stmt_again = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtContinue)}
 
 parse_stmt = () -> *AstStmt or Unit {
   tk = ctok()
@@ -1142,7 +1095,7 @@ parse_stmt = () -> *AstStmt or Unit {
     match("while")    => parse_stmt_while    (ti)
     match("return")   => parse_stmt_return   (ti)
     match("break")    => parse_stmt_break    (ti)
-    match("continue") => parse_stmt_continue (ti)
+    match("again")    => parse_stmt_again (ti)
     match("goto")     => parse_stmt_goto     (ti)
     else              => lab_or_expr         ()
   }
