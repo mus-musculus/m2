@@ -870,6 +870,8 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if t.kind == #TypePoison {goto fail}
 
+  nocnt := 0 // !сбрасываем id локальных имен
+
   // get func 'name'
   fuid := fuid + 1
   uid = get_suid ("func", fuid)

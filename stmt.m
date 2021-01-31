@@ -83,7 +83,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 }
 
 
-nocnt = 0 to Var Nat
+
 
 // used in cpl
 stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {

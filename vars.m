@@ -29,3 +29,7 @@ asm0 = 0 to Var Assembly
 // ! перенеси в сборку!
 unions = 0 to Var List
 
+
+nocnt = 0 to Var Nat
+
+

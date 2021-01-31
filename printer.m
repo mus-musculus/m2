@@ -1533,6 +1533,8 @@ print_stmt_var = (v : *Decl) -> () {
 
 print_stmt_valbind = (x : *StmtValBind) -> () {
   o = reval (x.v)
+
+  //local_vars_map[x.v.no] := o.reg
   // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
   // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)
   // могло быть связано с результатом этого значения через Value#expr.reg
