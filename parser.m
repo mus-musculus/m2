@@ -1067,7 +1067,7 @@ parse_stmt = () -> *AstStmt or Unit {
   is_bind = tk.kind == #TokenId and nt.kind == #TokenSym and nt.text[0] == "="[0]
 
   if is_bind {
-    return when true  {
+    return when true {
       isUpperCase(tk.text[0]) => parse_stmt_typebind(ti)
       else => parse_stmt_valbind(ti)
     }
