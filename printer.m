@@ -1489,7 +1489,7 @@ print_stmt = (s : *Stmt) -> () {
   }
 
   when s.data {
-    StmtBlock    => print_block         (s.block)
+    StmtBlock    => print_block         (s.data as StmtBlock)
     StmtValBind  => print_stmt_valbind  (&s.expr)
     StmtAssign   => print_stmt_assign   (s.data as StmtAssign)
     StmtVarDef   => print_stmt_var      (&s.v)
