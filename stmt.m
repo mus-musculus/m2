@@ -86,7 +86,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 // used in cpl
 stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
   s = stmt_new ((id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef)
-  s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)
+  s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)  //!!!!!!!!????
   nocnt := nocnt + 1
   return s
 }
@@ -177,9 +177,7 @@ do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
     //warning("ignoring value", x.ti)
   }
 
-  s = stmt_new ((v=v, ti=x.ti) to StmtValBind)
-  s.expr := (v=v, ti=x.ti)
-  return s
+  return stmt_new ((v=v, ti=x.ti) to StmtValBind)
 }
 
 
@@ -209,9 +207,7 @@ do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
 
   if then is Unit {return unit}
 
-  s = stmt_new ((cond=cond, then=then as *Stmt, else=_else, ti=x.ti) to StmtIf)
-  s.if := (cond=cond, then=then as *Stmt, else=_else, ti=x.ti)
-  return s
+  return stmt_new ((cond=cond, then=then as *Stmt, else=_else, ti=x.ti) to StmtIf)
 }
 
 
@@ -230,9 +226,7 @@ do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
 
   if block is Unit {return unit}
 
-  s = stmt_new ((cond=cond, stmt=block as *Stmt, ti=x.ti) to StmtWhile)
-  s.while := (cond=cond, stmt=block as *Stmt, ti=x.ti)
-  return s
+  return stmt_new ((cond=cond, stmt=block as *Stmt, ti=x.ti) to StmtWhile)
 }
 
 
@@ -246,9 +240,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
       return unit
     }
 
-    s = stmt_new ((value=unit, ti=x.ti) to StmtReturn)
-    s.return := (value=unit, ti=x.ti) to StmtReturn
-    return s
+    return stmt_new ((value=unit, ti=x.ti) to StmtReturn)
   }
 
   v0 = do_value (rv as *AstValue)
@@ -256,9 +248,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
   v = implicit_cast (v0, func_to)
   if not type_check (func_to, v.type, v0.ti) {}
 
-  s = stmt_new ((value=v, ti=x.ti) to StmtReturn)
-  s.return := (value=v, ti=x.ti) to StmtReturn
-  return s
+  return stmt_new ((value=v, ti=x.ti) to StmtReturn)
 }
 
 
@@ -307,16 +297,12 @@ do_stmt_again = (x : AstStmtAgain) -> *Stmt or Unit {
 
 
 do_stmt_goto = (x : AstStmtGoto) -> *Stmt or Unit {
-  s = stmt_new ((label=x.label.str, ti=x.ti) to StmtGoto)
-  s.l := x.label.str
-  return s
+  return stmt_new ((label=x.label.str, ti=x.ti) to StmtGoto)
 }
 
 
 do_stmt_label = (x : AstStmtLabel) -> *Stmt or Unit {
-  s = stmt_new ((label=x.label.str, ti=x.ti) to StmtLabel)
-  s.l := x.label.str
-  return s
+  return stmt_new ((label=x.label.str, ti=x.ti) to StmtLabel)
 }
 
 
