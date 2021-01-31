@@ -300,8 +300,7 @@ Decl = (
   type   : *Type
   align  : Nat        // выравнивание поля
   offset : Nat16      // field offset
-  no     : Nat
-  lab    : Nat32      // локальная переменная юзается через lab
+  no     : Nat   // номер для идентификации регистра
   init_value : *Value
   ti     : *TokenInfo
 )
@@ -546,7 +545,7 @@ StmtBlock = Tagged (
 // ?пока нужно но потом?
 StmtVarDef   = Tagged (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
 
-StmtValBind  = Tagged (v : *Value, no : Nat, reg : Nat32, ti : *TokenInfo)
+StmtValBind  = Tagged (v : *Value, no : Nat, ti : *TokenInfo)
 StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
 StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)

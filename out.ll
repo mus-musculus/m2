@@ -245,7 +245,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %TypeEnum = type {%List*}
 %TypeUnion = type {%List, %Type*, %Nat32}
 %EnumConstructor = type {%AstId*, %Nat32, %TokenInfo*}
-%Decl = type {%AstId*, %Type*, %Nat32, %Nat16, %Nat32, %Nat32, %Value*, %TokenInfo*}
+%Decl = type {%AstId*, %Type*, %Nat32, %Nat16, %Nat32, %Value*, %TokenInfo*}
 %TypeKind = type i16
 %Type = type {%TypeKind, %Nat32, %Str, %Nat32, %Nat32, %TypeNumeric, %TypeFunc, %TypePointer, %TypeArray, %TypeArrayU, %TypeRecord, %TypeEnum, %TypeVar, %TypeUnion, %TokenInfo*}
 %ValueKind = type i16
@@ -268,7 +268,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %Index = type {%List, %List}
 %StmtBlock = type {%StmtBlock*, %Index, %List, %List, %TokenInfo*}
 %StmtVarDef = type {%AstId*, %Nat32, %Type*, %Value*, %TokenInfo*}
-%StmtValBind = type {%Value*, %Nat32, %Nat32, %TokenInfo*}
+%StmtValBind = type {%Value*, %Nat32, %TokenInfo*}
 %StmtAssign = type {%Value*, %Value*, %TokenInfo*}
 %StmtIf = type {%Value*, %Stmt*, %union.10, %TokenInfo*}
 %StmtWhile = type {%Value*, %Stmt*, %TokenInfo*}
@@ -13272,7 +13272,7 @@ define void @func354 (%Decl*) {
   %8 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %7
   store %Nat32 %5, %Nat32* %8, align 4
 ;stmt2:
-  %9 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 6
+  %9 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 5
   %10 = load %Value*, %Value** %9
 ;stmt3:; loadImmPtr
   %11 = inttoptr i64 0 to%Value*
@@ -14548,7 +14548,7 @@ define %Decl* @func406 (%AstId*, %Type*, %TokenInfo*) {
   %11 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 4
   %12 = load %Nat32, %Nat32* %11
   %13 = insertvalue %Decl %10, %Nat32 %12, 2
-  %14 = insertvalue %Decl %13, %TokenInfo* %2, 7
+  %14 = insertvalue %Decl %13, %TokenInfo* %2, 6
   store %Decl %14, %Decl* %5, align 8
 ;stmt3:
   ret %Decl* %5
@@ -18356,7 +18356,7 @@ define void @func496 (%Unit*, %Unit*, %Nat32, %Node*) {
 ;stmt2:
   %7 = getelementptr inbounds %Decl, %Decl* %5, i1 0, i32 1
   %8 = load %Type*, %Type** %7
-  %9 = getelementptr inbounds %Decl, %Decl* %5, i1 0, i32 7
+  %9 = getelementptr inbounds %Decl, %Decl* %5, i1 0, i32 6
   %10 = load %TokenInfo*, %TokenInfo** %9
   %11 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func434 (%ValueKind 7, %Type* %8, %TokenInfo* %10)
 ;stmt3:
@@ -20101,8 +20101,8 @@ define %Stmt* @stmt_new_vardef (%AstId*, %Type*, %Value*, %TokenInfo*) {
   %21 = insertvalue %Decl %19, %Nat32 %20, 4
   %22 = insertvalue %Decl %21, %Type* %1, 1
   %23 = call %Value* (%Value*) @dold (%Value* %2)
-  %24 = insertvalue %Decl %22, %Value* %23, 6
-  %25 = insertvalue %Decl %24, %TokenInfo* %3, 7
+  %24 = insertvalue %Decl %22, %Value* %23, 5
+  %25 = insertvalue %Decl %24, %TokenInfo* %3, 6
   store %Decl %25, %Decl* %18, align 8
 ;stmt2:
   %26 = load %Nat32, %Nat32* @nocnt
@@ -20156,7 +20156,7 @@ endif_0:
   %26 = load %Nat32, %Nat32* @nocnt2
   %27 = insertvalue %StmtValBind %25, %Nat32 %26, 1
   %28 = extractvalue %AstStmtValueBind %0, 2
-  %29 = insertvalue %StmtValBind %27, %TokenInfo* %28, 3
+  %29 = insertvalue %StmtValBind %27, %TokenInfo* %28, 2
   %30 = alloca %union.12
 ; write variant 0
   %31 = getelementptr inbounds %union.12, %union.12* %30, i1 0, i32 0
@@ -20352,7 +20352,7 @@ endif_1:
 ;stmt4:
   %14 = insertvalue %StmtValBind zeroinitializer, %Value* %3, 0
   %15 = extractvalue %AstStmtExpr %0, 1
-  %16 = insertvalue %StmtValBind %14, %TokenInfo* %15, 3
+  %16 = insertvalue %StmtValBind %14, %TokenInfo* %15, 2
   %17 = alloca %union.12
 ; write variant 0
   %18 = getelementptr inbounds %union.12, %union.12* %17, i1 0, i32 0
@@ -20368,7 +20368,7 @@ endif_1:
   %24 = getelementptr inbounds %Stmt, %Stmt* %23, i1 0, i32 3
   %25 = insertvalue %StmtValBind zeroinitializer, %Value* %3, 0
   %26 = extractvalue %AstStmtExpr %0, 1
-  %27 = insertvalue %StmtValBind %25, %TokenInfo* %26, 3
+  %27 = insertvalue %StmtValBind %25, %TokenInfo* %26, 2
   store %StmtValBind %27, %StmtValBind* %24, align 8
 ;stmt6:
   %28 = bitcast %Stmt* %23 to %union.35
