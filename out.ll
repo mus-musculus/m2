@@ -60,7 +60,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 %union.15 = type %Unit*
 
-%union.16 = type {i16, [16 x i8]}
+%union.16 = type {i16, [40 x i8]}
 
 %union.17 = type %Unit*
 

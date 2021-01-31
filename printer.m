@@ -78,7 +78,8 @@ LLVM_Value2 = LLVM_ValueUndef or
               LLVM_ValueGlobalVar or
               LLVM_ValueLocalVar or
               LLVM_ValueAddress or
-              LLVM_ValueRegister
+              LLVM_ValueRegister or
+              LLVM_Value
 
 
 exist loadImmAs : (x : LLVM_Value, t : *Type) -> LLVM_Value
