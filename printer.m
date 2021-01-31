@@ -600,7 +600,7 @@ eval = Eval {
     #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
-    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=x.vardef.lab)
+    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])
 
     #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
 

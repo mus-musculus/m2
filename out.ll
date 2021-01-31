@@ -10813,9 +10813,10 @@ select_1_5_ok:
   %43 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %44 = load %Type*, %Type** %43
   %45 = insertvalue %LLVM_Value %42, %Type* %44, 1
-  %46 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 8
-  %47 = load %Decl*, %Decl** %46
-  %48 = getelementptr inbounds %Decl, %Decl* %47, i1 0, i32 5
+  %46 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
+  %47 = load %Nat32, %Nat32* %46
+; index array
+  %48 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %47
   %49 = load %Nat32, %Nat32* %48
   %50 = insertvalue %LLVM_Value %45, %Nat32 %49, 4
   br label %select_1_end
