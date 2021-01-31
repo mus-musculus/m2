@@ -230,7 +230,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstStmtGoto = type {%AstId*, %TokenInfo*}
 %AstStmtLabel = type {%AstId*, %TokenInfo*}
 %AstStmtBreak = type {%TokenInfo*}
-%AstStmtContinue = type {%TokenInfo*}
+%AstStmtAgain = type {%TokenInfo*}
 %AstStmt = type %union.8
 %AstStmtParser = type %union.9 (%TokenInfo*)*
 %TypeNumeric = type {%Nat32, i1}
@@ -271,10 +271,10 @@ target triple = "x86_64-apple-macosx10.15.0"
 %StmtWhile = type {%Value*, %Stmt*, %TokenInfo*}
 %StmtReturn = type {%union.11, %TokenInfo*}
 %StmtBreak = type {%TokenInfo*}
-%StmtContinue = type {%TokenInfo*}
+%StmtAgain = type {%TokenInfo*}
 %StmtGoto = type {%Str, %TokenInfo*}
 %StmtLabel = type {%Str, %TokenInfo*}
-%Stmt = type {%StmtKind, %StmtExpr, %StmtAssign, %StmtBlock, %Decl, %StmtIf, %StmtWhile, %StmtReturn, %StmtGoto, %StmtLabel, %StmtBreak, %StmtContinue, %Str, %TokenInfo*}
+%Stmt = type {%StmtKind, %StmtExpr, %StmtAssign, %StmtBlock, %Decl, %StmtIf, %StmtWhile, %StmtReturn, %StmtGoto, %StmtLabel, %StmtBreak, %StmtAgain, %Str, %TokenInfo*}
 %Module = type {%Index, %Index, %Index}
 %FuncContext = type {%Str, %Value*, %StmtBlock*, %Nat32, %Nat32, %Nat32, %Nat32, %Nat32}
 %DefinitionKind = type i16
@@ -8865,15 +8865,15 @@ define %union.9 @func242 (%TokenInfo*) {
 
 define %union.9 @func243 (%TokenInfo*) {
 ;stmt0:
-  %2 = insertvalue %AstStmtContinue zeroinitializer, %TokenInfo* %0, 0
+  %2 = insertvalue %AstStmtAgain zeroinitializer, %TokenInfo* %0, 0
   %3 = alloca %union.8
 ; write variant 11
   %4 = getelementptr inbounds %union.8, %union.8* %3, i1 0, i32 0
   store %Int16 11, %Int16* %4, align 2
 ; write data
   %5 = getelementptr inbounds %union.8, %union.8* %3, i1 0, i32 1
-  %6 = bitcast [48 x %Nat8]* %5 to %AstStmtContinue*
-  store %AstStmtContinue %2, %AstStmtContinue* %6, align 8
+  %6 = bitcast [48 x %Nat8]* %5 to %AstStmtAgain*
+  store %AstStmtAgain %2, %AstStmtAgain* %6, align 8
   %7 = load %union.8, %union.8* %3
   %8 = call %union.8* (%union.8) @ast_stmt_boxing (%union.8 %7)
   %9 = bitcast %union.8* %8 to %union.9
@@ -19863,9 +19863,9 @@ select_1_9_ok:
   %69 = alloca %union.8
   store %union.8 %2, %union.8* %69, align 64
   %70 = getelementptr inbounds %union.8, %union.8* %69, i1 0, i32 1
-  %71 = bitcast [48 x %Nat8]* %70 to %AstStmtContinue*
-  %72 = load %AstStmtContinue, %AstStmtContinue* %71
-  %73 = call %union.41 (%AstStmtContinue) @func532 (%AstStmtContinue %72)
+  %71 = bitcast [48 x %Nat8]* %70 to %AstStmtAgain*
+  %72 = load %AstStmtAgain, %AstStmtAgain* %71
+  %73 = call %union.41 (%AstStmtAgain) @func532 (%AstStmtAgain %72)
   br label %select_1_end
 select_1_10:
   %74 = bitcast %Int16 8 to %Int16
@@ -20523,7 +20523,7 @@ endif_0:
   ret %union.40 %10
 }
 
-define %union.41 @func532 (%AstStmtContinue) {
+define %union.41 @func532 (%AstStmtAgain) {
 ;stmt0:
   %2 = load %FuncContext*, %FuncContext** @fctx
   %3 = getelementptr inbounds %FuncContext, %FuncContext* %2, i1 0, i32 3
@@ -20540,7 +20540,7 @@ else_0:
   br label %endif_0
 endif_0:
 ;stmt2:
-  %8 = extractvalue %AstStmtContinue %0, 0
+  %8 = extractvalue %AstStmtAgain %0, 0
   %9 = call %Stmt* (%StmtKind, %TokenInfo*) @func519 (%StmtKind 9, %TokenInfo* %8)
   %10 = bitcast %Stmt* %9 to %union.41
   ret %union.41 %10

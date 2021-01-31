@@ -254,7 +254,7 @@ AstStmtReturn   = Tagged (value : *AstValue or Unit, ti : *TokenInfo)
 AstStmtGoto     = Tagged (label : *AstId, ti : *TokenInfo)
 AstStmtLabel    = Tagged (label : *AstId, ti : *TokenInfo)
 AstStmtBreak    = Tagged (ti : *TokenInfo)
-AstStmtContinue = Tagged (ti : *TokenInfo)
+AstStmtAgain = Tagged (ti : *TokenInfo)
 
 
 AstStmt = AstStmtAssign or
@@ -268,7 +268,7 @@ AstStmt = AstStmtAssign or
           AstStmtGoto or
           AstStmtLabel or
           AstStmtBreak or
-          AstStmtContinue
+          AstStmtAgain
 
 
 AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
@@ -519,7 +519,7 @@ StmtKind = {
   #StmtWhile
   #StmtReturn
   #StmtBreak
-  #StmtContinue
+  #StmtAgain
   #StmtGoto
   #StmtLabel
 }
@@ -547,7 +547,7 @@ StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *
 StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
 StmtReturn   = Tagged (value : *Value or Unit, ti : *TokenInfo)
 StmtBreak    = Tagged (ti : *TokenInfo)
-StmtContinue = Tagged (ti : *TokenInfo)
+StmtAgain = Tagged (ti : *TokenInfo)
 StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
 StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
@@ -559,7 +559,7 @@ StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
         StmtWhile or
         StmtReturn or
         StmtBreak or
-        StmtContinue or
+        StmtAgain or
         StmtGoto or
         StmtLabel*/
 
@@ -579,7 +579,7 @@ Stmt = (
   goto     : StmtGoto
   label    : StmtLabel
   break    : StmtBreak
-  continue : StmtContinue
+  continue : StmtAgain
 
   l : Str        // goto & label statement
 //)

@@ -20,7 +20,7 @@ exist do_stmt_while    : (x : AstStmtWhile) -> *Stmt or Unit
 exist do_stmt_return   : (x : AstStmtReturn) -> *Stmt or Unit
 exist do_stmt_typebind : (x : AstStmtTypeBind) -> *Stmt or Unit
 exist do_stmt_break    : (x : AstStmtBreak) -> *Stmt or Unit
-exist do_stmt_again : (x : AstStmtContinue) -> *Stmt or Unit
+exist do_stmt_again : (x : AstStmtAgain) -> *Stmt or Unit
 exist do_stmt_goto     : (x : AstStmtGoto) -> *Stmt or Unit
 exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
 
@@ -37,7 +37,7 @@ do_stmt = DoStmt {
     AstStmtReturn    => do_stmt_return   (xx to AstStmtReturn)
     AstStmtTypeBind  => do_stmt_typebind (xx to AstStmtTypeBind)
     AstStmtBreak     => do_stmt_break    (xx to AstStmtBreak)
-    AstStmtContinue  => do_stmt_again    (xx to AstStmtContinue)
+    AstStmtAgain     => do_stmt_again    (xx to AstStmtAgain)
     AstStmtGoto      => do_stmt_goto     (xx to AstStmtGoto)
     AstStmtLabel     => do_stmt_label    (xx to AstStmtLabel)
     //AstStmtVarDef  => do_stmt_vardef (x)
@@ -285,9 +285,9 @@ do_stmt_break = (x : AstStmtBreak) -> *Stmt or Unit {
 }
 
 
-do_stmt_again = (x : AstStmtContinue) -> *Stmt or Unit {
+do_stmt_again = (x : AstStmtAgain) -> *Stmt or Unit {
   if fctx.loop == 0 {error ("`break` outside any loop operator", nil)}
-  return stmt_new (#StmtContinue, x.ti)
+  return stmt_new (#StmtAgain, x.ti)
 }
 
 

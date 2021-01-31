@@ -1057,7 +1057,7 @@ exist parse_stmt_again : AstStmtParser
 
 parse_stmt_break = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtBreak)}
 
-parse_stmt_again = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtContinue)}
+parse_stmt_again = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtAgain)}
 
 parse_stmt = () -> *AstStmt or Unit {
   tk = ctok()
