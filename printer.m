@@ -1471,12 +1471,12 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 }
 
 
-exist print_stmt        : (s : *Stmt) -> ()
-exist print_stmt_assign : (x : StmtAssign) -> ()
-exist print_stmt_var    : (v : *Decl) -> ()
-exist print_stmt_valbind   : (e : *StmtValBind) -> ()
-exist print_stmt_if     : (i : StmtIf) -> ()
-exist print_stmt_while  : (w : StmtWhile) -> ()
+exist print_stmt         : (s : *Stmt) -> ()
+exist print_stmt_assign  : (x : StmtAssign) -> ()
+exist print_stmt_var     : (v : Decl) -> ()
+exist print_stmt_valbind : (x : StmtValBind) -> ()
+exist print_stmt_if      : (i : StmtIf) -> ()
+exist print_stmt_while   : (w : StmtWhile) -> ()
 
 exist print_stmt_return   : (x : StmtReturn) -> ()
 exist print_stmt_break    : (x : StmtBreak) -> ()
@@ -1495,9 +1495,9 @@ print_stmt = (s : *Stmt) -> () {
 
   when s.data {
     StmtBlock    => print_block         (s.data as StmtBlock)
-    StmtValBind  => print_stmt_valbind  (&s.expr)
+    StmtValBind  => print_stmt_valbind  (s.data as StmtValBind)
     StmtAssign   => print_stmt_assign   (s.data as StmtAssign)
-    StmtVarDef   => print_stmt_var      (&s.v)
+    StmtVarDef   => print_stmt_var      (s.v)
     StmtIf       => print_stmt_if       (s.data as StmtIf)
     StmtWhile    => print_stmt_while    (s.data as StmtWhile)
     StmtReturn   => print_stmt_return   (s.data as StmtReturn)
@@ -1517,7 +1517,7 @@ print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 // или непосредственная константа (которая никак не вычисляется в LLVM)
 
 
-print_stmt_var = (v : *Decl) -> () {
+print_stmt_var = (v : Decl) -> () {
   reg = operation_with_type ("alloca", v.type)
   // сохраняем номер полученного регистра по нашему номеру
   local_vars_map[v.no] :=reg
@@ -1531,7 +1531,7 @@ print_stmt_var = (v : *Decl) -> () {
 }
 
 
-print_stmt_valbind = (x : *StmtValBind) -> () {
+print_stmt_valbind = (x : StmtValBind) -> () {
   o = reval (x.v)
   // сохраняем номер регистра по нашему номеру
   local_x_map[x.no] := o.reg
