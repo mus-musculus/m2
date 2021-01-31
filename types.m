@@ -484,8 +484,7 @@ Value = (
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
   vardef : *Decl        // ValueLocalVar (VarDef#lab)
   param  : *Decl        // ValueParam (Decl#offset)
-  expr   : *StmtValBind    // ValueLocalConst  ссылается на стейтмент где была объявлена
-  // и там в объявлении ей выставляется reg
+
 
   // operation info
   un     : ValueUn
@@ -578,7 +577,7 @@ Stmt = (
   data : Stmt2
 
 
-  expr     : StmtValBind
+  //expr     : StmtValBind
 
   block    : StmtBlock
 )
