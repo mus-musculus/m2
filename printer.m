@@ -360,9 +360,7 @@ exist llvm_st : (lo, ro : LLVM_Value) -> ()
 exist eval_cast_to_ref : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast_to_bool : (op : LLVM_Value, to : *Type) -> LLVM_Value
 exist eval_cast_to_basic : (op : LLVM_Value, to : *Type) -> LLVM_Value
-exist eval_cast : (x : *ValueCast) -> LLVM_Value
-exist eval_bin : (x : *ValueBin) -> LLVM_Value
-exist eval_when : (x : *ValueWhen) -> LLVM_Value
+
 
 exist print_st : (l, r : *Value) -> ()
 exist load : (x : LLVM_Value) -> LLVM_Value
@@ -563,21 +561,25 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
 
 
 exist eval_immediate : Eval
-exist eval_call : (x : *ValueCall) -> LLVM_Value
+exist eval_call : (x : ValueCall) -> LLVM_Value
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index : (x : *ValueIndex) -> LLVM_Value
-exist eval_access : (x : *ValueAccess) -> LLVM_Value
-exist eval_ref : (x : *ValueUn) -> LLVM_Value
-exist eval_deref : (x : *ValueUn) -> LLVM_Value
-exist eval_not : (x : *ValueUn) -> LLVM_Value
-exist eval_plus : (x : *ValueUn) -> LLVM_Value
-exist eval_minus : (x : *ValueUn) -> LLVM_Value
-exist eval_rec : (x : *ValueRecord) -> LLVM_Value
-exist eval_arr : (x : *ValueArray) -> LLVM_Value
+exist eval_index : (x : ValueIndex) -> LLVM_Value
+exist eval_access : (x : ValueAccess) -> LLVM_Value
+exist eval_ref : (x : ValueUn) -> LLVM_Value
+exist eval_deref : (x : ValueUn) -> LLVM_Value
+exist eval_not : (x : ValueUn) -> LLVM_Value
+exist eval_plus : (x : ValueUn) -> LLVM_Value
+exist eval_minus : (x : ValueUn) -> LLVM_Value
+exist eval_rec : (x : ValueRecord) -> LLVM_Value
+exist eval_arr : (x : ValueArray) -> LLVM_Value
 
-exist eval_as : (x : *ValueAs) -> LLVM_Value
-exist eval_is : (x : *ValueIs) -> LLVM_Value
+exist eval_as : (x : ValueAs) -> LLVM_Value
+exist eval_is : (x : ValueIs) -> LLVM_Value
+
+exist eval_cast : (x : ValueCast) -> LLVM_Value
+exist eval_bin : (x : ValueBin) -> LLVM_Value
+exist eval_when : (x : ValueWhen) -> LLVM_Value
 
 
 
@@ -603,27 +605,27 @@ eval = Eval {
     #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
 
     //#ValueLoad   => load        (reval (x.load))
-    #ValueCall   => eval_call   (&x.call)
-    #ValueIndex  => eval_index  (&x.index)
-    #ValueAccess => eval_access (&x.access)
-    #ValueRef    => eval_ref    (&x.un)
-    #ValueDeref  => eval_deref  (&x.un)
-    #ValueMinus  => eval_minus  (&x.un)
-    #ValuePlus   => eval_plus   (&x.un)
-    #ValueNot    => eval_not    (&x.un)
-    #ValueCast   => eval_cast   (&x.cast)
-    #ValueAs     => eval_as     (&x.as)
-    #ValueIs     => eval_is     (&x.is)
-    #ValueWhen   => eval_when   (&x.when)
-    #ValueRecord => eval_rec    (&x.rec)
-    #ValueArray  => eval_arr    (&x.arr)
+    #ValueCall   => eval_call   (x.call)
+    #ValueIndex  => eval_index  (x.index)
+    #ValueAccess => eval_access (x.access)
+    #ValueRef    => eval_ref    (x.un)
+    #ValueDeref  => eval_deref  (x.un)
+    #ValueMinus  => eval_minus  (x.un)
+    #ValuePlus   => eval_plus   (x.un)
+    #ValueNot    => eval_not    (x.un)
+    #ValueCast   => eval_cast   (x.cast)
+    #ValueAs     => eval_as     (x.as)
+    #ValueIs     => eval_is     (x.is)
+    #ValueWhen   => eval_when   (x.when)
+    #ValueRecord => eval_rec    (x.rec)
+    #ValueArray  => eval_arr    (x.arr)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
       return (kind=#LLVM_ValueInvalid)
     } (x)
 
-    else => eval_bin (&x.bin)
+    else => eval_bin (x.bin)
   }
 }
 
@@ -636,7 +638,7 @@ eval_immediate = Eval {
 reval = Eval {return load(eval(x))}
 
 
-eval_call = (x : *ValueCall) -> LLVM_Value {
+eval_call = (x : ValueCall) -> LLVM_Value {
   // evaluate arguments values before printing call
 
   // context for evaluated & loaded arguments
@@ -701,7 +703,7 @@ eval_index_uarray = (a, i : LLVM_Value) -> LLVM_Value {
 
 
 
-eval_index = (x : *ValueIndex) -> LLVM_Value {
+eval_index = (x : ValueIndex) -> LLVM_Value {
   a = eval (x.array)
   i = reval (x.index)
 
@@ -746,7 +748,7 @@ eval_index = (x : *ValueIndex) -> LLVM_Value {
 
 /*.*/
 
-eval_access = (x : *ValueAccess) -> LLVM_Value {
+eval_access = (x : ValueAccess) -> LLVM_Value {
   assert (x.field != nil, "print/expr:: x.field == nil\n")
 
   if x.value.kind == #ValueAccess {}
@@ -787,7 +789,7 @@ eval_access = (x : *ValueAccess) -> LLVM_Value {
 
 
 
-eval_ref = (x : *ValueUn) -> LLVM_Value {
+eval_ref = (x : ValueUn) -> LLVM_Value {
   vx = eval (x.value)
   if vx.kind == #LLVM_ValueAddress {
     // если это адрес - вернем его в регистре, а тип обернем в указатель
@@ -801,7 +803,7 @@ eval_ref = (x : *ValueUn) -> LLVM_Value {
 }
 
 
-eval_deref = (x : *ValueUn) -> LLVM_Value {
+eval_deref = (x : ValueUn) -> LLVM_Value {
   // eval & load pointer
   vx = reval (x.value)
 
@@ -810,7 +812,7 @@ eval_deref = (x : *ValueUn) -> LLVM_Value {
 }
 
 
-eval_not = (x : *ValueUn) -> LLVM_Value {
+eval_not = (x : ValueUn) -> LLVM_Value {
   vx = reval (x.value)
 
   //"%s = xor %s, -1"
@@ -822,7 +824,7 @@ eval_not = (x : *ValueUn) -> LLVM_Value {
 }
 
 
-eval_minus = (x : *ValueUn) -> LLVM_Value {
+eval_minus = (x : ValueUn) -> LLVM_Value {
   vx = reval (x.value)
 
   z = (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
@@ -832,7 +834,7 @@ eval_minus = (x : *ValueUn) -> LLVM_Value {
 }
 
 
-eval_plus = (x : *ValueUn) -> LLVM_Value {return reval (x.value)}
+eval_plus = (x : ValueUn) -> LLVM_Value {return reval (x.value)}
 
 
 
@@ -908,7 +910,7 @@ eval_cast_to_basic = EvalCast {
 }
 
 
-eval_as = (x : *ValueAs) -> LLVM_Value {
+eval_as = (x : ValueAs) -> LLVM_Value {
   v = reval (x.value)
   t = x.type
 
@@ -916,7 +918,7 @@ eval_as = (x : *ValueAs) -> LLVM_Value {
 }
 
 
-eval_is = (x : *ValueIs) -> LLVM_Value {
+eval_is = (x : ValueIs) -> LLVM_Value {
   v = reval (x.value)
 
   // Maybe Ptr
@@ -1051,7 +1053,7 @@ eval_cast_union_to = EvalCast {
 }
 
 
-eval_cast = (x : *ValueCast) -> LLVM_Value {
+eval_cast = (x : ValueCast) -> LLVM_Value {
   v = reval (x.value)
   t = x.type
 
@@ -1092,7 +1094,7 @@ llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
 }
 
 
-eval_bin = (x : *ValueBin) -> LLVM_Value {
+eval_bin = (x : ValueBin) -> LLVM_Value {
   l = reval (x.left)
   r = reval (x.right)
 
@@ -1179,7 +1181,7 @@ default:
 cond_next:
   %X.2 = phi i32 [ %X.1, %cond_false ], [ %X.0, %cond_true ]
 */
-eval_when = (x : *ValueWhen) -> LLVM_Value {
+eval_when = (x : ValueWhen) -> LLVM_Value {
   sel = reval (x.x)
 
   when_is_sel = 0 to Var LLVM_Value
@@ -1254,7 +1256,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
     c.regs[index] := s1.reg  // сохраняем регистр для фи
     c.case := c.case + 1
   }
-  list_foreach (&x.variants, print_select_case, &ctx)
+  list_foreach (&(x.variants to Var List), print_select_case, &ctx)
 
   fprintf (fout, "\nselect_%d_%d:", sno, ctx.case) // else ->
   otherwise = loadIfImmAs (reval (x.other), ctx.type)
@@ -1287,7 +1289,7 @@ eval_when = (x : *ValueWhen) -> LLVM_Value {
 
 //%agg1 = insertvalue {i32, float} undef, i32 1, 0 ; yields {i32 1, float undef}
 //%agg2 = insertvalue {i32, float} %agg1, float %val, 1
-eval_rec = (x : *ValueRecord) -> LLVM_Value {
+eval_rec = (x : ValueRecord) -> LLVM_Value {
 
   // контекст в котором будет происходить формирование структуры
   Ctx6 = (
@@ -1315,12 +1317,12 @@ eval_rec = (x : *ValueRecord) -> LLVM_Value {
     print_val_with_type (vx); comma (); fprintf (fout, "%d", fieldno)
     c.v := (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
   }
-  map_foreach(&x.values, pack, &ctx)
+  map_foreach(&(x.values to Var Map), pack, &ctx)
 
   return ctx.v
 }
 
-eval_arr = (x : *ValueArray) -> LLVM_Value {
+eval_arr = (x : ValueArray) -> LLVM_Value {
   // контекст в котором будет происходить формирование структуры
   Ctx8 = (
     type : *Type
@@ -1346,11 +1348,10 @@ eval_arr = (x : *ValueArray) -> LLVM_Value {
     c.v := (kind=#LLVM_ValueRegister, type=c.type, reg=reg)
     c.cnt := c.cnt + 1
   }
-  list_foreach(&x.items, pack, &ctx)
+  list_foreach(&(x.items to Var List), pack, &ctx)
 
   return ctx.v
 }
-
 
 
 
