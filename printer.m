@@ -1486,13 +1486,6 @@ exist print_stmt_label    : (x : StmtLabel) -> ()
 
 
 print_stmt = (s : *Stmt) -> () {
-  k = s.kind
-
-  if k != #StmtBlock {
-    fprintf (fout, "\n;stmt%d:", stmtno)
-    stmtno := stmtno + 1
-  }
-
   when s.data {
     StmtBlock    => print_block         (s.data as StmtBlock)
     StmtValBind  => print_stmt_valbind  (s.data as StmtValBind)

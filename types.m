@@ -573,29 +573,14 @@ Stmt2 = StmtValBind or
 
 
 Stmt = (
-  kind : StmtKind
+  //kind : StmtKind
 
   data : Stmt2
 
-//union (
-  no       : Nat
+
   expr     : StmtValBind
-  assign   : StmtAssign
+
   block    : StmtBlock
-
-  v        : Decl    // var definition
-  if       : StmtIf
-  while    : StmtWhile
-  return   : StmtReturn
-  goto     : StmtGoto
-  label    : StmtLabel
-  break    : StmtBreak
-  continue : StmtAgain
-
-  l : Str        // goto & label statement
-//)
-
-  ti : *TokenInfo
 )
 
 
