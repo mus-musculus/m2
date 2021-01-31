@@ -77,9 +77,7 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
     return unit
   }
 
-  s = stmt_new ((l=lval, r=rval, ti=x.ti) to StmtAssign)
-  s.assign := (l=lval, r=rval, ti=x.ti)
-  return s
+  return stmt_new ((l=lval, r=rval, ti=x.ti) to StmtAssign)
 }
 
 

@@ -20578,16 +20578,8 @@ endif_3:
   store %StmtAssign %45, %StmtAssign* %49, align 8
   %50 = load %union.12, %union.12* %46
   %51 = call %Stmt* (%union.12) @func519 (%union.12 %50)
-;stmt18:
-  %52 = getelementptr inbounds %Stmt, %Stmt* %51, i1 0, i32 4
-  %53 = insertvalue %StmtAssign zeroinitializer, %Value* %10, 0
-  %54 = insertvalue %StmtAssign %53, %Value* %34, 1
-  %55 = extractvalue %AstStmtAssign %0, 2
-  %56 = insertvalue %StmtAssign %54, %TokenInfo* %55, 2
-  store %StmtAssign %56, %StmtAssign* %52, align 8
-;stmt19:
-  %57 = bitcast %Stmt* %51 to %union.32
-  ret %union.32 %57
+  %52 = bitcast %Stmt* %51 to %union.32
+  ret %union.32 %52
 }
 
 define %Stmt* @stmt_new_vardef (%AstId*, %Type*, %Value*, %TokenInfo*) {
