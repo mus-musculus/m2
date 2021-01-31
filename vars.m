@@ -31,5 +31,6 @@ unions = 0 to Var List
 
 
 nocnt = 0 to Var Nat
+nocnt2 = 0 to Var Nat  // wtf?
 
 

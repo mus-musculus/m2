@@ -114,17 +114,17 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   // инициализируемые в рантайме
 
   // создаем стейтмент который в принтере назначит регистр выражению
-  se = stmt_new (#StmtValBind, (v=v, no=nocnt, ti=x.ti) to StmtValBind, x.ti)
+  se = stmt_new (#StmtValBind, (v=v, no=nocnt2, ti=x.ti) to StmtValBind, x.ti)
   se.expr.v := v
-  se.expr.no := nocnt
+  se.expr.no := nocnt2
 
   // и создаем значение которое ссылается на вырадение в стейтменте
   v0 = value_new (#ValueLocalConst, v.type, x.ti)
   v0.expr := &se.expr
-  v0.no := nocnt
+  v0.no := nocnt2
   bind_value_local (id, v0)
 
-  nocnt := nocnt + 1
+  nocnt2 := nocnt2 + 1
   return se
 }
 

@@ -1062,6 +1062,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @asm0 = global %Assembly zeroinitializer
 @unions = global %List zeroinitializer
 @nocnt = global %Nat32 0
+@nocnt2 = global %Nat32 0
 @warncnt = global %Nat32 0
 @errcnt = global %Int32 0
 @builtinIndex = global %Index zeroinitializer
@@ -1086,6 +1087,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @stmtno = global %Nat32 0
 @select_no = global %Nat32 0
 @local_vars_map = global [1024 x %Nat32] zeroinitializer
+@local_x_map = global [1024 x %Nat32] zeroinitializer
 @spec_type_uid = global %Nat32 0
 @union_id = global %Nat32 0
 @fuid = global %Nat32 0
@@ -10799,9 +10801,10 @@ select_1_4_ok:
   %33 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %34 = load %Type*, %Type** %33
   %35 = insertvalue %LLVM_Value %32, %Type* %34, 1
-  %36 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %37 = load %StmtValBind*, %StmtValBind** %36
-  %38 = getelementptr inbounds %StmtValBind, %StmtValBind* %37, i1 0, i32 2
+  %36 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
+  %37 = load %Nat32, %Nat32* %36
+; index array
+  %38 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_x_map, i1 0, %Nat32 %37
   %39 = load %Nat32, %Nat32* %38
   %40 = insertvalue %LLVM_Value %35, %Nat32 %39, 4
   br label %select_1_end
@@ -13301,9 +13304,12 @@ define void @func355 (%StmtValBind*) {
   %3 = load %Value*, %Value** %2
   %4 = call %LLVM_Value (%Value*) @func301 (%Value* %3)
 ;stmt1:
-  %5 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 2
-  %6 = extractvalue %LLVM_Value %4, 4
-  store %Nat32 %6, %Nat32* %5, align 4
+  %5 = getelementptr inbounds %StmtValBind, %StmtValBind* %0, i1 0, i32 1
+  %6 = load %Nat32, %Nat32* %5
+; index array
+  %7 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_x_map, i1 0, %Nat32 %6
+  %8 = extractvalue %LLVM_Value %4, 4
+  store %Nat32 %8, %Nat32* %7, align 4
   ret void
 }
 
@@ -20150,7 +20156,7 @@ else_0:
 endif_0:
 ;stmt8:
   %25 = insertvalue %StmtValBind zeroinitializer, %Value* %6, 0
-  %26 = load %Nat32, %Nat32* @nocnt
+  %26 = load %Nat32, %Nat32* @nocnt2
   %27 = insertvalue %StmtValBind %25, %Nat32 %26, 1
   %28 = extractvalue %AstStmtValueBind %0, 2
   %29 = insertvalue %StmtValBind %27, %TokenInfo* %28, 3
@@ -20172,7 +20178,7 @@ endif_0:
 ;stmt10:
   %39 = getelementptr inbounds %Stmt, %Stmt* %36, i1 0, i32 3
   %40 = getelementptr inbounds %StmtValBind, %StmtValBind* %39, i1 0, i32 1
-  %41 = load %Nat32, %Nat32* @nocnt
+  %41 = load %Nat32, %Nat32* @nocnt2
   store %Nat32 %41, %Nat32* %40, align 4
 ;stmt11:
   %42 = getelementptr inbounds %Value, %Value* %6, i1 0, i32 1
@@ -20185,14 +20191,14 @@ endif_0:
   store %StmtValBind* %47, %StmtValBind** %46, align 8
 ;stmt13:
   %48 = getelementptr inbounds %Value, %Value* %45, i1 0, i32 6
-  %49 = load %Nat32, %Nat32* @nocnt
+  %49 = load %Nat32, %Nat32* @nocnt2
   store %Nat32 %49, %Nat32* %48, align 4
 ;stmt14:
   call void (%Str, %Value*) @func143 (%Str %4, %Value* %45)
 ;stmt15:
-  %50 = load %Nat32, %Nat32* @nocnt
+  %50 = load %Nat32, %Nat32* @nocnt2
   %51 = add %Nat32 %50, 1
-  store %Nat32 %51, %Nat32* @nocnt, align 4
+  store %Nat32 %51, %Nat32* @nocnt2, align 4
 ;stmt16:
   %52 = bitcast %Stmt* %36 to %union.33
   ret %union.33 %52

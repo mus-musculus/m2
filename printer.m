@@ -453,6 +453,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
 // потом при обращении к значению переменной исплоьзыется этот номер
 // для получения фактического регистра: reg = local_vars_map[no]
 local_vars_map = 0 to Var [maxLocals]Nat32
+local_x_map = 0 to Var [maxLocals]Nat32
 
 funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
   // 0, 1, 2 - params; 3 - entry label, 4 - first free register
@@ -603,7 +604,7 @@ eval = Eval {
 
     #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
 
-    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=x.expr.reg)
+    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])
 
     #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.offset to Nat32)
@@ -1535,11 +1536,11 @@ print_stmt_valbind = (x : *StmtValBind) -> () {
   o = reval (x.v)
 
   //printf("NO: %d\n", x.no)
-  //local_vars_map[x.no] := o.reg
+  local_x_map[x.no] := o.reg
   // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
   // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)
   // могло быть связано с результатом этого значения через Value#expr.reg
-  x.reg := o.reg
+  //x.reg := o.reg
 }
 
 
