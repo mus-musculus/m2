@@ -1095,7 +1095,7 @@ parse_stmt = () -> *AstStmt or Unit {
     match("while")    => parse_stmt_while    (ti)
     match("return")   => parse_stmt_return   (ti)
     match("break")    => parse_stmt_break    (ti)
-    match("again")    => parse_stmt_again (ti)
+    match("again")    => parse_stmt_again    (ti)
     match("goto")     => parse_stmt_goto     (ti)
     else              => lab_or_expr         ()
   }
@@ -1105,23 +1105,22 @@ parse_stmt = () -> *AstStmt or Unit {
 
 
 parse_stmt_expr = AstStmtParser {
-  x = parse_value()
+  x = parse_value ()
 
-  if match(":=") {
-    v = parse_value()
+  if match (":=") {
+    v = parse_value ()
     return ast_stmt_boxing ((l=x, r=v, ti=ti) to AstStmtAssign)
   }
 
   return ast_stmt_boxing ((expr=x, ti=ti) to AstStmtExpr)
 }
 
-
 parse_stmt_valbind = AstStmtParser {
   // <id> '=' <expr>
   ti = &ctok().ti
-  id = parse_id()
+  id = parse_id ()
   need("=")
-  v = parse_value()
+  v = parse_value ()
 
   if id == nil or v == nil {return unit}
 
