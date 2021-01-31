@@ -102,9 +102,11 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   // Сюда попадают неизменяемые значения (регистры)
   // инициализируемые в рантайме
 
+  // создаем стейтмент который в принтере назначит регистр выражению
   se = stmt_new (#StmtValBind, x.ti)
   se.expr.v := v
 
+  // и создаем значение которое ссылается на вырадение в стейтменте
   v0 = value_new (#ValueLocalConst, v.type, x.ti)
   v0.expr := &se.expr
   bind_value_local (id, v0)
