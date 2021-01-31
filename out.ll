@@ -21611,6 +21611,12 @@ define %Value* @func567 (%AstId*, %Type*, %Value*, %TokenInfo*) {
   %11 = getelementptr inbounds %Stmt, %Stmt* %9, i1 0, i32 5
   store %Decl* %11, %Decl** %10, align 8
 ;stmt5:
+  %12 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 6
+  %13 = getelementptr inbounds %Stmt, %Stmt* %9, i1 0, i32 5
+  %14 = getelementptr inbounds %Decl, %Decl* %13, i1 0, i32 4
+  %15 = load %Nat32, %Nat32* %14
+  store %Nat32 %15, %Nat32* %12, align 4
+;stmt6:
   ret %Value* %5
 }
 
