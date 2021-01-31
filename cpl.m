@@ -236,14 +236,18 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
   return v
 }
 
+
+
+nocnt = 0 to Var Nat
+stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
+  s = stmt_new (#StmtVarDef, (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef, ti)
+  s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)
+  nocnt := nocnt + 1
+  return s
+}
+
+
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
-
-  stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
-    s = stmt_new (#StmtVarDef, (id=id, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef, ti)
-    s.v := (id=id, type=t, init_value=dold (init_value), ti=ti)
-    return s
-  }
-
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
   v = value_new(#ValueLocalVar, t, ti)

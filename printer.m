@@ -446,15 +446,15 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
 }
 
 
+// каждая локальная переменная получает порядковый номер
+// он является иддексом этой карты в которой лежат регистры назначенные переменной
+local_vars_map = 0 to Var [1024]Nat32
+
 funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
   // 0, 1, 2 - params; 3 - entry label, 4 - first free register
   params = t.func.from.record.decls
   firstlab = params.volume + (1 /*entry label*/)
 
-  if strcmp(id, "xx") == 0 {
-    printf("xx : "); prttype(t); printf("\n")
-    printf("Maybe? %d\n", type_is_maybe_ptr(t.func.to))
-  }
 
   select_no := 0
 
@@ -1515,6 +1515,8 @@ print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 print_stmt_var = (v : *Decl) -> () {
   reg = operation_with_type ("alloca", v.type)
   v.lab := reg
+
+  local_vars_map[v.no] :=reg
   // initialization
   iv = v.init_value
   if iv != nil {

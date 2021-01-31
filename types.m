@@ -300,6 +300,7 @@ Decl = (
   type   : *Type
   align  : Nat        // выравнивание поля
   offset : Nat16      // field offset
+  no     : Nat
   lab    : Nat32      // локальная переменная юзается через lab
   init_value : *Value
   ti     : *TokenInfo
@@ -478,6 +479,7 @@ Value = (
   mention : ValueMention
   rec     : ValueRecord
   arr     : ValueArray
+  no      : Nat // уникальный порядковый номер для каждой переменной
 
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
@@ -542,7 +544,7 @@ StmtBlock = Tagged (
 )
 
 // ?пока нужно но потом?
-StmtVarDef   = Tagged (id : *AstId, type : *Type, init_value : *Value, ti : *TokenInfo)
+StmtVarDef   = Tagged (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
 
 StmtValBind  = Tagged (v : *Value, reg : Nat32, ti : *TokenInfo)
 StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
