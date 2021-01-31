@@ -1519,8 +1519,7 @@ print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 
 print_stmt_var = (v : *Decl) -> () {
   reg = operation_with_type ("alloca", v.type)
-  v.lab := reg
-
+  // сохраняем номер полученного регистра по нашему номеру
   local_vars_map[v.no] :=reg
   // initialization
   iv = v.init_value
@@ -1534,13 +1533,8 @@ print_stmt_var = (v : *Decl) -> () {
 
 print_stmt_valbind = (x : *StmtValBind) -> () {
   o = reval (x.v)
-
-  //printf("NO: %d\n", x.no)
+  // сохраняем номер регистра по нашему номеру
   local_x_map[x.no] := o.reg
-  // Сохраняем номер регистра в котором результат вычисления выражения в Expr#reg.
-  // Это нужно для того чтобы связанное значение вида ValueLocalConst (let)
-  // могло быть связано с результатом этого значения через Value#expr.reg
-  //x.reg := o.reg
 }
 
 

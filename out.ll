@@ -13266,31 +13266,28 @@ define void @func354 (%Decl*) {
   %4 = load %Type*, %Type** %3
   %5 = call %Nat32 (%Str, %Type*) @func295 (%Str %2, %Type* %4)
 ;stmt1:
-  %6 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 5
-  store %Nat32 %5, %Nat32* %6, align 4
-;stmt2:
-  %7 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 4
-  %8 = load %Nat32, %Nat32* %7
+  %6 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 4
+  %7 = load %Nat32, %Nat32* %6
 ; index array
-  %9 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %8
-  store %Nat32 %5, %Nat32* %9, align 4
-;stmt3:
-  %10 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 6
-  %11 = load %Value*, %Value** %10
-;stmt4:; loadImmPtr
-  %12 = inttoptr i64 0 to%Value*
-  %13 = icmp ne %Value* %11, %12
-  br i1 %13, label %then_0, label %else_0
+  %8 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %7
+  store %Nat32 %5, %Nat32* %8, align 4
+;stmt2:
+  %9 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 6
+  %10 = load %Value*, %Value** %9
+;stmt3:; loadImmPtr
+  %11 = inttoptr i64 0 to%Value*
+  %12 = icmp ne %Value* %10, %11
+  br i1 %12, label %then_0, label %else_0
 then_0:
+;stmt4:
+  %13 = call %LLVM_Value (%Value*) @func301 (%Value* %10)
 ;stmt5:
-  %14 = call %LLVM_Value (%Value*) @func301 (%Value* %11)
-;stmt6:
-  %15 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
-  %16 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 1
-  %17 = load %Type*, %Type** %16
-  %18 = insertvalue %LLVM_Value %15, %Type* %17, 1
-  %19 = insertvalue %LLVM_Value %18, %Nat32 %5, 4
-  call void (%LLVM_Value, %LLVM_Value) @func346 (%LLVM_Value %19, %LLVM_Value %14)
+  %14 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
+  %15 = getelementptr inbounds %Decl, %Decl* %0, i1 0, i32 1
+  %16 = load %Type*, %Type** %15
+  %17 = insertvalue %LLVM_Value %14, %Type* %16, 1
+  %18 = insertvalue %LLVM_Value %17, %Nat32 %5, 4
+  call void (%LLVM_Value, %LLVM_Value) @func346 (%LLVM_Value %18, %LLVM_Value %13)
   br label %endif_0
 else_0:
   br label %endif_0
