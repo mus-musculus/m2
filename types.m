@@ -113,10 +113,9 @@ AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
 AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
 AstTypeUnion   = Tagged (types : AstTypeList, ti : *TokenInfo)
 
-AstTypeParserError = {#AstTypeParserError}
+TypeParserError = {#TypeParserError}
 
-AstType = AstTypeParserError or
-          AstTypeNamed or
+AstType = AstTypeNamed or
           AstTypeEnum or
           AstTypeRecord or
           AstTypeArray or
@@ -225,7 +224,7 @@ AstValue =  AstValueName or
             AstValueAlignof
 
 
-ValueParserError = {#AstValueParserError}
+ValueParserError = {#ValueParserError}
 
 // TODO
 ValueParserResult = AstValue or ValueParserError
