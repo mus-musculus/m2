@@ -20,7 +20,7 @@ exist do_stmt_while    : (x : AstStmtWhile) -> *Stmt or Unit
 exist do_stmt_return   : (x : AstStmtReturn) -> *Stmt or Unit
 exist do_stmt_typebind : (x : AstStmtTypeBind) -> *Stmt or Unit
 exist do_stmt_break    : (x : AstStmtBreak) -> *Stmt or Unit
-exist do_stmt_again : (x : AstStmtAgain) -> *Stmt or Unit
+exist do_stmt_again    : (x : AstStmtAgain) -> *Stmt or Unit
 exist do_stmt_goto     : (x : AstStmtGoto) -> *Stmt or Unit
 exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
 
