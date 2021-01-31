@@ -17,8 +17,8 @@ maxSelectorEntry = 256
 // потом переделай на списках
 maxArg = 64
 
-// макс количество локальных переменных
-maxLocalVars = 1024
+// макс количество локальных имен
+maxLocals = 1024
 
 cfgMaxWarn = 20
 cfgMaxErr = 20

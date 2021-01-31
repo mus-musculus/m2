@@ -83,6 +83,17 @@ do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
 }
 
 
+nocnt = 0 to Var Nat
+
+// used in cpl
+stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
+  s = stmt_new (#StmtVarDef, (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti) to StmtVarDef, ti)
+  s.v := (id=id, no=nocnt, type=t, init_value=dold (init_value), ti=ti)
+  nocnt := nocnt + 1
+  return s
+}
+
+
 do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   id = x.id.str
   v = do_valuex (x.expr, false)
@@ -103,13 +114,16 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   // инициализируемые в рантайме
 
   // создаем стейтмент который в принтере назначит регистр выражению
-  se = stmt_new (#StmtValBind, (v=v, ti=x.ti) to StmtValBind, x.ti)
+  se = stmt_new (#StmtValBind, (v=v, no=nocnt, ti=x.ti) to StmtValBind, x.ti)
   se.expr.v := v
 
   // и создаем значение которое ссылается на вырадение в стейтменте
   v0 = value_new (#ValueLocalConst, v.type, x.ti)
   v0.expr := &se.expr
+  v0.no := nocnt
   bind_value_local (id, v0)
+
+  nocnt := nocnt + 1
   return se
 }
 

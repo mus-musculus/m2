@@ -452,7 +452,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
 // и кладет его в local_vars_map[no] := reg
 // потом при обращении к значению переменной исплоьзыется этот номер
 // для получения фактического регистра: reg = local_vars_map[no]
-local_vars_map = 0 to Var [maxLocalVars]Nat32
+local_vars_map = 0 to Var [maxLocals]Nat32
 
 funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
   // 0, 1, 2 - params; 3 - entry label, 4 - first free register
