@@ -5,6 +5,10 @@ import "data/list"
 import "data/map"
 
 
+// когда возвращаем по значению unit еще не работает, поэтому возвращаем #Nothing
+Nothing = {#Nothing}
+
+
 /*****************************************************************************/
 /*                               Lexer                                       */
 /*****************************************************************************/
@@ -482,7 +486,7 @@ Value = (
 
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
-  vardef : *Decl        // ValueLocalVar (VarDef#lab)
+
   param  : *Decl        // ValueParam (Decl#offset)
 
 
@@ -541,8 +545,6 @@ StmtAgain    = Tagged (ti : *TokenInfo)
 StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
 StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
-
-Nothing = {#Nothing}
 
 Stmt = StmtValBind or
         StmtBlock or
