@@ -544,7 +544,7 @@ StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
 Nothing = {#Nothing}
 
-Stmt2 = StmtValBind or
+Stmt = StmtValBind or
         StmtBlock or
         StmtAssign or
         StmtIf or
@@ -556,12 +556,6 @@ Stmt2 = StmtValBind or
         StmtLabel or
         StmtVarDef or
         Nothing
-
-
-Stmt = (
-
-  data : Stmt2
-)
 
 
 

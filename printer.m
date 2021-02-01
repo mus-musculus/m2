@@ -1488,18 +1488,19 @@ exist print_stmt_label    : (x : StmtLabel) -> ()
 
 
 print_stmt = (s : *Stmt) -> () {
-  when s.data {
-    StmtBlock    => print_block         (s.data as StmtBlock)
-    StmtValBind  => print_stmt_valbind  (s.data as StmtValBind)
-    StmtAssign   => print_stmt_assign   (s.data as StmtAssign)
-    StmtVarDef   => print_stmt_var      (s.data as StmtVarDef)
-    StmtIf       => print_stmt_if       (s.data as StmtIf)
-    StmtWhile    => print_stmt_while    (s.data as StmtWhile)
-    StmtReturn   => print_stmt_return   (s.data as StmtReturn)
-    StmtBreak    => print_stmt_break    (s.data as StmtBreak)
-    StmtAgain    => print_stmt_again    (s.data as StmtAgain)
-    StmtGoto     => print_stmt_goto     (s.data as StmtGoto)
-    StmtLabel    => print_stmt_label    (s.data as StmtLabel)
+  ss = *s
+  when ss {
+    StmtBlock    => print_block         (ss as StmtBlock)
+    StmtValBind  => print_stmt_valbind  (ss as StmtValBind)
+    StmtAssign   => print_stmt_assign   (ss as StmtAssign)
+    StmtVarDef   => print_stmt_var      (ss as StmtVarDef)
+    StmtIf       => print_stmt_if       (ss as StmtIf)
+    StmtWhile    => print_stmt_while    (ss as StmtWhile)
+    StmtReturn   => print_stmt_return   (ss as StmtReturn)
+    StmtBreak    => print_stmt_break    (ss as StmtBreak)
+    StmtAgain    => print_stmt_again    (ss as StmtAgain)
+    StmtGoto     => print_stmt_goto     (ss as StmtGoto)
+    StmtLabel    => print_stmt_label    (ss as StmtLabel)
     else => fprintf (fout, "<print::stmt_unknown>") to ()
   }
 }

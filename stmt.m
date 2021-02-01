@@ -3,10 +3,10 @@
 /*****************************************************************************/
 
 
-stmt_new = (x : Stmt2) -> *Stmt {
+stmt_new = (x : Stmt) -> *Stmt {
   s = malloc (sizeof Stmt) to *Stmt
   assert (s != nil, "stmt_new")
-  *s := (data=x)
+  *s := x
   return s
 }
 
