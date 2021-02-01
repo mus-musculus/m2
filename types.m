@@ -490,7 +490,6 @@ Value = (
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
 
 
-
   // operation info
   un     : ValueUn
   bin    : ValueBin
@@ -501,9 +500,6 @@ Value = (
   is     : ValueIs
   call   : ValueCall
   when   : ValueWhen
-
-  //load   : *Value  // #ValueLoad
-//)
 
   ti : *TokenInfo  // place in code where value was mentioned
 )
