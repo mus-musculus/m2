@@ -139,29 +139,19 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 
   fctx.cblock := &sb
 
-  // только так я могу сделать чтобы параметр этой ф-ции
-  // был не x : *AstStmtBlock, а - x : AstStmtBlock
-  // (это надо для перевода все на union тип)
-  // тк я не могу взять указатель на поле структуры в регистре
-  // поэтому я ложу ее сперва в переменную а у нее уже беру адрес
-  stmts = x.stmts to Var List
-
   hstmt = ListForeachHandler {
     ast_stmt = data to *AstStmt
     stmt = do_stmt (ast_stmt)
-    // just skip broken statements
+    // just skip up broken statements
     if stmt is Unit {return}
     stmts = ctx to *List
     list_append (stmts, stmt as *Stmt)
   }
-  list_foreach (&stmts, hstmt, &sb.stmts)
+  list_foreach (&(x.stmts to Var List), hstmt, &sb.stmts)
 
   fctx.cblock := sb.parent  // restore old cblock value
 
-  s = stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, local_funcs=sb.local_funcs, ti=x.ti) to StmtBlock)
-
-  s.data := (stmts=sb.stmts, parent=sb.parent, index=sb.index, local_funcs=sb.local_funcs, ti=x.ti) to StmtBlock
-  return s
+  return stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, local_funcs=sb.local_funcs, ti=x.ti) to StmtBlock)
 }
 
 

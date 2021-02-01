@@ -17364,33 +17364,8 @@ define %union.35 @func525 (%AstStmtBlock) {
   store %StmtBlock %33, %StmtBlock* %37, align 8
   %38 = load %union.13, %union.13* %34
   %39 = call %Stmt* (%union.13) @stmt_new (%union.13 %38)
-  %40 = getelementptr inbounds %Stmt, %Stmt* %39, i1 0, i32 0
-  %41 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 2
-  %42 = load %List, %List* %41
-  %43 = insertvalue %StmtBlock zeroinitializer, %List %42, 2
-  %44 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 0
-  %45 = load %StmtBlock*, %StmtBlock** %44
-  %46 = insertvalue %StmtBlock %43, %StmtBlock* %45, 0
-  %47 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 1
-  %48 = load %Index, %Index* %47
-  %49 = insertvalue %StmtBlock %46, %Index %48, 1
-  %50 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 3
-  %51 = load %List, %List* %50
-  %52 = insertvalue %StmtBlock %49, %List %51, 3
-  %53 = extractvalue %AstStmtBlock %0, 1
-  %54 = insertvalue %StmtBlock %52, %TokenInfo* %53, 4
-  %55 = alloca %union.13
-; write variant 1
-  %56 = getelementptr inbounds %union.13, %union.13* %55, i1 0, i32 0
-  store %Int16 1, %Int16* %56, align 2
-; write data
-  %57 = getelementptr inbounds %union.13, %union.13* %55, i1 0, i32 1
-  %58 = bitcast [144 x %Nat8]* %57 to %StmtBlock*
-  store %StmtBlock %54, %StmtBlock* %58, align 8
-  %59 = load %union.13, %union.13* %55
-  store %union.13 %59, %union.13* %40, align 256
-  %60 = bitcast %Stmt* %39 to %union.35
-  ret %union.35 %60
+  %40 = bitcast %Stmt* %39 to %union.35
+  ret %union.35 %40
 }
 
 define %union.36 @func527 (%AstStmtExpr) {
