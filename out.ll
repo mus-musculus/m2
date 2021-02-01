@@ -15867,28 +15867,33 @@ endif_4:
   %81 = bitcast %union.14 %76 to %Stmt*
   %82 = getelementptr inbounds %Value, %Value* %46, i1 0, i32 7
   %83 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
-  %84 = getelementptr inbounds %Stmt, %Stmt* %81, i1 0, i32 1
-  %85 = load %StmtBlock, %StmtBlock* %84
-  %86 = alloca %union.10
+  %84 = getelementptr inbounds %Stmt, %Stmt* %81, i1 0, i32 0
+  %85 = load %union.13, %union.13* %84
+  %86 = alloca %union.13
+  store %union.13 %85, %union.13* %86, align 256
+  %87 = getelementptr inbounds %union.13, %union.13* %86, i1 0, i32 1
+  %88 = bitcast [144 x %Nat8]* %87 to %StmtBlock*
+  %89 = load %StmtBlock, %StmtBlock* %88
+  %90 = alloca %union.10
 ; write variant 0
-  %87 = getelementptr inbounds %union.10, %union.10* %86, i1 0, i32 0
-  store %Int16 0, %Int16* %87, align 2
+  %91 = getelementptr inbounds %union.10, %union.10* %90, i1 0, i32 0
+  store %Int16 0, %Int16* %91, align 2
 ; write data
-  %88 = getelementptr inbounds %union.10, %union.10* %86, i1 0, i32 1
-  %89 = bitcast [144 x %Nat8]* %88 to %StmtBlock*
-  store %StmtBlock %85, %StmtBlock* %89, align 8
-  %90 = load %union.10, %union.10* %86
-  %91 = call %Definition* (%Assembly*, %Str, %Type*, %union.10) @func268 (%Assembly* %83, %Str %13, %Type* %3, %union.10 %90)
-  store %Definition* %91, %Definition** %82, align 8
+  %92 = getelementptr inbounds %union.10, %union.10* %90, i1 0, i32 1
+  %93 = bitcast [144 x %Nat8]* %92 to %StmtBlock*
+  store %StmtBlock %89, %StmtBlock* %93, align 8
+  %94 = load %union.10, %union.10* %90
+  %95 = call %Definition* (%Assembly*, %Str, %Type*, %union.10) @func268 (%Assembly* %83, %Str %13, %Type* %3, %union.10 %94)
+  store %Definition* %95, %Definition** %82, align 8
   store %FuncContext* %56, %FuncContext** @fctx, align 8
   store %Nat32 %8, %Nat32* @nocnt, align 4
   ret %Value* %46
   br label %fail
 fail:
   store %FuncContext* %56, %FuncContext** @fctx, align 8
-  %93 = extractvalue %AstValueFunc %0, 2
-  %94 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %93)
-  ret %Value* %94
+  %97 = extractvalue %AstValueFunc %0, 2
+  %98 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %97)
+  ret %Value* %98
 }
 
 define %Value* @func497 (%AstValueArray) {
