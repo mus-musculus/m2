@@ -880,8 +880,8 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if x.block_stmt is Unit {
     fv = value_new (#ValueGlobalConst, t, x.ti)
-    fv.def := asmFuncAdd (&asm0, uid, t, #NoBlock)
-    fv.gconst := (type=t, def=fv.def, ti=x.ti)
+    def = asmFuncAdd (&asm0, uid, t, #NoBlock)
+    fv.gconst := (type=t, def=def, ti=x.ti)
     return fv
   }
 
