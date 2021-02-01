@@ -162,10 +162,10 @@ exist typedef : (id : Str, t : *Type) -> ()
 exist arraydef : (id : Str, t : *Type, items : *List) -> ()
 exist stringdef : (id : Str, len : Nat, s : Str) -> ()
 exist vardef : (id : Str, t : *Type, v : *Value) -> ()
-exist funcdef : (id : Str, t : *Type, b : *StmtBlock) -> ()
+//exist funcdef : (id : Str, t : *Type, b : *StmtBlock) -> ()
 exist aliasdef : (id : Str, t : *Type, org : Str) -> ()
 
-
+exist funcdef : (id : Str, t : *Type, b : MaybeBlock) -> ()
 
 
 exist printTypeSpec : (t : *Type, print_alias, func_as_ptr : Bool) -> ()

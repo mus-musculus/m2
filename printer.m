@@ -297,7 +297,13 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   o ("\n\n;funcs:\n")
   foreach_funcdef = ListForeachHandler {
     fd = &(data to *Definition).funcdef
-    funcdef (fd.id, fd.type, fd.block)
+    if fd.block == nil {
+      funcdef (fd.id, fd.type, #NoBlock)
+    } else {
+      xx = (parent=fd.block.parent, index=fd.block.index, stmts=fd.block.stmts, local_funcs= fd.block.local_funcs, ti=fd.block.ti) to StmtBlock
+
+      funcdef (fd.id, fd.type, xx)
+    }
   }
   list_foreach (&a.funcs, foreach_funcdef, nil)
 
@@ -455,7 +461,7 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
 local_vars_map = 0 to Var [maxLocals]Nat32
 local_x_map = 0 to Var [maxLocals]Nat32
 
-funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
+funcdef = (id : Str, t : *Type, b : MaybeBlock) -> () {
   // 0, 1, 2 - params; 3 - entry label, 4 - first free register
   params = t.func.from.record.decls
   firstlab = params.volume + (1 /*entry label*/)
@@ -468,7 +474,7 @@ funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
 
   assert (t != nil, "prn/funcdef t = nil")
 
-  if b == nil {
+  if b is NoBlock {
     o ("\ndeclare")
     //if DEBUG {dbg(0)}
   } else {
@@ -495,11 +501,8 @@ funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
   if t.func.arghack {o (", ...")}
   o (")")
 
-  if b != nil {
-    //if DEBUG {dbg(0); space ()}
-  }
 
-  if b != nil {
+  if b is StmtBlock {
     o (" {")
     //reset_local_labels
     global_if_id := 0
@@ -508,7 +511,7 @@ funcdef = (id : Str, t : *Type, b : *StmtBlock) -> () {
     stmtno := 0
     blockno := 0
 
-    print_block (*b)
+    print_block (b as StmtBlock)
     if isvoid {o ("\n  ret void")}
     o ("\n}")
   }

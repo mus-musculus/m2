@@ -511,6 +511,7 @@ Value = (
 
 Index = (types, values : Map)
 
+NoBlock = {#NoBlock}
 
 // Compound Statement
 StmtBlock = Tagged (
@@ -524,6 +525,8 @@ StmtBlock = Tagged (
 
   ti : *TokenInfo
 )
+
+MaybeBlock = StmtBlock or NoBlock
 
 // ?пока нужно но потом?
 StmtVarDef   = Tagged (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
