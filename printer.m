@@ -300,9 +300,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
     if fd.block == nil {
       funcdef (fd.id, fd.type, #NoBlock)
     } else {
-      xx = (parent=fd.block.parent, index=fd.block.index, stmts=fd.block.stmts, local_funcs= fd.block.local_funcs, ti=fd.block.ti) to StmtBlock
-
-      funcdef (fd.id, fd.type, xx)
+      funcdef (fd.id, fd.type, *fd.block)
     }
   }
   list_foreach (&a.funcs, foreach_funcdef, nil)

@@ -8750,45 +8750,23 @@ then_0:
   call void (%Str, %Type*, %union.10) @func292 (%Str %12, %Type* %14, %union.10 %19)
   br label %endif_0
 else_0:
-  %20 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
-  %21 = load %StmtBlock*, %StmtBlock** %20
-  %22 = getelementptr inbounds %StmtBlock, %StmtBlock* %21, i1 0, i32 0
-  %23 = load %StmtBlock*, %StmtBlock** %22
-  %24 = insertvalue %StmtBlock zeroinitializer, %StmtBlock* %23, 0
-  %25 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
-  %26 = load %StmtBlock*, %StmtBlock** %25
-  %27 = getelementptr inbounds %StmtBlock, %StmtBlock* %26, i1 0, i32 1
-  %28 = load %Index, %Index* %27
-  %29 = insertvalue %StmtBlock %24, %Index %28, 1
-  %30 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
-  %31 = load %StmtBlock*, %StmtBlock** %30
-  %32 = getelementptr inbounds %StmtBlock, %StmtBlock* %31, i1 0, i32 2
-  %33 = load %List, %List* %32
-  %34 = insertvalue %StmtBlock %29, %List %33, 2
-  %35 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
-  %36 = load %StmtBlock*, %StmtBlock** %35
-  %37 = getelementptr inbounds %StmtBlock, %StmtBlock* %36, i1 0, i32 3
-  %38 = load %List, %List* %37
-  %39 = insertvalue %StmtBlock %34, %List %38, 3
-  %40 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
-  %41 = load %StmtBlock*, %StmtBlock** %40
-  %42 = getelementptr inbounds %StmtBlock, %StmtBlock* %41, i1 0, i32 4
-  %43 = load %TokenInfo*, %TokenInfo** %42
-  %44 = insertvalue %StmtBlock %39, %TokenInfo* %43, 4
-  %45 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
-  %46 = load %Str, %Str* %45
-  %47 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 1
-  %48 = load %Type*, %Type** %47
-  %49 = alloca %union.10
+  %20 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 0
+  %21 = load %Str, %Str* %20
+  %22 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 1
+  %23 = load %Type*, %Type** %22
+  %24 = getelementptr inbounds %DefFunc, %DefFunc* %6, i1 0, i32 2
+  %25 = load %StmtBlock*, %StmtBlock** %24
+  %26 = load %StmtBlock, %StmtBlock* %25
+  %27 = alloca %union.10
 ; write variant 0
-  %50 = getelementptr inbounds %union.10, %union.10* %49, i1 0, i32 0
-  store %Int16 0, %Int16* %50, align 2
+  %28 = getelementptr inbounds %union.10, %union.10* %27, i1 0, i32 0
+  store %Int16 0, %Int16* %28, align 2
 ; write data
-  %51 = getelementptr inbounds %union.10, %union.10* %49, i1 0, i32 1
-  %52 = bitcast [144 x %Nat8]* %51 to %StmtBlock*
-  store %StmtBlock %44, %StmtBlock* %52, align 8
-  %53 = load %union.10, %union.10* %49
-  call void (%Str, %Type*, %union.10) @func292 (%Str %46, %Type* %48, %union.10 %53)
+  %29 = getelementptr inbounds %union.10, %union.10* %27, i1 0, i32 1
+  %30 = bitcast [144 x %Nat8]* %29 to %StmtBlock*
+  store %StmtBlock %26, %StmtBlock* %30, align 8
+  %31 = load %union.10, %union.10* %27
+  call void (%Str, %Type*, %union.10) @func292 (%Str %21, %Type* %23, %union.10 %31)
   br label %endif_0
 endif_0:
   ret void
