@@ -621,7 +621,7 @@ eval = Eval {
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])
 
-    #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.no)
+    #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.no)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x.call)

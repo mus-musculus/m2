@@ -896,7 +896,9 @@ do_value_func = (x : AstValueFunc) -> *Value {
     decl = data to *Decl
     param_block = ctx to *StmtBlock
     param_value = value_new (#ValueParam, decl.type, decl.ti)
-    param_value.no := decl.offset to Nat32
+    param_value.param := (type=decl.type, no=decl.offset to Nat32, ti=decl.ti)
+
+
     map_append (&param_block.index.values, decl.id.str, param_value)
   }
   list_foreach (t.func.from.record.decls, getparam, param_block)
