@@ -557,6 +557,8 @@ Value = (
 
   type : *Type
 
+  data : Value2
+
 //union (
   imm     : ValueImm
   //mention : ValueMention
