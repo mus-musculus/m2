@@ -471,6 +471,9 @@ ValueWhenVariant = (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
 ValueWhen   = (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
+ValueGlobalVar   = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
+ValueGlobalConst = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
+
 
 Value = (
   kind : ValueKind
@@ -491,6 +494,8 @@ Value = (
 
 
   // operation info
+  gvar   : ValueGlobalVar
+  gconst : ValueGlobalConst
   un     : ValueUn
   bin    : ValueBin
   index  : ValueIndex
