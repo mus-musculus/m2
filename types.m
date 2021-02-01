@@ -452,23 +452,23 @@ ValueKind = {
   #ValueWhen
 }
 
+ValuePoison  = Tagged (ti : *TokenInfo)
+ValueImm     = Tagged (type : *Type, value : Int64, ti : *TokenInfo)
+ValueRecord  = Tagged (type : *Type, values : Map, ti : *TokenInfo)
+ValueArray   = Tagged (type : *Type, items : List, ti : *TokenInfo)
+ValueMention = Tagged (type : *Type, of : *Value, ti : *TokenInfo)
 
-ValueImm     = (type : *Type, value : Int64, ti : *TokenInfo)
-ValueRecord  = (type : *Type, values : Map, ti : *TokenInfo)
-ValueArray   = (type : *Type, items : List, ti : *TokenInfo)
-ValueMention = (type : *Type, of : *Value, ti : *TokenInfo)
+ValueUn     = Tagged (type : *Type, value : *Value, ti : *TokenInfo)
+ValueBin    = Tagged (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
+ValueCall   = Tagged (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
+ValueAccess = Tagged (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
+ValueIndex  = Tagged (type : *Type, array, index : *Value, ti : *TokenInfo)
+ValueCast   = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueAs     = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueIs     = Tagged (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
 
-ValueUn     = (type : *Type, value : *Value, ti : *TokenInfo)
-ValueBin    = (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
-ValueCall   = (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
-ValueAccess = (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
-ValueIndex  = (type : *Type, array, index : *Value, ti : *TokenInfo)
-ValueCast   = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
-ValueAs     = (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
-ValueIs     = (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
-
-ValueWhenVariant = (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
-ValueWhen   = (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
+ValueWhenVariant = Tagged (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
+ValueWhen   = Tagged (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
 // и ValueGlobalVar и ValueGlobalConst юзают ссылку на определение
@@ -483,6 +483,10 @@ ValueParam = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 // (или просто номер для параметра)
 ValueLocalVar = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
+
+
+Value2 = ValuePoison or
+         ValueImm
 
 
 Value = (
