@@ -146,7 +146,7 @@ asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definitio
 }
 
 
-asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : *StmtBlock) -> *Definition {
+asmFuncAdd = (a : *Assembly, id : Str, t : *Type, b : MaybeBlock) -> *Definition {
   x = definition_new (#DefFunc, id)
   x.funcdef := (id=id, type=t, block=b)
   list_append (&a.funcs, x)
@@ -297,11 +297,12 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   o ("\n\n;funcs:\n")
   foreach_funcdef = ListForeachHandler {
     fd = &(data to *Definition).funcdef
-    if fd.block == nil {
+    funcdef (fd.id, fd.type, fd.block)
+    /*if fd.block == nil {
       funcdef (fd.id, fd.type, #NoBlock)
     } else {
       funcdef (fd.id, fd.type, *fd.block)
-    }
+    }*/
   }
   list_foreach (&a.funcs, foreach_funcdef, nil)
 

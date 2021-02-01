@@ -120,7 +120,7 @@ exist asmTypedefAdd : (a : *Assembly, id : Str, t : *Type) -> *Definition
 exist asmStringAdd : (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition
 exist asmArrayAdd : (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definition
 
-exist asmFuncAdd : (a : *Assembly, id : Str, t : *Type, b : *StmtBlock) -> *Definition
+exist asmFuncAdd : (a : *Assembly, id : Str, t : *Type, b : MaybeBlock) -> *Definition
 exist asmVarAdd : (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *Definition
 
 exist asmAliasAdd : (a : *Assembly, id : Str, type : *Type, org : Str) -> *Definition

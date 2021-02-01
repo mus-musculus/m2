@@ -605,7 +605,7 @@ DefType  = (id : Str, type : *Type)
 DefConst = (id : Str, type : *Type, value : *Value)
 DefStr   = (id : Str, type : *Type, data : Str, len : Nat)
 DefArray = (id : Str, type : *Type, len : Nat, values : *List)
-DefFunc  = (id : Str, type : *Type, block : *StmtBlock)
+DefFunc  = (id : Str, type : *Type, block : MaybeBlock)
 DefVar   = (id : Str, type : *Type, init_value : *Value)
 DefAlias = (id : Str, type : *Type, org : Str)
 
