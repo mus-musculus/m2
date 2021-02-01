@@ -589,10 +589,22 @@ exist eval_bin : (x : ValueBin) -> LLVM_Value
 exist eval_when : (x : ValueWhen) -> LLVM_Value
 
 
+// не так то просто тк ValueGlobalConst бывает разным)
+def_getname = (d : *Definition) -> Str {
+  return when d.kind {
+    #DefType  => (d : *Definition) -> Str {return d.typedef.id} (d)
+    #DefConst => (d : *Definition) -> Str {return d.constdef.id} (d)
+    #DefStr   => (d : *Definition) -> Str {return d.stringdef.id} (d)
+    #DefArray => (d : *Definition) -> Str {return d.arraydef.id} (d)
+    #DefFunc  => (d : *Definition) -> Str {return d.funcdef.id} (d)
+    #DefVar   => (d : *Definition) -> Str {return d.vardef.id} (d)
+    #DefAlias => (d : *Definition) -> Str {return d.aliasdef.id} (d)
+    else => () -> Str {return "<undef-def-kind>"} ()
+  }
+}
 
-exist def_getname : (d : *Definition) -> Str
 // value evaluation
-// Принимает на вход значение. Возвращает объект принтера
+// Принимает на вход значение. Возвращает значение принтера
 // Значения-операции вычисляются. Результатом может быть константа, имя, регистр или адрес.
 // Имена и адреса нуждаются в дополнительной загрузке функцией load
 // (только если это не lval)
@@ -604,7 +616,7 @@ eval = Eval {
 
     #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 
-    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=x.def.vardef.id)
+    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=def_getname(x.def))
 
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])

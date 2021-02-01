@@ -35,18 +35,7 @@ def_rename = (d : *Definition, id : Str) -> () {
   }
 }
 
-def_getname = (d : *Definition) -> Str {
-  return when d.kind {
-    #DefType  => (d : *Definition) -> Str {return d.typedef.id} (d)
-    #DefConst => (d : *Definition) -> Str {return d.constdef.id} (d)
-    #DefStr   => (d : *Definition) -> Str {return d.stringdef.id} (d)
-    #DefArray => (d : *Definition) -> Str {return d.arraydef.id} (d)
-    #DefFunc  => (d : *Definition) -> Str {return d.funcdef.id} (d)
-    #DefVar   => (d : *Definition) -> Str {return d.vardef.id} (d)
-    #DefAlias => (d : *Definition) -> Str {return d.aliasdef.id} (d)
-    else => () -> Str {return "<undef-def-kind>"} ()
-  }
-}
+
 
 
 
