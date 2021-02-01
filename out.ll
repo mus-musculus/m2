@@ -48,7 +48,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 %union.9 = type %Unit*
 
-%union.10 = type {i16, [24 x i8]}
+%union.10 = type {i16, [72 x i8]}
 
 %union.11 = type {i16, [144 x i8]}
 
@@ -260,7 +260,28 @@ target triple = "x86_64-apple-macosx10.15.0"
 %ValueArray = type {%Type*, %List, %TokenInfo*}
 %ValueMention = type {%Type*, %Value*, %TokenInfo*}
 %ValueUn = type {%Type*, %Value*, %TokenInfo*}
+%ValueRef = type {%Type*, %Value*, %TokenInfo*}
+%ValueDeref = type {%Type*, %Value*, %TokenInfo*}
+%ValueNot = type {%Type*, %Value*, %TokenInfo*}
+%ValueMinus = type {%Type*, %Value*, %TokenInfo*}
+%ValuePlus = type {%Type*, %Value*, %TokenInfo*}
 %ValueBin = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueAdd = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueSub = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueMul = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueDiv = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueMod = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueOr = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueXor = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueAnd = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueEq = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueNe = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueLt = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueGt = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueLe = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueGe = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueShl = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
+%ValueShr = type {%Type*, %ValueKind, %Value*, %Value*, %TokenInfo*}
 %ValueCall = type {%Type*, %Value*, %List*, %TokenInfo*}
 %ValueAccess = type {%Type*, %Value*, %Str, %TokenInfo*}
 %ValueIndex = type {%Type*, %Value*, %Value*, %TokenInfo*}

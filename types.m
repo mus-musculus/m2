@@ -458,8 +458,33 @@ ValueRecord  = Tagged (type : *Type, values : Map, ti : *TokenInfo)
 ValueArray   = Tagged (type : *Type, items : List, ti : *TokenInfo)
 ValueMention = Tagged (type : *Type, of : *Value, ti : *TokenInfo)
 
-ValueUn     = Tagged (type : *Type, value : *Value, ti : *TokenInfo)
-ValueBin    = Tagged (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
+ValueUn     = (type : *Type, value : *Value, ti : *TokenInfo)
+
+ValueRef = Tagged ValueUn
+ValueDeref = Tagged ValueUn
+ValueNot = Tagged ValueUn
+ValueMinus = Tagged ValueUn
+ValuePlus = Tagged ValueUn
+
+ValueBin    = (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
+
+ValueAdd = Tagged ValueBin
+ValueSub = Tagged ValueBin
+ValueMul = Tagged ValueBin
+ValueDiv = Tagged ValueBin
+ValueMod = Tagged ValueBin
+ValueOr = Tagged ValueBin
+ValueXor = Tagged ValueBin
+ValueAnd = Tagged ValueBin
+ValueEq = Tagged ValueBin
+ValueNe = Tagged ValueBin
+ValueLt = Tagged ValueBin
+ValueGt = Tagged ValueBin
+ValueLe = Tagged ValueBin
+ValueGe = Tagged ValueBin
+ValueShl = Tagged ValueBin
+ValueShr = Tagged ValueBin
+
 ValueCall   = Tagged (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
 ValueAccess = Tagged (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
 ValueIndex  = Tagged (type : *Type, array, index : *Value, ti : *TokenInfo)
@@ -486,7 +511,45 @@ ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 
 
 Value2 = ValuePoison or
-         ValueImm
+        ValueImm or
+        ValueRecord or
+        ValueArray or
+        ValueGlobalVar or
+        ValueGlobalConst or
+        ValueParam or
+        ValueLocalVar or
+        ValueLocalVal or
+
+        ValueRef or
+        ValueDeref or
+        ValueNot or
+        ValueMinus or
+        ValuePlus or
+
+        ValueAdd or
+        ValueSub or
+        ValueMul or
+        ValueDiv or
+        ValueMod or
+        ValueOr or
+        ValueXor or
+        ValueAnd or
+        ValueEq or
+        ValueNe or
+        ValueLt or
+        ValueGt or
+        ValueLe or
+        ValueGe or
+        ValueShl or
+        ValueShr or
+
+        ValueIndex or
+        ValueAccess or
+        ValueCast or
+        ValueAs or
+        ValueIs or
+        ValueCall or
+        ValueWhen
 
 
 Value = (
