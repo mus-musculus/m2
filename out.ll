@@ -18326,27 +18326,21 @@ endif_0:
   %46 = icmp eq %ValueKind %45, 6
   br i1 %46, label %then_2, label %else_2
 then_2:
-  %47 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %48 = load %Definition*, %Definition** %47
-  call void (%Definition*, %Str) @def_rename (%Definition* %48, %Str %4)
-  %49 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
-  %50 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %49, i1 0, i32 1
-  %51 = load %Definition*, %Definition** %50
-  call void (%Definition*, %Str) @def_rename (%Definition* %51, %Str %4)
+  %47 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
+  %48 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %47, i1 0, i32 1
+  %49 = load %Definition*, %Definition** %48
+  call void (%Definition*, %Str) @def_rename (%Definition* %49, %Str %4)
   br label %endif_2
 else_2:
-  %52 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
-  %53 = load %ValueKind, %ValueKind* %52
-  %54 = icmp eq %ValueKind %53, 5
-  br i1 %54, label %then_3, label %else_3
+  %50 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
+  %51 = load %ValueKind, %ValueKind* %50
+  %52 = icmp eq %ValueKind %51, 5
+  br i1 %52, label %then_3, label %else_3
 then_3:
-  %55 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %56 = load %Definition*, %Definition** %55
-  call void (%Definition*, %Str) @def_rename (%Definition* %56, %Str %4)
-  %57 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 9
-  %58 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %57, i1 0, i32 1
-  %59 = load %Definition*, %Definition** %58
-  call void (%Definition*, %Str) @def_rename (%Definition* %59, %Str %4)
+  %53 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 9
+  %54 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %53, i1 0, i32 1
+  %55 = load %Definition*, %Definition** %54
+  call void (%Definition*, %Str) @def_rename (%Definition* %55, %Str %4)
   br label %endif_3
 else_3:
   br label %endif_3
@@ -18401,26 +18395,22 @@ define %Value* @func559 (%AstId*, %Type*, %Value*, %TokenInfo*) {
   %5 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 1
   %6 = load %TokenInfo*, %TokenInfo** %5
   %7 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func436 (%ValueKind 6, %Type* %1, %TokenInfo* %6)
-  %8 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %9 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
-  %10 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 0
-  %11 = load %Str, %Str* %10
-  %12 = call %Definition* (%Assembly*, %Str, %Type*, %Value*) @func269 (%Assembly* %9, %Str %11, %Type* %1, %Value* %2)
-  store %Definition* %12, %Definition** %8, align 8
-  %13 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
-  %14 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 1
-  %15 = load %Type*, %Type** %14
-  %16 = insertvalue %ValueGlobalVar zeroinitializer, %Type* %15, 0
-  %17 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %18 = load %Definition*, %Definition** %17
-  %19 = insertvalue %ValueGlobalVar %16, %Definition* %18, 1
-  %20 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 1
-  %21 = load %TokenInfo*, %TokenInfo** %20
-  %22 = insertvalue %ValueGlobalVar %19, %TokenInfo* %21, 2
-  store %ValueGlobalVar %22, %ValueGlobalVar* %13, align 8
-  %23 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 0
-  %24 = load %Str, %Str* %23
-  call void (%Str, %Value*) @func144 (%Str %24, %Value* %7)
+  %8 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
+  %9 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 0
+  %10 = load %Str, %Str* %9
+  %11 = call %Definition* (%Assembly*, %Str, %Type*, %Value*) @func269 (%Assembly* %8, %Str %10, %Type* %1, %Value* %2)
+  %12 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
+  %13 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 1
+  %14 = load %Type*, %Type** %13
+  %15 = insertvalue %ValueGlobalVar zeroinitializer, %Type* %14, 0
+  %16 = insertvalue %ValueGlobalVar %15, %Definition* %11, 1
+  %17 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 1
+  %18 = load %TokenInfo*, %TokenInfo** %17
+  %19 = insertvalue %ValueGlobalVar %16, %TokenInfo* %18, 2
+  store %ValueGlobalVar %19, %ValueGlobalVar* %12, align 8
+  %20 = getelementptr inbounds %AstId, %AstId* %0, i1 0, i32 0
+  %21 = load %Str, %Str* %20
+  call void (%Str, %Value*) @func144 (%Str %21, %Value* %7)
   ret %Value* %7
 }
 
