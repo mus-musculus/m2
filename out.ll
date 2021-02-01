@@ -18321,37 +18321,36 @@ endif_0:
   %42 = or i1 %30, %41
   %43 = or i1 %27, %42
   store i1 %43, i1* %24, align 1
-  %44 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %45 = load %Definition*, %Definition** %44; loadImmPtr
-  %46 = inttoptr i64 0 to%Definition*
-  %47 = icmp ne %Definition* %45, %46
-  br i1 %47, label %then_2, label %else_2
+  %44 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
+  %45 = load %ValueKind, %ValueKind* %44
+  %46 = icmp eq %ValueKind %45, 6
+  br i1 %46, label %then_2, label %else_2
 then_2:
-  %48 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
-  %49 = load %ValueKind, %ValueKind* %48
-  %50 = icmp eq %ValueKind %49, 6
-  br i1 %50, label %then_3, label %else_3
-then_3:
-  %51 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %52 = load %Definition*, %Definition** %51
-  call void (%Definition*, %Str) @def_rename (%Definition* %52, %Str %4)
-  %53 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
-  %54 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %53, i1 0, i32 1
-  %55 = load %Definition*, %Definition** %54
-  call void (%Definition*, %Str) @def_rename (%Definition* %55, %Str %4)
-  br label %endif_3
-else_3:
-  %56 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %57 = load %Definition*, %Definition** %56
-  call void (%Definition*, %Str) @def_rename (%Definition* %57, %Str %4)
-  %58 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 9
-  %59 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %58, i1 0, i32 1
-  %60 = load %Definition*, %Definition** %59
-  call void (%Definition*, %Str) @def_rename (%Definition* %60, %Str %4)
-  br label %endif_3
-endif_3:
+  %47 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
+  %48 = load %Definition*, %Definition** %47
+  call void (%Definition*, %Str) @def_rename (%Definition* %48, %Str %4)
+  %49 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
+  %50 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %49, i1 0, i32 1
+  %51 = load %Definition*, %Definition** %50
+  call void (%Definition*, %Str) @def_rename (%Definition* %51, %Str %4)
   br label %endif_2
 else_2:
+  %52 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
+  %53 = load %ValueKind, %ValueKind* %52
+  %54 = icmp eq %ValueKind %53, 5
+  br i1 %54, label %then_3, label %else_3
+then_3:
+  %55 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
+  %56 = load %Definition*, %Definition** %55
+  call void (%Definition*, %Str) @def_rename (%Definition* %56, %Str %4)
+  %57 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 9
+  %58 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %57, i1 0, i32 1
+  %59 = load %Definition*, %Definition** %58
+  call void (%Definition*, %Str) @def_rename (%Definition* %59, %Str %4)
+  br label %endif_3
+else_3:
+  br label %endif_3
+endif_3:
   br label %endif_2
 endif_2:
   ret void
