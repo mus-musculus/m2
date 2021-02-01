@@ -134,11 +134,10 @@ stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
 
 
 do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
-  s = stmt_new (#Nothing)
+  sb = 0 to Var StmtBlock
+  stmt_block_init (&sb, fctx.cblock)
 
-  b = stmt_block_init (&s.block, fctx.cblock)
-
-  fctx.cblock := b
+  fctx.cblock := &sb
 
   // только так я могу сделать чтобы параметр этой ф-ции
   // был не x : *AstStmtBlock, а - x : AstStmtBlock
@@ -155,11 +154,12 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
     stmts = ctx to *List
     list_append (stmts, stmt as *Stmt)
   }
-  list_foreach (&stmts, hstmt, &b.stmts)
+  list_foreach (&stmts, hstmt, &sb.stmts)
 
-  fctx.cblock := b.parent  // restore old cblock value
+  fctx.cblock := sb.parent  // restore old cblock value
 
-  s.data := (stmts=s.block.stmts, parent=s.block.parent, index=s.block.index, local_funcs=s.block.local_funcs, ti=x.ti) to StmtBlock
+  s = stmt_new (#Nothing)
+  s.data := (stmts=sb.stmts, parent=sb.parent, index=sb.index, local_funcs=sb.local_funcs, ti=x.ti) to StmtBlock
   return s
 }
 
