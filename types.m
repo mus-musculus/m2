@@ -561,11 +561,6 @@ Stmt2 = StmtValBind or
 Stmt = (
 
   data : Stmt2
-
-
-  //expr     : StmtValBind
-
-  block    : StmtBlock
 )
 
 

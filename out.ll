@@ -282,7 +282,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %StmtLabel = type {%Str, %TokenInfo*}
 %Nothing = type i16
 %Stmt2 = type %union.13
-%Stmt = type {%union.13, %StmtBlock}
+%Stmt = type {%union.13}
 %Module = type {%Index, %Index, %Index}
 %FuncContext = type {%Str, %Value*, %StmtBlock*, %Nat32, %Nat32, %Nat32, %Nat32, %Nat32}
 %DefinitionKind = type i16
@@ -16938,7 +16938,7 @@ define void @func518 () {
 }
 
 define %Stmt* @stmt_new (%union.13) {
-  %2 = call %Unit* (%Nat32) @malloc (%Nat32 512)
+  %2 = call %Unit* (%Nat32) @malloc (%Nat32 256)
   %3 = bitcast %Unit* %2 to %Stmt*; loadImmPtr
   %4 = inttoptr i64 0 to%Stmt*
   %5 = icmp ne %Stmt* %3, %4
