@@ -482,12 +482,13 @@ Value = (
   mention : ValueMention
   rec     : ValueRecord
   arr     : ValueArray
-  no      : Nat // уникальный порядковый номер для каждой переменной
+  // уникальный порядковый номер для каждой переменной
+  // (или просто номер для параметра)
+  no      : Nat
 
 
   def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
 
-  param  : *Decl        // ValueParam (Decl#offset)
 
 
   // operation info
