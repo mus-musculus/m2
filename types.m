@@ -489,10 +489,6 @@ Value = (
   // (или просто номер для параметра)
   no      : Nat
 
-
-  def    : *Definition  // ValueGlobalVar & ValueGlobalConst (Definition#reg)
-
-
   // operation info
   gvar   : ValueGlobalVar
   gconst : ValueGlobalConst

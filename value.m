@@ -934,9 +934,9 @@ do_value_func = (x : AstValueFunc) -> *Value {
   if bx0 is Unit {goto fail}
   bx = *(bx0 as *Stmt)
 
-  fv.def := asmFuncAdd (&asm0, uid, t, bx as StmtBlock)
+  def = asmFuncAdd (&asm0, uid, t, bx as StmtBlock)
 
-  fv.gconst := (type=t, def=fv.def, ti=x.ti)
+  fv.gconst := (type=t, def=def, ti=x.ti)
 
   fctx := old_fctx  // restore func context before exit
 
