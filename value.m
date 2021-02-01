@@ -858,8 +858,8 @@ do_value_string = (x : AstValueString) -> *Value {
   typ = type_pointer_new (type_array_new (typeChar, len, x.ti), x.ti)
   v = value_new (#ValueGlobalConst, typ, x.ti)
   id = get_name_str ()
-  v.def := asmStringAdd (&asm0, id, s, len)
-  v.gconst := (type=typ, def=v.def, ti=x.ti)
+  def = asmStringAdd (&asm0, id, s, len)
+  v.gconst := (type=typ, def=def, ti=x.ti)
   return v
 }
 

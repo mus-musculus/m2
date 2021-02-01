@@ -15754,18 +15754,14 @@ define %Value* @func496 (%AstValueString) {
   %10 = extractvalue %AstValueString %0, 1
   %11 = call %Value* (%ValueKind, %Type*, %TokenInfo*) @func436 (%ValueKind 5, %Type* %9, %TokenInfo* %10)
   %12 = call %Str () @func154 ()
-  %13 = getelementptr inbounds %Value, %Value* %11, i1 0, i32 7
-  %14 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
-  %15 = call %Definition* (%Assembly*, %Str, %Str, %Nat32) @func266 (%Assembly* %14, %Str %12, %Str %2, %Nat32 %4)
-  store %Definition* %15, %Definition** %13, align 8
-  %16 = getelementptr inbounds %Value, %Value* %11, i1 0, i32 9
-  %17 = insertvalue %ValueGlobalConst zeroinitializer, %Type* %9, 0
-  %18 = getelementptr inbounds %Value, %Value* %11, i1 0, i32 7
-  %19 = load %Definition*, %Definition** %18
-  %20 = insertvalue %ValueGlobalConst %17, %Definition* %19, 1
-  %21 = extractvalue %AstValueString %0, 1
-  %22 = insertvalue %ValueGlobalConst %20, %TokenInfo* %21, 2
-  store %ValueGlobalConst %22, %ValueGlobalConst* %16, align 8
+  %13 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
+  %14 = call %Definition* (%Assembly*, %Str, %Str, %Nat32) @func266 (%Assembly* %13, %Str %12, %Str %2, %Nat32 %4)
+  %15 = getelementptr inbounds %Value, %Value* %11, i1 0, i32 9
+  %16 = insertvalue %ValueGlobalConst zeroinitializer, %Type* %9, 0
+  %17 = insertvalue %ValueGlobalConst %16, %Definition* %14, 1
+  %18 = extractvalue %AstValueString %0, 1
+  %19 = insertvalue %ValueGlobalConst %17, %TokenInfo* %18, 2
+  store %ValueGlobalConst %19, %ValueGlobalConst* %15, align 8
   ret %Value* %11
 }
 
