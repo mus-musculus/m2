@@ -479,6 +479,8 @@ ValueGlobalConst = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
 // у параметра в no просто его порядковый номер
 ValueParam = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 
+ValueLocalVar = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
+ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 
 
 Value = (
@@ -499,6 +501,8 @@ Value = (
   gvar   : ValueGlobalVar
   gconst : ValueGlobalConst
   param  : ValueParam
+  lvar   : ValueLocalVar
+
   un     : ValueUn
   bin    : ValueBin
   index  : ValueIndex

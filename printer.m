@@ -619,7 +619,7 @@ eval = Eval {
     #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=def_getname(x.gvar.def))
 
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
-    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])
+    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.lvar.no])
 
     #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.no)
 

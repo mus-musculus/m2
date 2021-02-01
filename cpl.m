@@ -249,6 +249,7 @@ create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo
   stmtAdd(vd)
 
   v.no := (*vd as StmtVarDef).no
+  v.lvar := (type=t, no=v.no, ti=ti)
 
   return v
 }
