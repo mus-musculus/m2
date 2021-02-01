@@ -9270,192 +9270,194 @@ select_1_2_ok:
   %13 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
   %14 = load %Type*, %Type** %13
   %15 = insertvalue %LLVM_Value %12, %Type* %14, 1
-  %16 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 7
-  %17 = load %Definition*, %Definition** %16
-  %18 = call %Str (%Definition*) @def_getname (%Definition* %17)
-  %19 = insertvalue %LLVM_Value %15, %Str %18, 3
+  %16 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 9
+  %17 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %16, i1 0, i32 1
+  %18 = load %Definition*, %Definition** %17
+  %19 = call %Str (%Definition*) @def_getname (%Definition* %18)
+  %20 = insertvalue %LLVM_Value %15, %Str %19, 3
   br label %select_1_end
 select_1_3:
-  %20 = icmp eq %ValueKind %3, 6
-  br i1 %20, label %select_1_3_ok, label %select_1_4
+  %21 = icmp eq %ValueKind %3, 6
+  br i1 %21, label %select_1_3_ok, label %select_1_4
 select_1_3_ok:
-  %21 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 7, 0
-  %22 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %23 = load %Type*, %Type** %22
-  %24 = insertvalue %LLVM_Value %21, %Type* %23, 1
-  %25 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 7
-  %26 = load %Definition*, %Definition** %25
-  %27 = call %Str (%Definition*) @def_getname (%Definition* %26)
-  %28 = insertvalue %LLVM_Value %24, %Str %27, 3
+  %22 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 7, 0
+  %23 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %24 = load %Type*, %Type** %23
+  %25 = insertvalue %LLVM_Value %22, %Type* %24, 1
+  %26 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 8
+  %27 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %26, i1 0, i32 1
+  %28 = load %Definition*, %Definition** %27
+  %29 = call %Str (%Definition*) @def_getname (%Definition* %28)
+  %30 = insertvalue %LLVM_Value %25, %Str %29, 3
   br label %select_1_end
 select_1_4:
-  %29 = icmp eq %ValueKind %3, 11
-  br i1 %29, label %select_1_4_ok, label %select_1_5
+  %31 = icmp eq %ValueKind %3, 11
+  br i1 %31, label %select_1_4_ok, label %select_1_5
 select_1_4_ok:
-  %30 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %31 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %32 = load %Type*, %Type** %31
-  %33 = insertvalue %LLVM_Value %30, %Type* %32, 1
-  %34 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
-  %35 = load %Nat32, %Nat32* %34
-; index array
-  %36 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_x_map, i1 0, %Nat32 %35
+  %32 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %33 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %34 = load %Type*, %Type** %33
+  %35 = insertvalue %LLVM_Value %32, %Type* %34, 1
+  %36 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
   %37 = load %Nat32, %Nat32* %36
-  %38 = insertvalue %LLVM_Value %33, %Nat32 %37, 4
+; index array
+  %38 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_x_map, i1 0, %Nat32 %37
+  %39 = load %Nat32, %Nat32* %38
+  %40 = insertvalue %LLVM_Value %35, %Nat32 %39, 4
   br label %select_1_end
 select_1_5:
-  %39 = icmp eq %ValueKind %3, 12
-  br i1 %39, label %select_1_5_ok, label %select_1_6
+  %41 = icmp eq %ValueKind %3, 12
+  br i1 %41, label %select_1_5_ok, label %select_1_6
 select_1_5_ok:
-  %40 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
-  %41 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %42 = load %Type*, %Type** %41
-  %43 = insertvalue %LLVM_Value %40, %Type* %42, 1
-  %44 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
-  %45 = load %Nat32, %Nat32* %44
-; index array
-  %46 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %45
+  %42 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
+  %43 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %44 = load %Type*, %Type** %43
+  %45 = insertvalue %LLVM_Value %42, %Type* %44, 1
+  %46 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
   %47 = load %Nat32, %Nat32* %46
-  %48 = insertvalue %LLVM_Value %43, %Nat32 %47, 4
+; index array
+  %48 = getelementptr inbounds [1024 x %Nat32], [1024 x %Nat32]* @local_vars_map, i1 0, %Nat32 %47
+  %49 = load %Nat32, %Nat32* %48
+  %50 = insertvalue %LLVM_Value %45, %Nat32 %49, 4
   br label %select_1_end
 select_1_6:
-  %49 = icmp eq %ValueKind %3, 7
-  br i1 %49, label %select_1_6_ok, label %select_1_7
+  %51 = icmp eq %ValueKind %3, 7
+  br i1 %51, label %select_1_6_ok, label %select_1_7
 select_1_6_ok:
-  %50 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %51 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
-  %52 = load %Type*, %Type** %51
-  %53 = insertvalue %LLVM_Value %50, %Type* %52, 1
-  %54 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
-  %55 = load %Nat32, %Nat32* %54
-  %56 = insertvalue %LLVM_Value %53, %Nat32 %55, 4
+  %52 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %53 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 1
+  %54 = load %Type*, %Type** %53
+  %55 = insertvalue %LLVM_Value %52, %Type* %54, 1
+  %56 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 6
+  %57 = load %Nat32, %Nat32* %56
+  %58 = insertvalue %LLVM_Value %55, %Nat32 %57, 4
   br label %select_1_end
 select_1_7:
-  %57 = icmp eq %ValueKind %3, 35
-  br i1 %57, label %select_1_7_ok, label %select_1_8
+  %59 = icmp eq %ValueKind %3, 35
+  br i1 %59, label %select_1_7_ok, label %select_1_8
 select_1_7_ok:
-  %58 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 17
-  %59 = load %ValueCall, %ValueCall* %58
-  %60 = call %LLVM_Value (%ValueCall) @func304 (%ValueCall %59)
+  %60 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 17
+  %61 = load %ValueCall, %ValueCall* %60
+  %62 = call %LLVM_Value (%ValueCall) @func304 (%ValueCall %61)
   br label %select_1_end
 select_1_8:
-  %61 = icmp eq %ValueKind %3, 36
-  br i1 %61, label %select_1_8_ok, label %select_1_9
+  %63 = icmp eq %ValueKind %3, 36
+  br i1 %63, label %select_1_8_ok, label %select_1_9
 select_1_8_ok:
-  %62 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 12
-  %63 = load %ValueIndex, %ValueIndex* %62
-  %64 = call %LLVM_Value (%ValueIndex) @func307 (%ValueIndex %63)
+  %64 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 12
+  %65 = load %ValueIndex, %ValueIndex* %64
+  %66 = call %LLVM_Value (%ValueIndex) @func307 (%ValueIndex %65)
   br label %select_1_end
 select_1_9:
-  %65 = icmp eq %ValueKind %3, 37
-  br i1 %65, label %select_1_9_ok, label %select_1_10
+  %67 = icmp eq %ValueKind %3, 37
+  br i1 %67, label %select_1_9_ok, label %select_1_10
 select_1_9_ok:
-  %66 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 13
-  %67 = load %ValueAccess, %ValueAccess* %66
-  %68 = call %LLVM_Value (%ValueAccess) @func309 (%ValueAccess %67)
+  %68 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 13
+  %69 = load %ValueAccess, %ValueAccess* %68
+  %70 = call %LLVM_Value (%ValueAccess) @func309 (%ValueAccess %69)
   br label %select_1_end
 select_1_10:
-  %69 = icmp eq %ValueKind %3, 13
-  br i1 %69, label %select_1_10_ok, label %select_1_11
+  %71 = icmp eq %ValueKind %3, 13
+  br i1 %71, label %select_1_10_ok, label %select_1_11
 select_1_10_ok:
-  %70 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %71 = load %ValueUn, %ValueUn* %70
-  %72 = call %LLVM_Value (%ValueUn) @func310 (%ValueUn %71)
+  %72 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
+  %73 = load %ValueUn, %ValueUn* %72
+  %74 = call %LLVM_Value (%ValueUn) @func310 (%ValueUn %73)
   br label %select_1_end
 select_1_11:
-  %73 = icmp eq %ValueKind %3, 14
-  br i1 %73, label %select_1_11_ok, label %select_1_12
+  %75 = icmp eq %ValueKind %3, 14
+  br i1 %75, label %select_1_11_ok, label %select_1_12
 select_1_11_ok:
-  %74 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %75 = load %ValueUn, %ValueUn* %74
-  %76 = call %LLVM_Value (%ValueUn) @func311 (%ValueUn %75)
+  %76 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
+  %77 = load %ValueUn, %ValueUn* %76
+  %78 = call %LLVM_Value (%ValueUn) @func311 (%ValueUn %77)
   br label %select_1_end
 select_1_12:
-  %77 = icmp eq %ValueKind %3, 16
-  br i1 %77, label %select_1_12_ok, label %select_1_13
+  %79 = icmp eq %ValueKind %3, 16
+  br i1 %79, label %select_1_12_ok, label %select_1_13
 select_1_12_ok:
-  %78 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %79 = load %ValueUn, %ValueUn* %78
-  %80 = call %LLVM_Value (%ValueUn) @func313 (%ValueUn %79)
+  %80 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
+  %81 = load %ValueUn, %ValueUn* %80
+  %82 = call %LLVM_Value (%ValueUn) @func313 (%ValueUn %81)
   br label %select_1_end
 select_1_13:
-  %81 = icmp eq %ValueKind %3, 17
-  br i1 %81, label %select_1_13_ok, label %select_1_14
+  %83 = icmp eq %ValueKind %3, 17
+  br i1 %83, label %select_1_13_ok, label %select_1_14
 select_1_13_ok:
-  %82 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %83 = load %ValueUn, %ValueUn* %82
-  %84 = call %LLVM_Value (%ValueUn) @func314 (%ValueUn %83)
+  %84 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
+  %85 = load %ValueUn, %ValueUn* %84
+  %86 = call %LLVM_Value (%ValueUn) @func314 (%ValueUn %85)
   br label %select_1_end
 select_1_14:
-  %85 = icmp eq %ValueKind %3, 15
-  br i1 %85, label %select_1_14_ok, label %select_1_15
+  %87 = icmp eq %ValueKind %3, 15
+  br i1 %87, label %select_1_14_ok, label %select_1_15
 select_1_14_ok:
-  %86 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
-  %87 = load %ValueUn, %ValueUn* %86
-  %88 = call %LLVM_Value (%ValueUn) @func312 (%ValueUn %87)
+  %88 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 10
+  %89 = load %ValueUn, %ValueUn* %88
+  %90 = call %LLVM_Value (%ValueUn) @func312 (%ValueUn %89)
   br label %select_1_end
 select_1_15:
-  %89 = icmp eq %ValueKind %3, 38
-  br i1 %89, label %select_1_15_ok, label %select_1_16
+  %91 = icmp eq %ValueKind %3, 38
+  br i1 %91, label %select_1_15_ok, label %select_1_16
 select_1_15_ok:
-  %90 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 14
-  %91 = load %ValueCast, %ValueCast* %90
-  %92 = call %LLVM_Value (%ValueCast) @func327 (%ValueCast %91)
+  %92 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 14
+  %93 = load %ValueCast, %ValueCast* %92
+  %94 = call %LLVM_Value (%ValueCast) @func327 (%ValueCast %93)
   br label %select_1_end
 select_1_16:
-  %93 = icmp eq %ValueKind %3, 40
-  br i1 %93, label %select_1_16_ok, label %select_1_17
+  %95 = icmp eq %ValueKind %3, 40
+  br i1 %95, label %select_1_16_ok, label %select_1_17
 select_1_16_ok:
-  %94 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 15
-  %95 = load %ValueAs, %ValueAs* %94
-  %96 = call %LLVM_Value (%ValueAs) @func323 (%ValueAs %95)
+  %96 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 15
+  %97 = load %ValueAs, %ValueAs* %96
+  %98 = call %LLVM_Value (%ValueAs) @func323 (%ValueAs %97)
   br label %select_1_end
 select_1_17:
-  %97 = icmp eq %ValueKind %3, 39
-  br i1 %97, label %select_1_17_ok, label %select_1_18
+  %99 = icmp eq %ValueKind %3, 39
+  br i1 %99, label %select_1_17_ok, label %select_1_18
 select_1_17_ok:
-  %98 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 16
-  %99 = load %ValueIs, %ValueIs* %98
-  %100 = call %LLVM_Value (%ValueIs) @func324 (%ValueIs %99)
+  %100 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 16
+  %101 = load %ValueIs, %ValueIs* %100
+  %102 = call %LLVM_Value (%ValueIs) @func324 (%ValueIs %101)
   br label %select_1_end
 select_1_18:
-  %101 = icmp eq %ValueKind %3, 41
-  br i1 %101, label %select_1_18_ok, label %select_1_19
+  %103 = icmp eq %ValueKind %3, 41
+  br i1 %103, label %select_1_18_ok, label %select_1_19
 select_1_18_ok:
-  %102 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
-  %103 = load %ValueWhen, %ValueWhen* %102
-  %104 = call %LLVM_Value (%ValueWhen) @func341 (%ValueWhen %103)
+  %104 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 18
+  %105 = load %ValueWhen, %ValueWhen* %104
+  %106 = call %LLVM_Value (%ValueWhen) @func341 (%ValueWhen %105)
   br label %select_1_end
 select_1_19:
-  %105 = icmp eq %ValueKind %3, 8
-  br i1 %105, label %select_1_19_ok, label %select_1_20
+  %107 = icmp eq %ValueKind %3, 8
+  br i1 %107, label %select_1_19_ok, label %select_1_20
 select_1_19_ok:
-  %106 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 4
-  %107 = load %ValueRecord, %ValueRecord* %106
-  %108 = call %LLVM_Value (%ValueRecord) @func343 (%ValueRecord %107)
+  %108 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 4
+  %109 = load %ValueRecord, %ValueRecord* %108
+  %110 = call %LLVM_Value (%ValueRecord) @func343 (%ValueRecord %109)
   br label %select_1_end
 select_1_20:
-  %109 = icmp eq %ValueKind %3, 10
-  br i1 %109, label %select_1_20_ok, label %select_1_21
+  %111 = icmp eq %ValueKind %3, 10
+  br i1 %111, label %select_1_20_ok, label %select_1_21
 select_1_20_ok:
-  %110 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 5
-  %111 = load %ValueArray, %ValueArray* %110
-  %112 = call %LLVM_Value (%ValueArray) @func345 (%ValueArray %111)
+  %112 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 5
+  %113 = load %ValueArray, %ValueArray* %112
+  %114 = call %LLVM_Value (%ValueArray) @func345 (%ValueArray %113)
   br label %select_1_end
 select_1_21:
-  %113 = icmp eq %ValueKind %3, 2
-  br i1 %113, label %select_1_21_ok, label %select_1_22
+  %115 = icmp eq %ValueKind %3, 2
+  br i1 %115, label %select_1_21_ok, label %select_1_22
 select_1_21_ok:
-  %114 = call %LLVM_Value (%Value*) @func301 (%Value* %0)
+  %116 = call %LLVM_Value (%Value*) @func301 (%Value* %0)
   br label %select_1_end
 select_1_22:
-  %115 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
-  %116 = load %ValueBin, %ValueBin* %115
-  %117 = call %LLVM_Value (%ValueBin) @func330 (%ValueBin %116)
+  %117 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 11
+  %118 = load %ValueBin, %ValueBin* %117
+  %119 = call %LLVM_Value (%ValueBin) @func330 (%ValueBin %118)
   br label %select_1_end
 select_1_end:
-  %118 = phi %LLVM_Value [ %5, %select_1_0_ok ], [ %10, %select_1_1_ok ], [ %19, %select_1_2_ok ], [ %28, %select_1_3_ok ], [ %38, %select_1_4_ok ], [ %48, %select_1_5_ok ], [ %56, %select_1_6_ok ], [ %60, %select_1_7_ok ], [ %64, %select_1_8_ok ], [ %68, %select_1_9_ok ], [ %72, %select_1_10_ok ], [ %76, %select_1_11_ok ], [ %80, %select_1_12_ok ], [ %84, %select_1_13_ok ], [ %88, %select_1_14_ok ], [ %92, %select_1_15_ok ], [ %96, %select_1_16_ok ], [ %100, %select_1_17_ok ], [ %104, %select_1_18_ok ], [ %108, %select_1_19_ok ], [ %112, %select_1_20_ok ], [ %114, %select_1_21_ok ], [ %117, %select_1_22 ]
-  ret %LLVM_Value %118
+  %120 = phi %LLVM_Value [ %5, %select_1_0_ok ], [ %10, %select_1_1_ok ], [ %20, %select_1_2_ok ], [ %30, %select_1_3_ok ], [ %40, %select_1_4_ok ], [ %50, %select_1_5_ok ], [ %58, %select_1_6_ok ], [ %62, %select_1_7_ok ], [ %66, %select_1_8_ok ], [ %70, %select_1_9_ok ], [ %74, %select_1_10_ok ], [ %78, %select_1_11_ok ], [ %82, %select_1_12_ok ], [ %86, %select_1_13_ok ], [ %90, %select_1_14_ok ], [ %94, %select_1_15_ok ], [ %98, %select_1_16_ok ], [ %102, %select_1_17_ok ], [ %106, %select_1_18_ok ], [ %110, %select_1_19_ok ], [ %114, %select_1_20_ok ], [ %116, %select_1_21_ok ], [ %119, %select_1_22 ]
+  ret %LLVM_Value %120
 }
 
 define %LLVM_Value @func302 (%Value*) {
@@ -18325,9 +18327,29 @@ endif_0:
   %47 = icmp ne %Definition* %45, %46
   br i1 %47, label %then_2, label %else_2
 then_2:
-  %48 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
-  %49 = load %Definition*, %Definition** %48
-  call void (%Definition*, %Str) @def_rename (%Definition* %49, %Str %4)
+  %48 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 0
+  %49 = load %ValueKind, %ValueKind* %48
+  %50 = icmp eq %ValueKind %49, 6
+  br i1 %50, label %then_3, label %else_3
+then_3:
+  %51 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
+  %52 = load %Definition*, %Definition** %51
+  call void (%Definition*, %Str) @def_rename (%Definition* %52, %Str %4)
+  %53 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 8
+  %54 = getelementptr inbounds %ValueGlobalVar, %ValueGlobalVar* %53, i1 0, i32 1
+  %55 = load %Definition*, %Definition** %54
+  call void (%Definition*, %Str) @def_rename (%Definition* %55, %Str %4)
+  br label %endif_3
+else_3:
+  %56 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 7
+  %57 = load %Definition*, %Definition** %56
+  call void (%Definition*, %Str) @def_rename (%Definition* %57, %Str %4)
+  %58 = getelementptr inbounds %Value, %Value* %7, i1 0, i32 9
+  %59 = getelementptr inbounds %ValueGlobalConst, %ValueGlobalConst* %58, i1 0, i32 1
+  %60 = load %Definition*, %Definition** %59
+  call void (%Definition*, %Str) @def_rename (%Definition* %60, %Str %4)
+  br label %endif_3
+endif_3:
   br label %endif_2
 else_2:
   br label %endif_2

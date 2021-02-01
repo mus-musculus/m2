@@ -614,9 +614,9 @@ eval = Eval {
 
     #ValueMention     => eval (x.mention.of)  // Just go through
 
-    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
+    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.gconst.def))
 
-    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=def_getname(x.def))
+    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=def_getname(x.gvar.def))
 
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.no])

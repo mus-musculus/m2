@@ -189,7 +189,13 @@ do_value_bind = (x : AstNodeBindValue) -> () {
       strcmp("fprintf", id) == 0
 
   if v.def != nil {
-    def_rename(v.def, id)
+    if v.kind == #ValueGlobalVar {
+      def_rename(v.def, id)
+      def_rename(v.gvar.def, id)
+    } else {
+      def_rename(v.def, id)
+      def_rename(v.gconst.def, id)
+    }
   }
 }
 
