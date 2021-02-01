@@ -471,8 +471,14 @@ ValueWhenVariant = (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
 ValueWhen   = (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
+// и ValueGlobalVar и ValueGlobalConst юзают ссылку на определение
+// в котором лежит их id. Сделано так потому что id в определении
+// может меняться ренеймом, тк изначально они анонимны, а потом как бог даст.
 ValueGlobalVar   = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
 ValueGlobalConst = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
+// у параметра в no просто его порядковый номер
+ValueParam = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
+
 
 
 Value = (
@@ -492,6 +498,7 @@ Value = (
   // operation info
   gvar   : ValueGlobalVar
   gconst : ValueGlobalConst
+  param  : ValueParam
   un     : ValueUn
   bin    : ValueBin
   index  : ValueIndex
