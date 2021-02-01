@@ -612,7 +612,7 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => eval_immediate (x)
 
-    #ValueMention     => eval (x.mention.of)  // Just go through
+    //#ValueMention     => eval (x.mention.of)  // Just go through
 
     #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.gconst.def))
 

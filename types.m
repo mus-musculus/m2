@@ -492,7 +492,7 @@ Value = (
 
 //union (
   imm     : ValueImm
-  mention : ValueMention
+  //mention : ValueMention
   rec     : ValueRecord
   arr     : ValueArray
 
