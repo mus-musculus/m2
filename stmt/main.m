@@ -115,7 +115,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   se = stmt_new ((v=v, no=nocnt2, ti=x.ti) to StmtValBind)
 
   // и создаем значение которое ссылается на вырадение в стейтменте
-  v0 = value_new (#ValueLocalConst, (type=v.type, no=nocnt2, ti=x.ti) to ValueLocalVal, v.type, x.ti)
+  v0 = value_new ((type=v.type, no=nocnt2, ti=x.ti) to ValueLocalVal, v.type, x.ti)
   v0.locval := (type=v.type, no=nocnt2, ti=x.ti)
   bind_value_local (id, v0)
 

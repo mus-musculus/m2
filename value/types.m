@@ -164,8 +164,6 @@ Value2 = ValuePoison or
 
 
 Value = (
-  kind : ValueKind
-
   type : *Type
 
   data : Value2

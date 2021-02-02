@@ -31,23 +31,23 @@ vn = () -> *Value or Unit  {
   return x
 }
 
-value_new = (k : ValueKind, x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
+value_new = (x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
 
-  *v := (kind=k, type=t, ti=ti, data=x)
+  *v := (type=t, ti=ti, data=x)
   return v
 }
 
 
 value_new_poison = (ti : *TokenInfo) -> *Value {
   tp = type_new (#TypePoison, 0, ti)
-  return value_new (#ValuePoison, (ti=ti) to ValuePoison, tp, ti)
+  return value_new ((ti=ti) to ValuePoison, tp, ti)
 }
 
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
-  v = value_new (#ValueImmediate, (type=t, value=dx, ti=ti) to ValueImm, t, ti)
+  v = value_new ((type=t, value=dx, ti=ti) to ValueImm, t, ti)
   v.imm := (type=t, value=dx, ti=ti)
   return v
 }
@@ -290,7 +290,7 @@ do_value_when = (x : AstValueWhen) -> *Value {
       }
 
       // Создаю локальное выражение is
-      //vx = value_new(#ValueIs, typeBool, tx.ti)
+      //vx = value_new (#ValueIs, typeBool, tx.ti)
       //vx.is := (type=typeBool, value=kit.val, variant=vari, ti=tx.ti)
       vari = type_union_get_variant (kit.val.type, tx)
 
@@ -309,7 +309,7 @@ do_value_when = (x : AstValueWhen) -> *Value {
   other = implicit_cast (do_value(x.other), kit.type)
   iss = val.type.kind == #TypeUnion
 
-  return value_new (#ValueWhen, (x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti) to ValueWhen, kit.type, x.ti)
+  return value_new ((x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti) to ValueWhen, kit.type, x.ti)
 }
 
 
@@ -328,7 +328,7 @@ do_value_ref = (x : AstValueRef) -> *Value {
 
   t = type_pointer_new (v.type, x.ti)
 
-  return value_new (#ValueRef, (type=t, value=v, ti=x.ti) to ValueRef, t, x.ti)
+  return value_new ((type=t, value=v, ti=x.ti) to ValueRef, t, x.ti)
 }
 
 
@@ -345,7 +345,7 @@ do_value_deref = (x : AstValueDeref) -> *Value {
 
   t = v.type.pointer.to
 
-  return value_new (#ValueDeref, (type=t, value=v, ti=x.ti) to ValueDeref, t, x.ti)
+  return value_new ((type=t, value=v, ti=x.ti) to ValueDeref, t, x.ti)
 }
 
 
@@ -408,20 +408,20 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
   }
 
   v = when k {
-    #ValueAdd => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueAdd, typ, ti)
-    #ValueSub => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueSub, typ, ti)
-    #ValueMul => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueMul, typ, ti)
-    #ValueDiv => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueDiv, typ, ti)
-    #ValueMod => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueMod, typ, ti)
-    #ValueOr  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueOr, typ, ti)
-    #ValueXor => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueXor, typ, ti)
-    #ValueAnd => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueAnd, typ, ti)
-    #ValueEq  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueEq, typ, ti)
-    #ValueNe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueNe, typ, ti)
-    #ValueLt  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueLt, typ, ti)
-    #ValueGt  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueGt, typ, ti)
-    #ValueLe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueLe, typ, ti)
-    #ValueGe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueGe, typ, ti)
+    #ValueAdd => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueAdd, typ, ti)
+    #ValueSub => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueSub, typ, ti)
+    #ValueMul => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueMul, typ, ti)
+    #ValueDiv => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueDiv, typ, ti)
+    #ValueMod => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueMod, typ, ti)
+    #ValueOr  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueOr, typ, ti)
+    #ValueXor => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueXor, typ, ti)
+    #ValueAnd => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueAnd, typ, ti)
+    #ValueEq  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueEq, typ, ti)
+    #ValueNe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueNe, typ, ti)
+    #ValueLt  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueLt, typ, ti)
+    #ValueGt  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueGt, typ, ti)
+    #ValueLe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueLe, typ, ti)
+    #ValueGe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueGe, typ, ti)
     else => value_new_poison(ti)
   }
 
@@ -442,7 +442,7 @@ do_value_call = (x : AstValueCall) -> *Value {
 
   t = f.type.func.to
 
-  return value_new (#ValueCall, (type=t, func=f, args=args, ti=x.ti) to ValueCall, t, x.ti)
+  return value_new ((type=t, func=f, args=args, ti=x.ti) to ValueCall, t, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -536,7 +536,7 @@ do_value_index = (x : AstValueIndex) -> *Value {
 
   ind = implicit_cast_int (i)
 
-  v = value_new (#ValueIndex, (type=typ, array=a, index=ind, ti=x.ti) to ValueIndex, typ, x.ti)
+  v = value_new ((type=typ, array=a, index=ind, ti=x.ti) to ValueIndex, typ, x.ti)
   v.index := (type=typ, array=a, index=ind, ti=x.ti)
   return v
 
@@ -577,7 +577,7 @@ do_value_access = (x : AstValueAccess) -> *Value {
 
   t = field.type
 
-  v = value_new (#ValueAccess, (type=t, value=r, field=field_id, ti=x.ti) to ValueAccess, t, x.ti)
+  v = value_new ((type=t, value=r, field=field_id, ti=x.ti) to ValueAccess, t, x.ti)
   v.access := (type=t, value=r, field=field_id, ti=x.ti)
   return v
 
@@ -680,7 +680,7 @@ do_value_cast_gen_rec = DoValueCast {
   }
   map_foreach(&v.rec.values, prep, &ctx)
 
-  return value_new (#ValueRecord, (type=t, values=ctx.new_vm, ti=ti) to ValueRecord, t, ti)
+  return value_new ((type=t, values=ctx.new_vm, ti=ti) to ValueRecord, t, ti)
 }
 
 
@@ -769,7 +769,7 @@ value_union_type_check = (value : *AstValue, type : *AstType, logic : Bool, ti :
 
   variant = type_union_get_variant (v.type, t)
 
-  vx = value_new(#ValueIs, (type=typeBool, value=v, variant=variant, logic=logic, ti=ti) to ValueIs, typeBool, ti)
+  vx = value_new ((type=typeBool, value=v, variant=variant, logic=logic, ti=ti) to ValueIs, typeBool, ti)
   vx.is := (type=typeBool, value=v, variant=variant, ti=ti)
   return vx
 
@@ -894,7 +894,7 @@ do_value_string = (x : AstValueString) -> *Value {
   id = get_name_str ()
   def = asmStringAdd (&asm0, id, s, len)
 
-  v = value_new (#ValueGlobalConst, (type=typ, def=def, ti=x.ti) to ValueGlobalConst, typ, x.ti)
+  v = value_new ((type=typ, def=def, ti=x.ti) to ValueGlobalConst, typ, x.ti)
   v.gconst := (type=typ, def=def, ti=x.ti)
   return v
 }
@@ -916,7 +916,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if x.block_stmt is Unit {
     def = asmFuncAdd (&asm0, uid, t, #NoBlock)
-    fv = value_new (#ValueGlobalConst, (type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
+    fv = value_new ((type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
     fv.gconst := (type=t, def=def, ti=x.ti)
     return fv
   }
@@ -931,7 +931,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_block = ctx to *StmtBlock
-    param_value = value_new (#ValueParam, (type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
+    param_value = value_new ((type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
     map_append (&param_block.index.values, decl.id.str, param_value)
   }
   list_foreach (t.func.from.record.decls, getparam, param_block)
@@ -940,7 +940,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if block is Unit {goto fail}
 
-  fv = value_new (#ValueGlobalConst, #ValueNo, t, x.ti)
+  fv = value_new (#ValueNo, t, x.ti)
 
   // we're in func?
   // add current func to parant func local_funcs list
@@ -1026,7 +1026,7 @@ do_value_record = (x : AstValueRecord) -> *Value {
   map_foreach(&(x.values to Var Map), field_value_handle, &ctx)
 
 
-  vx = value_new (#ValueGenericRecord, (type=t, values=ctx.vl) to ValueGenericRecord, t, x.ti)
+  vx = value_new ((type=t, values=ctx.vl) to ValueGenericRecord, t, x.ti)
   vx.rec := (type=t, values=ctx.vl)
   return vx
 
@@ -1044,7 +1044,7 @@ do_value_plus = (x : AstValuePlus) -> *Value {
     return value_new_imm (v.type, v.imm.value, x.ti)
   }
 
-  return value_new (#ValuePlus, (type=v.type, value=v, ti=x.ti) to ValuePlus, v.type, x.ti)
+  return value_new ((type=v.type, value=v, ti=x.ti) to ValuePlus, v.type, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -1060,7 +1060,7 @@ do_value_minus = (x : AstValueMinus) -> *Value {
     return value_new_imm (v.type, -v.imm.value, x.ti)
   }
 
-  return value_new (#ValueMinus, (type=v.type, value=v, ti=x.ti) to ValueMinus, v.type, x.ti)
+  return value_new ((type=v.type, value=v, ti=x.ti) to ValueMinus, v.type, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -1076,7 +1076,7 @@ do_value_not = (x : AstValueNot) -> *Value {
     return value_new_imm (v.type, not v.imm.value, x.ti)
   }
 
-  return value_new (#ValueNot, (type=v.type, value=v, ti=x.ti) to ValueNot, v.type, x.ti)
+  return value_new ((type=v.type, value=v, ti=x.ti) to ValueNot, v.type, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -1112,8 +1112,8 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   t = l.type
 
   return when k {
-    #ValueShl => value_new (k, (type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShl, t, ti)
-    #ValueShr => value_new (k, (type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShr, t, ti)
+    #ValueShl => value_new ((type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShl, t, ti)
+    #ValueShr => value_new ((type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShr, t, ti)
     else => value_new_poison(ti)
   }
 
@@ -1199,7 +1199,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // во всех остальных случаях выполняем runtime приведение
 sact:
-  return value_new (#ValueCast, (type=t, value=vx, ti=ti) to ValueCast, t, ti)
+  return value_new ((type=t, value=vx, ti=ti) to ValueCast, t, ti)
 
 fail:
   return value_new_poison (ti)

@@ -96,7 +96,7 @@ bind_value = (index : *Index, id : Str, v : *Value) -> () {
   ae = index_get_value(index, id)
   if ae != nil {
     // если значение уже есть но не определено
-    if ae.kind != #ValueUndefined {
+    if ae.data isnt ValueUndefined {
       error("value bind error: id already bound", v.ti)
       warning("first defined here", ae.ti)
       return
