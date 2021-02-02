@@ -96,7 +96,7 @@ type_print_union = (t : *TypeUnion) -> () {
 
 
 
-
+/*
 print_value_kind = (k : ValueKind) -> () {
   kstr = when k {
     #ValueForbidden => "#ValueForbidden" to Str
@@ -153,10 +153,10 @@ print_value_kind = (k : ValueKind) -> () {
   }
 
   printf("%s", kstr)
-}
+}*/
 
 
-
+/*
 value_print = (v : *Value) -> () {
   printf("value:")
   printf("type: "); prttype(v.type);
@@ -210,7 +210,7 @@ value_print = (v : *Value) -> () {
     #ValueWhen => value_print_select (v)
     else => () -> ()  {} ()
   }
-}
+}*/
 
 value_print_undefined = (v : *Value) -> () {}
 value_print_immediate = (v : *Value) -> () {}
