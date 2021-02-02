@@ -649,6 +649,10 @@ eval = Eval {
 }
 
 
+// right eval
+reval = Eval {return load(eval(x))}
+
+
 eval_immediate = (x : ValueImm) -> LLVM_Value {
   return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.value) to LLVM_Value
 }
@@ -658,8 +662,7 @@ eval_param = (x : ValueParam) -> LLVM_Value {
 }
 
 eval_local_var = (x : ValueLocalVar) -> LLVM_Value {
-  // T изза того что вар обернут в VAr а потом разворачиваетс]!
-  t = x.type.var.of
+  t = x.type.var.of // <<fixit!
   return (kind=#LLVM_ValueLocalVar, type=t, reg=local_vars_map[x.no])
 }
 
@@ -668,16 +671,13 @@ eval_glb_const = (x : ValueGlobalConst) -> LLVM_Value {
 }
 
 eval_glb_var = (x : ValueGlobalVar) -> LLVM_Value {
-  t = x.type.var.of
+  t = x.type.var.of // <<fixit!
   return (kind=#LLVM_ValueGlobalVar, type=t, id=def_getname(x.def))
 }
 
 eval_loc_const = (x : ValueLocalVal) -> LLVM_Value {
   return (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
 }
-
-// right eval
-reval = Eval {return load(eval(x))}
 
 
 eval_call = (x : ValueCall) -> LLVM_Value {
