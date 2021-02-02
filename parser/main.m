@@ -10,16 +10,18 @@ xarghack = false to Var Bool
 exist match : (s : Str) -> Bool
 exist ctok : () -> *Token
 exist separator : () -> Bool
-exist parse_import : () -> *AstNode
 exist parse_decl : (arghack : Bool) -> *AstDecl
-exist ast_value_new : (k : AstValueKind, ti : *TokenInfo) -> *AstValue
-exist parse_bind_type : () -> *AstNodeBindType
-exist parse_bind_value : () -> *AstNodeBindValue
+exist ast_value_new : (x : AstValue) -> *AstValue
+
+exist parse_import : () -> AstNodeImport
+exist parse_bind_type : () -> AstNodeBindType
+exist parse_bind_value : () -> AstNodeBindValue
 
 exist parse_type : () -> *AstType
 exist parse_value : () -> *AstValue
 
 exist is_it_type : () -> Bool
+exist is_it_value_record : () -> Bool
 
 // возвращает ноду текущего токена
 gett = () -> *Node {return pstat.token_node}
@@ -61,7 +63,7 @@ nextok = () -> *Token {
  * Если все ок и разделитель присутствует - возвращает 1
  * Если разделителя нет - выводит ошибку и возвращает 0
  */
-sep = () -> Bool {
+need_sep = () -> Bool {
   ct = ctok()
   s = separator()
 
@@ -81,6 +83,13 @@ separator = () -> Bool {
   return false
 }
 
+need_comma_or_nl = () -> () {
+  ti = &ctok().ti
+  if match(",") {return}
+  if match("\n") {return}
+  error("expected comma or new line", ti)
+}
+
 
 skipto = (s : Str) -> () {
   error("lex::skipto not implemented\n", nil)
@@ -90,17 +99,24 @@ skipto = (s : Str) -> () {
 }
 
 
-match = (s : Str) -> Bool {
+look = (s : Str) -> Bool {
   tok = ctok()
   tt = tok.kind
   if tt == #TokenString or tt == #TokenEOF {
     return false
   }
 
-  rc = strcmp(s, &tok.text to Str) == 0
+  return strcmp(s, &tok.text to Str) == 0
+}
+
+
+match = (s : Str) -> Bool {
+  rc = look(s)
   if rc {skip()}
   return rc
 }
+
+
 
 
 need = (s : Str) -> Bool {
@@ -122,8 +138,7 @@ need = (s : Str) -> Bool {
 ast_id_new = (str : Str, ti : *TokenInfo) -> *AstId {
   id = malloc(sizeof AstId) to *AstId
   assert(id != nil, "ast_id_new")
-  id.str := str
-  id.ti := ti
+  *id := (str=str, ti=ti)
   return id
 }
 
@@ -131,7 +146,7 @@ ast_id_new = (str : Str, ti : *TokenInfo) -> *AstId {
 parse_id = () -> *AstId {
   tok = ctok()
   if tok.kind != #TokenId {
-    error("expected id", &tok.ti)
+    error("expected id1", &tok.ti)
     return nil
   }
 
@@ -163,18 +178,20 @@ parse_name = () -> AstName {
 /*                            Parse Module                                   */
 /*****************************************************************************/
 
-ast_node_new = (kind : AstNodeKind, entity : *Unit) -> *AstNode {
+ast_node_boxing = (x : AstNode) -> *AstNode {
   n = malloc (sizeof AstNode) to *AstNode
-  assert(n != nil, "ast_node_new")
-  n.kind := kind
-  n.entity := entity
+  assert(n != nil, "ast_node_boxing")
+  *n := x
   return n
 }
 
-parse = (filename : Str) -> *AstModule {
-  m = malloc(sizeof AstModule) to *AstModule
-  memset(m, 0, sizeof AstModule)
-  list_init(&m.nodes)
+
+parse = (filename : Str) -> ParserResult {
+  //m = malloc(sizeof AstModule) to *AstModule
+  //memset(m, 0, sizeof AstModule)
+
+  nodes = 0 to Var AstNodeList
+  list_init(&nodes)
 
   pstat.src := tokenize(filename)
 
@@ -184,14 +201,15 @@ parse = (filename : Str) -> *AstModule {
     tok = ctok()
 
     if tok.kind == #TokenEOF {break}
-    if tok.kind == #TokenNL {skip(); continue}
-    if tok.kind == #TokenComment {skip(); continue}
+    if tok.kind == #TokenNL {skip(); again}
+    if tok.kind == #TokenComment {skip(); again}
 
     // firstly, do imports
     if match("import") {
-      imp = parse_import()  // #AstNodeImport
-      list_append(&m.nodes, imp)
-      continue
+      imp = parse_import()
+      boxed_imp = ast_node_boxing (imp)
+      list_append(&nodes, boxed_imp)
+      again
     } else {
       break
     }
@@ -201,17 +219,11 @@ parse = (filename : Str) -> *AstModule {
     tok = ctok()
 
     if tok.kind == #TokenEOF {break}
-    if tok.kind == #TokenNL {skip(); continue}
-    if tok.kind == #TokenComment {skip(); continue}
+    if tok.kind == #TokenNL {skip(); again}
+    if tok.kind == #TokenComment {skip(); again}
 
     xarghack = match("arghack")
 
-    /*if match("var") {
-      dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
-      dv.decl := parse_decl(false)
-      list_append(&m.nodes, ast_node_new(#AstNodeDeclVar, dv))
-      continue
-    } else*/
     if match("exist") {
       tok = ctok()
       if isUpperCase(tok.text[0]) {
@@ -219,92 +231,72 @@ parse = (filename : Str) -> *AstModule {
         id = parse_id()
         dv = malloc(sizeof AstNodeDeclType) to *AstNodeDeclType
         dv.id := id
-        list_append(&m.nodes, ast_node_new(#AstNodeDeclType, dv))
+        typdecl = ast_node_boxing ((id=id) to AstNodeDeclType)
+        list_append(&nodes, typdecl)
       } else {
         // exist <id> : <Type>  // exist value
         dv = malloc(sizeof AstNodeDeclVar) to *AstNodeDeclVar
         dv.decl := parse_decl(false)
-        list_append(&m.nodes, ast_node_new(#AstNodeDeclValue, dv))
+        valdecl = ast_node_boxing ((decl=dv.decl) to AstNodeDeclValue)
+        list_append(&nodes, valdecl)
       }
-      continue
+      again
     } else if match("extern") {
       decl = parse_decl(false)
 
-      v = ast_value_new(#AstValueFunc, decl.ti)
-      v.func.type := decl.type
-      v.func.type.func.arghack := xarghack
-      v.extern := true
-      v.func.block_stmt := nil
+      v = ast_value_new ((type=decl.type, block_stmt=unit) to AstValueFunc)
 
       bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
-      bv.id := decl.ids.first.data to *AstId
-      bv.value := v
-      bv.ti := decl.ti
-
-      list_append(&m.nodes, ast_node_new(#AstNodeBindValue, bv))
-      continue
+      *bv := (id=decl.ids.first.data to *AstId, value=v, ti=decl.ti)
+      valbind = ast_node_boxing ((id=bv.id, value=v, ti=bv.ti) to AstNodeBindValue)
+      list_append(&nodes, valbind)
+      again
     }
 
 
-    if isAlpha(tok.text[0]) {
-      if isUpperCase(tok.text[0]) {
-        bt = parse_bind_type()
-        list_append(&m.nodes, ast_node_new(#AstNodeBindType, bt))
+    if isAlpha (tok.text[0]) {
+      if isUpperCase (tok.text[0]) {
+        bt = parse_bind_type ()
+        bindtyp = ast_node_boxing (bt)
+        list_append (&nodes, bindtyp)
       } else {
-        bv = parse_bind_value()
-        list_append(&m.nodes, ast_node_new(#AstNodeBindValue, bv))
+        bv = parse_bind_value ()
+        bindval = ast_node_boxing (bv)
+        list_append (&nodes, bindval)
       }
     }
-
   }
-  return m
+
+  if errcnt > 0 {return #ParserError}
+
+  return (nodes=nodes, src=pstat.src) to AstModule
 }
 
 
-parse_import = () -> *AstNode {
-  i = malloc(sizeof AstNodeImport) to *AstNodeImport
+parse_import = () -> AstNodeImport {
   tk = ctok()
-  i.line := dup(&tk.text[0] to Str)
-  i.ti := &tk.ti
+  line = dup(&tk.text[0] to Str)
+  ti = &tk.ti
   skip()
-  return ast_node_new(#AstNodeImport, i)
-  //old_lstate = lstate
-  //parse(filename)
-  //lstate = old_lstate
+  return (line=line, ti=ti)
 }
 
-parse_bind_type = () -> *AstNodeBindType {
-  bt = malloc(sizeof AstNodeBindType) to *AstNodeBindType
+
+parse_bind_type = () -> AstNodeBindType {
   id = parse_id()
   ti = &ctok().ti
   need("=")
-  /*ist = is_it_type()
-  if not ist {
-    printf("%s is type? %d\n", id.str, ist)
-  }*/
   t = parse_type()
-  //printf("type bind: %s\n", id.str)
-  bt.id := id
-  bt.type := t
-  bt.ti := ti
-  return bt
+  return (id=id, type=t, ti=ti)
 }
 
-parse_bind_value = () -> *AstNodeBindValue {
-  bv = malloc(sizeof AstNodeBindValue) to *AstNodeBindValue
+
+parse_bind_value = () -> AstNodeBindValue {
   id = parse_id()
   ti = &ctok().ti
   need("=")
-  /*ist = is_it_type()
-  if ist {
-    printf("%s is type? %d\n", id.str, ist)
-  }*/
-
-  //printf("value bind: %s\n", id.str)
-  bv.id := id
-  bv.value := parse_value()
-  bv.ti := ti
-  return bv
+  v = parse_value()
+  return (id=id, value=v, ti=ti)
 }
 
 
@@ -312,116 +304,177 @@ parse_bind_value = () -> *AstNodeBindValue {
 /*                             Parse Type                                    */
 /*****************************************************************************/
 
-ast_type_new = (kind : AstTypeKind, ti : *TokenInfo) -> *AstType {
+AstTypeParser = () -> *AstType
+
+ast_type_new = (x : AstType) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
-  t.kind := kind
-  t.ti := ti
+  *t := x
   return t
 }
 
-AstTypeParser = () -> *AstType
 
-exist parse_type_pointer : AstTypeParser
-exist parse_type_enum : AstTypeParser
-exist parse_type_array : AstTypeParser
-exist parse_type_rec_func : AstTypeParser
+exist parse_type_set   : AstTypeParser
+exist parse_type_rec   : AstTypeParser
 
-parse_type = () -> *AstType {
+exist parse_type   : AstTypeParser
+exist parse_type0  : AstTypeParser
+exist parse_type1  : AstTypeParser
+exist parse_type2  : AstTypeParser
+exist parse_type3  : AstTypeParser
+exist parse_type4  : AstTypeParser
+
+
+
+parse_type0 = AstTypeParser {
+  t = parse_type1()
+
   tk = ctok()
-  t = ast_type_new(#AstTypeUnknown, &tk.ti) to Var *AstType
-
-  if tk.kind == #TokenId {
-    if match("Var") {
-      vt = ast_type_new(#AstTypeVar, &tk.ti)
-      vt.var.of := parse_type()
-      return vt
-    }
-
-    t := ast_type_new(#AstTypeNamed, &tk.ti)
-    t.name := parse_name()
-  } else if tk.kind == #TokenSym {
-    t := select tk.text[0] {
-      "*"[0] => parse_type_pointer()
-      "{"[0] => parse_type_enum()
-      "["[0] => parse_type_array()
-      "("[0] => parse_type_rec_func()
-      else => nil to *AstType
-    }
-  }
-
-  tk_func = ctok()
   if match("->") {
     from = t
     _to = parse_type()
-    ft = ast_type_new(#AstTypeFunc, &tk_func.ti)
-    ft.func.from := from
-    ft.func.to := _to
-    t := ft
+
+    ft = ast_type_new ((from=from, to=_to, ti=&tk.ti) to AstTypeFunc)
+    //ft.func := (from=from, to=_to, ti=&tk.ti)
+    return ft
   }
 
   return t
 }
 
+parse_type1 = AstTypeParser {
+  t = parse_type2()
 
-parse_type_pointer = AstTypeParser {
   tk = ctok()
-  need("*")
-  t = ast_type_new(#AstTypePointer, &tk.ti)
-  t.pointer.to := parse_type()
+  if match("or") {
+
+    types = 0 to Var List
+    list_init(&types)
+
+    list_append(&types, t)
+
+    skip_nl()
+    t = parse_type2()
+
+    list_append(&types, t)
+
+    while match("or") {
+      skip_nl()
+      t = parse_type2()
+      list_append(&types, t)
+    }
+
+    return ast_type_new ((types=types, ti=&tk.ti) to AstTypeUnion)
+  }
+
   return t
 }
 
-
-parse_type_enum = AstTypeParser {
+parse_type2 = AstTypeParser {
   tk = ctok()
-  need("{")
-  t = ast_type_new(#AstTypeEnum, &tk.ti)
+  if match("*") {
+    pointer_to = parse_type2()
+    return ast_type_new ((to=pointer_to, ti=&tk.ti) to AstTypePointer)
+  } else if match("[") {
+
+    if match("]") {
+      of = parse_type2()
+      return ast_type_new ((of=of, ti=&tk.ti) to AstTypeArrayU)
+    }
+
+    size = parse_value()
+    need("]")
+    of = parse_type2()
+
+    return ast_type_new ((of=of, size=size, ti=&tk.ti) to AstTypeArray)
+  }
+
+  return parse_type3()
+}
+
+exist is_it_field : () -> Bool
+
+parse_type3 = AstTypeParser {
+  tk = ctok()
+  if match("(") {
+    if look(")") or is_it_field() {
+      return parse_type_rec()
+    }
+
+    t = parse_type()
+    need(")")
+    return t
+  }
+
+  return parse_type4()
+}
+
+
+parse_type4 = AstTypeParser {
+  if match("{") {
+    return parse_type_set()
+  }
+
+  tk = ctok()
+
+  if match("Tagged") {
+    spec_type = parse_type()
+    return ast_type_new ((type=spec_type, ti=&tk.ti) to AstTypeSpecial)
+  }
+
+  if match("Var") {
+    var_type = parse_type()
+    return ast_type_new ((of=var_type, ti=&tk.ti) to AstTypeVar)
+  }
+
+  name = parse_name()
+
+  return ast_type_new (name)
+}
+
+
+parse_type = parse_type0
+
+
+//*/
+
+
+
+parse_type_set = AstTypeParser {
+  tk = ctok()
+  //need("{")
+
+  items = 0 to Var List
+  list_init(&items)
 
   skip_nl()
-  while not match("}") {
+  while true {
     skip_nl()
 
     ti = &ctok().ti
     cons = parse_id()
 
-    list_append(&t.enum.constructors, cons to *Unit)
+    list_append(&items, cons to *Unit)
 
-    if not match(",") {
-      skip_nl()
-      need("}")
-      break
+    ti_sep = &ctok().ti
+    if match(",") {again}
+
+    nl_sep_present = match("\n")
+
+    skip_nl()
+    if match ("}") {break;}
+
+    if not nl_sep_present {
+      error("expected comma or new-line separator", ti_sep)
     }
   }
 
-  return t
+  return ast_type_new ((items=items, ti=&tk.ti) to AstTypeEnum)
 }
 
 
-parse_type_array = AstTypeParser {
+parse_type_rec = AstTypeParser {
   tk = ctok()
-  need("[")
-  if match("]") {
-    t = ast_type_new(#AstTypeArrayU, &tk.ti)
-    of = parse_type()
-    t.array_u.of := of
-    return t
-  }
-
-  t = ast_type_new(#AstTypeArray, &tk.ti)
-  size = parse_value()
-  need("]")
-  of = parse_type()
-  t.array.size := size
-  t.array.of := of
-  return t
-}
-
-
-parse_type_rec_func = AstTypeParser {
-  tk = ctok()
-  need("(")
-  t = ast_type_new(#AstTypeRecord, &tk.ti)
 
   decls = 0 to Var List
   list_init(&decls)
@@ -443,70 +496,48 @@ parse_type_rec_func = AstTypeParser {
     list_append(&decls, fd)
   }
 
-  t.record.decls := decls
-
-  return t
+  return ast_type_new ((decls=decls, ti=&tk.ti) to AstTypeRecord)
 }
 
 
 // syntax: <id> [,<id>] ':' <type>
 // *AstDecl
 parse_decl = (arghack : Bool) -> *AstDecl {
-  afd = malloc(sizeof AstDecl) to *AstDecl
-
   // get id's
-  list_init(&afd.ids)
+  ids = 0 to Var List
+  list_init(&ids)
   while true {
     id = parse_id()
-    list_append(&afd.ids, id)
+    list_append(&ids, id)
     if not match(",") {break}
     skip_nl()
   }
 
-  afd.ti := &ctok().ti
+  ti = &ctok().ti
   need(":")
-
   t = parse_type()
 
-  afd.type := t
-  afd.extern := external
-  afd.arghack := xarghack
-
+  afd = malloc(sizeof AstDecl) to *AstDecl
+  *afd := (ids=ids, type=t, extern=external, arghack=xarghack, ti=ti)
   return afd
 }
 
 
 
-/*****************************************************************************/
-/*                             Parse Value                                    */
-/*****************************************************************************/
+//
+//  Parse Value
+//
 
-// нужно передавать сюда стартовый токен
 AstValueParser = () -> *AstValue
 
 
-ast_value_new = (k : AstValueKind, ti : *TokenInfo) -> *AstValue {
+ast_value_new = (x : AstValue) -> *AstValue {
   v = malloc(sizeof AstValue) to *AstValue
-  assert(v != nil, "ast_value_new malloc")
-  memset(v, 0, sizeof AstValue)
-  v.kind := k
-  v.ti := ti
+  assert(v != nil, "ast_value_new malloc fail")
+  *v := x
   return v
 }
 
-
-prefix = (k : AstValueKind, v : *AstValue, ti : *TokenInfo) -> *AstValue {
-  nv = ast_value_new(k, ti)
-  nv.operand[0] := v
-  return nv
-}
-
-infix = (k : AstValueKind, l, r : *AstValue, ti : *TokenInfo) -> *AstValue {
-  v = ast_value_new(k, ti)
-  v.operand[0] := l
-  v.operand[1] := r
-  return v
-}
 
 exist parse_value2 : AstValueParser
 exist parse_value3 : AstValueParser
@@ -522,16 +553,6 @@ exist parse_value12 : AstValueParser
 exist parse_value_term : AstValueParser
 
 parse_value = AstValueParser {
-  /*if is_it_type() {
-    ct = ctok()
-    t = parse_type()
-    v = parse_value()
-    nv = ast_value_new(#AstValueCast, t.ti)
-    nv.cast.value := v
-    nv.cast.type := t
-    return nv
-  }*/
-
   v = parse_value2() to Var *AstValue
   if v == nil {return nil}
   ti = &ctok().ti
@@ -539,7 +560,7 @@ parse_value = AstValueParser {
     skip_nl()
     l = v
     r = parse_value()
-    v := infix(#AstValueOr, l, r, ti)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueOr)
   }
   return v
 }
@@ -554,7 +575,7 @@ parse_value2 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value2()
-    v := infix(#AstValueXor, l, r, ti)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueXor)
   }
   return v
 }
@@ -568,7 +589,7 @@ parse_value3 = AstValueParser {
     skip_nl()
     l = v
     r = parse_value3()
-    v := infix(#AstValueAnd, l, r, ti)
+    v := ast_value_new ((left=l, right=r, ti=ti) to AstValueAnd)
   }
   return v
 }
@@ -583,12 +604,12 @@ parse_value4 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value4()
-      v := infix(#AstValueEq, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueEq)
     } else if match("!=") {
       skip_nl()
       l = v
       r = parse_value4()
-      v := infix(#AstValueNe, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueNe)
     } else {
       break
     }
@@ -606,22 +627,22 @@ parse_value5 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value6()
-      v := infix(#AstValueLt, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueLt)
     } else if match(">") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := infix(#AstValueGt, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueGt)
     } else if match("<=") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := infix(#AstValueLe, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueLe)
     } else if match(">=") {
       skip_nl()
       l = v
       r = parse_value6()
-      v := infix(#AstValueGe, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueGe)
     } else {
       break
     }
@@ -639,12 +660,12 @@ parse_value6 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value7()
-      v := infix(#AstValueShl, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueShl)
     } else if match(">>") {
       skip_nl()
       l = v
       r = parse_value7()
-      v := infix(#AstValueShr, l, r, ti)
+      v := ast_value_new((left=l, right=r, ti=ti) to AstValueShr)
     } else {
       break
     }
@@ -662,12 +683,12 @@ parse_value7 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value8()
-      v := infix(#AstValueAdd, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueAdd)
     } else if match("-") {
       skip_nl()
       l = v
       r = parse_value8()
-      v := infix(#AstValueSub, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueSub)
     } else {
       break
     }
@@ -685,17 +706,17 @@ parse_value8 = AstValueParser {
       skip_nl()
       l = v
       r = parse_value9()
-      v := infix(#AstValueMul, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueMul)
     } else if match("/") {
       skip_nl()
       l = v
       r = parse_value9()
-      v := infix(#AstValueDiv, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueDiv)
     } else if match("%") {
       skip_nl()
       l = v
       r = parse_value9()
-      v := infix(#AstValueMod, l, r, ti)
+      v := ast_value_new ((left=l, right=r, ti=ti) to AstValueMod)
     } else {
       break
     }
@@ -709,11 +730,17 @@ parse_value9 = AstValueParser {
   if v == nil {return nil}
   ti = &ctok().ti
   if match("to") {
-    t = parse_type()
-    nv = ast_value_new(#AstValueCast, ti)
-    nv.cast.value := v
-    nv.cast.type := t
-    v := nv
+    t = parse_type ()
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueCast)
+  } else if match("is") {
+    t = parse_type ()
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueIs)
+  } else if match("isnt") {
+    t = parse_type ()
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueIsnt)
+  } else if match("as") {
+    t = parse_type ()
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueAs)
   }
   return v
 }
@@ -724,19 +751,19 @@ parse_value10 = AstValueParser {
   ti = &ctok().ti
   if match("*") {
     r = parse_value10()
-    v := prefix(#AstValueDeref, r, ti)
+    v := ast_value_new ((value=r, ti=ti) to AstValueDeref)
   } else if match("&") {
     r = parse_value11()
-    v := prefix(#AstValueRef, r, ti)
+    v := ast_value_new ((value=r, ti=ti) to AstValueRef)
   } else if match("not") {
     r = parse_value10()
-    v := prefix(#AstValueNot, r, ti)
+    v := ast_value_new ((value=r, ti=ti) to AstValueNot)
   } else if match("-") {
     r = parse_value10()
-    v := prefix(#AstValueMinus, r, ti)
+    v := ast_value_new ((value=r, ti=ti) to AstValueMinus)
   } else if match("+") {
     r = parse_value10()
-    v := prefix(#AstValuePlus, r, ti)
+    v := ast_value_new ((value=r, ti=ti) to AstValuePlus)
   } else if match("sizeof") {
     ti_sizeof = &ctok().ti
     t = parse_type()
@@ -744,9 +771,7 @@ parse_value10 = AstValueParser {
       error("sizeof expected <type>", ti_sizeof)
       return nil
     }
-    nv = ast_value_new(#AstValueSizeof, ti)
-    nv.of_type := t
-    v := nv
+    v := ast_value_new ((type=t, ti=ti) to AstValueSizeof)
 
   } else if match("alignof") {
     ti_alignof = &ctok().ti
@@ -755,9 +780,7 @@ parse_value10 = AstValueParser {
       error("alignof expected <type>", ti_alignof)
       return nil
     }
-    nv = ast_value_new(#AstValueAlignof, ti)
-    nv.of_type := t
-    v := nv
+    v := ast_value_new ((type=t, ti=ti) to AstValueAlignof)
   } else {
     v := parse_value11()
   }
@@ -778,7 +801,7 @@ parse_value11 = AstValueParser {
         if a == nil {
           skipto(",)")
           if match(",") {
-            continue
+            again
           } else if match(")") {
             break
           } else {
@@ -794,23 +817,14 @@ parse_value11 = AstValueParser {
         }
       }
 
-      nv = ast_value_new(#AstValueCall, ti)
-      nv.call.func := v
-      nv.call.args := *arglist
-      v := nv
+      v := ast_value_new ((func=v, args=*arglist, ti=ti) to AstValueCall)
     } else if match("[") {
       i = parse_value()
       match("]")
-      nv = ast_value_new(#AstValueIndex, ti)
-      nv.index.array := v
-      nv.index.index := i
-      v := nv
+      v := ast_value_new ((array=v, index=i, ti=ti) to AstValueIndex)
     } else if match(".") {
-      field_id = parse_id()
-      nv = ast_value_new(#AstValueAccess, ti)
-      nv.access.rec := v
-      nv.access.field_id := field_id
-      v := nv
+      fid = parse_id()
+      v := ast_value_new ((rec=v, field_id=fid, ti=ti) to AstValueAccess)
     } else {
       break
     }
@@ -821,9 +835,9 @@ parse_value11 = AstValueParser {
 
 
 exist parse_value_func : AstValueParser
+exist parse_value_rec : AstValueParser
 
 parse_value12 = AstValueParser {
-
   if is_it_type() {
     return parse_value_func()
   }
@@ -831,6 +845,12 @@ parse_value12 = AstValueParser {
   v = nil to Var *AstValue
   ti = &ctok().ti
   if match("(") {
+
+    // если это Generic запись
+    if is_it_value_record () {
+      return parse_value_rec ()
+    }
+
     v := parse_value()
     need(")")
   } else {
@@ -843,17 +863,24 @@ parse_value12 = AstValueParser {
 exist parse_value_id : AstValueParser
 
 exist parse_value_extern : AstValueParser
-exist parse_value_arr : AstValueParser
 exist parse_value_num : AstValueParser
 exist parse_value_str : AstValueParser
-exist parse_value_select : AstValueParser
+exist parse_value_when : AstValueParser
+exist parse_value_array : AstValueParser
 
 parse_value_term = AstValueParser {
   token = ctok()
-  return select token.kind {
+  return when token.kind {
     #TokenId  => parse_value_id()
     #TokenNum => parse_value_num()
     #TokenString => parse_value_str()
+
+    #TokenSym => (token : *Token) -> *AstValue {
+      error("unexpected symbol\n", &token.ti)
+      assert(false, "bad term")
+      return nil to *AstValue
+    } (token)
+
     else => (token : *Token) -> *AstValue {
       error("unexpected symbol\n", &token.ti)
       printf("received: %s\n", &token.text[0])
@@ -865,56 +892,66 @@ parse_value_term = AstValueParser {
 
 
 parse_value_id = AstValueParser {
+
+  ti = &ctok().ti
   if match("func") {
     return parse_value_func()
   } else if match("extern") {
     return parse_value_extern()
   } else if match("array") {
-    return parse_value_arr()
-  } else if match("select") {
-    return parse_value_select()
+    return parse_value_array()
+  } else if match("when") {
+    return parse_value_when()
   }
 
-  ti = &ctok().ti
   id = parse_id()
   if id == nil {return nil}
 
-  v = ast_value_new(#AstValueId, ti)
-  v.name.id := id
-  v.name.ti := ti
-  return v
+  return ast_value_new ((id=id, ti=ti) to AstValueName)
 
 fail:
   return nil
 }
 
-parse_value_select = AstValueParser {
+parse_value_when = AstValueParser {
   token = ctok()
-  v = ast_value_new(#AstValueSelect, &token.ti)
-  list_init(&v.select.variants)
-  v.select.x := parse_value()
+
+  variants = 0 to Var List
+  list_init(&variants)
+  other = 0 to Var *AstValue
+
+  when_arg = parse_value()
+
   skip_nl()
+  ti = &ctok().ti
   need("{")
   skip_nl()
   while not match("}") {
 
     if match("else") {
       need("=>")
-      // otherwise
-      v.select.other := parse_value()
+      other := parse_value()
       skip_nl()
-      continue
+      again
     }
 
     // parse each variant
-    va = malloc(sizeof AstValueSelectVariant) to *AstValueSelectVariant
-    va.x := parse_value()
+    va = malloc(sizeof AstValueWhenVariant) to *AstValueWhenVariant
+    memset (va, 0, sizeof AstValueWhenVariant)
+
+    // check if is type when
+    if is_it_type () {
+      va.is_t := parse_type()
+    } else {
+      va.x := parse_value()
+    }
     need("=>")
     va.y := parse_value()
     skip_nl()
-    list_append(&v.select.variants, va)
+    list_append(&variants, va)
   }
-  return v
+
+  return ast_value_new ((x=when_arg, variants=variants, other=other, ti=ti) to AstValueWhen)
 }
 
 
@@ -924,44 +961,54 @@ parse_value_str = AstValueParser {
   len = strlen(text) + 1  // используй готовую инфу из токенинфо!
   str = dup(text)
   skip()
-
-  v = ast_value_new(#AstValueStr, &token.ti)
-  v.str := str
-  return v
+  return ast_value_new ((string=str, ti=&token.ti) to AstValueString)
 }
 
 
-parse_value_arr = AstValueParser {
-//  ti = &ctok().ti
-//  of = parse_type()
-//  need("[")
-//
-//  data = list_new()  // of *AstValue
-//
-//  var len : Nat32
-//  len = 0
-//  while not match("]") {
-//    item = parse_value()
-//    if item == nil {match(","); continue}
-//    item2 = castIfGenericTo(item, typeBaseInt)
-//    len = len + 1
-//    list_append(data, item2)
-//    match(",")
-//  }
-//
-//  t = type_array_new(of, len)
-//  v = valueNew(#AstValueGlobalConst, ti)
-//  id = get_name_arr()
-//  v.def = asmArrayAdd(&asm0, id, t, data)
-//  v.type = t
-//  return v
-    return nil
+parse_value_rec = AstValueParser {
+  fields = 0 to Var Map  // id -> *Value
+
+  ti = &ctok().ti
+  while true {
+    id = parse_id()
+    need("=")
+    v = parse_value()
+
+    map_append(&fields, id.str, v)
+
+    if match(")") {break}
+    need(",")
+  }
+
+  return ast_value_new ((values=fields, ti=ti) to AstValueRecord)
 }
 
-AstStmtParser = (ti : *TokenInfo) -> *AstStmt
 
+parse_value_array = AstValueParser {
+  ti = &ctok().ti
+
+  items = 0 to Var List  // of *Value
+
+  len = 0 to Var Nat32
+  while true {
+    v = parse_value()
+
+    list_append(&items, v)
+    len := len + 1
+
+    if match("]") {break}
+    need(",")
+  }
+
+  return ast_value_new ((items=items, ti=ti) to AstValueArray)
+}
+
+
+
+AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
 
 exist parse_stmt_block : AstStmtParser
+
 
 parse_value_func = AstValueParser {
   func_ti = &ctok().ti
@@ -970,21 +1017,14 @@ parse_value_func = AstValueParser {
   block_ti = &ctok().ti
   need("{")
   b = parse_stmt_block(block_ti)
-  v = ast_value_new(#AstValueFunc, func_ti)
-  v.func.type := t
-  v.func.block_stmt := b
-  return v
+  return ast_value_new ((type=t, block_stmt=b as *AstStmt, ti=block_ti) to AstValueFunc)
 }
 
 
 parse_value_extern = AstValueParser {
   ti = &ctok().ti
   t = parse_type()
-  v = ast_value_new(#AstValueFunc, ti)
-  v.func.type := t
-  v.extern := true
-  v.func.block_stmt := nil
-  return v
+  return ast_value_new ((type=t, block_stmt=unit, ti=ti) to AstValueFunc)
 }
 
 
@@ -995,9 +1035,7 @@ parse_value_num = AstValueParser {
   str = dup(&tok.text[0] to Str)
   skip()
 
-  v = ast_value_new(#AstValueNum, ti)
-  v.str := str
-  return v
+  return ast_value_new ((string=str, ti=ti) to AstValueNumber)
 }
 
 
@@ -1006,38 +1044,45 @@ parse_value_num = AstValueParser {
 /*                             Parse Statement                               */
 /*****************************************************************************/
 
-ast_stmt_new = (k : AstStmtKind, ti : *TokenInfo) -> *AstStmt {
+// размещаем значение AstStmt в куче
+ast_stmt_boxing = (x : AstStmt) -> *AstStmt {
   s = malloc(sizeof AstStmt) to *AstStmt
-  assert(s != nil, "ast_value_new malloc")
-  memset(s, 0, sizeof AstStmt)
-  s.kind := k
-  s.ti := ti
+  assert(s != nil, "ast_stmt_boxing malloc")
+  *s := x
   return s
 }
 
 
+exist parse_stmt_if       : AstStmtParser
+exist parse_stmt_while    : AstStmtParser
+exist parse_stmt_return   : AstStmtParser
+exist parse_stmt_goto     : AstStmtParser
+exist parse_stmt_valbind  : AstStmtParser
+exist parse_stmt_typebind : AstStmtParser
+exist parse_stmt_expr     : AstStmtParser
+exist parse_stmt_break    : AstStmtParser
+exist parse_stmt_again : AstStmtParser
 
-exist parse_stmt_valdef : AstStmtParser
-exist parse_stmt_if : AstStmtParser
-exist parse_stmt_while : AstStmtParser
-exist parse_stmt_return : AstStmtParser
-exist parse_stmt_goto : AstStmtParser
-exist parse_stmt_vardef : AstStmtParser
-exist parse_stmt_typedef : AstStmtParser
-exist parse_stmt_expr : AstStmtParser
 
-parse_stmt = () -> *AstStmt {
+parse_stmt_break = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtBreak)}
+
+parse_stmt_again = AstStmtParser {return ast_stmt_boxing ((ti=ti) to AstStmtAgain)}
+
+parse_stmt = () -> *AstStmt or Unit {
   tk = ctok()
   nt = nextok()
   ti = &tk.ti
 
-  is_def = tk.kind == #TokenId and nt.kind == #TokenSym and nt.text[0] == "="[0]
+  is_bind = tk.kind == #TokenId and nt.kind == #TokenSym and nt.text[0] == "="[0]
 
-  is_valdef = is_def and (isLowerCase(tk.text[0]) or tk.text[0] == "_"[0])
-  is_typdef = is_def and isUpperCase(tk.text[0])
+  if is_bind {
+    return when true {
+      isUpperCase(tk.text[0]) => parse_stmt_typebind(ti)
+      else => parse_stmt_valbind(ti)
+    }
+  }
 
-
-  lab_or_expr = () -> *AstStmt {
+  lab_or_expr = () -> *AstStmt or Unit{
     tk = ctok()
     if tk.kind == #TokenId {
       // Maybe Label?
@@ -1046,78 +1091,68 @@ parse_stmt = () -> *AstStmt {
         id = parse_id()
         skip()  // `:`
         ti = &ctok().ti
-        s = ast_stmt_new(#AstStmtLabel, ti)
-        s.label.label := id
-        return s
+        return ast_stmt_boxing ((label=id, ti=ti) to AstStmtLabel)
       }
     }
 
     return parse_stmt_expr(&tk.ti)
   }
 
-  return select true {
-    match("let") or is_valdef => parse_stmt_valdef(ti)
-    match("{") => parse_stmt_block(ti)
-    match("if") => parse_stmt_if(ti)
-    match("while") => parse_stmt_while(ti)
-    match("return") => parse_stmt_return(ti)
-    match("break") => ast_stmt_new(#AstStmtBreak, ti)
-    match("continue") => ast_stmt_new(#AstStmtContinue, ti)
-    //match("var") => parse_stmt_vardef(ti)
-    match("type") or is_typdef => parse_stmt_typedef(ti)
-    match("goto") => parse_stmt_goto(ti)
-    else => lab_or_expr()
+  return when true {
+    match("{")        => parse_stmt_block    (ti)
+    match("if")       => parse_stmt_if       (ti)
+    match("while")    => parse_stmt_while    (ti)
+    match("return")   => parse_stmt_return   (ti)
+    match("break")    => parse_stmt_break    (ti)
+    match("again")    => parse_stmt_again    (ti)
+    match("goto")     => parse_stmt_goto     (ti)
+    else              => lab_or_expr         ()
   }
 }
+
+
 
 
 parse_stmt_expr = AstStmtParser {
-  x = parse_value()
+  x = parse_value ()
 
-  if match(":=") {
-    s = ast_stmt_new(#AstStmtAssign, ti)
-    s.assign.l := x
-    s.assign.r := parse_value()
-    return s
+  if match (":=") {
+    v = parse_value ()
+    return ast_stmt_boxing ((l=x, r=v, ti=ti) to AstStmtAssign)
   }
 
-  s = ast_stmt_new(#AstStmtExpr, ti)
-  s.expr.expr := x
-  return s
+  return ast_stmt_boxing ((expr=x, ti=ti) to AstStmtExpr)
 }
 
-
-parse_stmt_valdef = AstStmtParser {
+parse_stmt_valbind = AstStmtParser {
   // <id> '=' <expr>
   ti = &ctok().ti
-  id = parse_id()
+  id = parse_id ()
   need("=")
-  v = parse_value()
-  if id == nil or v == nil {return nil}
-  s = ast_stmt_new(#AstStmtValueDef, ti)
-  s.valdef.id := id
-  s.valdef.expr := v
-  return s
+  v = parse_value ()
+
+  if id == nil or v == nil {return unit}
+
+  return ast_stmt_boxing ((id=id, expr=v, ti=ti) to AstStmtValueBind)
 }
 
 
-parse_stmt_typedef = AstStmtParser {
+parse_stmt_typebind = AstStmtParser {
   // <id> '=' <type>
   ti = &ctok().ti
   id = parse_id()
   need("=")
   t = parse_type()
-  if id == nil or t == nil {return nil}
-  s = ast_stmt_new(#AstStmtTypeDef, ti)
-  s.typedef.id := id
-  s.typedef.type := t
-  return s
+
+  if id == nil or t == nil {return unit}
+
+  return ast_stmt_boxing ((id=id, type=t, ti=ti) to AstStmtTypeBind)
 }
 
 
 parse_stmt_block = AstStmtParser {
-  sb = ast_stmt_new(#AstStmtBlock, ti)
-  list_init(&sb.block.stmts)
+  stmts = 0 to Var List
+  list_init(&stmts)
   while not match("}") {
     skip_nl()
 
@@ -1129,90 +1164,115 @@ parse_stmt_block = AstStmtParser {
     if match("}") {break}
 
     s = parse_stmt()
-    if s != nil {
-      sep()
-      list_append(&sb.block.stmts, s)
+    if not (s is Unit) {
+      need_sep()
+      list_append(&stmts, s as *AstStmt)
     }
   }
 
-  return sb
+  return ast_stmt_boxing ((stmts=stmts, ti=ti) to AstStmtBlock)
 }
 
 
 parse_stmt_if = AstStmtParser {
-  s = ast_stmt_new(#AstStmtIf, ti)
-  s.if.cond := parse_value()
+  cond = parse_value()
   match("\n")
   ti_then_block = &ctok().ti
   need("{")
-  s.if.then := parse_stmt_block(ti_then_block)
+  then = parse_stmt_block(ti_then_block)
+
+  // parse else (if present)
+  els = unit to Var (*AstStmt or Unit)
   if match("else") {
     match("\n")
     ti_else_branch = &ctok().ti
     if match("if") {
-      s.if._else := parse_stmt_if(ti_else_branch)
+      els := parse_stmt_if(ti_else_branch)
     } else {
       need("{")
-      s.if._else := parse_stmt_block(ti_else_branch)
+      els := parse_stmt_block(ti_else_branch)
     }
-  } else {
-    s.if._else := nil
   }
 
-  if s.if.cond == nil or s.if.then == nil {return nil}
-  return s
+  if cond == nil {return unit}
+  if then is Unit {return unit}
+
+  return ast_stmt_boxing ((cond=cond, then=then as *AstStmt, else=els, ti=ti) to AstStmtIf)
 }
 
 
 parse_stmt_while = AstStmtParser {
-  s = ast_stmt_new(#AstStmtWhile, ti)
-  s.while.cond := parse_value()
+  cond = parse_value()
   match("\n")
   ti_block = &ctok().ti
   need("{")
-  s.while.block := parse_stmt_block(ti_block)
-  if s.while.cond == nil or s.while.block == nil {return nil}
-  return s
+  block =  parse_stmt_block(ti_block)
+
+  if cond == nil {return unit}
+  if block is Unit {return unit}
+
+  return ast_stmt_boxing ((cond=cond, block=block as *AstStmt, ti=ti) to AstStmtWhile)
 }
 
 
 parse_stmt_return = AstStmtParser {
-  s = ast_stmt_new(#AstStmtReturn, ti)
-
-  if separator() {return s}
+  if separator() {
+    return ast_stmt_boxing ((value=unit, ti=ti) to AstStmtReturn)
+  }
 
   ti = &ctok().ti
   v = parse_value()
   if v == nil {
     error("expected return expression", ti)
   }
-  s.return.value := v
 
-  return s
+  return ast_stmt_boxing ((value=v, ti=ti) to AstStmtReturn)
 }
 
 
 parse_stmt_goto = AstStmtParser {
-  s = ast_stmt_new(#AstStmtGoto, ti)
-  s.goto.label := parse_id()
-  return s
+  id = parse_id()
+  return ast_stmt_boxing ((label=id, ti=ti) to AstStmtGoto)
 }
 
 
-parse_stmt_vardef = AstStmtParser {
-  s = ast_stmt_new(#AstStmtVarDef, ti)
+/*parse_stmt_vardef = AstStmtParser {
+  s = ast_stmt_boxing(#AstStmtVarDef, ti)
   fieldsdef = parse_decl(false)
   s.vardef := *fieldsdef
   return s
-}
+}*/
 
 
 
 
 // IS IT?
 
-tn2tok = (token_node : *Node) -> *Token
-    {return token_node.data to *Token}
+tn2tok = (token_node : *Node) -> *Token {
+  return token_node.data to *Token
+}
+
+
+
+is_it_field = () -> Bool {
+  start = gett()  // сохраняем текущий токен
+
+  skip_nl()
+
+  tok = ctok()
+
+  if tok.kind != #TokenId {goto no}
+  skip()
+  if match(",") {goto yes}
+  if match(":") {goto yes}
+
+no:
+  sett(start)
+  return false
+yes:
+  sett(start)
+  return true
+}
 
 
 is_it_type_rec = () -> Bool {
@@ -1222,14 +1282,7 @@ is_it_type_rec = () -> Bool {
 
   if match(")") {return true}
 
-  tok = ctok()
-
-  if tok.kind != #TokenId {return false}
-  skip()
-  if match(",") {return true}
-  if match(":") {return true}
-
-  return false
+  return is_it_field ()
 }
 
 // определяет если спереди синтаксическое выражение типа
@@ -1238,7 +1291,7 @@ is_it_type = () -> Bool {
 
   t = start.data to *Token
 
-  if not select t.kind {
+  if not when t.kind {
     #TokenNum => false
     #TokenString => false
     #TokenComment => false
@@ -1257,7 +1310,7 @@ is_it_type = () -> Bool {
     return isUpperCase(c)
   }
 
-  if select c {
+  if when c {
     "("[0] => is_it_type_rec()
     "["[0] => true
     "{"[0] => true
@@ -1274,4 +1327,29 @@ yes:
 }
 
 
+// вызывается после '(' в выражении значения
+// для проверки это подвыражение или запись
+is_it_value_record = () -> Bool {
+  start = gett()
+
+  skip_nl()
+
+  if match(")") {goto yes}
+
+  if ctok().kind != #TokenId {goto no}
+  skip()  // skip Id
+
+  if match("=") {
+    goto yes
+  } else {
+    goto no
+  }
+
+no:
+  sett(start)  // restore
+  return false
+yes:
+  sett(start)  // restore
+  return true
+}
 

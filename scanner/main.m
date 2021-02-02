@@ -29,10 +29,10 @@ lex_init = (fname : Str) -> () {
     fatal ("module not exist")
   }
 
-  lstate.fd := open (fname, c_O_RDONLY)
-  lstate.ti.file := fname
-  lstate.ti.line := 1
+  fd = open (fname, c_O_RDONLY)
+  lstate.fd := fd
   lstate.pos := 1
+  lstate.ti := (file=fname, line=1)
 }
 
 
@@ -58,6 +58,7 @@ fill = (rule : Rule) -> () {
   while true {
     c = getcc ()
     if c == symEOF {
+      printf("file: %s\n", lstate.ti.file)
       fatal ("unexpected end-of-file")
       exit (1)
     }
@@ -77,21 +78,22 @@ fill = (rule : Rule) -> () {
 }
 
 
-blank = Rule {return c == " "[0] or c == "\t"[0]}
-minus = Rule {return c == ">"[0]}
-slash = Rule {return c == "/"[0] or c == "*"[0]}
-rarrow = Rule {return c == ">"[0] or c == "="[0]}
-larrow = Rule {return c == "<"[0] or c == "="[0]}
-eq = Rule {return c == "="[0] or c == ">"[0]}
-ass = Rule {return c == "="[0]}
-bang = Rule {return c == "="[0]}
-id = Rule {return isAlNum (c) or c == "_"[0] or c == "-"[0]}
-digit = Rule {return isAlNum (c)}
+blank   = Rule {return c == " "[0] or c == "\t"[0]}
+minus   = Rule {return c == ">"[0]}
+slash   = Rule {return c == "/"[0] or c == "*"[0]}
+rarrow  = Rule {return c == ">"[0] or c == "="[0]}
+larrow  = Rule {return c == "<"[0] or c == "="[0]}
+eq      = Rule {return c == "="[0] or c == ">"[0]}
+ass     = Rule {return c == "="[0]}
+bang    = Rule {return c == "="[0]}
+id      = Rule {return isAlNum (c) or c == "_"[0] or c == "-"[0]}
+digit   = Rule {return isAlNum (c)}
 cpp_com = Rule {return c != "\n"[0]}
 
 /* комментарии это тоже токены */
 
 x_nl = () -> () {lstate.kind := #TokenNL}
+
 x_eof = () -> () {
   lstate.kind := #TokenEOF
   lstate.token[0] := 0
@@ -137,17 +139,17 @@ getToken = () -> TokenKind {
     /*** SYMBOLS, COMMENTS, STRINGS ***/
     lstate.kind := #TokenSym
 
-    select c {
-      "\n"[0] => x_nl   ()
-      ":"[0]  => fill   (ass)
-      "="[0]  => fill   (eq)
-      "-"[0]  => fill   (minus)
+    when c {
+      "\n"[0] => x_nl ()
+      ":"[0]  => fill (ass)
+      "="[0]  => fill (eq)
+      "-"[0]  => fill (minus)
       "/"[0]  => xslash ()
-      ">"[0]  => fill   (rarrow)
-      "<"[0]  => fill   (larrow)
-      "!"[0]  => fill   (bang)
+      ">"[0]  => fill (rarrow)
+      "<"[0]  => fill (larrow)
+      "!"[0]  => fill (bang)
       "\""[0] => string ()
-      symEOF  => x_eof  ()
+      symEOF  => x_eof ()
       else => () -> () {} ()
     }
   }
@@ -177,7 +179,9 @@ xslash = () -> () {
 
       if c == symEOF {
         fatal("unexpected end-of-file")
-      } else if c == "*"[0] {
+      }
+
+      if c == "*"[0] {
         c := getcc ()
         if c == "/"[0] {
           // C-style comment ended
@@ -206,31 +210,29 @@ xslash = () -> () {
 string = () -> () {
   c = 0 to Var Nat8
   lstate.kind := #TokenString
-  lstate.ti.length := 0  // skip first "
+  lstate.ti.length := 0
 
   while true {
     c := getcc ()
-    if c == "\""[0] {
-      break
-    } else if c == symEOF {
-      fatal ("unexpected end-of-file")
-    } else {
-      if c == "\\"[0] {
-        /* ESACPE-symbols */
-        c := getcc ()
 
-        c := select c {
-          "n"[0] => "\n"[0]
-          "r"[0] => "\r"[0]
-          "t"[0] => "\t"[0]
-          "\\"[0] => "\\"[0]
-          "\""[0] => "\""[0]
-          "0"[0] => "\0"[0]
-          "a"[0] => "\a"[0]
-          "b"[0] => "\b"[0]
-          "v"[0] => "\v"[0]
-          else => c
-        }
+    if c == "\""[0] {break}
+    if c == symEOF {fatal ("unexpected end-of-file")}
+
+    if c == "\\"[0] {
+      /* ESACPE-symbols */
+      c := getcc ()
+
+      c := when c {
+        "n"[0]  => "\n"[0]
+        "r"[0]  => "\r"[0]
+        "t"[0]  => "\t"[0]
+        "\\"[0] => "\\"[0]
+        "\""[0] => "\""[0]
+        "0"[0]  => "\0"[0]
+        "a"[0]  => "\a"[0]
+        "b"[0]  => "\b"[0]
+        "v"[0]  => "\v"[0]
+        else => c
       }
     }
 
@@ -241,12 +243,14 @@ string = () -> () {
     lstate.token[lstate.ti.length] := c
     lstate.ti.length := lstate.ti.length + 1
   }
+
+  lstate.token[lstate.ti.length] := 0
+  lstate.ti.length := lstate.ti.length + 1
 }
 
 
 // токенизируем файл в список (включая #TokenEOF)
 tokenize = (filename : Str) -> *Source {
-
   src = malloc (sizeof Source) to *Source
   list_init (&src.tokens)
 
@@ -257,12 +261,10 @@ tokenize = (filename : Str) -> *Source {
     len = lstate.ti.length + 1
     t = malloc (sizeof Token + len to Nat32) to *Token
     t.kind := lstate.kind
-    t.ti.length := lstate.ti.length
-    t.ti.file := lstate.ti.file
-    t.ti.line := lstate.ti.line
-    t.ti.start := lstate.ti.start
-    memcpy (&t.text, &lstate.token, len to Size_T)
-    t.text[len + 1] := 0
+    t.ti := lstate.ti
+    memcpy (&t.text[0], &lstate.token[0], len to Size_T)
+    t.text[len - 1] := 0
+
     list_append (&src.tokens, t)
     if tt == #TokenEOF {break}
   }

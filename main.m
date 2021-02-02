@@ -3,6 +3,7 @@
  * пофикси вывод ошибки когда указывает не на упоминание а на связывание
  * Если указано Var значит переменная, если не указан Var - не факт что не переменная.
  * Это для типов аргументов функции
+ * Конструирование и связывание
  */
 
 
@@ -14,8 +15,16 @@ import "data/node"
 import "data/list"
 import "data/map"
 import "sys/fs"
+import "nothing"
 
 import "types"
+import "scanner/types"
+import "parser/types"
+import "type/types"
+import "value/types"
+import "stmt/types"
+import "printer/types"
+
 import "proto"
 import "vars"
 
@@ -23,13 +32,13 @@ import "debug"
 import "error"
 import "cfg"
 import "data"
-import "scanner"
-import "parser"
-import "printer"
+import "scanner/main"
+import "parser/main"
+import "printer/main"
 
-import "type"
-import "value"
-import "stmt"
+import "type/main"
+import "value/main"
+import "stmt/main"
 import "cpl"
 
 
@@ -40,35 +49,24 @@ compilerVersionMajor = 0
 compilerVersionMinor = 5
 
 
+
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
 
-  /* если первым параметром не передано имя файла, то это main.m */
-  /*fname = "main.m" to Var Str
-  if argc > 1 {fname := argv[1]}*/
-
-  /*printf ("sizeof Token %d\n", sizeof Token)
-  printf ("sizeof AstValue %d\n", sizeof AstValue)
-  printf ("sizeof Type %d\n", sizeof Type)
-  printf ("sizeof Value %d\n", sizeof Value)*/
-
   m = parse ("main.m")
 
-  ee = errcnt
-
-  if ee > 0 {return ee/* to Int32*/}
+  if m is ParserError {return errcnt}
 
   compiler_init ()
 
-  a = compile (m)
+  a = compile (m as AstModule)
 
   if a != nil {
     printf ("lines: %d\n", lines)
     print_assembly (a, "out.ll")
   }
 
-  eee = errcnt
-  return eee/* to Int32*/
+  return errcnt
 }
 
 

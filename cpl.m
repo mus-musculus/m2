@@ -22,22 +22,43 @@ compiler_init = () -> () {
 }
 
 
+def_rename = (d : *Definition, id : Str) -> () {
+  when d.kind {
+    #DefType  => (d : *Definition, id : Str) -> () {d.typedef.id := id} (d, id)
+    #DefConst => (d : *Definition, id : Str) -> () {d.constdef.id := id} (d, id)
+    #DefStr   => (d : *Definition, id : Str) -> () {d.stringdef.id := id} (d, id)
+    #DefArray => (d : *Definition, id : Str) -> () {d.arraydef.id := id} (d, id)
+    #DefFunc  => (d : *Definition, id : Str) -> () {d.funcdef.id := id} (d, id)
+    #DefVar   => (d : *Definition, id : Str) -> () {d.vardef.id := id} (d, id)
+    #DefAlias => (d : *Definition, id : Str) -> () {d.aliasdef.id := id} (d, id)
+    else => () -> () {} ()
+  }
+}
 
-compile = (a : *AstModule) -> *Assembly {
+
+
+
+
+exist do_import : (x : AstNodeImport) -> ()
+exist do_type_bind : (x : AstNodeBindType) -> ()
+exist do_value_bind : (x : AstNodeBindValue) -> ()
+exist do_value_decl : (x : AstNodeDeclValue) -> ()
+//exist do_var_decl : (x : *AstDecl) -> ()
+//exist do_type_decl : (x : *AstNodeDeclType) -> ()
+
+compile = (a : AstModule) -> *Assembly {
   do_node = ListForeachHandler {
     ast_node = data to *AstNode
-    e = ast_node.entity
-    select ast_node.kind {
-      //#AstNodeDeclVar => do_var_decl ((e to *AstNodeDeclVar).decl)
-      #AstNodeBindType => do_type_bind (e to *AstNodeBindType)
-      #AstNodeBindValue => do_value_bind (e to *AstNodeBindValue)
-      //#AstNodeDeclType => do_type_decl (e to *AstNodeDeclType)
-      #AstNodeDeclValue => do_value_decl (e to *AstNodeDeclValue)
-      #AstNodeImport => do_import (e to *AstNodeImport)
+    e = *ast_node
+    when e {
+      AstNodeBindType => do_type_bind (e as AstNodeBindType)
+      AstNodeBindValue => do_value_bind (e as AstNodeBindValue)
+      AstNodeDeclValue => do_value_decl (e as AstNodeDeclValue)
+      AstNodeImport => do_import (e as AstNodeImport)
       else => () -> () {} ()
     }
   }
-  list_foreach(&a.nodes, do_node, nil)
+  list_foreach(&(a.nodes to Var List), do_node, nil)
 
   if errcnt > 0 {return nil}
   return &asm0
@@ -46,26 +67,30 @@ compile = (a : *AstModule) -> *Assembly {
 
 
 imp_list = 0 to Var Map
-do_import = (x : *AstNodeImport) -> () {
+do_import = (x : AstNodeImport) -> () {
   line = x.line
 
   /* include guard */
-  if map_get(&imp_list, line) != nil {return}
+  if map_get (&imp_list, line) != nil {return}
   //not_null = 0x1 to Var *Unit
-  map_append(&imp_list, line, &imp_list/*not_null*/)
+  map_append (&imp_list, line, &imp_list/*not_null*/)
 
-  fname = cat(line, ".m")
-  if exists(fname) {
-    m = parse(fname)
-    compile(m)
+  fname = cat (line, ".m")
+  if exists (fname) {
+    m = parse (fname)
+    if m is AstModule {
+      compile (m as AstModule)
+    }
     return
   }
 
-  lib_path = getenv(cfgLibraryVar)
-  lib_fname = cat4(lib_path, "/", line, ".m")
-  if exists(lib_fname) {
-    m = parse(lib_fname)
-    compile(m)
+  lib_path = getenv (cfgLibraryVar)
+  lib_fname = cat4 (lib_path, "/", line, ".m")
+  if exists (lib_fname) {
+    m = parse (lib_fname)
+    if m is AstModule {
+      compile (m as AstModule)
+    }
     return
   }
 
@@ -92,7 +117,7 @@ do_var_decl = (x : *AstDecl) -> () {
 }*/
 
 
-do_type_bind = (x : *AstNodeBindType) -> () {
+do_type_bind = (x : AstNodeBindType) -> () {
   id = x.id.str
   t = do_type(x.type)
 
@@ -132,7 +157,7 @@ unwrap_var = (x : *Value) -> *Value {
 
 
 // top level value bind
-do_value_bind = (x : *AstNodeBindValue) -> () {
+do_value_bind = (x : AstNodeBindValue) -> () {
   id = x.id.str
   v0 = do_valuex(x.value, false/*do not load*/)
 
@@ -145,7 +170,7 @@ do_value_bind = (x : *AstNodeBindValue) -> () {
    */
   y = get_value_global(id)
   if y != nil {
-    if y.kind != #ValueUndefined {
+    if y.data isnt ValueUndefined {
       error("value redefination", x.ti)
       return
     }
@@ -163,13 +188,20 @@ do_value_bind = (x : *AstNodeBindValue) -> () {
       strcmp("sprintf", id) == 0 or
       strcmp("fprintf", id) == 0
 
-  if v.def != nil {v.def.id := id}
+
+  if v.data is ValueGlobalVar {
+    g = v.data as ValueGlobalVar
+    def_rename(g.def, id)
+  } else if v.data is ValueGlobalConst {
+    g = v.data as ValueGlobalConst
+    def_rename(g.def, id)
+  }
 }
 
 
 // декларация значения - создается запись значения #ValueUndefined
 // про которое известен лишь его тип, но мы не знаем больше ничего
-do_value_decl = (x : *AstNodeDeclValue) -> () {
+do_value_decl = (x : AstNodeDeclValue) -> () {
   decl = x.decl
   t = do_type(decl.type)
   de = ListForeachHandler {
@@ -183,48 +215,37 @@ do_value_decl = (x : *AstNodeDeclValue) -> () {
 
 
 value_decl_global = (id : *AstId, t : *Type) -> () {
-  v = value_new(#ValueUndefined, t, id.ti)
+  v = value_new ((type=t, ti=id.ti) to ValueUndefined, t, id.ti)
   bind_value_global(id.str, v)
 }
 
 
 
-create_global_var = (id : Str, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
+create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new(#ValueGlobalVar, t, ti)
-  v.dirty := true
-  v.def := asmVarAdd(&asm0, id, t, init_value)
-  bind_value_global(id, v)
+  def = asmVarAdd(&asm0, id.str, t, init_value)
+  v = value_new ((type=t, def=def, ti=id.ti) to ValueGlobalVar, t, id.ti)
+  bind_value_global(id.str, v)
   return v
 }
 
+
+
+
+
+
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
-
-  stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt {
-    va = malloc(sizeof Decl) to *Decl
-    va.id := id
-    va.init_value := dold(init_value)
-    va.type := t
-
-    s = stmt_new(#StmtVarDef, ti)
-    s.v := va
-    return s
-  }
-  // создадим фейковый value который будет занесен в индекс
-  // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new(#ValueLocalVar, t, ti)
-
-  bind_value_local(id.str, v)
-
   // добавляем в код функции стейтмент с определением этой переменной
   vd = stmt_new_vardef(id, t, init_value, nil)
+  list_append(&fctx.cblock.stmts, vd)
 
-  stmtAdd = (s : *Stmt) -> () {list_append(&fctx.cblock.stmts, s)}
+  no = (*vd as StmtVarDef).no
 
-  stmtAdd(vd)
-  v.vardef := vd.v
-
+  // создадим фейковый value который будет занесен в индекс
+  // и будет ссылаться на переменную (просто нести тот же id)
+  v = value_new ((type=t, no=no, ti=ti) to ValueLocalVar, t, ti)
+  bind_value_local(id.str, v)
   return v
 }
 

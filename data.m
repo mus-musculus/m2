@@ -64,7 +64,7 @@ get_value_global = (id : Str) -> *Value {
 
 get_value = (id : Str) -> *Value {
   // ищет запись о значении во стеке блоков вплоть до корневого
-  search_value_in_block_stack = (id : Str, b : *Block) -> *Value {
+  search_value_in_block_stack = (id : Str, b : *StmtBlock) -> *Value {
     if b == nil {return nil}
     v = index_get_value(&b.index, id)
     if v != nil {return v}
@@ -96,7 +96,7 @@ bind_value = (index : *Index, id : Str, v : *Value) -> () {
   ae = index_get_value(index, id)
   if ae != nil {
     // если значение уже есть но не определено
-    if ae.kind != #ValueUndefined {
+    if ae.data isnt ValueUndefined {
       error("value bind error: id already bound", v.ti)
       warning("first defined here", ae.ti)
       return
@@ -111,7 +111,7 @@ bind_value = (index : *Index, id : Str, v : *Value) -> () {
 
 
 // Add bind into a block
-bind_value_in_block = (b : *Block, id : Str, v : *Value) -> () {bind_value(&b.index, id, v)}
+bind_value_in_block = (b : *StmtBlock, id : Str, v : *Value) -> () {bind_value(&b.index, id, v)}
 
 // Add bind into current block
 bind_value_local = (id : Str, v : *Value) -> ()
@@ -165,7 +165,7 @@ get_type = (id : Str) -> *Type {
   // searching in local block stack
   if fctx != nil {
     // ищет запись о значении во стеке блоков вплоть до корневого
-    search_type_in_block_stack = (id : Str, b : *Block) -> *Type {
+    search_type_in_block_stack = (id : Str, b : *StmtBlock) -> *Type {
       if b == nil {return nil}
       t = index_get_type(&b.index, id)
       if t != nil {return t}
@@ -247,4 +247,15 @@ get_name_var = () -> Str {return get_name("var", &var_uid)}
 type_uid = 0 to Var Nat32
 get_name_type = () -> Str {return get_name("Type", &type_uid)}
 
+
+
+
+type_present_in_list = (list : *List, t : *Type) -> Bool {
+  finder = ListSearchHandler {
+    t_in = data to *Type
+    t = ctx to *Type
+    return type_eq(t_in, t)
+  }
+  return list_search (list, finder, t) != nil
+}
 
