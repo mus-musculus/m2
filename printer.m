@@ -618,10 +618,10 @@ eval = Eval {
   return when x.kind {
     #ValueImmediate   => eval_immediate (x.data as ValueImm)
     #ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
-    #ValueGlobalVar   => eval_glb_var (x.data as ValueGlobalVar)
+    #ValueGlobalVar   => eval_glb_var   (x.data as ValueGlobalVar)
     #ValueLocalConst  => eval_loc_const (x.data as ValueLocalVal)
     #ValueLocalVar    => eval_local_var (x.data as ValueLocalVar)
-    #ValueParam       => eval_param (x.data as ValueParam)
+    #ValueParam       => eval_param     (x.data as ValueParam)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x.data as ValueCall)
