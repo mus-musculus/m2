@@ -345,8 +345,6 @@ print_value_index = (index : *Map) -> () {
 */
 
 
-Eval = (x : *Value) -> LLVM_Value
-
 exist operand : (t : *Type, k : LLVM_ValueKind, reg : Nat32) -> LLVM_Value
 
 
@@ -377,8 +375,8 @@ exist create_array : (x : LLVM_Value) -> LLVM_Value
 
 exist print_block : (b : StmtBlock) -> ()
 
-exist eval : Eval
-exist reval : Eval
+exist eval : (x : *Value) -> LLVM_Value
+exist reval : (x : *Value) -> LLVM_Value
 
 
 typedef = (id : Str, t : *Type) -> () {
@@ -649,7 +647,7 @@ exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 // Значения-операции вычисляются. Результатом может быть константа, имя, регистр или адрес.
 // Имена и адреса нуждаются в дополнительной загрузке функцией load
 // (только если это не lval)
-eval = Eval {
+eval = (x : *Value) -> LLVM_Value {
   return when x.data {
     ValueImm         => eval_imm       (x.data as ValueImm)
     ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
@@ -691,7 +689,7 @@ eval = Eval {
     ValueRecord => eval_rec    (x.data as ValueRecord)
     ValueArray  => eval_arr    (x.data as ValueArray)
 
-    else => Eval {
+    else => (x : *Value) -> LLVM_Value {
       fatal ("error eval #ValueUndefined\n")
       return (kind=#LLVM_ValueInvalid)
     } (x)
@@ -700,7 +698,7 @@ eval = Eval {
 
 
 // right eval
-reval = Eval {return load(eval(x))}
+reval = (x : *Value) -> LLVM_Value {return load(eval(x))}
 
 
 eval_imm = (x : ValueImm) -> LLVM_Value {

@@ -349,7 +349,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 %LLVM_ValueAddress = type {%Type*, %Nat32}
 %LLVM_ValueRegister = type {%Type*, %Nat32}
 %LLVM_Value2 = type %union.19
-%Eval = type %LLVM_Value (%Value*)*
 %func311.type1 = type {[64 x %LLVM_Value], %Nat16}
 %EvalCast = type %LLVM_Value (%LLVM_Value, %Type*)*
 %func357.type2 = type {%LLVM_Value, %LLVM_Value, %Nat32, %Nat32, [256 x %Nat32], %Type*}
