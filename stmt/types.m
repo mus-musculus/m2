@@ -44,8 +44,7 @@ Stmt = StmtValBind or
         StmtAgain or
         StmtGoto or
         StmtLabel or
-        StmtVarDef or
-        Nothing
+        StmtVarDef
 
 
 
