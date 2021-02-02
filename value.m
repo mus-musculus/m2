@@ -122,6 +122,7 @@ exist do_value_index  : (x : AstValueIndex) -> *Value
 exist do_value_access : (x : AstValueAccess) -> *Value
 exist do_value_cast   : (x : AstValueCast) -> *Value
 exist do_value_is     : (x : AstValueIs) -> *Value
+exist do_value_isnt   : (x : AstValueIsnt) -> *Value
 exist do_value_as     : (x : AstValueAs) -> *Value
 
 exist do_value_sizeof  : (x : AstValueSizeof) -> *Value
@@ -192,6 +193,7 @@ do_valuex = DoValuex {
     AstValueAccess  => do_value_access  (xx as AstValueAccess)
     AstValueCast    => do_value_cast    (xx as AstValueCast)
     AstValueIs      => do_value_is      (xx as AstValueIs)
+    AstValueIsnt    => do_value_isnt    (xx as AstValueIsnt)
     AstValueAs      => do_value_as      (xx as AstValueAs)
     AstValueSizeof  => do_value_sizeof  (xx as AstValueSizeof)
     AstValueAlignof => do_value_alignof (xx as AstValueAlignof)
@@ -749,9 +751,9 @@ fail:
 
 
 
-do_value_is = (x : AstValueIs) -> *Value {
-  v = do_value (x.value)
-  t = do_type (x.type)
+value_union_type_check = (value : *AstValue, type : *AstType, logic : Bool, ti : *TokenInfo) -> *Value {
+  v = do_value (value)
+  t = do_type (type)
 
   // чекаем если значение имеет unit тип
   if v.type.kind != #TypeUnion {
@@ -766,13 +768,24 @@ do_value_is = (x : AstValueIs) -> *Value {
 
   variant = type_union_get_variant (v.type, t)
 
-  vx = value_new(#ValueIs, (type=typeBool, value=v, variant=variant, ti=x.ti) to ValueIs, typeBool, x.ti)
-  vx.is := (type=typeBool, value=v, variant=variant, ti=x.ti)
+  vx = value_new(#ValueIs, (type=typeBool, value=v, variant=variant, logic=logic, ti=ti) to ValueIs, typeBool, ti)
+  vx.is := (type=typeBool, value=v, variant=variant, ti=ti)
   return vx
 
 fail:
-  return value_new_poison (x.ti)
+  return value_new_poison (ti)
 }
+
+do_value_is = (x : AstValueIs) -> *Value {
+  return value_union_type_check (x.value, x.type, true, x.ti)
+}
+
+do_value_isnt = (x : AstValueIsnt) -> *Value {
+  return value_union_type_check (x.value, x.type, false, x.ti)
+}
+
+
+
 
 
 do_value_as = (x : AstValueAs) -> *Value {

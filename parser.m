@@ -731,6 +731,9 @@ parse_value9 = AstValueParser {
   } else if match("is") {
     t = parse_type ()
     v := ast_value_new ((value=v, type=t, ti=ti) to AstValueIs)
+  } else if match("isnt") {
+    t = parse_type ()
+    v := ast_value_new ((value=v, type=t, ti=ti) to AstValueIsnt)
   } else if match("as") {
     t = parse_type ()
     v := ast_value_new ((value=v, type=t, ti=ti) to AstValueAs)

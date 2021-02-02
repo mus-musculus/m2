@@ -981,11 +981,10 @@ eval_is = (x : ValueIs) -> LLVM_Value {
     // селктор определяет значение какого типа упаковано в юнион
     selector = llvm_cast ("ptrtoint", v, typeBaseInt)
 
-
     // Для `Maybe Pointer
     regno = when x.variant {
-      0 => llvm_binary ("icmp ne", selector, variant)
-      1 => llvm_binary ("icmp eq", selector, variant)
+      (not x.logic) to Nat => llvm_binary ("icmp ne", selector, variant)
+      (x.logic) to Nat => llvm_binary ("icmp eq", selector, variant)
       else => 0
     }
 
@@ -1013,7 +1012,11 @@ eval_is = (x : ValueIs) -> LLVM_Value {
   variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
 
-  regno = llvm_binary ("icmp eq", selector, variant)
+  regno = when x.logic {
+    true => llvm_binary ("icmp eq", selector, variant)
+    else => llvm_binary ("icmp ne", selector, variant)
+  }
+
   return (kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
 }
 

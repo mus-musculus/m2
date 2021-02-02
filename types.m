@@ -145,6 +145,7 @@ AstValueAccess = (rec : *AstValue, field_id : *AstId, ti : *TokenInfo)
 AstValueValType = (value : *AstValue, type : *AstType, ti : *TokenInfo)
 AstValueCast   = Tagged AstValueValType
 AstValueIs     = Tagged AstValueValType
+AstValueIsnt   = Tagged AstValueValType
 AstValueAs     = Tagged AstValueValType
 
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue, ti : *TokenInfo)
@@ -222,6 +223,7 @@ AstValue =  AstValueName or
             AstValueAccess or
             AstValueCast or
             AstValueIs or
+            AstValueIsnt or
             AstValueAs or
             AstValueWhen or
             AstValueSizeof or
@@ -492,7 +494,8 @@ ValueAccess = Tagged (type : *Type, value : *Value, field : Str, ti : *TokenInfo
 ValueIndex  = Tagged (type : *Type, array, index : *Value, ti : *TokenInfo)
 ValueCast   = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
 ValueAs     = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
-ValueIs     = Tagged (type : *Type, value : *Value, variant : Nat, ti : *TokenInfo)
+ValueIs     = Tagged (type : *Type, value : *Value, logic : Bool, variant : Nat, ti : *TokenInfo)
+ValueIsnt = Tagged ValueIs
 
 ValueWhenVariant = Tagged (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
 ValueWhen   = Tagged (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
@@ -553,6 +556,7 @@ Value2 = ValuePoison or
         ValueCast or
         ValueAs or
         ValueIs or
+        ValueIsnt or
         ValueCall or
         ValueWhen or
         ValueNo
