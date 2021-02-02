@@ -54,11 +54,11 @@ lval - означающий что не нужно загружать значе
 do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
   rval0 = do_value (x.r)
 
-  if rval0.kind == #ValuePoison {return unit}
+  if rval0.data is ValuePoison {return unit}
 
   lval = do_lvalue(x.l)
 
-  if lval.kind == #ValuePoison {return unit}
+  if lval.data is ValuePoison {return unit}
 
   if value_is_readonly (lval) {
     error ("invalid lval", x.ti)
@@ -95,10 +95,11 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
   id = x.id.str
   v = do_valuex (x.expr, false)
 
-  k = v.kind
-  is_constbind = k == #ValueGlobalConst or
-                 k == #ValueImmediate or
-                 k == #ValueGenericRecord
+  d = v.data
+  is_constbind = (d is ValueGlobalConst) or
+                 (d is ValueImm) or
+                 (d is ValueGenericRecord)
+
   is_varbind = v.type.kind == #TypeVar
 
   if is_constbind or is_varbind {
@@ -158,7 +159,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
   v = do_value (x.expr)
 
-  if v.kind == #ValuePoison {return unit}
+  if v.data is ValuePoison {return unit}
 
   if not type_eq (v.type, typeUnit) {
     //warning("ignoring value", x.ti)
@@ -186,7 +187,7 @@ do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
 //    else => do_stmt (x.if._else)
 //  }
 
-  if cond.kind == #ValuePoison {return unit}
+  if cond.data is ValuePoison {return unit}
 
   if not type_check (typeBool, cond.type, cond.ti) {
     return unit
@@ -205,7 +206,7 @@ do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
   block = do_stmt (x.block)
   fctx.loop := fctx.loop - 1
 
-  if cond.kind == #ValuePoison {return unit}
+  if cond.data is ValuePoison {return unit}
 
   if not type_check (typeBool, cond.type, cond.ti) {
     return unit
@@ -231,7 +232,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
   }
 
   v0 = do_value (rv as *AstValue)
-  if v0.kind == #ValuePoison {return unit}
+  if v0.data is ValuePoison {return unit}
   v = implicit_cast (v0, func_to)
   if not type_check (func_to, v.type, v0.ti) {}
 

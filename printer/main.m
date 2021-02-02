@@ -839,7 +839,7 @@ eval_index = (x : ValueIndex) -> LLVM_Value {
 eval_access = (x : ValueAccess) -> LLVM_Value {
   assert (x.field != nil, "print/expr:: x.field == nil\n")
 
-  if x.value.kind == #ValueAccess {}
+  if x.value.data is ValueAccess {}
 
   s = eval (x.value)
 
