@@ -995,9 +995,10 @@ eval_is = (x : ValueIs) -> LLVM_Value {
   print_val (v)
   o(", 0")
 
-  selector = (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
-
   t16 = getIntByPower(2)
+  selector = (kind=#LLVM_ValueRegister, type=t16, reg=reg)
+
+
 
   // Maybe
   variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.variant to Int64)
@@ -1127,7 +1128,7 @@ eval_cast = (x : ValueCast) -> LLVM_Value {
 
 
 llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
-  reg = operation_with_type (op, t)
+  reg = operation_with_type (op, l.type)
   space ()
   print_val (l)
   comma ()
@@ -1242,7 +1243,8 @@ eval_when = (x : ValueWhen) -> LLVM_Value {
     print_val (sel)
     o(", 0")
 
-    when_is_sel := (kind=#LLVM_ValueRegister, type=x.type, reg=reg)
+    t16 = getIntByPower(2)
+    when_is_sel := (kind=#LLVM_ValueRegister, type=t16, reg=reg)
   }
 
 

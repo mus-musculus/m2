@@ -10293,15 +10293,14 @@ endif_1:
   %53 = call %LLVM_Value (%LLVM_Value, %Type*) @func343 (%LLVM_Value %51, %Type* %52)
   %54 = bitcast [8 x %Nat8]* @func329_str7 to %Str
   %55 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %56 = extractvalue %ValueIs %0, 0
-  %57 = insertvalue %LLVM_Value %55, %Type* %56, 1
-  %58 = insertvalue %LLVM_Value %57, %Nat32 %38, 4
-  %59 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func334 (%Str %54, %LLVM_Value %58, %LLVM_Value %53, %Type* %46)
-  %60 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %61 = load %Type*, %Type** @typeBool
-  %62 = insertvalue %LLVM_Value %60, %Type* %61, 1
-  %63 = insertvalue %LLVM_Value %62, %Nat32 %59, 4
-  ret %LLVM_Value %63
+  %56 = insertvalue %LLVM_Value %55, %Type* %46, 1
+  %57 = insertvalue %LLVM_Value %56, %Nat32 %38, 4
+  %58 = call %Nat32 (%Str, %LLVM_Value, %LLVM_Value, %Type*) @func334 (%Str %54, %LLVM_Value %57, %LLVM_Value %53, %Type* %46)
+  %59 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %60 = load %Type*, %Type** @typeBool
+  %61 = insertvalue %LLVM_Value %59, %Type* %60, 1
+  %62 = insertvalue %LLVM_Value %61, %Nat32 %58, 4
+  ret %LLVM_Value %62
 }
 
 define %LLVM_Value @eval_cast_to_union (%LLVM_Value, %Type*) {
@@ -10553,12 +10552,13 @@ select_1_end:
 }
 
 define %Nat32 @func334 (%Str, %LLVM_Value, %LLVM_Value, %Type*) {
-  %5 = call %Nat32 (%Str, %Type*) @func295 (%Str %0, %Type* %3)
+  %5 = extractvalue %LLVM_Value %1, 1
+  %6 = call %Nat32 (%Str, %Type*) @func295 (%Str %0, %Type* %5)
   call void () @space ()
   call void (%LLVM_Value) @func356 (%LLVM_Value %1)
   call void () @comma ()
   call void (%LLVM_Value) @func356 (%LLVM_Value %2)
-  ret %Nat32 %5
+  ret %Nat32 %6
 }
 
 define %Str @func336 (i1) {
@@ -10921,9 +10921,9 @@ then_0:
   call void (%LLVM_Value) @func356 (%LLVM_Value %3)
   %13 = bitcast [4 x %Nat8]* @func346_str2 to %Str
   call void (%Str) @o (%Str %13)
-  %14 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %15 = extractvalue %ValueWhen %0, 0
-  %16 = insertvalue %LLVM_Value %14, %Type* %15, 1
+  %14 = call %Type* (%Nat32) @func434 (%Nat32 2)
+  %15 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %16 = insertvalue %LLVM_Value %15, %Type* %14, 1
   %17 = insertvalue %LLVM_Value %16, %Nat32 %6, 4
   store %LLVM_Value %17, %LLVM_Value* %4, align 8
   br label %endif_0
