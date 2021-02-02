@@ -534,9 +534,7 @@ do_value_index = (x : AstValueIndex) -> *Value {
 
   ind = implicit_cast_int (i)
 
-  v = value_new ((type=typ, array=a, index=ind, ti=x.ti) to ValueIndex, typ, x.ti)
-  v.index := (type=typ, array=a, index=ind, ti=x.ti)
-  return v
+  return value_new ((type=typ, array=a, index=ind, ti=x.ti) to ValueIndex, typ, x.ti)
 
 fail:
   return value_new_poison (x.ti)
@@ -663,6 +661,7 @@ do_value_cast_union = DoValueCast {
 do_value_cast_gen_rec = DoValueCast {
   // приводим generic запись к типу записи t
   // для этого приводим все ее поля к типу полей соотв типа-записи
+  vrec = v.data as ValueRecord
   Ctx12 = (type : *Type, new_vm : Map)
   ctx = (type=t) to Var Ctx12
   prep = MapForeachHandler {
@@ -674,7 +673,7 @@ do_value_cast_gen_rec = DoValueCast {
     vx = implicit_cast (val, field.type)
     map_append (&c.new_vm, id, vx)
   }
-  map_foreach(&v.rec.values, prep, &ctx)
+  map_foreach(&(vrec.values to Var List), prep, &ctx)
 
   return value_new ((type=t, values=ctx.new_vm, ti=ti) to ValueRecord, t, ti)
 }
@@ -888,9 +887,7 @@ do_value_string = (x : AstValueString) -> *Value {
   id = get_name_str ()
   def = asmStringAdd (&asm0, id, s, len)
 
-  v = value_new ((type=typ, def=def, ti=x.ti) to ValueGlobalConst, typ, x.ti)
-  v.gconst := (type=typ, def=def, ti=x.ti)
-  return v
+  return value_new ((type=typ, def=def, ti=x.ti) to ValueGlobalConst, typ, x.ti)
 }
 
 
@@ -910,9 +907,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if x.block_stmt is Unit {
     def = asmFuncAdd (&asm0, uid, t, #NoBlock)
-    fv = value_new ((type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
-    fv.gconst := (type=t, def=def, ti=x.ti)
-    return fv
+    return value_new ((type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
   }
 
   // создаем фиктивный parent-block c параметрами
@@ -969,7 +964,6 @@ do_value_func = (x : AstValueFunc) -> *Value {
   def = asmFuncAdd (&asm0, uid, t, bx as StmtBlock)
 
   fv.data := (type=t, def=def, ti=x.ti) to ValueGlobalConst
-  fv.gconst := (type=t, def=def, ti=x.ti)
 
   fctx := old_fctx  // restore func context before exit
 
@@ -1019,10 +1013,7 @@ do_value_record = (x : AstValueRecord) -> *Value {
   }
   map_foreach(&(x.values to Var Map), field_value_handle, &ctx)
 
-
-  vx = value_new ((type=t, values=ctx.vl) to ValueGenericRecord, t, x.ti)
-  vx.rec := (type=t, values=ctx.vl)
-  return vx
+  return value_new ((type=t, values=ctx.vl) to ValueGenericRecord, t, x.ti)
 
 fail:
   return value_new_poison (x.ti)

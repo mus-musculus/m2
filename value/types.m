@@ -168,16 +168,6 @@ Value = (
 
   data : Value2
 
-  rec     : ValueRecord
-  index  : ValueIndex
-  gconst : ValueGlobalConst
-
-  locval : ValueLocalVal
-  gvar   : ValueGlobalVar
-  lvar   : ValueLocalVar
-
-
-
   ti : *TokenInfo  // place in code where value was mentioned
 )
 

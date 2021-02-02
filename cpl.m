@@ -190,9 +190,11 @@ do_value_bind = (x : AstNodeBindValue) -> () {
 
 
   if v.data is ValueGlobalVar {
-    def_rename(v.gvar.def, id)
+    g = v.data as ValueGlobalVar
+    def_rename(g.def, id)
   } else if v.data is ValueGlobalConst {
-    def_rename(v.gconst.def, id)
+    g = v.data as ValueGlobalConst
+    def_rename(g.def, id)
   }
 }
 
@@ -224,7 +226,6 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
   // и будет ссылаться на переменную (просто нести тот же id)
   def = asmVarAdd(&asm0, id.str, t, init_value)
   v = value_new ((type=t, def=def, ti=id.ti) to ValueGlobalVar, t, id.ti)
-  v.gvar := (type=t, def=def, ti=id.ti)
   bind_value_global(id.str, v)
   return v
 }
@@ -244,7 +245,6 @@ create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
   v = value_new ((type=t, no=no, ti=ti) to ValueLocalVar, t, ti)
-  v.lvar := (type=t, no=no, ti=ti)
   bind_value_local(id.str, v)
   return v
 }
