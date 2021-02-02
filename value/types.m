@@ -172,7 +172,7 @@ Value = (
   index  : ValueIndex
   access : ValueAccess
   gconst : ValueGlobalConst
-  is     : ValueIs
+
   locval : ValueLocalVal
   gvar   : ValueGlobalVar
   lvar   : ValueLocalVar

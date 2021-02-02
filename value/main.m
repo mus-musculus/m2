@@ -767,9 +767,7 @@ value_union_type_check = (value : *AstValue, type : *AstType, logic : Bool, ti :
 
   variant = type_union_get_variant (v.type, t)
 
-  vx = value_new ((type=typeBool, value=v, variant=variant, logic=logic, ti=ti) to ValueIs, typeBool, ti)
-  vx.is := (type=typeBool, value=v, variant=variant, ti=ti)
-  return vx
+  return value_new ((type=typeBool, value=v, variant=variant, logic=logic, ti=ti) to ValueIs, typeBool, ti)
 
 fail:
   return value_new_poison (ti)
