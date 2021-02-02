@@ -200,7 +200,7 @@ AstStmtReturn   = Tagged (value : *AstValue or Unit, ti : *TokenInfo)
 AstStmtGoto     = Tagged (label : *AstId, ti : *TokenInfo)
 AstStmtLabel    = Tagged (label : *AstId, ti : *TokenInfo)
 AstStmtBreak    = Tagged (ti : *TokenInfo)
-AstStmtAgain = Tagged (ti : *TokenInfo)
+AstStmtAgain    = Tagged (ti : *TokenInfo)
 
 
 AstStmt = AstStmtAssign or
