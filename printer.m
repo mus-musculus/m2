@@ -573,6 +573,15 @@ llvm_binary = (op : Str, l, r : LLVM_Value) -> Nat {
   return reg
 }
 
+// llvm binary signed unsigned (internal function)
+llvm_binary_su = (ops : Str, opu : Str, l, r : LLVM_Value) -> Nat {
+  op = when l.type.num.signed {
+    true => ops
+    else => opu
+  }
+  return llvm_binary (op, l, r)
+}
+
 
 
 
@@ -595,6 +604,23 @@ exist eval_is : (x : ValueIs) -> LLVM_Value
 
 exist eval_cast : (x : ValueCast) -> LLVM_Value
 exist eval_bin : (x : ValueBin) -> LLVM_Value
+exist eval_add : (x : ValueAdd) -> LLVM_Value
+exist eval_sub : (x : ValueSub) -> LLVM_Value
+exist eval_mul : (x : ValueMul) -> LLVM_Value
+exist eval_div : (x : ValueDiv) -> LLVM_Value
+exist eval_mod : (x : ValueMod) -> LLVM_Value
+exist eval_and : (x : ValueAnd) -> LLVM_Value
+exist eval_or  : (x : ValueOr) -> LLVM_Value
+exist eval_xor : (x : ValueXor) -> LLVM_Value
+exist eval_eq  : (x : ValueEq) -> LLVM_Value
+exist eval_ne  : (x : ValueNe) -> LLVM_Value
+exist eval_lt  : (x : ValueLt) -> LLVM_Value
+exist eval_gt  : (x : ValueGt) -> LLVM_Value
+exist eval_le  : (x : ValueLe) -> LLVM_Value
+exist eval_ge  : (x : ValueGe) -> LLVM_Value
+exist eval_shl : (x : ValueShl) -> LLVM_Value
+exist eval_shr : (x : ValueShr) -> LLVM_Value
+
 exist eval_when : (x : ValueWhen) -> LLVM_Value
 
 
@@ -632,6 +658,23 @@ eval = Eval {
     #ValueLocalVar    => eval_local_var (x.data as ValueLocalVar)
     #ValueParam       => eval_param     (x.data as ValueParam)
 
+    #ValueAdd         => eval_add (x.data as ValueAdd)
+    #ValueSub         => eval_sub (x.data as ValueSub)
+    #ValueMul         => eval_mul (x.data as ValueMul)
+    #ValueDiv         => eval_div (x.data as ValueDiv)
+    #ValueMod         => eval_mod (x.data as ValueMod)
+    #ValueAnd         => eval_and (x.data as ValueAnd)
+    #ValueOr          => eval_or  (x.data as ValueOr)
+    #ValueXor         => eval_xor (x.data as ValueXor)
+    #ValueEq          => eval_eq  (x.data as ValueEq)
+    #ValueNe          => eval_ne  (x.data as ValueNe)
+    #ValueLt          => eval_lt  (x.data as ValueLt)
+    #ValueGt          => eval_gt  (x.data as ValueGt)
+    #ValueLe          => eval_le  (x.data as ValueLe)
+    #ValueGe          => eval_ge  (x.data as ValueGe)
+    #ValueShl         => eval_shl (x.data as ValueShl)
+    #ValueShr         => eval_shr (x.data as ValueShr)
+
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x.data as ValueCall)
     #ValueIndex  => eval_index  (x.data as ValueIndex)
@@ -648,12 +691,12 @@ eval = Eval {
     #ValueRecord => eval_rec    (x.data as ValueRecord)
     #ValueArray  => eval_arr    (x.data as ValueArray)
 
-    #ValueUndefined => Eval {
+    else => Eval {
       fatal ("error eval #ValueUndefined\n")
       return (kind=#LLVM_ValueInvalid)
     } (x)
 
-    else => eval_bin (x.bin)
+    //else => eval_bin (x.bin)
   }
 }
 
@@ -1138,12 +1181,83 @@ eval_cast = (x : ValueCast) -> LLVM_Value {
 
 
 
+eval_binary = (op : Str, left, right : *Value, type : *Type) -> LLVM_Value {
+  regno = llvm_binary (op, reval (left), reval (right))
+  return (kind=#LLVM_ValueRegister, type=type, reg=regno)
+}
+
+// eval_binary signed (ops) / unsigned (opu)
+eval_binary_su = (ops : Str, opu : Str, left, right : *Value, type : *Type) -> LLVM_Value {
+  regno = llvm_binary_su (ops, opu, reval (left), reval (right))
+  return (kind=#LLVM_ValueRegister, type=type, reg=regno)
+}
+
+eval_add = (x : ValueAdd) -> LLVM_Value {
+  return eval_binary ("add", x.left, x.right, x.type)
+}
+
+eval_sub = (x : ValueSub) -> LLVM_Value {
+  return eval_binary ("sub", x.left, x.right, x.type)
+}
+
+eval_mul = (x : ValueMul) -> LLVM_Value {
+  return eval_binary ("mul", x.left, x.right, x.type)
+}
+
+eval_div = (x : ValueDiv) -> LLVM_Value {
+  return eval_binary_su ("sdiv", "udiv", x.left, x.right, x.type)
+}
+
+eval_mod = (x : ValueMod) -> LLVM_Value {
+  return eval_binary_su ("srem", "urem", x.left, x.right, x.type)
+}
+
+eval_or = (x : ValueOr) -> LLVM_Value {
+  return eval_binary ("or", x.left, x.right, x.type)
+}
+
+eval_xor = (x : ValueXor) -> LLVM_Value {
+  return eval_binary ("xor", x.left, x.right, x.type)
+}
+
+eval_and = (x : ValueAnd) -> LLVM_Value {
+  return eval_binary ("and", x.left, x.right, x.type)
+}
+
+eval_eq = (x : ValueEq) -> LLVM_Value {
+  return eval_binary ("icmp eq", x.left, x.right, x.type)
+}
+
+eval_ne = (x : ValueNe) -> LLVM_Value {
+  return eval_binary ("icmp ne", x.left, x.right, x.type)
+}
+
+eval_lt = (x : ValueLt) -> LLVM_Value {
+  return eval_binary_su ("icmp slt", "icmp ult", x.left, x.right, x.type)
+}
+
+eval_gt = (x : ValueGt) -> LLVM_Value {
+  return eval_binary_su ("icmp sgt", "icmp ugt", x.left, x.right, x.type)
+}
+
+eval_le = (x : ValueLe) -> LLVM_Value {
+  return eval_binary_su ("icmp sle", "icmp ule", x.left, x.right, x.type)
+}
+
+eval_ge = (x : ValueGe) -> LLVM_Value {
+  return eval_binary_su ("icmp sge", "icmp uge", x.left, x.right, x.type)
+}
+
+eval_shl = (x : ValueShl) -> LLVM_Value {
+  return eval_binary ("shl", x.left, x.right, x.type)
+}
+
+eval_shr = (x : ValueShr) -> LLVM_Value {
+  return eval_binary_su ("ashr", "lshr", x.left, x.right, x.type)
+}
 
 
-/*eval_add = (x : ValueAdd) -> LLVM_Value {
-  regno = llvm_binary ("add", reval (x.left), reval (x.right), l.type)
-  return (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
-}*/
+/*
 
 eval_bin = (x : ValueBin) -> LLVM_Value {
   l = reval (x.left)
@@ -1180,6 +1294,8 @@ eval_bin = (x : ValueBin) -> LLVM_Value {
   regno = llvm_binary (op, l, r)
   return (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
 }
+*/
+
 
 
 
