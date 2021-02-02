@@ -953,7 +953,10 @@ do_value_func = (x : AstValueFunc) -> *Value {
   fctx.cblock := param_block
   fctx.cfunc := fv
 
+
+  // DO FUNCTION BLOCK
   bx0 = do_stmt (block as *AstStmt)
+
 
   if bx0 is Unit {goto fail}
   bx = *(bx0 as *Stmt)
