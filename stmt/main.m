@@ -25,7 +25,7 @@ exist do_stmt_goto     : (x : AstStmtGoto) -> *Stmt or Unit
 exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
 
 
-do_stmt = DoStmt {
+do_stmt = (x : *AstStmt) -> *Stmt or Unit {
   xx = *x
   return when xx {
     AstStmtAssign    => do_stmt_assign   (xx to AstStmtAssign)

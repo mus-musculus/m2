@@ -29,7 +29,7 @@ exist typeIsRecord : (t : *Type) -> Bool
 exist getIntByPower : (power : Nat) -> *Type
 
 
-exist do_type : DoType
+exist do_type : (x : *AstType) -> *Type
 
 
 
@@ -56,11 +56,11 @@ exist value_new_imm : (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value
 
 exist ld_if_var : (x : *Value) -> *Value
 
-exist do_lvalue : DoValue
+exist do_lvalue : (x : *AstValue) -> *Value
 exist do_value  : (x : *AstValue) -> *Value
 
 exist do_lvalue : (x : *AstValue) -> *Value
-exist do_valuex : DoValuex
+exist do_valuex : (x : *AstValue, load : Bool) -> *Value
 
 
 
@@ -69,7 +69,7 @@ exist do_valuex : DoValuex
 exist do_args : (f : *Value, a : *List, ti : *TokenInfo) -> *List
 
 
-exist do_value_forbidden : DoValue
+exist do_value_forbidden : (x : *AstValue) -> *Value
 
 
 
@@ -104,7 +104,7 @@ exist stmt_block_init : (b, parent : *StmtBlock) -> *StmtBlock
 
 
 
-exist do_stmt : DoStmt
+exist do_stmt : (x : *AstStmt) -> *Stmt or Unit
 
 
 exist create_global_var : (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value

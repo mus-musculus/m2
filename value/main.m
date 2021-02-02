@@ -153,9 +153,9 @@ do_value_shl = (x : AstValueShl) -> *Value {return do_value_shift (#ValueShl, x.
 
 
 
-do_value = DoValue {return do_valuex(x, true)}
+do_value = (x : *AstValue) -> *Value {return do_valuex(x, true)}
 
-do_valuex = DoValuex {
+do_valuex = (x : *AstValue, load : Bool) -> *Value {
   xx = *x
   v = when xx {
     AstValueName    => do_value_named   (xx as AstValueName)
@@ -210,14 +210,14 @@ do_valuex = DoValuex {
 }
 
 
-do_lvalue = DoValue {
+do_lvalue = (x : *AstValue) -> *Value {
   xx = *x
   return when xx {
     AstValueName   => do_value_named  (xx to AstValueName)
     AstValueDeref  => do_value_deref  (xx to AstValueDeref)
     AstValueIndex  => do_value_index  (xx to AstValueIndex)
     AstValueAccess => do_value_access (xx to AstValueAccess)
-    else => DoValue {
+    else => (x : *AstValue) -> *Value {
       error ("invalid lvalue12", nil)
       return value_new_poison (nil)
     } (x)

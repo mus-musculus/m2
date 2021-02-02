@@ -26,11 +26,11 @@ import "cfg"
 import "data"
 import "scanner/main"
 import "parser/main"
-import "printer"
+import "printer/main"
 
-import "type"
-import "value"
-import "stmt"
+import "type/main"
+import "value/main"
+import "stmt/main"
 import "cpl"
 
 

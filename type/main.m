@@ -136,7 +136,7 @@ exist do_type_record  : (x : AstTypeRecord) -> *Type
 exist do_type_enum    : (x : AstTypeEnum) -> *Type
 exist do_type_union   : (x : AstTypeUnion) -> *Type
 
-do_type = DoType {
+do_type = (x : *AstType) -> *Type {
   xx = *x
   return when xx {
     AstTypeNamed   => do_type_named   (xx as AstTypeNamed)
