@@ -604,9 +604,9 @@ def_getname = (d : *Definition) -> Str {
 }
 
 exist eval_param : (x : ValueParam) -> LLVM_Value
-exist eval_local_var : (t :*Type, x : ValueLocalVar) -> LLVM_Value
+exist eval_local_var : (x : ValueLocalVar) -> LLVM_Value
 exist eval_glb_const : (x : ValueGlobalConst) -> LLVM_Value
-exist eval_glb_var : (t :*Type, x : ValueGlobalVar) -> LLVM_Value
+exist eval_glb_var : (x : ValueGlobalVar) -> LLVM_Value
 exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 
 // value evaluation
@@ -617,18 +617,11 @@ exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 eval = Eval {
   return when x.kind {
     #ValueImmediate   => eval_immediate (x)
-
-    //#ValueMention     => eval (x.mention.of)  // Just go through
-
     #ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
-
-    #ValueGlobalVar   => eval_glb_var (x.type, x.data as ValueGlobalVar)
-
-
+    #ValueGlobalVar   => eval_glb_var (x.data as ValueGlobalVar)
     #ValueLocalConst  => eval_loc_const (x.data as ValueLocalVal)
-
-    #ValueLocalVar    => eval_local_var (x.type, x.data as ValueLocalVar)
-    #ValueParam => eval_param (x.data as ValueParam)
+    #ValueLocalVar    => eval_local_var (x.data as ValueLocalVar)
+    #ValueParam       => eval_param (x.data as ValueParam)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x.data as ValueCall)
@@ -664,8 +657,9 @@ eval_param = (x : ValueParam) -> LLVM_Value {
   return (kind=#LLVM_ValueRegister, type=x.type, reg=x.no)
 }
 
-eval_local_var = (t : *Type, x : ValueLocalVar) -> LLVM_Value {
+eval_local_var = (x : ValueLocalVar) -> LLVM_Value {
   // T изза того что вар обернут в VAr а потом разворачиваетс]!
+  t = x.type.var.of
   return (kind=#LLVM_ValueLocalVar, type=t, reg=local_vars_map[x.no])
 }
 
@@ -673,7 +667,8 @@ eval_glb_const = (x : ValueGlobalConst) -> LLVM_Value {
   return (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
 }
 
-eval_glb_var = (t : *Type, x : ValueGlobalVar) -> LLVM_Value {
+eval_glb_var = (x : ValueGlobalVar) -> LLVM_Value {
+  t = x.type.var.of
   return (kind=#LLVM_ValueGlobalVar, type=t, id=def_getname(x.def))
 }
 
