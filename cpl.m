@@ -170,7 +170,7 @@ do_value_bind = (x : AstNodeBindValue) -> () {
    */
   y = get_value_global(id)
   if y != nil {
-    if y.kind != #ValueUndefined {
+    if y.data isnt ValueUndefined {
       error("value redefination", x.ti)
       return
     }
@@ -189,9 +189,9 @@ do_value_bind = (x : AstNodeBindValue) -> () {
       strcmp("fprintf", id) == 0
 
 
-  if v.kind == #ValueGlobalVar {
+  if v.data is ValueGlobalVar {
     def_rename(v.gvar.def, id)
-  } else if v.kind == #ValueGlobalConst {
+  } else if v.data is ValueGlobalConst {
     def_rename(v.gconst.def, id)
   }
 }
