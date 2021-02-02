@@ -400,7 +400,24 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
     return value_new_imm (typ, imm, ti)
   }
 
-  v = value_new (k, #ValueNo, typ, ti)
+  v = when k {
+    #ValueAdd => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueAdd, typ, ti)
+    #ValueSub => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueSub, typ, ti)
+    #ValueMul => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueMul, typ, ti)
+    #ValueDiv => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueDiv, typ, ti)
+    #ValueMod => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueMod, typ, ti)
+    #ValueOr  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueOr, typ, ti)
+    #ValueXor => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueXor, typ, ti)
+    #ValueAnd => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueAnd, typ, ti)
+    #ValueEq  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueEq, typ, ti)
+    #ValueNe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueNe, typ, ti)
+    #ValueLt  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueLt, typ, ti)
+    #ValueGt  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueGt, typ, ti)
+    #ValueLe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueLe, typ, ti)
+    #ValueGe  => value_new (k, (type=typ, kind=k, left=l, right=r, ti=ti) to ValueGe, typ, ti)
+    else => value_new_poison(ti)
+  }
+
   v.bin := (type=typ, kind=k, left=l, right=r, ti=ti)
   return v
 
@@ -1084,7 +1101,13 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   r2 = cast (r, l.type, r.ti)
 
   t = l.type
-  v = value_new (k, #ValueNo, t, ti)
+
+  v = when k {
+    #ValueShl => value_new (k, (type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShl, t, ti)
+    #ValueShr => value_new (k, (type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShr, t, ti)
+    else => value_new_poison(ti)
+  }
+
   v.bin := (type=t, kind=k, left=l2, right=r2, ti=ti)
   return v
 
