@@ -581,14 +581,8 @@ llvm_binary_su = (ops : Str, opu : Str, l, r : LLVM_Value) -> Nat {
 }
 
 
-
-
 exist eval_imm : (x : ValueImm) -> LLVM_Value
-exist eval_call : (x : ValueCall) -> LLVM_Value
-exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
-exist eval_index : (x : ValueIndex) -> LLVM_Value
-exist eval_access : (x : ValueAccess) -> LLVM_Value
+
 exist eval_ref : (x : ValueRef) -> LLVM_Value
 exist eval_deref : (x : ValueDeref) -> LLVM_Value
 exist eval_not : (x : ValueNot) -> LLVM_Value
@@ -597,10 +591,6 @@ exist eval_minus : (x : ValueMinus) -> LLVM_Value
 exist eval_rec : (x : ValueRecord) -> LLVM_Value
 exist eval_arr : (x : ValueArray) -> LLVM_Value
 
-exist eval_as : (x : ValueAs) -> LLVM_Value
-exist eval_is : (x : ValueIs) -> LLVM_Value
-
-exist eval_cast : (x : ValueCast) -> LLVM_Value
 exist eval_add : (x : ValueAdd) -> LLVM_Value
 exist eval_sub : (x : ValueSub) -> LLVM_Value
 exist eval_mul : (x : ValueMul) -> LLVM_Value
@@ -617,6 +607,14 @@ exist eval_le  : (x : ValueLe) -> LLVM_Value
 exist eval_ge  : (x : ValueGe) -> LLVM_Value
 exist eval_shl : (x : ValueShl) -> LLVM_Value
 exist eval_shr : (x : ValueShr) -> LLVM_Value
+
+exist eval_call : (x : ValueCall) -> LLVM_Value
+exist eval_index : (x : ValueIndex) -> LLVM_Value
+exist eval_access : (x : ValueAccess) -> LLVM_Value
+
+exist eval_cast : (x : ValueCast) -> LLVM_Value
+exist eval_as : (x : ValueAs) -> LLVM_Value
+exist eval_is : (x : ValueIs) -> LLVM_Value
 
 exist eval_when : (x : ValueWhen) -> LLVM_Value
 
