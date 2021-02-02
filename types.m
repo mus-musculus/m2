@@ -521,7 +521,7 @@ Value2 = ValuePoison or
         ValueArray or
         ValueGlobalVar or
         ValueGlobalConst or
-        ValueParam or
+        ValueParam or        // <<< ValueLocalVal
         ValueLocalVar or
         ValueLocalVal or
 
