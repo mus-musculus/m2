@@ -44,9 +44,9 @@ AstNode = AstNodeComment or
           AstNodeDeclVar
 
 
-/*****************************************************************************/
-/*                           Parser Type (AST)                               */
-/*****************************************************************************/
+//
+//  Parser Type
+//
 
 AstDeclList = List
 AstTypeList = List
@@ -78,9 +78,9 @@ AstType = AstTypeNamed or
 AstTypeParser = () -> *AstType
 
 
-/*****************************************************************************/
-/*                           Parser Value (AST)                              */
-/*****************************************************************************/
+//
+//  Parser Value
+//
 
 AstValueFunc   = (type : *AstType, block_stmt : *AstStmt or Unit, ti : *TokenInfo)
 AstValueCall   = (func : *AstValue, args : List, ti : *TokenInfo)
@@ -183,9 +183,9 @@ ValueParserResult = AstValue or ValueParserError
 AstValueParser = () -> *AstValue
 
 
-/*****************************************************************************/
-/*                        Parser Statement (AST)                             */
-/*****************************************************************************/
+//
+//  Parser Statement
+//
 
 AstStmtValueBind = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
 AstStmtTypeBind  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
