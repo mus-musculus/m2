@@ -573,11 +573,11 @@ exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index : (x : ValueIndex) -> LLVM_Value
 exist eval_access : (x : ValueAccess) -> LLVM_Value
-exist eval_ref : (x : ValueUn) -> LLVM_Value
-exist eval_deref : (x : ValueUn) -> LLVM_Value
-exist eval_not : (x : ValueUn) -> LLVM_Value
-exist eval_plus : (x : ValueUn) -> LLVM_Value
-exist eval_minus : (x : ValueUn) -> LLVM_Value
+exist eval_ref : (x : ValueRef) -> LLVM_Value
+exist eval_deref : (x : ValueDeref) -> LLVM_Value
+exist eval_not : (x : ValueNot) -> LLVM_Value
+exist eval_plus : (x : ValuePlus) -> LLVM_Value
+exist eval_minus : (x : ValueMinus) -> LLVM_Value
 exist eval_rec : (x : ValueRecord) -> LLVM_Value
 exist eval_arr : (x : ValueArray) -> LLVM_Value
 
@@ -604,6 +604,10 @@ def_getname = (d : *Definition) -> Str {
 }
 
 exist eval_param : (x : ValueParam) -> LLVM_Value
+exist eval_local_var : (t :*Type, x : ValueLocalVar) -> LLVM_Value
+exist eval_glb_const : (x : ValueGlobalConst) -> LLVM_Value
+exist eval_glb_var : (t :*Type, x : ValueGlobalVar) -> LLVM_Value
+exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 
 // value evaluation
 // Принимает на вход значение. Возвращает значение принтера
@@ -616,24 +620,25 @@ eval = Eval {
 
     //#ValueMention     => eval (x.mention.of)  // Just go through
 
-    #ValueGlobalConst => (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.gconst.def))
+    #ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
 
-    #ValueGlobalVar   => (kind=#LLVM_ValueGlobalVar, type=x.type, id=def_getname(x.gvar.def))
+    #ValueGlobalVar   => eval_glb_var (x.type, x.data as ValueGlobalVar)
 
-    #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.locval.no])
-    #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.lvar.no])
 
-    #ValueParam => eval_param(x.data as ValueParam)
+    #ValueLocalConst  => eval_loc_const (x.data as ValueLocalVal)
+
+    #ValueLocalVar    => eval_local_var (x.type, x.data as ValueLocalVar)
+    #ValueParam => eval_param (x.data as ValueParam)
 
     //#ValueLoad   => load        (reval (x.load))
     #ValueCall   => eval_call   (x.data as ValueCall)
     #ValueIndex  => eval_index  (x.data as ValueIndex)
     #ValueAccess => eval_access (x.data as ValueAccess)
-    #ValueRef    => eval_ref    (x.un)
-    #ValueDeref  => eval_deref  (x.un)
-    #ValueMinus  => eval_minus  (x.un)
-    #ValuePlus   => eval_plus   (x.un)
-    #ValueNot    => eval_not    (x.un)
+    #ValueRef    => eval_ref    (x.data as ValueRef)
+    #ValueDeref  => eval_deref  (x.data as ValueDeref)
+    #ValueMinus  => eval_minus  (x.data as ValueMinus)
+    #ValuePlus   => eval_plus   (x.data as ValuePlus)
+    #ValueNot    => eval_not    (x.data as ValueNot)
     #ValueCast   => eval_cast   (x.data as ValueCast)
     #ValueAs     => eval_as     (x.data as ValueAs)
     #ValueIs     => eval_is     (x.data as ValueIs)
@@ -657,6 +662,23 @@ eval_immediate = Eval {
 
 eval_param = (x : ValueParam) -> LLVM_Value {
   return (kind=#LLVM_ValueRegister, type=x.type, reg=x.no)
+}
+
+eval_local_var = (t : *Type, x : ValueLocalVar) -> LLVM_Value {
+  // T изза того что вар обернут в VAr а потом разворачиваетс]!
+  return (kind=#LLVM_ValueLocalVar, type=t, reg=local_vars_map[x.no])
+}
+
+eval_glb_const = (x : ValueGlobalConst) -> LLVM_Value {
+  return (kind=#LLVM_ValueGlobalConst, type=x.type, id=def_getname(x.def))
+}
+
+eval_glb_var = (t : *Type, x : ValueGlobalVar) -> LLVM_Value {
+  return (kind=#LLVM_ValueGlobalVar, type=t, id=def_getname(x.def))
+}
+
+eval_loc_const = (x : ValueLocalVal) -> LLVM_Value {
+  return (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.no])
 }
 
 // right eval
@@ -814,7 +836,7 @@ eval_access = (x : ValueAccess) -> LLVM_Value {
 
 
 
-eval_ref = (x : ValueUn) -> LLVM_Value {
+eval_ref = (x : ValueRef) -> LLVM_Value {
   vx = eval (x.value)
   if vx.kind == #LLVM_ValueAddress {
     // если это адрес - вернем его в регистре, а тип обернем в указатель
@@ -828,7 +850,7 @@ eval_ref = (x : ValueUn) -> LLVM_Value {
 }
 
 
-eval_deref = (x : ValueUn) -> LLVM_Value {
+eval_deref = (x : ValueDeref) -> LLVM_Value {
   // eval & load pointer
   vx = reval (x.value)
 
@@ -837,7 +859,7 @@ eval_deref = (x : ValueUn) -> LLVM_Value {
 }
 
 
-eval_not = (x : ValueUn) -> LLVM_Value {
+eval_not = (x : ValueNot) -> LLVM_Value {
   vx = reval (x.value)
 
   //"%s = xor %s, -1"
@@ -849,7 +871,7 @@ eval_not = (x : ValueUn) -> LLVM_Value {
 }
 
 
-eval_minus = (x : ValueUn) -> LLVM_Value {
+eval_minus = (x : ValueMinus) -> LLVM_Value {
   vx = reval (x.value)
 
   z = (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
@@ -859,7 +881,7 @@ eval_minus = (x : ValueUn) -> LLVM_Value {
 }
 
 
-eval_plus = (x : ValueUn) -> LLVM_Value {return reval (x.value)}
+eval_plus = (x : ValuePlus) -> LLVM_Value {return reval (x.value)}
 
 
 

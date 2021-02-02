@@ -963,6 +963,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   def = asmFuncAdd (&asm0, uid, t, bx as StmtBlock)
 
+  fv.data := (type=t, def=def, ti=x.ti) to ValueGlobalConst
   fv.gconst := (type=t, def=def, ti=x.ti)
 
   fctx := old_fctx  // restore func context before exit

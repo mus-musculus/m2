@@ -237,10 +237,7 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // добавляем в код функции стейтмент с определением этой переменной
   vd = stmt_new_vardef(id, t, init_value, nil)
-
-  stmtAdd = (s : *Stmt) -> () {list_append(&fctx.cblock.stmts, s)}
-
-  stmtAdd(vd)
+  list_append(&fctx.cblock.stmts, vd)
 
   no = (*vd as StmtVarDef).no
 
