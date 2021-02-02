@@ -71,7 +71,7 @@ ValueNot = Tagged ValueUn
 ValueMinus = Tagged ValueUn
 ValuePlus = Tagged ValueUn
 
-ValueBin    = (type : *Type, kind : ValueKind, left, right : *Value, ti : *TokenInfo)
+ValueBin    = (type : *Type, left, right : *Value, ti : *TokenInfo)
 
 ValueAdd = Tagged ValueBin
 ValueSub = Tagged ValueBin

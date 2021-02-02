@@ -113,7 +113,7 @@ exist do_value_plus  : (x : AstValuePlus) -> *Value
 exist do_value_not   : (x : AstValueNot) -> *Value
 
 exist do_value_bin : (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value
-//exist do_value_bin    : (k : ValueKind, x : AstValueBinary) -> *Value
+
 exist do_value_shift  : (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Value
 exist do_value_call   : (x : AstValueCall) -> *Value
 exist do_value_index  : (x : AstValueIndex) -> *Value
@@ -406,24 +406,24 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
   }
 
   v = when k {
-    #ValueAdd => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueAdd, typ, ti)
-    #ValueSub => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueSub, typ, ti)
-    #ValueMul => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueMul, typ, ti)
-    #ValueDiv => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueDiv, typ, ti)
-    #ValueMod => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueMod, typ, ti)
-    #ValueOr  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueOr, typ, ti)
-    #ValueXor => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueXor, typ, ti)
-    #ValueAnd => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueAnd, typ, ti)
-    #ValueEq  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueEq, typ, ti)
-    #ValueNe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueNe, typ, ti)
-    #ValueLt  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueLt, typ, ti)
-    #ValueGt  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueGt, typ, ti)
-    #ValueLe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueLe, typ, ti)
-    #ValueGe  => value_new ((type=typ, kind=k, left=l, right=r, ti=ti) to ValueGe, typ, ti)
+    #ValueAdd => value_new ((type=typ, left=l, right=r, ti=ti) to ValueAdd, typ, ti)
+    #ValueSub => value_new ((type=typ, left=l, right=r, ti=ti) to ValueSub, typ, ti)
+    #ValueMul => value_new ((type=typ, left=l, right=r, ti=ti) to ValueMul, typ, ti)
+    #ValueDiv => value_new ((type=typ, left=l, right=r, ti=ti) to ValueDiv, typ, ti)
+    #ValueMod => value_new ((type=typ, left=l, right=r, ti=ti) to ValueMod, typ, ti)
+    #ValueOr  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueOr, typ, ti)
+    #ValueXor => value_new ((type=typ, left=l, right=r, ti=ti) to ValueXor, typ, ti)
+    #ValueAnd => value_new ((type=typ, left=l, right=r, ti=ti) to ValueAnd, typ, ti)
+    #ValueEq  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueEq, typ, ti)
+    #ValueNe  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueNe, typ, ti)
+    #ValueLt  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueLt, typ, ti)
+    #ValueGt  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueGt, typ, ti)
+    #ValueLe  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueLe, typ, ti)
+    #ValueGe  => value_new ((type=typ, left=l, right=r, ti=ti) to ValueGe, typ, ti)
     else => value_new_poison(ti)
   }
 
-  //v.bin := (type=typ, kind=k, left=l, right=r, ti=ti)
+  //v.bin := (type=typ, left=l, right=r, ti=ti)
   return v
 
 fail:
@@ -1102,8 +1102,8 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   t = l.type
 
   return when k {
-    #ValueShl => value_new ((type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShl, t, ti)
-    #ValueShr => value_new ((type=t, kind=k, left=l2, right=r2, ti=ti) to ValueShr, t, ti)
+    #ValueShl => value_new ((type=t, left=l2, right=r2, ti=ti) to ValueShl, t, ti)
+    #ValueShr => value_new ((type=t, left=l2, right=r2, ti=ti) to ValueShr, t, ti)
     else => value_new_poison(ti)
   }
 
