@@ -1006,8 +1006,6 @@ eval_is = (x : ValueIs) -> LLVM_Value {
   t16 = getIntByPower(2)
   selector = (kind=#LLVM_ValueRegister, type=t16, reg=reg)
 
-
-
   // Maybe
   variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
