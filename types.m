@@ -516,8 +516,8 @@ ValueNo = {#ValueNo}
 Value2 = ValuePoison or
         ValueUndefined or
         ValueImm or
-        ValueRecord or        //?
-        ValueGenericRecord or //?
+        ValueRecord or        //? приведенное
+        ValueGenericRecord or //? не приведенное (объедини!)
         ValueArray or
         ValueGlobalVar or
         ValueGlobalConst or
