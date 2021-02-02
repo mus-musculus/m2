@@ -173,7 +173,6 @@ Value = (
   access : ValueAccess
   gconst : ValueGlobalConst
   is     : ValueIs
-  imm     : ValueImm
   locval : ValueLocalVal
   gvar   : ValueGlobalVar
   lvar   : ValueLocalVar

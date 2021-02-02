@@ -47,9 +47,7 @@ value_new_poison = (ti : *TokenInfo) -> *Value {
 
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
-  v = value_new ((type=t, value=dx, ti=ti) to ValueImm, t, ti)
-  //v.imm := (type=t, value=dx, ti=ti)
-  return v
+  return value_new ((type=t, value=dx, ti=ti) to ValueImm, t, ti)
 }
 
 
