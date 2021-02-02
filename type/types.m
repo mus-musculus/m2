@@ -3,15 +3,15 @@
 /*****************************************************************************/
 
 
-TypeNumeric = (power : Nat, signed : Bool)
-TypeArray   = (of : *Type, volume : Nat)
-TypeArrayU  = (of : *Type)
-TypeFunc    = (from, to : *Type, arghack : Bool)
-TypePointer = (to : *Type)
-TypeRecord  = (decls : *List, end : Nat)
-TypeVar     = (of : *Type)
-TypeEnum    = (cons : *List)
-TypeUnion   = (types : List, impl : *Type, data_size : Nat)
+TypeNumeric = Tagged (power : Nat, signed : Bool)
+TypeArray   = Tagged (of : *Type, volume : Nat)
+TypeArrayU  = Tagged (of : *Type)
+TypeFunc    = Tagged (from, to : *Type, arghack : Bool)
+TypePointer = Tagged (to : *Type)
+TypeRecord  = Tagged (decls : *List, end : Nat)
+TypeVar     = Tagged (of : *Type)
+TypeEnum    = Tagged (cons : *List)
+TypeUnion   = Tagged (types : List, impl : *Type, data_size : Nat)
 
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 
@@ -68,8 +68,9 @@ TypeKind = {
 }
 
 
-/*Type = TypePoison or
+Type2 = TypePoison or
        TypeGenericReference or
+       TypeGenericRecord or
        TypeNumeric or
        TypeVar or
        TypeBool or
@@ -79,7 +80,7 @@ TypeKind = {
        TypePointer or
        TypeArray or
        TypeArrayU or
-       TypeUnion*/
+       TypeUnion
 
 /*
  * Type Structure
@@ -93,6 +94,8 @@ Type = (
 
 
   size, align  : Nat  // размер и выравнивание в байтах
+
+  data : Type2
 
 //union (
     num      : TypeNumeric
