@@ -575,9 +575,7 @@ do_value_access = (x : AstValueAccess) -> *Value {
 
   t = field.type
 
-  v = value_new ((type=t, value=r, field=field_id, ti=x.ti) to ValueAccess, t, x.ti)
-  v.access := (type=t, value=r, field=field_id, ti=x.ti)
-  return v
+  return value_new ((type=t, value=r, field=field_id, ti=x.ti) to ValueAccess, t, x.ti)
 
 fail:
   return value_new_poison (x.ti)

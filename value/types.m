@@ -170,7 +170,6 @@ Value = (
 
   rec     : ValueRecord
   index  : ValueIndex
-  access : ValueAccess
   gconst : ValueGlobalConst
 
   locval : ValueLocalVal
