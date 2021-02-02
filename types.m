@@ -509,6 +509,7 @@ ValueParam = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 ValueLocalVar = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 
+ValueNo = {#ValueNo}
 
 Value2 = ValuePoison or
         ValueImm or
@@ -549,7 +550,8 @@ Value2 = ValuePoison or
         ValueAs or
         ValueIs or
         ValueCall or
-        ValueWhen
+        ValueWhen or
+        ValueNo
 
 
 Value = (

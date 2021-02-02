@@ -213,7 +213,7 @@ do_value_decl = (x : AstNodeDeclValue) -> () {
 
 
 value_decl_global = (id : *AstId, t : *Type) -> () {
-  v = value_new(#ValueUndefined, t, id.ti)
+  v = value_new(#ValueUndefined, #ValueNo, t, id.ti)
   bind_value_global(id.str, v)
 }
 
@@ -222,7 +222,7 @@ value_decl_global = (id : *AstId, t : *Type) -> () {
 create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new(#ValueGlobalVar, t, id.ti)
+  v = value_new(#ValueGlobalVar, #ValueNo, t, id.ti)
   def = asmVarAdd(&asm0, id.str, t, init_value)
   v.gvar := (type=v.type, def=def, ti=id.ti)
   bind_value_global(id.str, v)
@@ -237,7 +237,7 @@ create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInf
 create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new(#ValueLocalVar, t, ti)
+  v = value_new(#ValueLocalVar, #ValueNo, t, ti)
 
   bind_value_local(id.str, v)
 

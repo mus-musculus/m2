@@ -31,23 +31,23 @@ vn = () -> *Value or Unit  {
   return x
 }
 
-value_new = (k : ValueKind, t : *Type, ti : *TokenInfo) -> *Value {
+value_new = (k : ValueKind, x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
 
-  *v := (kind=k, type=t, ti=ti)
+  *v := (kind=k, type=t, ti=ti, data=x)
   return v
 }
 
 
 value_new_poison = (ti : *TokenInfo) -> *Value {
   tp = type_new (#TypePoison, 0, ti)
-  return value_new (#ValuePoison, tp, ti)
+  return value_new (#ValuePoison, #ValueNo, tp, ti)
 }
 
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
-  v = value_new (#ValueImmediate, t, ti)
+  v = value_new (#ValueImmediate, #ValueNo, t, ti)
   v.imm := (type=t, value=dx, ti=ti)
   return v
 }
@@ -306,7 +306,7 @@ do_value_when = (x : AstValueWhen) -> *Value {
 
   other = implicit_cast (do_value(x.other), kit.type)
 
-  v = value_new (#ValueWhen, kit.type, x.ti)
+  v = value_new (#ValueWhen, #ValueNo, kit.type, x.ti)
   iss = val.type.kind == #TypeUnion
   v.when := (x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti)
   return v
@@ -327,7 +327,7 @@ do_value_ref = (x : AstValueRef) -> *Value {
   if v.kind == #ValuePoison {return v}
 
   t = type_pointer_new (v.type, x.ti)
-  vx = value_new (#ValueRef, t, x.ti)
+  vx = value_new (#ValueRef, #ValueNo, t, x.ti)
   vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
@@ -345,7 +345,7 @@ do_value_deref = (x : AstValueDeref) -> *Value {
   }
 
   t = v.type.pointer.to
-  vx = value_new (#ValueDeref, t, x.ti)
+  vx = value_new (#ValueDeref, #ValueNo, t, x.ti)
   vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
@@ -399,7 +399,7 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
     return value_new_imm (typ, imm, ti)
   }
 
-  v = value_new (k, typ, ti)
+  v = value_new (k, #ValueNo, typ, ti)
   v.bin := (type=typ, kind=k, left=l, right=r, ti=ti)
   return v
 
@@ -416,7 +416,7 @@ do_value_call = (x : AstValueCall) -> *Value {
   args = do_args (f, &(x.args to Var List), x.ti)
 
   t = f.type.func.to
-  v = value_new (#ValueCall, t, x.ti)
+  v = value_new (#ValueCall, #ValueNo, t, x.ti)
   v.call := (type=t, func=f, args=args, ti=x.ti)
   return v
 
@@ -511,7 +511,7 @@ do_value_index = (x : AstValueIndex) -> *Value {
   }
 
   ind = implicit_cast_int (i)
-  v = value_new (#ValueIndex, typ, x.ti)
+  v = value_new (#ValueIndex, #ValueNo, typ, x.ti)
   v.index := (type=typ, array=a, index=ind, ti=x.ti)
   return v
 
@@ -551,7 +551,7 @@ do_value_access = (x : AstValueAccess) -> *Value {
   }
 
   t = field.type
-  v = value_new (#ValueAccess, t, x.ti)
+  v = value_new (#ValueAccess, #ValueNo, t, x.ti)
   v.access := (type=t, value=r, field=field_id, ti=x.ti)
   return v
 
@@ -654,7 +654,7 @@ do_value_cast_gen_rec = DoValueCast {
   }
   map_foreach(&v.rec.values, prep, &ctx)
 
-  nv = value_new (#ValueRecord, t, ti)
+  nv = value_new (#ValueRecord, #ValueNo, t, ti)
   nv.rec := (type=t, values=ctx.new_vm, ti=ti)
   return nv
 }
@@ -745,7 +745,7 @@ do_value_is = (x : AstValueIs) -> *Value {
 
   variant = type_union_get_variant (v.type, t)
 
-  vx = value_new(#ValueIs, typeBool, x.ti)
+  vx = value_new(#ValueIs, #ValueNo, typeBool, x.ti)
   vx.is := (type=typeBool, value=v, variant=variant, ti=x.ti)
   return vx
 
@@ -856,7 +856,7 @@ do_value_string = (x : AstValueString) -> *Value {
   s = x.string
   len = strlen (s) + 1
   typ = type_pointer_new (type_array_new (typeChar, len, x.ti), x.ti)
-  v = value_new (#ValueGlobalConst, typ, x.ti)
+  v = value_new (#ValueGlobalConst, #ValueNo, typ, x.ti)
   id = get_name_str ()
   def = asmStringAdd (&asm0, id, s, len)
   v.gconst := (type=typ, def=def, ti=x.ti)
@@ -879,7 +879,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   uid = get_suid ("func", fuid)
 
   if x.block_stmt is Unit {
-    fv = value_new (#ValueGlobalConst, t, x.ti)
+    fv = value_new (#ValueGlobalConst, #ValueNo, t, x.ti)
     def = asmFuncAdd (&asm0, uid, t, #NoBlock)
     fv.gconst := (type=t, def=def, ti=x.ti)
     return fv
@@ -895,7 +895,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_block = ctx to *StmtBlock
-    param_value = value_new (#ValueParam, decl.type, decl.ti)
+    param_value = value_new (#ValueParam, #ValueNo, decl.type, decl.ti)
     param_value.param := (type=decl.type, no=decl.offset to Nat32, ti=decl.ti)
 
 
@@ -907,7 +907,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   if block is Unit {goto fail}
 
-  fv = value_new (#ValueGlobalConst, t, x.ti)
+  fv = value_new (#ValueGlobalConst, #ValueNo, t, x.ti)
 
   // we're in func?
   // add current func to parant func local_funcs list
@@ -989,7 +989,7 @@ do_value_record = (x : AstValueRecord) -> *Value {
   map_foreach(&(x.values to Var Map), field_value_handle, &ctx)
 
 
-  vx = value_new (#ValueGenericRecord, t, x.ti)
+  vx = value_new (#ValueGenericRecord, #ValueNo, t, x.ti)
   vx.rec := (type=t, values=ctx.vl)
   return vx
 
@@ -1007,7 +1007,7 @@ do_value_plus = (x : AstValuePlus) -> *Value {
     return value_new_imm (v.type, v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValuePlus, v.type, x.ti)
+  vx = value_new (#ValuePlus, #ValueNo, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1025,7 +1025,7 @@ do_value_minus = (x : AstValueMinus) -> *Value {
     return value_new_imm (v.type, -v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValueMinus, v.type, x.ti)
+  vx = value_new (#ValueMinus, #ValueNo, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1043,7 +1043,7 @@ do_value_not = (x : AstValueNot) -> *Value {
     return value_new_imm (v.type, not v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValueNot, v.type, x.ti)
+  vx = value_new (#ValueNot, #ValueNo, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1079,7 +1079,7 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   r2 = cast (r, l.type, r.ti)
 
   t = l.type
-  v = value_new (k, t, ti)
+  v = value_new (k, #ValueNo, t, ti)
   v.bin := (type=t, kind=k, left=l2, right=r2, ti=ti)
   return v
 
@@ -1165,7 +1165,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // во всех остальных случаях выполняем runtime приведение
 sact:
-  v = value_new (#ValueCast, t, ti)
+  v = value_new (#ValueCast, #ValueNo, t, ti)
   v.cast := (type=t, value=vx, ti=ti)
   return v
 
