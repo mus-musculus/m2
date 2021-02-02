@@ -119,9 +119,12 @@ ValueNo = {#ValueNo}
 
 Value2 = ValuePoison or
         ValueUndefined or
+
         ValueImm or
+
         ValueRecord or        //? приведенное
-        ValueGenericRecord or //? не приведенное (объедини!)
+        ValueGenericRecord or //? не приведенное (объедини в imm!)
+
         ValueArray or
         ValueGlobalVar or
         ValueGlobalConst or
@@ -168,6 +171,8 @@ Value = (
 
   data : Value2
 
+  bind_at,
   ti : *TokenInfo  // place in code where value was mentioned
 )
+
 
