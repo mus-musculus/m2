@@ -368,6 +368,16 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
     goto fail
   }
 
+
+  isReletionOpKind = (k : ValueKind) -> Bool {
+    return k == #ValueEq or
+           k == #ValueNe or
+           k == #ValueLt or
+           k == #ValueGt or
+           k == #ValueLe or
+           k == #ValueGe
+  }
+
   typ = when isReletionOpKind (k) {
     true => typeBool
     else => l.type
@@ -1370,71 +1380,31 @@ implicit_cast_possible = (a, b : *Type) -> Bool {
 
 
 
-isUnaryOpKind = (k : ValueKind) -> Bool
-{return k == #ValueRef or k == #ValueDeref or k == #ValueMinus or k == #ValuePlus or k == #ValueNot}
-
-
-isBinaryOpKind = (k : ValueKind) -> Bool {
-  return k == #ValueAdd or
-         k == #ValueSub or
-         k == #ValueMul or
-         k == #ValueDiv or
-         k == #ValueMod or
-         k == #ValueAnd or
-         k == #ValueOr or
-         k == #ValueXor or
-         isReletionOpKind (k)
-}
-
-
-isReletionOpKind = (k : ValueKind) -> Bool {
-  return k == #ValueEq or
-         k == #ValueNe or
-         k == #ValueLt or
-         k == #ValueGt or
-         k == #ValueLe or
-         k == #ValueGe
-}
-
-
-isSpecialOpKind = (k : ValueKind) -> Bool {
-  return k == #ValueShl or
-         k == #ValueShr or
-         k == #ValueCall or
-         k == #ValueIndex or
-         k == #ValueAccess or
-         k == #ValueCall or
-         k == #ValueCast
-}
-
-
-
 // испольуется в assign
 value_is_readonly = (v : *Value) -> Bool {
   if v.type.kind == #TypeVar {return false}
 
   k = v.kind
 
-  if k == #ValueIndex {
-    def_arr = typeIsDefinedArray (v.index.array.type)
-    return value_is_readonly (v.index.array) and def_arr
+  d = v.data
+
+  if d is ValueIndex {
+    i = d as ValueIndex
+    def_arr = typeIsDefinedArray (i.array.type)
+    return value_is_readonly (i.array) and def_arr
   }
 
-  if k == #ValueAccess {
-    return value_is_readonly (v.access.value) and v.access.value.type.kind != #TypePointer
+  if d is ValueAccess {
+    a = d as ValueAccess
+    return value_is_readonly (a.value) and a.value.type.kind != #TypePointer
   }
 
   // это неправильно - тк операции тоже readonly!
-  return k == #ValueGlobalConst or
-         k == #ValueImmediate or
-         k == #ValueLocalConst or
-         k == #ValueParam
-}
-
-
-valueIsMutable = (v : *Value) -> Bool {
-  k = v.kind
-  return k == #ValueLocalVar or k == #ValueGlobalVar
+  // todo: какая то херня с приоритетом is - пофикси как будет время
+  return (d is ValueGlobalConst) or
+         (d is ValueImm) or
+         (d is ValueLocalVal) or
+         (d is ValueParam)
 }
 
 
