@@ -42,12 +42,12 @@ value_new = (k : ValueKind, x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
 
 value_new_poison = (ti : *TokenInfo) -> *Value {
   tp = type_new (#TypePoison, 0, ti)
-  return value_new (#ValuePoison, #ValueNo, tp, ti)
+  return value_new (#ValuePoison, (ti=ti) to ValuePoison, tp, ti)
 }
 
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
-  v = value_new (#ValueImmediate, #ValueNo, t, ti)
+  v = value_new (#ValueImmediate, (type=t, value=dx, ti=ti) to ValueImm, t, ti)
   v.imm := (type=t, value=dx, ti=ti)
   return v
 }
@@ -305,9 +305,9 @@ do_value_when = (x : AstValueWhen) -> *Value {
   }
 
   other = implicit_cast (do_value(x.other), kit.type)
-
-  v = value_new (#ValueWhen, #ValueNo, kit.type, x.ti)
   iss = val.type.kind == #TypeUnion
+
+  v = value_new (#ValueWhen, (x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti) to ValueWhen, kit.type, x.ti)
   v.when := (x=val, iss=iss, variants=kit.variants, other=other, type=kit.type, ti=x.ti)
   return v
 }
@@ -327,7 +327,7 @@ do_value_ref = (x : AstValueRef) -> *Value {
   if v.kind == #ValuePoison {return v}
 
   t = type_pointer_new (v.type, x.ti)
-  vx = value_new (#ValueRef, #ValueNo, t, x.ti)
+  vx = value_new (#ValueRef, (type=t, value=v, ti=x.ti) to ValueRef, t, x.ti)
   vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
@@ -345,7 +345,8 @@ do_value_deref = (x : AstValueDeref) -> *Value {
   }
 
   t = v.type.pointer.to
-  vx = value_new (#ValueDeref, #ValueNo, t, x.ti)
+
+  vx = value_new (#ValueDeref, (type=t, value=v, ti=x.ti) to ValueDeref, t, x.ti)
   vx.un := (type=t, value=v, ti=x.ti)
   return vx
 }
@@ -416,7 +417,8 @@ do_value_call = (x : AstValueCall) -> *Value {
   args = do_args (f, &(x.args to Var List), x.ti)
 
   t = f.type.func.to
-  v = value_new (#ValueCall, #ValueNo, t, x.ti)
+
+  v = value_new (#ValueCall, (type=t, func=f, args=args, ti=x.ti) to ValueCall, t, x.ti)
   v.call := (type=t, func=f, args=args, ti=x.ti)
   return v
 
@@ -511,7 +513,8 @@ do_value_index = (x : AstValueIndex) -> *Value {
   }
 
   ind = implicit_cast_int (i)
-  v = value_new (#ValueIndex, #ValueNo, typ, x.ti)
+
+  v = value_new (#ValueIndex, (type=typ, array=a, index=ind, ti=x.ti) to ValueIndex, typ, x.ti)
   v.index := (type=typ, array=a, index=ind, ti=x.ti)
   return v
 
@@ -551,7 +554,8 @@ do_value_access = (x : AstValueAccess) -> *Value {
   }
 
   t = field.type
-  v = value_new (#ValueAccess, #ValueNo, t, x.ti)
+
+  v = value_new (#ValueAccess, (type=t, value=r, field=field_id, ti=x.ti) to ValueAccess, t, x.ti)
   v.access := (type=t, value=r, field=field_id, ti=x.ti)
   return v
 
@@ -654,7 +658,7 @@ do_value_cast_gen_rec = DoValueCast {
   }
   map_foreach(&v.rec.values, prep, &ctx)
 
-  nv = value_new (#ValueRecord, #ValueNo, t, ti)
+  nv = value_new (#ValueRecord, (type=t, values=ctx.new_vm, ti=ti) to ValueRecord, t, ti)
   nv.rec := (type=t, values=ctx.new_vm, ti=ti)
   return nv
 }
@@ -745,7 +749,7 @@ do_value_is = (x : AstValueIs) -> *Value {
 
   variant = type_union_get_variant (v.type, t)
 
-  vx = value_new(#ValueIs, #ValueNo, typeBool, x.ti)
+  vx = value_new(#ValueIs, (type=typeBool, value=v, variant=variant, ti=x.ti) to ValueIs, typeBool, x.ti)
   vx.is := (type=typeBool, value=v, variant=variant, ti=x.ti)
   return vx
 
@@ -856,9 +860,10 @@ do_value_string = (x : AstValueString) -> *Value {
   s = x.string
   len = strlen (s) + 1
   typ = type_pointer_new (type_array_new (typeChar, len, x.ti), x.ti)
-  v = value_new (#ValueGlobalConst, #ValueNo, typ, x.ti)
   id = get_name_str ()
   def = asmStringAdd (&asm0, id, s, len)
+
+  v = value_new (#ValueGlobalConst, (type=typ, def=def, ti=x.ti) to ValueGlobalConst, typ, x.ti)
   v.gconst := (type=typ, def=def, ti=x.ti)
   return v
 }
@@ -879,8 +884,8 @@ do_value_func = (x : AstValueFunc) -> *Value {
   uid = get_suid ("func", fuid)
 
   if x.block_stmt is Unit {
-    fv = value_new (#ValueGlobalConst, #ValueNo, t, x.ti)
     def = asmFuncAdd (&asm0, uid, t, #NoBlock)
+    fv = value_new (#ValueGlobalConst, (type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
     fv.gconst := (type=t, def=def, ti=x.ti)
     return fv
   }
@@ -895,7 +900,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_block = ctx to *StmtBlock
-    param_value = value_new (#ValueParam, #ValueNo, decl.type, decl.ti)
+    param_value = value_new (#ValueParam, (type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
     param_value.param := (type=decl.type, no=decl.offset to Nat32, ti=decl.ti)
 
 
@@ -989,7 +994,7 @@ do_value_record = (x : AstValueRecord) -> *Value {
   map_foreach(&(x.values to Var Map), field_value_handle, &ctx)
 
 
-  vx = value_new (#ValueGenericRecord, #ValueNo, t, x.ti)
+  vx = value_new (#ValueGenericRecord, (type=t, values=ctx.vl) to ValueGenericRecord, t, x.ti)
   vx.rec := (type=t, values=ctx.vl)
   return vx
 
@@ -1007,7 +1012,7 @@ do_value_plus = (x : AstValuePlus) -> *Value {
     return value_new_imm (v.type, v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValuePlus, #ValueNo, v.type, x.ti)
+  vx = value_new (#ValuePlus, (type=v.type, value=v, ti=x.ti) to ValuePlus, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1025,7 +1030,7 @@ do_value_minus = (x : AstValueMinus) -> *Value {
     return value_new_imm (v.type, -v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValueMinus, #ValueNo, v.type, x.ti)
+  vx = value_new (#ValueMinus, (type=v.type, value=v, ti=x.ti) to ValueMinus, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1043,7 +1048,7 @@ do_value_not = (x : AstValueNot) -> *Value {
     return value_new_imm (v.type, not v.imm.value, x.ti)
   }
 
-  vx = value_new (#ValueNot, #ValueNo, v.type, x.ti)
+  vx = value_new (#ValueNot, (type=v.type, value=v, ti=x.ti) to ValueNot, v.type, x.ti)
   vx.un := (type=v.type, value=v, ti=x.ti)
   return vx
 
@@ -1165,7 +1170,7 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // во всех остальных случаях выполняем runtime приведение
 sact:
-  v = value_new (#ValueCast, #ValueNo, t, ti)
+  v = value_new (#ValueCast, (type=t, value=vx, ti=ti) to ValueCast, t, ti)
   v.cast := (type=t, value=vx, ti=ti)
   return v
 

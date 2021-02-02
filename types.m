@@ -453,7 +453,9 @@ ValueKind = {
 }
 
 ValuePoison  = Tagged (ti : *TokenInfo)
+ValueUndefined = Tagged (type : *Type, ti : *TokenInfo)
 ValueImm     = Tagged (type : *Type, value : Int64, ti : *TokenInfo)
+ValueGenericRecord = Tagged (type : *Type, values : Map, ti : *TokenInfo)
 ValueRecord  = Tagged (type : *Type, values : Map, ti : *TokenInfo)
 ValueArray   = Tagged (type : *Type, items : List, ti : *TokenInfo)
 ValueMention = Tagged (type : *Type, of : *Value, ti : *TokenInfo)
@@ -512,8 +514,10 @@ ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
 ValueNo = {#ValueNo}
 
 Value2 = ValuePoison or
+        ValueUndefined or
         ValueImm or
-        ValueRecord or
+        ValueRecord or        //?
+        ValueGenericRecord or //?
         ValueArray or
         ValueGlobalVar or
         ValueGlobalConst or
