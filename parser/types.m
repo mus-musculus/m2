@@ -75,8 +75,6 @@ AstType = AstTypeNamed or
           AstTypeSpecial or
           AstTypeUnion
 
-AstTypeParser = () -> *AstType
-
 
 //
 //  Parser Value
@@ -180,8 +178,6 @@ ValueParserError = {#ValueParserError}
 // TODO
 ValueParserResult = AstValue or ValueParserError
 
-AstValueParser = () -> *AstValue
-
 
 //
 //  Parser Statement
@@ -219,8 +215,5 @@ AstStmt = AstStmtAssign or
           AstStmtLabel or
           AstStmtBreak or
           AstStmtAgain
-
-
-AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
 
 

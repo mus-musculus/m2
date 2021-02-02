@@ -601,7 +601,6 @@ exist eval_as : (x : ValueAs) -> LLVM_Value
 exist eval_is : (x : ValueIs) -> LLVM_Value
 
 exist eval_cast : (x : ValueCast) -> LLVM_Value
-exist eval_bin : (x : ValueBin) -> LLVM_Value
 exist eval_add : (x : ValueAdd) -> LLVM_Value
 exist eval_sub : (x : ValueSub) -> LLVM_Value
 exist eval_mul : (x : ValueMul) -> LLVM_Value
@@ -1251,47 +1250,6 @@ eval_shl = (x : ValueShl) -> LLVM_Value {
 eval_shr = (x : ValueShr) -> LLVM_Value {
   return eval_binary_su ("ashr", "lshr", x.left, x.right, x.type)
 }
-
-
-/*
-
-eval_bin = (x : ValueBin) -> LLVM_Value {
-  l = reval (x.left)
-  r = reval (x.right)
-
-  // берем тип левого а не тип x тк у x может быть Bool тип (в случае отношений)!
-  signed = l.type.num.signed
-
-  op = when x.kind {
-    #ValueAdd => "add" to Str
-    #ValueSub => "sub" to Str
-    #ValueMul => "mul" to Str
-    #ValueDiv => (s : Bool) -> Str {if s {return "sdiv"}; return "udiv"} (signed)
-    #ValueMod => (s : Bool) -> Str {if s {return "srem"}; return "urem"} (signed)
-
-    #ValueOr => "or" to Str
-    #ValueXor => "xor" to Str
-    #ValueAnd => "and" to Str
-
-    #ValueEq => "icmp eq" to Str
-    #ValueNe => "icmp ne" to Str
-
-    #ValueLt => (s : Bool) -> Str {if s {return "icmp slt"}; return "icmp ult"} (signed)
-    #ValueGt => (s : Bool) -> Str {if s {return "icmp sgt"}; return "icmp ugt"} (signed)
-    #ValueLe => (s : Bool) -> Str {if s {return "icmp sle"}; return "icmp ule"} (signed)
-    #ValueGe => (s : Bool) -> Str {if s {return "icmp sge"}; return "icmp uge"} (signed)
-
-    #ValueShl => "shl" to Str
-    #ValueShr => (s : Bool) -> Str {if s {return "ashr"}; return "lshr"} (signed)
-
-    else => "<unknown-binary-operation>" to Str
-  }
-
-  regno = llvm_binary (op, l, r)
-  return (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
-}
-*/
-
 
 
 

@@ -304,6 +304,8 @@ parse_bind_value = () -> AstNodeBindValue {
 /*                             Parse Type                                    */
 /*****************************************************************************/
 
+AstTypeParser = () -> *AstType
+
 ast_type_new = (x : AstType) -> *AstType {
   t = malloc(sizeof AstType) to *AstType
   assert(t != nil, "parse_type malloc")
@@ -522,9 +524,11 @@ parse_decl = (arghack : Bool) -> *AstDecl {
 
 
 
-/*****************************************************************************/
-/*                             Parse Value                                    */
-/*****************************************************************************/
+//
+//  Parse Value
+//
+
+AstValueParser = () -> *AstValue
 
 
 ast_value_new = (x : AstValue) -> *AstValue {
@@ -1000,6 +1004,8 @@ parse_value_array = AstValueParser {
 }
 
 
+
+AstStmtParser = (ti : *TokenInfo) -> *AstStmt or Unit
 
 exist parse_stmt_block : AstStmtParser
 
