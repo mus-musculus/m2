@@ -354,7 +354,7 @@ exist operand : (t : *Type, k : LLVM_ValueKind, reg : Nat32) -> LLVM_Value
 
 
 exist operation_with_type : (op : Str, t : *Type) -> Nat
-exist llvm_binary : (op : Str, l, r : LLVM_Value, t : *Type) -> Nat
+exist llvm_binary : (op : Str, l, r : LLVM_Value) -> Nat
 exist llvm_getelementptr : (by : LLVM_Value, item_type : *Type) -> Nat
 exist llvm_extractvalue : (t : *Type, o : LLVM_Value, index : Nat) -> Nat
 
@@ -561,6 +561,15 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
   space ()
   print_val (o)
   fprintf (fout, ", %u", index)
+  return reg
+}
+
+llvm_binary = (op : Str, l, r : LLVM_Value) -> Nat {
+  reg = operation_with_type (op, l.type)
+  space ()
+  print_val (l)
+  comma ()
+  print_val (r)
   return reg
 }
 
@@ -871,7 +880,7 @@ eval_minus = (x : ValueMinus) -> LLVM_Value {
 
   z = (kind=#LLVM_ValueImmediate, type=typeBaseInt, imm=0 to Int64)
 
-  reg = llvm_binary ("sub nsw", z, vx, vx.type)
+  reg = llvm_binary ("sub nsw", z, vx)
   return (kind=#LLVM_ValueRegister, type=vx.type, reg=reg)
 }
 
@@ -975,8 +984,8 @@ eval_is = (x : ValueIs) -> LLVM_Value {
 
     // Для `Maybe Pointer
     regno = when x.variant {
-      0 => llvm_binary ("icmp ne", selector, variant, typeBaseInt)
-      1 => llvm_binary ("icmp eq", selector, variant, typeBaseInt)
+      0 => llvm_binary ("icmp ne", selector, variant)
+      1 => llvm_binary ("icmp eq", selector, variant)
       else => 0
     }
 
@@ -1004,7 +1013,7 @@ eval_is = (x : ValueIs) -> LLVM_Value {
   variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=x.variant to Int64)
   variant = loadImmAs(variant_reg, typeBaseInt)
 
-  regno = llvm_binary ("icmp eq", selector, variant, t16)
+  regno = llvm_binary ("icmp eq", selector, variant)
   return (kind=#LLVM_ValueRegister, type=typeBool, reg=regno)
 }
 
@@ -1127,14 +1136,7 @@ eval_cast = (x : ValueCast) -> LLVM_Value {
 }
 
 
-llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
-  reg = operation_with_type (op, l.type)
-  space ()
-  print_val (l)
-  comma ()
-  print_val (r)
-  return reg
-}
+
 
 
 /*eval_add = (x : ValueAdd) -> LLVM_Value {
@@ -1174,7 +1176,7 @@ eval_bin = (x : ValueBin) -> LLVM_Value {
     else => "<unknown-binary-operation>" to Str
   }
 
-  regno = llvm_binary (op, l, r, l.type)
+  regno = llvm_binary (op, l, r)
   return (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
 }
 
@@ -1279,7 +1281,7 @@ eval_when = (x : ValueWhen) -> LLVM_Value {
     if va.x != nil {
       // when по значению
       s0 = reval (va.x)
-      regno = llvm_binary ("icmp eq", c.sel, s0, s0.type)
+      regno = llvm_binary ("icmp eq", c.sel, s0)
       fprintf (fout, "\n  br i1 %%%d", regno)
     } else {
       // when по типу
@@ -1289,7 +1291,7 @@ eval_when = (x : ValueWhen) -> LLVM_Value {
       variant = loadImmAs(variant_reg, t16)
 
       // сравниваем его c полученым в начале when реальным значением селектора
-      regno = llvm_binary ("icmp eq", c.when_is_sel, variant, t16)
+      regno = llvm_binary ("icmp eq", c.when_is_sel, variant)
       fprintf (fout, "\n  br i1 %%%d", regno)
     }
 
