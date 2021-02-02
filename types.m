@@ -11,7 +11,7 @@ Module = (public, private, undef : Index)
 
 // parsing function context
 FuncContext = (
-  id     : Str     // for local strings prefix
+  id     : Str     // for local resources prefix (str, arr, func, rec)
 
   cfunc  : *Value
   cblock : *StmtBlock
