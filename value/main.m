@@ -48,7 +48,7 @@ value_new_poison = (ti : *TokenInfo) -> *Value {
 
 value_new_imm = (t : *Type, dx : Int64, ti : *TokenInfo) -> *Value {
   v = value_new ((type=t, value=dx, ti=ti) to ValueImm, t, ti)
-  v.imm := (type=t, value=dx, ti=ti)
+  //v.imm := (type=t, value=dx, ti=ti)
   return v
 }
 
@@ -1041,7 +1041,8 @@ do_value_plus = (x : AstValuePlus) -> *Value {
   if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
-    return value_new_imm (v.type, v.imm.value, x.ti)
+    val = (v.data as ValueImm).value
+    return value_new_imm (v.type, val, x.ti)
   }
 
   return value_new ((type=v.type, value=v, ti=x.ti) to ValuePlus, v.type, x.ti)
@@ -1057,7 +1058,8 @@ do_value_minus = (x : AstValueMinus) -> *Value {
   if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
-    return value_new_imm (v.type, -v.imm.value, x.ti)
+    val = (v.data as ValueImm).value
+    return value_new_imm (v.type, -val, x.ti)
   }
 
   return value_new ((type=v.type, value=v, ti=x.ti) to ValueMinus, v.type, x.ti)
@@ -1073,7 +1075,8 @@ do_value_not = (x : AstValueNot) -> *Value {
   if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
-    return value_new_imm (v.type, not v.imm.value, x.ti)
+    val = (v.data as ValueImm).value
+    return value_new_imm (v.type, not val, x.ti)
   }
 
   return value_new ((type=v.type, value=v, ti=x.ti) to ValueNot, v.type, x.ti)
@@ -1095,9 +1098,11 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   // свертка констант
   if is_value_imm_num(l) and is_value_imm_num(r) {
 
+    limm = (l.data as ValueImm).value
+    rimm = (r.data as ValueImm).value
     d = when k {
-      #ValueShl => l.imm.value << r.imm.value
-      else => l.imm.value >> r.imm.value
+      #ValueShl => limm << rimm
+      else => limm >> rimm
     }
 
     return value_new_imm (l.type, d, ti)
@@ -1193,7 +1198,8 @@ cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
 
   // creating new imm value with target type
   if immCastIsPossible (vx, t) {
-    return value_new_imm (t, vx.imm.value, ti)
+    val = (vx.data as ValueImm).value
+    return value_new_imm (t, val, ti)
   }
 
 
@@ -1219,7 +1225,7 @@ fail:
 // used in: [index, call, shift, expr]
 implicit_cast_int = (v : *Value) -> *Value {
   return when type_eq (v.type, typeNumeric) {
-    true => value_new_imm (typeBaseInt, v.imm.value, v.ti)
+    true => value_new_imm (typeBaseInt, (v.data as ValueImm).value, v.ti)
     else => v
   }
 }
@@ -1314,10 +1320,14 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   if is_value_imm_num(v) {
     if type_is_generic_num (v.type) and type_is_basic_integer (t) {
       // проверяем если константа вписывается в размер типа
-      if 1 to Nat128 << t.num.power <= v.imm.value to Nat128 {
+
+      val = (v.data as ValueImm).value
+
+      if 1 to Nat128 << t.num.power <= val to Nat128 {
         error ("type overflow", v.ti)
       }
-      return value_new_imm (t, v.imm.value, v.ti)
+
+      return value_new_imm (t, val, v.ti)
     }
   }
 
