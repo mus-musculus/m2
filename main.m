@@ -15,8 +15,16 @@ import "data/node"
 import "data/list"
 import "data/map"
 import "sys/fs"
+import "nothing"
 
 import "types"
+import "scanner/types"
+import "parser/types"
+import "type/types"
+import "value/types"
+import "stmt/types"
+import "printer/types"
+
 import "proto"
 import "vars"
 

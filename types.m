@@ -5,14 +5,7 @@ import "data/list"
 import "data/map"
 
 
-import "nothing"
-import "scanner/types"
-import "parser/types"
-import "type/types"
-import "value/types"
-import "stmt/types"
-import "printer/types"
-
+Index = (types, values : Map)
 
 Module = (public, private, undef : Index)
 
