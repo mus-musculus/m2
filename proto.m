@@ -205,5 +205,6 @@ exist value_print_access : (v : *Value) -> ()
 exist value_print_cast : (v : *Value) -> ()
 exist value_print_select : (v : *Value) -> ()
 
+exist value_type_get : (x : Value) -> *Type
 
 //exist is_value_imm_num : (v : *Value) -> Bool

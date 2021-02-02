@@ -227,9 +227,9 @@ value_print_minus = (v : *Value) -> () {}
 value_print_plus = (v : *Value) -> () {}
 
 value_print_bin = (v : *Value, op : Str) -> () {
-  printf("value %s\n", op)
+  /*printf("value %s\n", op)
   printf("left_type:"); prttype(v.bin.left.type)
-  printf("right_type:"); prttype(v.bin.right.type)
+  printf("right_type:"); prttype(v.bin.right.type)*/
 }
 
 value_print_load = (v : *Value) -> () {}

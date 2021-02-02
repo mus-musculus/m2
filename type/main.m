@@ -212,7 +212,9 @@ do_type_array = (x : AstTypeArray) -> *Type {
   size = do_valuex (x.size, false)
   if size.data is ValuePoison {return type_new (#TypePoison, 0, x.ti)}
 
-  return type_array_new (of, size.imm.value to Nat32, x.ti)
+  vol = (size.data as ValueImm).value
+
+  return type_array_new (of, vol to Nat32, x.ti)
 }
 
 

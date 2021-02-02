@@ -384,8 +384,8 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
   }
 
   if is_value_imm_num(l) and is_value_imm_num(r) {
-    lv = l.imm.value
-    rv = r.imm.value
+    lv = (l.data as ValueImm).value
+    rv = (r.data as ValueImm).value
     imm = when k {
       #ValueAdd => lv + rv
       #ValueSub => lv - rv
@@ -1428,3 +1428,49 @@ value_init = () -> () {
 }
 
 
+
+value_type_get = (x : Value) -> *Type {
+  xx = x.data
+  return when xx {
+    ValueImm         => (xx as ValueImm).type
+    ValueGlobalConst => (xx as ValueGlobalConst).type
+    ValueGlobalVar   => (xx as ValueGlobalVar).type
+    ValueLocalVal    => (xx as ValueLocalVal).type
+    ValueLocalVar    => (xx as ValueLocalVar).type
+    ValueParam       => (xx as ValueParam).type
+
+    ValueAdd         => (xx as ValueAdd).type
+    ValueSub         => (xx as ValueSub).type
+    ValueMul         => (xx as ValueMul).type
+    ValueDiv         => (xx as ValueDiv).type
+    ValueMod         => (xx as ValueMod).type
+    ValueAnd         => (xx as ValueAnd).type
+    ValueOr          => (xx as ValueOr).type
+    ValueXor         => (xx as ValueXor).type
+    ValueEq          => (xx as ValueEq).type
+    ValueNe          => (xx as ValueNe).type
+    ValueLt          => (xx as ValueLt).type
+    ValueGt          => (xx as ValueGt).type
+    ValueLe          => (xx as ValueLe).type
+    ValueGe          => (xx as ValueGe).type
+    ValueShl         => (xx as ValueShl).type
+    ValueShr         => (xx as ValueShr).type
+
+    ValueCall   => (xx as ValueCall).type
+    ValueIndex  => (xx as ValueIndex).type
+    ValueAccess => (xx as ValueAccess).type
+    ValueRef    => (xx as ValueRef).type
+    ValueDeref  => (xx as ValueDeref).type
+    ValueMinus  => (xx as ValueMinus).type
+    ValuePlus   => (xx as ValuePlus).type
+    ValueNot    => (xx as ValueNot).type
+    ValueCast   => (xx as ValueCast).type
+    ValueAs     => (xx as ValueAs).type
+    ValueIs     => (xx as ValueIs).type
+    ValueWhen   => (xx as ValueWhen).type
+    ValueRecord => (xx as ValueRecord).type
+    ValueArray  => (xx as ValueArray).type
+
+    else => type_new (#TypePoison, 0, nil)
+  }
+}

@@ -168,28 +168,17 @@ Value = (
 
   data : Value2
 
-//union (
-  imm     : ValueImm
-  //mention : ValueMention
   rec     : ValueRecord
-  arr     : ValueArray
-
-  // operation info
-  gvar   : ValueGlobalVar
-  gconst : ValueGlobalConst
-  param  : ValueParam
-  lvar   : ValueLocalVar
-  locval : ValueLocalVal
-
-  un     : ValueUn
-  bin    : ValueBin
   index  : ValueIndex
   access : ValueAccess
-  cast   : ValueCast
-  as     : ValueAs
+  gconst : ValueGlobalConst
   is     : ValueIs
-  call   : ValueCall
-  when   : ValueWhen
+  imm     : ValueImm
+  locval : ValueLocalVal
+  gvar   : ValueGlobalVar
+  lvar   : ValueLocalVar
+
+
 
   ti : *TokenInfo  // place in code where value was mentioned
 )
