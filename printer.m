@@ -1136,6 +1136,11 @@ llvm_binary = (op : Str, l, r : LLVM_Value, t : *Type) -> Nat {
 }
 
 
+/*eval_add = (x : ValueAdd) -> LLVM_Value {
+  regno = llvm_binary ("add", reval (x.left), reval (x.right), l.type)
+  return (kind=#LLVM_ValueRegister, type=x.type, reg=regno)
+}*/
+
 eval_bin = (x : ValueBin) -> LLVM_Value {
   l = reval (x.left)
   r = reval (x.right)
@@ -1279,7 +1284,7 @@ eval_when = (x : ValueWhen) -> LLVM_Value {
       // загружаем номер сравниваемого типа (imm) в регистр
       t16 = getIntByPower(2)
       variant_reg = (kind=#LLVM_ValueImmediate, type=t16, imm=va.t_no to Int64) to LLVM_Value
-      variant = loadImmAs(variant_reg, typeBaseInt)
+      variant = loadImmAs(variant_reg, t16)
 
       // сравниваем его c полученым в начале when реальным значением селектора
       regno = llvm_binary ("icmp eq", c.when_is_sel, variant, t16)
