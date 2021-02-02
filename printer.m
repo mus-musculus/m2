@@ -567,7 +567,7 @@ llvm_extractvalue = (t : *Type, o : LLVM_Value, index : Nat) -> Nat {
 
 
 
-exist eval_immediate : Eval
+exist eval_immediate : (x : ValueImm) -> LLVM_Value
 exist eval_call : (x : ValueCall) -> LLVM_Value
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
@@ -616,7 +616,7 @@ exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 // (только если это не lval)
 eval = Eval {
   return when x.kind {
-    #ValueImmediate   => eval_immediate (x)
+    #ValueImmediate   => eval_immediate (x.data as ValueImm)
     #ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
     #ValueGlobalVar   => eval_glb_var (x.data as ValueGlobalVar)
     #ValueLocalConst  => eval_loc_const (x.data as ValueLocalVal)
@@ -649,8 +649,8 @@ eval = Eval {
 }
 
 
-eval_immediate = Eval {
-  return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value) to LLVM_Value
+eval_immediate = (x : ValueImm) -> LLVM_Value {
+  return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.value) to LLVM_Value
 }
 
 eval_param = (x : ValueParam) -> LLVM_Value {
