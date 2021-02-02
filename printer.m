@@ -585,7 +585,7 @@ llvm_binary_su = (ops : Str, opu : Str, l, r : LLVM_Value) -> Nat {
 
 
 
-exist eval_immediate : (x : ValueImm) -> LLVM_Value
+exist eval_imm : (x : ValueImm) -> LLVM_Value
 exist eval_call : (x : ValueCall) -> LLVM_Value
 exist eval_index_undefined : (a, i : LLVM_Value) -> LLVM_Value
 exist eval_index_defined : (a, i : LLVM_Value) -> LLVM_Value
@@ -651,7 +651,7 @@ exist eval_loc_const : (x : ValueLocalVal) -> LLVM_Value
 // (только если это не lval)
 eval = Eval {
   return when x.data {
-    ValueImm         => eval_immediate (x.data as ValueImm)
+    ValueImm         => eval_imm       (x.data as ValueImm)
     ValueGlobalConst => eval_glb_const (x.data as ValueGlobalConst)
     ValueGlobalVar   => eval_glb_var   (x.data as ValueGlobalVar)
     ValueLocalVal    => eval_loc_const (x.data as ValueLocalVal)
@@ -695,8 +695,6 @@ eval = Eval {
       fatal ("error eval #ValueUndefined\n")
       return (kind=#LLVM_ValueInvalid)
     } (x)
-
-    //else => eval_bin (x.bin)
   }
 }
 
@@ -705,7 +703,7 @@ eval = Eval {
 reval = Eval {return load(eval(x))}
 
 
-eval_immediate = (x : ValueImm) -> LLVM_Value {
+eval_imm = (x : ValueImm) -> LLVM_Value {
   return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.value) to LLVM_Value
 }
 
