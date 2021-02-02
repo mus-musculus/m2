@@ -3,11 +3,11 @@
 /*****************************************************************************/
 
 is_value_imm_num = (v : *Value) -> Bool {
-  return v.kind == #ValueImmediate
+  return v.data is ValueImm
 }
 
 /*is_value_imm_rec = (v : *Value) -> Bool {
-  if v.kind != #ValueImmediate {return false}
+  if v.data isnt ValueImm {return false}
   return v.type.kind ==
 }*/
 
@@ -201,7 +201,7 @@ do_valuex = (x : *AstValue, load : Bool) -> *Value {
     else => () -> *Value {fatal("do_value : v == nil"); return nil} ()
   }
 
-  if v.kind == #ValuePoison {return v}
+  if v.data is ValuePoison {return v}
 
   return when load {
     true => dold (v)
@@ -317,14 +317,14 @@ do_value_when = (x : AstValueWhen) -> *Value {
 do_value_ref = (x : AstValueRef) -> *Value {
   v = do_value (x.value)
 
-  if v.kind == #ValuePoison {return v}
+  if v.data is ValuePoison {return v}
 
   v.type := when v.type.kind {
     #TypeVar => v.type.var.of
     else => v.type
   }
 
-  if v.kind == #ValuePoison {return v}
+  if v.data is ValuePoison {return v}
 
   t = type_pointer_new (v.type, x.ti)
 
@@ -336,7 +336,7 @@ do_value_deref = (x : AstValueDeref) -> *Value {
   // eval & load pointer
   v = do_value (x.value)
 
-  if v.kind == #ValuePoison {return v}
+  if v.data is ValuePoison {return v}
 
   if v.type.kind != #TypePointer {
     error ("expected pointer", v.ti)
@@ -355,8 +355,8 @@ do_value_bin = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *Val
   lv = do_value (left)
   rv = do_value (right)
 
-  if lv.kind == #ValuePoison {return lv}
-  if rv.kind == #ValuePoison {return rv}
+  if lv.data is ValuePoison {return lv}
+  if rv.data is ValuePoison {return rv}
 
   l = implicit_cast (lv, rv.type)
   r = implicit_cast (rv, l.type)
@@ -436,7 +436,7 @@ fail:
 do_value_call = (x : AstValueCall) -> *Value {
   f = do_value (x.func)
 
-  if f.kind == #ValuePoison {return f}
+  if f.data is ValuePoison {return f}
 
   args = do_args (f, &(x.args to Var List), x.ti)
 
@@ -509,8 +509,8 @@ do_value_index = (x : AstValueIndex) -> *Value {
   a = do_value (x.array)
   i = do_value (x.index)
 
-  if a.kind == #ValuePoison {goto fail}
-  if i.kind == #ValuePoison {goto fail}
+  if a.data is ValuePoison {goto fail}
+  if i.data is ValuePoison {goto fail}
 
   // индексация допускается и для указателей на определенные массивы!
   // тип операции индексирования - тип элемента ее массива
@@ -549,7 +549,7 @@ do_value_access = (x : AstValueAccess) -> *Value {
   r = do_value (x.rec)
   field_id = x.field_id.str
 
-  if r.kind == #ValuePoison {goto fail}
+  if r.data is ValuePoison {goto fail}
 
   // It expects record or pointer to record
   r_typ = when r.type.kind {
@@ -709,7 +709,7 @@ do_value_cast = (x : AstValueCast) -> *Value {
   v = do_value (x.value)
   t = do_type (x.type)
 
-  if v.kind == #ValuePoison {goto fail}
+  if v.data is ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
 
   ti = x.ti
@@ -794,7 +794,7 @@ do_value_as = (x : AstValueAs) -> *Value {
   t = do_type (x.type)
   ti = x.ti
 
-  if v.kind == #ValuePoison {goto fail}
+  if v.data is ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
 
 
@@ -1038,7 +1038,7 @@ fail:
 do_value_plus = (x : AstValuePlus) -> *Value {
   v = do_value (x.value)
 
-  if v.kind == #ValuePoison {goto fail}
+  if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
     return value_new_imm (v.type, v.imm.value, x.ti)
@@ -1054,7 +1054,7 @@ fail:
 do_value_minus = (x : AstValueMinus) -> *Value {
   v = do_value (x.value)
 
-  if v.kind == #ValuePoison {goto fail}
+  if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
     return value_new_imm (v.type, -v.imm.value, x.ti)
@@ -1070,7 +1070,7 @@ fail:
 do_value_not = (x : AstValueNot) -> *Value {
   v = do_value (x.value)
 
-  if v.kind == #ValuePoison {goto fail}
+  if v.data is ValuePoison {goto fail}
 
   if is_value_imm_num(v) {
     return value_new_imm (v.type, not v.imm.value, x.ti)
@@ -1088,8 +1088,8 @@ do_value_shift = (k : ValueKind, left, right : *AstValue, ti : *TokenInfo) -> *V
   l = do_value (left)
   r = do_value (right)
 
-  if l.kind == #ValuePoison {goto fail}
-  if r.kind == #ValuePoison {goto fail}
+  if l.data is ValuePoison {goto fail}
+  if r.data is ValuePoison {goto fail}
 
 
   // свертка констант
@@ -1163,7 +1163,7 @@ exist generic_rec_cast_possible : (t_gen, t : *Type) -> Bool
 
 
 cast = (vx : *Value, t : *Type, ti : *TokenInfo) -> *Value {
-  if vx.kind == #ValuePoison {goto fail}
+  if vx.data is ValuePoison {goto fail}
   if t.kind == #TypePoison {goto fail}
 
   // приведение к собственному типу бессмыслено
@@ -1292,7 +1292,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   assert (v.type != nil, "implicit_cast::v.type == nil")
   assert (t != nil, "implicit_cast::t == nil")
 
-  if v.kind == #ValuePoison {return v}
+  if v.data is ValuePoison {return v}
   if t.kind == #TypePoison {goto fail}
 
 
@@ -1302,7 +1302,7 @@ implicit_cast = (v : *Value, t : *Type) -> *Value {
   }
 
   // GenericRecord -> Record
-  if v.kind == #ValueGenericRecord {
+  if v.data is ValueGenericRecord {
     if not generic_rec_cast_possible (v.type, t) {
       return v
     }
@@ -1383,8 +1383,6 @@ implicit_cast_possible = (a, b : *Type) -> Bool {
 // испольуется в assign
 value_is_readonly = (v : *Value) -> Bool {
   if v.type.kind == #TypeVar {return false}
-
-  k = v.kind
 
   d = v.data
 
