@@ -603,6 +603,8 @@ def_getname = (d : *Definition) -> Str {
   }
 }
 
+exist eval_param : (x : ValueParam) -> LLVM_Value
+
 // value evaluation
 // Принимает на вход значение. Возвращает значение принтера
 // Значения-операции вычисляются. Результатом может быть константа, имя, регистр или адрес.
@@ -621,23 +623,23 @@ eval = Eval {
     #ValueLocalConst  => (kind=#LLVM_ValueRegister, type=x.type, reg=local_x_map[x.locval.no])
     #ValueLocalVar    => (kind=#LLVM_ValueLocalVar, type=x.type, reg=local_vars_map[x.lvar.no])
 
-    #ValueParam => (kind=#LLVM_ValueRegister, type=x.type, reg=x.param.no)
+    #ValueParam => eval_param(x.data as ValueParam)
 
     //#ValueLoad   => load        (reval (x.load))
-    #ValueCall   => eval_call   (x.call)
-    #ValueIndex  => eval_index  (x.index)
-    #ValueAccess => eval_access (x.access)
+    #ValueCall   => eval_call   (x.data as ValueCall)
+    #ValueIndex  => eval_index  (x.data as ValueIndex)
+    #ValueAccess => eval_access (x.data as ValueAccess)
     #ValueRef    => eval_ref    (x.un)
     #ValueDeref  => eval_deref  (x.un)
     #ValueMinus  => eval_minus  (x.un)
     #ValuePlus   => eval_plus   (x.un)
     #ValueNot    => eval_not    (x.un)
-    #ValueCast   => eval_cast   (x.cast)
-    #ValueAs     => eval_as     (x.as)
-    #ValueIs     => eval_is     (x.is)
-    #ValueWhen   => eval_when   (x.when)
-    #ValueRecord => eval_rec    (x.rec)
-    #ValueArray  => eval_arr    (x.arr)
+    #ValueCast   => eval_cast   (x.data as ValueCast)
+    #ValueAs     => eval_as     (x.data as ValueAs)
+    #ValueIs     => eval_is     (x.data as ValueIs)
+    #ValueWhen   => eval_when   (x.data as ValueWhen)
+    #ValueRecord => eval_rec    (x.data as ValueRecord)
+    #ValueArray  => eval_arr    (x.data as ValueArray)
 
     #ValueUndefined => Eval {
       fatal ("error eval #ValueUndefined\n")
@@ -651,6 +653,10 @@ eval = Eval {
 
 eval_immediate = Eval {
   return (kind=#LLVM_ValueImmediate, type=x.type, imm=x.imm.value) to LLVM_Value
+}
+
+eval_param = (x : ValueParam) -> LLVM_Value {
+  return (kind=#LLVM_ValueRegister, type=x.type, reg=x.no)
 }
 
 // right eval
