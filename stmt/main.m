@@ -164,7 +164,7 @@ do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
     //warning("ignoring value", x.ti)
   }
 
-  return stmt_new ((v=v, ti=x.ti) to StmtValBind)
+  return stmt_new ((v=v, ti=x.ti) to StmtExpr)
 }
 
 

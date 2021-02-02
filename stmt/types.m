@@ -24,6 +24,7 @@ MaybeBlock = StmtBlock or NoBlock
 StmtVarDef   = Tagged (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
 
 StmtValBind  = Tagged (v : *Value, no : Nat, ti : *TokenInfo)
+StmtExpr     = Tagged (v : *Value, ti : *TokenInfo)
 StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
 StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
 StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
@@ -34,7 +35,8 @@ StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
 StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
 
 
-Stmt = StmtValBind or
+Stmt =  StmtExpr or
+        StmtValBind or
         StmtBlock or
         StmtAssign or
         StmtIf or

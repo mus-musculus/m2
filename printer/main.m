@@ -1591,6 +1591,7 @@ exist print_stmt         : (s : *Stmt) -> ()
 exist print_stmt_assign  : (x : StmtAssign) -> ()
 exist print_stmt_var     : (v : StmtVarDef) -> ()
 exist print_stmt_valbind : (x : StmtValBind) -> ()
+exist print_stmt_expr    : (x : StmtExpr) -> ()
 exist print_stmt_if      : (i : StmtIf) -> ()
 exist print_stmt_while   : (w : StmtWhile) -> ()
 
@@ -1606,6 +1607,7 @@ print_stmt = (s : *Stmt) -> () {
   when ss {
     StmtBlock    => print_block         (ss as StmtBlock)
     StmtValBind  => print_stmt_valbind  (ss as StmtValBind)
+    StmtExpr     => print_stmt_expr     (ss as StmtExpr)
     StmtAssign   => print_stmt_assign   (ss as StmtAssign)
     StmtVarDef   => print_stmt_var      (ss as StmtVarDef)
     StmtIf       => print_stmt_if       (ss as StmtIf)
@@ -1646,6 +1648,9 @@ print_stmt_valbind = (x : StmtValBind) -> () {
   // сохраняем номер регистра по нашему номеру
   local_x_map[x.no] := o.reg
 }
+
+
+print_stmt_expr = (x : StmtExpr) -> () {reval (x.v)}
 
 
 print_stmt_if = (x : StmtIf) -> () {
