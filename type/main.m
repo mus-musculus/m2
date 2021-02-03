@@ -169,6 +169,7 @@ exist do_type_pointer : (x : AstTypePointer) -> *Type
 exist do_type_record  : (x : AstTypeRecord) -> *Type
 exist do_type_enum    : (x : AstTypeEnum) -> *Type
 exist do_type_or      : (x : AstTypeOr) -> *Type
+exist do_type_union   : (x : AstTypeUnion) -> *Type
 
 do_type = (x : *AstType) -> *Type {
   xx = *x
@@ -176,7 +177,7 @@ do_type = (x : *AstType) -> *Type {
     AstTypeNamed   => do_type_named   (xx as AstTypeNamed)
     AstTypeRecord  => do_type_record  (xx as AstTypeRecord)
     AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
-    AstTypeOr      => do_type_or      (xx as AstTypeOr)
+    AstTypeUnion   => do_type_union   (xx as AstTypeUnion)
     AstTypeVar     => do_type_var     (xx as AstTypeVar)
     AstTypeNewType => do_type_special (xx as AstTypeNewType)
     AstTypeArray   => do_type_array   (xx as AstTypeArray)
@@ -188,46 +189,63 @@ do_type = (x : *AstType) -> *Type {
 }
 
 
-do_type_or = (x : AstTypeOr) -> *Type {
-  l = do_type (x.left)
-  r = do_type (x.right)
 
-  // сливает воедино union и произвольный тип
-  type_union_add = (u, t : *Type) -> *Type {
-    list_append (&u.union.types, t)
-    data_size = max (u.union.data_size, t.size)
-    u.union.data_size := data_size
-    size = propagation (align (data_size + 2, 4))
-    u.size := size
-    u.align := size
-    u.union.impl := nil
-    return u
-  }
 
-  // если слева TypeOr - сливаем
-  if l.kind == #TypeUnion {
-    return type_union_add (l, r)
-  }
+do_type_union = (x : AstTypeUnion) -> *Type {
+  xuid = str_new(10)
+  sprintf(&xuid[0], "%d", union_id)
+  aka = cat("union.", xuid)
+  union_id := union_id + 1
 
-  // если справа TypeOr - сливаем
-  if r.kind == #TypeUnion {
-    return type_union_add (r, l)
-  }
-
-  // создаем новый пусто union
-  aka = name_union_get ()
   t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
-  list_append (&unions, t)
   list_init (&t.union.types)
   t.aka := aka
 
-  // добавляем в него левый и правый член
-  type_union_add(t, l)
-  type_union_add(t, r)
+  CtxUnion = (
+    tlist : *List
+    max_size : Nat
+  )
+
+  ctx = (tlist=&t.union.types) to Var CtxUnion
+
+  do_variant = ListForeachHandler {
+    ast_type = data to *AstType
+    c = ctx to *CtxUnion
+
+    tlist = ctx to *List
+    t = do_type (ast_type)
+
+    // получаем размер самого большого варианта
+    c.max_size := when true {
+      t.size > c.max_size => t.size
+      else => c.max_size
+    }
+
+    if type_present_in_list(c.tlist, t) {
+      error("this type already present in union", t.ti)
+    }
+
+    list_append(c.tlist, t)
+  }
+  list_foreach(&(x.types to Var List), do_variant, &ctx)
+
+  size = propagation(align(ctx.max_size + 2, 4))
+
+
+  t.size := size
+  t.align := size
+
+  t.union.data_size := ctx.max_size
+
+  list_append (&unions, t)
 
   if type_is_maybe_ptr (t) {
     // если это мейби указатель то нам подойдет простой указатель
-    t.union.impl := typeFreePtr
+    u = typeFreePtr  // пока юнионы только для ?указателей тест
+    t.union.impl := u
+
+  } else {
+    t.union.impl := nil  // классический юнион
   }
 
   return t
