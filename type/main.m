@@ -28,6 +28,15 @@ propagation = (x : Nat) -> Nat {
 }
 
 
+max = (a, b : Nat) -> Nat {
+  return when true {
+    a > b => a
+    a < b => b
+    else => a
+  }
+}
+
+
 type_new = (k : TypeKind, x : Type2, size : Nat, ti : *TokenInfo) -> *Type {
   t = malloc (sizeof Type) to *Type
   assert (t != nil, "type_new")
@@ -180,13 +189,6 @@ do_type = (x : *AstType) -> *Type {
   }
 }
 
-max = (a, b : Nat) -> Nat {
-  return when true {
-    a > b => a
-    a < b => b
-    else => a
-  }
-}
 
 do_type_or = (x : AstTypeOr) -> *Type {
   l = do_type (x.left)
