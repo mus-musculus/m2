@@ -906,8 +906,8 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func390_str1 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
 @func390_str2 = private unnamed_addr constant [7 x i8] c"union.\00", align 1
 @func391_str1 = private unnamed_addr constant [20 x i8] c"alignment : align=0\00", align 1
-@func393_str1 = private unnamed_addr constant [9 x i8] c"type_new\00", align 1
-@func413_func414_str1 = private unnamed_addr constant [18 x i8] c"unknown type kind\00", align 1
+@func394_str1 = private unnamed_addr constant [9 x i8] c"type_new\00", align 1
+@func414_func415_str1 = private unnamed_addr constant [18 x i8] c"unknown type kind\00", align 1
 @func425_str1 = private unnamed_addr constant [22 x i8] c"type_record_field_new\00", align 1
 @func426_func427_str1 = private unnamed_addr constant [14 x i8] c"unknown type3\00", align 1
 @func426_func429_str1 = private unnamed_addr constant [15 x i8] c"undefined type\00", align 1
@@ -8137,7 +8137,7 @@ define %Nat32 @lab_get () {
 define void @func274 (%Unit*, %Unit*, %Unit*) {
   %4 = bitcast %Unit* %0 to %Str
   %5 = bitcast %Unit* %1 to %Type*
-  %6 = call i1 (%Type*) @func408 (%Type* %5)
+  %6 = call i1 (%Type*) @func409 (%Type* %5)
   br i1 %6, label %then_0, label %else_0
 then_0:
   %7 = load %FILE*, %FILE** @fout
@@ -9460,7 +9460,7 @@ define %LLVM_Value @func309 (%ValueIndex) {
   %4 = extractvalue %ValueIndex %0, 2
   %5 = call %LLVM_Value (%Value*) @func299 (%Value* %4)
   %6 = extractvalue %LLVM_Value %3, 1
-  %7 = call i1 (%Type*) @func406 (%Type* %6)
+  %7 = call i1 (%Type*) @func407 (%Type* %6)
   br i1 %7, label %then_0, label %else_0
 then_0:
   %8 = call %LLVM_Value (%LLVM_Value, %LLVM_Value) @eval_index_uarray (%LLVM_Value %3, %LLVM_Value %5)
@@ -9472,7 +9472,7 @@ endif_0:
   %10 = extractvalue %LLVM_Value %3, 0
   %11 = icmp eq %LLVM_ValueKind %10, 9
   %12 = extractvalue %LLVM_Value %3, 1
-  %13 = call i1 (%Type*) @func404 (%Type* %12)
+  %13 = call i1 (%Type*) @func405 (%Type* %12)
   %14 = and i1 %11, %13
   %15 = and i1 %14, 1
   br i1 %15, label %then_1, label %else_1
@@ -9534,7 +9534,7 @@ select_1_1:
 select_1_end:
   %24 = phi %Type* [ %22, %select_1_0_ok ], [ %23, %select_1_1 ]
   %25 = extractvalue %ValueAccess %0, 2
-  %26 = call %Decl* (%Type*, %Str) @func401 (%Type* %24, %Str %25)
+  %26 = call %Decl* (%Type*, %Str) @func402 (%Type* %24, %Str %25)
   %27 = getelementptr inbounds %Decl, %Decl* %26, i1 0, i32 3
   %28 = load %Nat16, %Nat16* %27
   %29 = xor i1 %17, 1
@@ -10003,7 +10003,7 @@ select_2_end:
 define %LLVM_Value @eval_cast_to_union (%LLVM_Value, %Type*) {
   %3 = extractvalue %LLVM_Value %0, 1
   %4 = call %Nat32 (%Type*, %Type*) @func447 (%Type* %1, %Type* %3)
-  %5 = call i1 (%Type*) @func412 (%Type* %1)
+  %5 = call i1 (%Type*) @func413 (%Type* %1)
   %6 = xor i1 %5, 1
   br i1 %6, label %then_0, label %else_0
 then_0:
@@ -10011,7 +10011,7 @@ then_0:
   %8 = call %Nat32 (%Str, %Type*) @func290 (%Str %7, %Type* %1)
   %9 = call %Type* (%Nat32) @func445 (%Nat32 2); loadImmPtr
   %10 = inttoptr i64 0 to%TokenInfo*
-  %11 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %9, %TokenInfo* %10)
+  %11 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %9, %TokenInfo* %10)
   %12 = load %FILE*, %FILE** @fout
   %13 = bitcast [20 x %Nat8]* @func327_str2 to %Str
   %14 = call %Int32 (%FILE*, %Str, ...) @fprintf (%FILE* %12, %Str %13, %Nat32 %4)
@@ -10042,16 +10042,16 @@ then_0:
   %35 = load %Nat32, %Nat32* %34
   %36 = load %Type*, %Type** @typeChar; loadImmPtr
   %37 = inttoptr i64 0 to%TokenInfo*
-  %38 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func397 (%Type* %36, %Nat32 %35, %TokenInfo* %37); loadImmPtr
+  %38 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func398 (%Type* %36, %Nat32 %35, %TokenInfo* %37); loadImmPtr
   %39 = inttoptr i64 0 to%TokenInfo*
-  %40 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %38, %TokenInfo* %39)
+  %40 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %38, %TokenInfo* %39)
   %41 = bitcast [8 x %Nat8]* @func327_str6 to %Str
   %42 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
   %43 = insertvalue %LLVM_Value %42, %Type* %40, 1
   %44 = insertvalue %LLVM_Value %43, %Nat32 %31, 4
   %45 = extractvalue %LLVM_Value %0, 1; loadImmPtr
   %46 = inttoptr i64 0 to%TokenInfo*
-  %47 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %45, %TokenInfo* %46)
+  %47 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %45, %TokenInfo* %46)
   %48 = call %LLVM_Value (%Str, %LLVM_Value, %Type*) @func317 (%Str %41, %LLVM_Value %44, %Type* %47)
   call void (%LLVM_Value, %LLVM_Value) @func359 (%LLVM_Value %48, %LLVM_Value %0)
   %49 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
@@ -10108,9 +10108,9 @@ define %LLVM_Value @eval_cast_union_to (%LLVM_Value, %Type*) {
   %13 = load %Nat32, %Nat32* %12
   %14 = load %Type*, %Type** @typeChar; loadImmPtr
   %15 = inttoptr i64 0 to%TokenInfo*
-  %16 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func397 (%Type* %14, %Nat32 %13, %TokenInfo* %15); loadImmPtr
+  %16 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func398 (%Type* %14, %Nat32 %13, %TokenInfo* %15); loadImmPtr
   %17 = inttoptr i64 0 to%TokenInfo*
-  %18 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %16, %TokenInfo* %17)
+  %18 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %16, %TokenInfo* %17)
   %19 = extractvalue %LLVM_Value %0, 1
   %20 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 6, 0
   %21 = extractvalue %LLVM_Value %0, 1
@@ -10120,7 +10120,7 @@ define %LLVM_Value @eval_cast_union_to (%LLVM_Value, %Type*) {
   %25 = bitcast [12 x %Nat8]* @func328_str2 to %Str
   call void (%Str) @o (%Str %25); loadImmPtr
   %26 = inttoptr i64 0 to%TokenInfo*
-  %27 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %1, %TokenInfo* %26)
+  %27 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %1, %TokenInfo* %26)
   %28 = bitcast [8 x %Nat8]* @func328_str3 to %Str
   %29 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
   %30 = insertvalue %LLVM_Value %29, %Type* %18, 1
@@ -10198,7 +10198,7 @@ else_1:
 endif_1:
   br label %select_1_0
 select_1_0:
-  %23 = call i1 (%Type*) @func403 (%Type* %4)
+  %23 = call i1 (%Type*) @func404 (%Type* %4)
   %24 = icmp eq i1 1, %23
   br i1 %24, label %select_1_0_ok, label %select_1_1
 select_1_0_ok:
@@ -10674,7 +10674,7 @@ define void @func355 (%Unit*, %Unit*, %Unit*) {
   %7 = call %LLVM_Value (%Value*) @func299 (%Value* %5)
   %8 = getelementptr inbounds %func354.type3, %func354.type3* %6, i1 0, i32 0
   %9 = load %Type*, %Type** %8
-  %10 = call %Decl* (%Type*, %Str) @func401 (%Type* %9, %Str %4)
+  %10 = call %Decl* (%Type*, %Str) @func402 (%Type* %9, %Str %4)
   %11 = getelementptr inbounds %Decl, %Decl* %10, i1 0, i32 3
   %12 = load %Nat16, %Nat16* %11
   %13 = bitcast [12 x %Nat8]* @func354_func355_str1 to %Str
@@ -10817,7 +10817,7 @@ endif_0:
   br i1 %5, label %then_1, label %else_1
 then_1:
   %6 = extractvalue %LLVM_Value %0, 1
-  %7 = call i1 (%Type*) @func403 (%Type* %6)
+  %7 = call i1 (%Type*) @func404 (%Type* %6)
   br label %select_1_0
 select_1_0:
   %8 = icmp eq i1 %7, 1
@@ -10862,7 +10862,7 @@ endif_2:
 
 define %Int32 @print_val_imm (%LLVM_Value) {
   %2 = extractvalue %LLVM_Value %0, 1
-  %3 = call i1 (%Type*) @func403 (%Type* %2)
+  %3 = call i1 (%Type*) @func404 (%Type* %2)
   %4 = getelementptr inbounds %Type, %Type* %2, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 12
@@ -10879,7 +10879,7 @@ then_0:
   %15 = getelementptr inbounds %Type, %Type* %2, i1 0, i32 13
   %16 = getelementptr inbounds %TypeVar, %TypeVar* %15, i1 0, i32 0
   %17 = load %Type*, %Type** %16
-  %18 = call i1 (%Type*) @func403 (%Type* %17)
+  %18 = call i1 (%Type*) @func404 (%Type* %17)
   %19 = getelementptr inbounds %Type, %Type* %17, i1 0, i32 0
   %20 = load %TypeKind, %TypeKind* %19
   %21 = icmp eq %TypeKind %20, 12
@@ -11712,12 +11712,33 @@ break_0:
   ret %Nat32 %7
 }
 
-define %Type* @func393 (%TypeKind, %union.9, %Nat32, %TokenInfo*) {
+define %Nat32 @max (%Nat32, %Nat32) {
+  br label %select_1_0
+select_1_0:
+  %3 = icmp ugt %Nat32 %0, %1
+  %4 = icmp eq i1 1, %3
+  br i1 %4, label %select_1_0_ok, label %select_1_1
+select_1_0_ok:
+  br label %select_1_end
+select_1_1:
+  %5 = icmp ult %Nat32 %0, %1
+  %6 = icmp eq i1 1, %5
+  br i1 %6, label %select_1_1_ok, label %select_1_2
+select_1_1_ok:
+  br label %select_1_end
+select_1_2:
+  br label %select_1_end
+select_1_end:
+  %7 = phi %Nat32 [ %0, %select_1_0_ok ], [ %1, %select_1_1_ok ], [ %0, %select_1_2 ]
+  ret %Nat32 %7
+}
+
+define %Type* @func394 (%TypeKind, %union.9, %Nat32, %TokenInfo*) {
   %5 = call %Unit* (%Nat32) @malloc (%Nat32 384)
   %6 = bitcast %Unit* %5 to %Type*; loadImmPtr
   %7 = inttoptr i64 0 to%Type*
   %8 = icmp ne %Type* %6, %7
-  %9 = bitcast [9 x %Nat8]* @func393_str1 to %Str
+  %9 = bitcast [9 x %Nat8]* @func394_str1 to %Str
   call void (i1, %Str) @assert (i1 %8, %Str %9)
   %10 = insertvalue %Type zeroinitializer, %TypeKind %0, 0
   %11 = insertvalue %Type %10, %Nat32 %2, 3
@@ -11740,7 +11761,7 @@ define %Type* @type_var_new (%Type*, %TokenInfo*) {
   %8 = load %union.9, %union.9* %4
   %9 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 3
   %10 = load %Nat32, %Nat32* %9
-  %11 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 8, %union.9 %8, %Nat32 %10, %TokenInfo* %1)
+  %11 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 8, %union.9 %8, %Nat32 %10, %TokenInfo* %1)
   %12 = getelementptr inbounds %Type, %Type* %11, i1 0, i32 4
   %13 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 4
   %14 = load %Nat32, %Nat32* %13
@@ -11751,7 +11772,7 @@ define %Type* @type_var_new (%Type*, %TokenInfo*) {
   ret %Type* %11
 }
 
-define %Type* @func395 (%Type*, %TokenInfo*) {
+define %Type* @func396 (%Type*, %TokenInfo*) {
   %3 = insertvalue %TypePointer zeroinitializer, %Type* %0, 0
   %4 = alloca %union.9
 ; write variant 11
@@ -11762,14 +11783,14 @@ define %Type* @func395 (%Type*, %TokenInfo*) {
   %7 = bitcast [56 x %Nat8]* %6 to %TypePointer*
   store %TypePointer %3, %TypePointer* %7, align 8
   %8 = load %union.9, %union.9* %4
-  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 13, %union.9 %8, %Nat32 8, %TokenInfo* %1)
+  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 13, %union.9 %8, %Nat32 8, %TokenInfo* %1)
   %10 = getelementptr inbounds %Type, %Type* %9, i1 0, i32 8
   %11 = insertvalue %TypePointer zeroinitializer, %Type* %0, 0
   store %TypePointer %11, %TypePointer* %10, align 8
   ret %Type* %9
 }
 
-define %Type* @func396 (%Type*, %TokenInfo*) {
+define %Type* @func397 (%Type*, %TokenInfo*) {
   %3 = insertvalue %TypeArrayU zeroinitializer, %Type* %0, 0
   %4 = alloca %union.9
 ; write variant 13
@@ -11780,14 +11801,14 @@ define %Type* @func396 (%Type*, %TokenInfo*) {
   %7 = bitcast [56 x %Nat8]* %6 to %TypeArrayU*
   store %TypeArrayU %3, %TypeArrayU* %7, align 8
   %8 = load %union.9, %union.9* %4
-  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 15, %union.9 %8, %Nat32 8, %TokenInfo* %1)
+  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 15, %union.9 %8, %Nat32 8, %TokenInfo* %1)
   %10 = getelementptr inbounds %Type, %Type* %9, i1 0, i32 10
   %11 = insertvalue %TypeArrayU zeroinitializer, %Type* %0, 0
   store %TypeArrayU %11, %TypeArrayU* %10, align 8
   ret %Type* %9
 }
 
-define %Type* @func397 (%Type*, %Nat32, %TokenInfo*) {
+define %Type* @func398 (%Type*, %Nat32, %TokenInfo*) {
   %4 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 3
   %5 = load %Nat32, %Nat32* %4
   %6 = mul %Nat32 %1, %5
@@ -11802,7 +11823,7 @@ define %Type* @func397 (%Type*, %Nat32, %TokenInfo*) {
   %12 = bitcast [56 x %Nat8]* %11 to %TypeArray*
   store %TypeArray %8, %TypeArray* %12, align 8
   %13 = load %union.9, %union.9* %9
-  %14 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 14, %union.9 %13, %Nat32 %6, %TokenInfo* %2)
+  %14 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 14, %union.9 %13, %Nat32 %6, %TokenInfo* %2)
   %15 = getelementptr inbounds %Type, %Type* %14, i1 0, i32 4
   %16 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 4
   %17 = load %Nat32, %Nat32* %16
@@ -11814,7 +11835,7 @@ define %Type* @func397 (%Type*, %Nat32, %TokenInfo*) {
   ret %Type* %14
 }
 
-define void @func399 (%Unit*, %Unit*, %Nat32, %Node*) {
+define void @func400 (%Unit*, %Unit*, %Nat32, %Node*) {
   %5 = bitcast %Unit* %0 to %EnumConstructor*
   %6 = bitcast %Unit* %1 to %Type*
   %7 = getelementptr inbounds %EnumConstructor, %EnumConstructor* %5, i1 0, i32 1
@@ -11833,7 +11854,7 @@ define void @func399 (%Unit*, %Unit*, %Nat32, %Node*) {
   ret void
 }
 
-define %Type* @func398 (%List*, %TokenInfo*) {
+define %Type* @func399 (%List*, %TokenInfo*) {
   %3 = alloca %union.9
 ; write variant 15
   %4 = getelementptr inbounds %union.9, %union.9* %3, i1 0, i32 0
@@ -11843,13 +11864,13 @@ define %Type* @func398 (%List*, %TokenInfo*) {
   %6 = bitcast [56 x %Nat8]* %5 to %TypeNo*
   store %TypeNo 0, %TypeNo* %6, align 2
   %7 = load %union.9, %union.9* %3
-  %8 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 11, %union.9 %7, %Nat32 2, %TokenInfo* %1)
+  %8 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 11, %union.9 %7, %Nat32 2, %TokenInfo* %1)
   %9 = bitcast %Type* %8 to %Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %0, %ListForeachHandler @func399, %Unit* %9)
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %0, %ListForeachHandler @func400, %Unit* %9)
   ret %Type* %8
 }
 
-define %Type* @func400 (%Type*, %Type*, i1, %TokenInfo*) {
+define %Type* @func401 (%Type*, %Type*, i1, %TokenInfo*) {
   %5 = insertvalue %TypeFunc zeroinitializer, %Type* %0, 0
   %6 = insertvalue %TypeFunc %5, %Type* %1, 1
   %7 = insertvalue %TypeFunc %6, i1 %2, 2
@@ -11862,7 +11883,7 @@ define %Type* @func400 (%Type*, %Type*, i1, %TokenInfo*) {
   %11 = bitcast [56 x %Nat8]* %10 to %TypeFunc*
   store %TypeFunc %7, %TypeFunc* %11, align 8
   %12 = load %union.9, %union.9* %8
-  %13 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 10, %union.9 %12, %Nat32 8, %TokenInfo* %3)
+  %13 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 10, %union.9 %12, %Nat32 8, %TokenInfo* %3)
   %14 = getelementptr inbounds %Type, %Type* %13, i1 0, i32 7
   %15 = insertvalue %TypeFunc zeroinitializer, %Type* %0, 0
   %16 = insertvalue %TypeFunc %15, %Type* %1, 1
@@ -11871,7 +11892,7 @@ define %Type* @func400 (%Type*, %Type*, i1, %TokenInfo*) {
   ret %Type* %13
 }
 
-define i1 @func402 (%Unit*, %Unit*, %Nat32) {
+define i1 @func403 (%Unit*, %Unit*, %Nat32) {
   %4 = bitcast %Unit* %0 to %Decl*
   %5 = bitcast %Unit* %1 to %Str
   %6 = getelementptr inbounds %Decl, %Decl* %4, i1 0, i32 0
@@ -11883,37 +11904,37 @@ define i1 @func402 (%Unit*, %Unit*, %Nat32) {
   ret i1 %11
 }
 
-define %Decl* @func401 (%Type*, %Str) {
+define %Decl* @func402 (%Type*, %Str) {
   %3 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 11
   %4 = getelementptr inbounds %TypeRecord, %TypeRecord* %3, i1 0, i32 0
   %5 = load %List*, %List** %4
   %6 = bitcast %Str %1 to %Unit*
-  %7 = call %Unit* (%List*, %ListSearchHandler, %Unit*) @list_search (%List* %5, %ListSearchHandler @func402, %Unit* %6)
+  %7 = call %Unit* (%List*, %ListSearchHandler, %Unit*) @list_search (%List* %5, %ListSearchHandler @func403, %Unit* %6)
   %8 = bitcast %Unit* %7 to %Decl*
   ret %Decl* %8
 }
 
-define i1 @func403 (%Type*) {
+define i1 @func404 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp eq %TypeKind %3, 3
   %5 = icmp eq %TypeKind %3, 13
   %6 = icmp eq %TypeKind %3, 10
-  %7 = call i1 (%Type*) @func406 (%Type* %0)
+  %7 = call i1 (%Type*) @func407 (%Type* %0)
   %8 = or i1 %6, %7
   %9 = or i1 %5, %8
   %10 = or i1 %4, %9
   ret i1 %10
 }
 
-define i1 @func404 (%Type*) {
+define i1 @func405 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp eq %TypeKind %3, 14
   ret i1 %4
 }
 
-define i1 @func405 (%Type*) {
+define i1 @func406 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp ne %TypeKind %3, 13
@@ -11927,11 +11948,11 @@ endif_0:
   %6 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 8
   %7 = getelementptr inbounds %TypePointer, %TypePointer* %6, i1 0, i32 0
   %8 = load %Type*, %Type** %7
-  %9 = call i1 (%Type*) @func404 (%Type* %8)
+  %9 = call i1 (%Type*) @func405 (%Type* %8)
   ret i1 %9
 }
 
-define i1 @func406 (%Type*) {
+define i1 @func407 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp eq %TypeKind %3, 15
@@ -11956,7 +11977,7 @@ endif_0:
   ret i1 %9
 }
 
-define i1 @func408 (%Type*) {
+define i1 @func409 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp ne %TypeKind %3, 5
@@ -11974,14 +11995,14 @@ endif_0:
   ret i1 %9
 }
 
-define i1 @func409 (%Type*) {
+define i1 @func410 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp eq %TypeKind %3, 12
   ret i1 %4
 }
 
-define i1 @func410 (%Type*) {
+define i1 @func411 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp ne %TypeKind %3, 13
@@ -11995,7 +12016,7 @@ endif_0:
   %6 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 8
   %7 = getelementptr inbounds %TypePointer, %TypePointer* %6, i1 0, i32 0
   %8 = load %Type*, %Type** %7
-  %9 = call i1 (%Type*) @func409 (%Type* %8)
+  %9 = call i1 (%Type*) @func410 (%Type* %8)
   ret i1 %9
 }
 
@@ -12018,7 +12039,7 @@ endif_0:
   ret i1 %10
 }
 
-define i1 @func412 (%Type*) {
+define i1 @func413 (%Type*) {
   %2 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 0
   %3 = load %TypeKind, %TypeKind* %2
   %4 = icmp ne %TypeKind %3, 16
@@ -12065,14 +12086,14 @@ endif_1:
   ret i1 %32
 }
 
-define %Type* @func414 () {
-  %1 = bitcast [18 x %Nat8]* @func413_func414_str1 to %Str
+define %Type* @func415 () {
+  %1 = bitcast [18 x %Nat8]* @func414_func415_str1 to %Str
   call void (%Str) @fatal (%Str %1); loadImmPtr
   %2 = inttoptr i64 0 to%Type*
   ret %Type* %2
 }
 
-define %Type* @func413 (%union.2*) {
+define %Type* @func414 (%union.2*) {
   %2 = load %union.2, %union.2* %0
   %3 = extractvalue %union.2 %2, 0
   br label %select_1_0
@@ -12209,32 +12230,11 @@ select_1_10_ok:
   %80 = call %Type* (%AstTypeUnion) @func432 (%AstTypeUnion %79)
   br label %select_1_end
 select_1_11:
-  %81 = call %Type* () @func414 ()
+  %81 = call %Type* () @func415 ()
   br label %select_1_end
 select_1_end:
   %82 = phi %Type* [ %10, %select_1_0_ok ], [ %17, %select_1_1_ok ], [ %24, %select_1_2_ok ], [ %31, %select_1_3_ok ], [ %38, %select_1_4_ok ], [ %45, %select_1_5_ok ], [ %52, %select_1_6_ok ], [ %59, %select_1_7_ok ], [ %66, %select_1_8_ok ], [ %73, %select_1_9_ok ], [ %80, %select_1_10_ok ], [ %81, %select_1_11 ]
   ret %Type* %82
-}
-
-define %Nat32 @max (%Nat32, %Nat32) {
-  br label %select_1_0
-select_1_0:
-  %3 = icmp ugt %Nat32 %0, %1
-  %4 = icmp eq i1 1, %3
-  br i1 %4, label %select_1_0_ok, label %select_1_1
-select_1_0_ok:
-  br label %select_1_end
-select_1_1:
-  %5 = icmp ult %Nat32 %0, %1
-  %6 = icmp eq i1 1, %5
-  br i1 %6, label %select_1_1_ok, label %select_1_2
-select_1_1_ok:
-  br label %select_1_end
-select_1_2:
-  br label %select_1_end
-select_1_end:
-  %7 = phi %Nat32 [ %0, %select_1_0_ok ], [ %1, %select_1_1_ok ], [ %0, %select_1_2 ]
-  ret %Nat32 %7
 }
 
 define %Type* @func417 (%Type*, %Type*) {
@@ -12267,9 +12267,9 @@ define %Type* @func417 (%Type*, %Type*) {
 
 define %Type* @func416 (%AstTypeBinary) {
   %2 = extractvalue %AstTypeBinary %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = extractvalue %AstTypeBinary %0, 1
-  %5 = call %Type* (%union.2*) @func413 (%union.2* %4)
+  %5 = call %Type* (%union.2*) @func414 (%union.2* %4)
   %6 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %7 = load %TypeKind, %TypeKind* %6
   %8 = icmp eq %TypeKind %7, 16
@@ -12303,7 +12303,7 @@ endif_1:
   store %TypeNo 0, %TypeNo* %20, align 2
   %21 = load %union.9, %union.9* %17
   %22 = extractvalue %AstTypeBinary %0, 2
-  %23 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 16, %union.9 %21, %Nat32 0, %TokenInfo* %22)
+  %23 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 16, %union.9 %21, %Nat32 0, %TokenInfo* %22)
   %24 = getelementptr inbounds %List, %List* @unions, i1 0
   %25 = bitcast %Type* %23 to %Unit*
   %26 = call i1 (%List*, %Unit*) @list_append (%List* %24, %Unit* %25)
@@ -12319,7 +12319,7 @@ endif_1:
 
 define %Type* @func418 (%AstTypeSpecial) {
   %2 = extractvalue %AstTypeSpecial %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = extractvalue %AstTypeSpecial %0, 1
   %5 = insertvalue %TypePoison zeroinitializer, %TokenInfo* %4, 0
   %6 = alloca %union.9
@@ -12332,7 +12332,7 @@ define %Type* @func418 (%AstTypeSpecial) {
   store %TypePoison %5, %TypePoison* %9, align 8
   %10 = load %union.9, %union.9* %6
   %11 = extractvalue %AstTypeSpecial %0, 1
-  %12 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 2, %union.9 %10, %Nat32 0, %TokenInfo* %11)
+  %12 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 2, %union.9 %10, %Nat32 0, %TokenInfo* %11)
   %13 = bitcast %Type* %12 to %Unit*
   %14 = bitcast %Type* %3 to %Unit*
   %15 = call %Unit* (%Unit*, %Unit*, %Nat32) @memcpy (%Unit* %13, %Unit* %14, %Nat32 384)
@@ -12347,7 +12347,7 @@ define %Type* @func418 (%AstTypeSpecial) {
 
 define %Type* @func419 (%AstTypeVar) {
   %2 = extractvalue %AstTypeVar %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = extractvalue %AstTypeVar %0, 1
   %5 = call %Type* (%Type*, %TokenInfo*) @type_var_new (%Type* %3, %TokenInfo* %4)
   ret %Type* %5
@@ -12374,7 +12374,7 @@ then_0:
   store %TypeUndefined %9, %TypeUndefined* %13, align 8
   %14 = load %union.9, %union.9* %10
   %15 = extractvalue %AstName %0, 2
-  %16 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 1, %union.9 %14, %Nat32 0, %TokenInfo* %15)
+  %16 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 1, %union.9 %14, %Nat32 0, %TokenInfo* %15)
   %17 = getelementptr inbounds %Type, %Type* %16, i1 0, i32 15
   %18 = extractvalue %AstName %0, 2
   store %TokenInfo* %18, %TokenInfo** %17, align 8
@@ -12391,7 +12391,7 @@ endif_0:
 
 define %Type* @func421 (%AstTypeFunc) {
   %2 = extractvalue %AstTypeFunc %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -12403,7 +12403,7 @@ else_0:
   br label %endif_0
 endif_0:
   %8 = extractvalue %AstTypeFunc %0, 1
-  %9 = call %Type* (%union.2*) @func413 (%union.2* %8)
+  %9 = call %Type* (%union.2*) @func414 (%union.2* %8)
   %10 = getelementptr inbounds %Type, %Type* %9, i1 0, i32 0
   %11 = load %TypeKind, %TypeKind* %10
   %12 = icmp eq %TypeKind %11, 2
@@ -12415,13 +12415,13 @@ else_1:
   br label %endif_1
 endif_1:
   %14 = extractvalue %AstTypeFunc %0, 3
-  %15 = call %Type* (%Type*, %Type*, i1, %TokenInfo*) @func400 (%Type* %3, %Type* %9, i1 0, %TokenInfo* %14)
+  %15 = call %Type* (%Type*, %Type*, i1, %TokenInfo*) @func401 (%Type* %3, %Type* %9, i1 0, %TokenInfo* %14)
   ret %Type* %15
 }
 
 define %Type* @func422 (%AstTypeArrayU) {
   %2 = extractvalue %AstTypeArrayU %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -12433,13 +12433,13 @@ else_0:
   br label %endif_0
 endif_0:
   %8 = extractvalue %AstTypeArrayU %0, 1
-  %9 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %3, %TokenInfo* %8)
+  %9 = call %Type* (%Type*, %TokenInfo*) @func397 (%Type* %3, %TokenInfo* %8)
   ret %Type* %9
 }
 
 define %Type* @func423 (%AstTypeArray) {
   %2 = extractvalue %AstTypeArray %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -12471,7 +12471,7 @@ then_1:
   store %TypePoison %16, %TypePoison* %20, align 8
   %21 = load %union.9, %union.9* %17
   %22 = extractvalue %AstTypeArray %0, 2
-  %23 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 2, %union.9 %21, %Nat32 0, %TokenInfo* %22)
+  %23 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 2, %union.9 %21, %Nat32 0, %TokenInfo* %22)
   ret %Type* %23
   br label %endif_1
 else_1:
@@ -12487,13 +12487,13 @@ endif_1:
   %31 = extractvalue %ValueImm %30, 1
   %32 = trunc %Int64 %31 to %Nat32
   %33 = extractvalue %AstTypeArray %0, 2
-  %34 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func397 (%Type* %3, %Nat32 %32, %TokenInfo* %33)
+  %34 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func398 (%Type* %3, %Nat32 %32, %TokenInfo* %33)
   ret %Type* %34
 }
 
 define %Type* @func424 (%AstTypePointer) {
   %2 = extractvalue %AstTypePointer %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -12505,7 +12505,7 @@ else_0:
   br label %endif_0
 endif_0:
   %8 = extractvalue %AstTypePointer %0, 1
-  %9 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %3, %TokenInfo* %8)
+  %9 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %3, %TokenInfo* %8)
   ret %Type* %9
 }
 
@@ -12546,7 +12546,7 @@ define void @func427 (%Unit*, %Unit*, %Nat32, %Node*) {
   %6 = bitcast %Unit* %1 to %func426.type5*
   %7 = getelementptr inbounds %AstDecl, %AstDecl* %5, i1 0, i32 1
   %8 = load %union.2*, %union.2** %7
-  %9 = call %Type* (%union.2*) @func413 (%union.2* %8)
+  %9 = call %Type* (%union.2*) @func414 (%union.2* %8)
   %10 = getelementptr inbounds %Type, %Type* %9, i1 0, i32 0
   %11 = load %TypeKind, %TypeKind* %10
   %12 = icmp eq %TypeKind %11, 2
@@ -12687,7 +12687,7 @@ define %Type* @func426 (%AstTypeRecord) {
   store %TypeNo 0, %TypeNo* %6, align 2
   %7 = load %union.9, %union.9* %3
   %8 = extractvalue %AstTypeRecord %0, 1
-  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 12, %union.9 %7, %Nat32 0, %TokenInfo* %8)
+  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 12, %union.9 %7, %Nat32 0, %TokenInfo* %8)
   store %Type* %9, %Type** @ctype, align 8
   %10 = alloca %func426.type5
   %11 = call %List* () @map_new ()
@@ -12739,7 +12739,7 @@ define %Type* @func430 (%AstTypeEnum) {
   %6 = bitcast %List* %2 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %5, %ListForeachHandler @func431, %Unit* %6)
   %7 = extractvalue %AstTypeEnum %0, 1
-  %8 = call %Type* (%List*, %TokenInfo*) @func398 (%List* %2, %TokenInfo* %7)
+  %8 = call %Type* (%List*, %TokenInfo*) @func399 (%List* %2, %TokenInfo* %7)
   ret %Type* %8
 }
 
@@ -12747,7 +12747,7 @@ define void @func433 (%Unit*, %Unit*, %Nat32, %Node*) {
   %5 = bitcast %Unit* %0 to %union.2*
   %6 = bitcast %Unit* %1 to %func432.type7*
   %7 = bitcast %Unit* %1 to %List*
-  %8 = call %Type* (%union.2*) @func413 (%union.2* %5)
+  %8 = call %Type* (%union.2*) @func414 (%union.2* %5)
   %9 = getelementptr inbounds %func432.type7, %func432.type7* %6, i1 0, i32 1
   br label %select_1_0
 select_1_0:
@@ -12801,7 +12801,7 @@ define %Type* @func432 (%AstTypeUnion) {
   store %TypeNo 0, %TypeNo* %6, align 2
   %7 = load %union.9, %union.9* %3
   %8 = extractvalue %AstTypeUnion %0, 1
-  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 16, %union.9 %7, %Nat32 0, %TokenInfo* %8)
+  %9 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 16, %union.9 %7, %Nat32 0, %TokenInfo* %8)
   %10 = getelementptr inbounds %Type, %Type* %9, i1 0, i32 14
   %11 = getelementptr inbounds %TypeUnion, %TypeUnion* %10, i1 0, i32 0
   call void (%List*) @map_init (%List* %11)
@@ -12836,7 +12836,7 @@ define %Type* @func432 (%AstTypeUnion) {
   %33 = getelementptr inbounds %List, %List* @unions, i1 0
   %34 = bitcast %Type* %9 to %Unit*
   %35 = call i1 (%List*, %Unit*) @list_append (%List* %33, %Unit* %34)
-  %36 = call i1 (%Type*) @func412 (%Type* %9)
+  %36 = call i1 (%Type*) @func413 (%Type* %9)
   br i1 %36, label %then_0, label %else_0
 then_0:
   %37 = load %Type*, %Type** @typeFreePtr
@@ -13135,7 +13135,7 @@ define %Type* @func444 (%Str, %Nat32, i1) {
   store %TypeNumeric %6, %TypeNumeric* %10, align 8
   %11 = load %union.9, %union.9* %7; loadImmPtr
   %12 = inttoptr i64 0 to%TokenInfo*
-  %13 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 5, %union.9 %11, %Nat32 %4, %TokenInfo* %12)
+  %13 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 5, %union.9 %11, %Nat32 %4, %TokenInfo* %12)
   %14 = getelementptr inbounds %Type, %Type* %13, i1 0, i32 2
   store %Str %0, %Str* %14, align 8
   %15 = getelementptr inbounds %Type, %Type* %13, i1 0, i32 6
@@ -13148,7 +13148,7 @@ define %Type* @func444 (%Str, %Nat32, i1) {
 define void @func443 () {
   %1 = call %List* () @map_new (); loadImmPtr
   %2 = inttoptr i64 0 to%TokenInfo*
-  %3 = call %Type* (%List*, %TokenInfo*) @func398 (%List* %1, %TokenInfo* %2)
+  %3 = call %Type* (%List*, %TokenInfo*) @func399 (%List* %1, %TokenInfo* %2)
   store %Type* %3, %Type** @typeVoid, align 8
   %4 = load %Type*, %Type** @typeVoid
   %5 = getelementptr inbounds %Type, %Type* %4, i1 0, i32 2
@@ -13169,7 +13169,7 @@ define void @func443 () {
   store %TypeRecord %10, %TypeRecord* %14, align 8
   %15 = load %union.9, %union.9* %11; loadImmPtr
   %16 = inttoptr i64 0 to%TokenInfo*
-  %17 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 12, %union.9 %15, %Nat32 0, %TokenInfo* %16)
+  %17 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 12, %union.9 %15, %Nat32 0, %TokenInfo* %16)
   store %Type* %17, %Type** @typeUnit, align 8
   %18 = load %Type*, %Type** @typeUnit
   %19 = getelementptr inbounds %Type, %Type* %18, i1 0, i32 11
@@ -13194,7 +13194,7 @@ define void @func443 () {
   store %TypeBool %27, %TypeBool* %31, align 8
   %32 = load %union.9, %union.9* %28; loadImmPtr
   %33 = inttoptr i64 0 to%TokenInfo*
-  %34 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 9, %union.9 %32, %Nat32 1, %TokenInfo* %33)
+  %34 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 9, %union.9 %32, %Nat32 1, %TokenInfo* %33)
   store %Type* %34, %Type** @typeBool, align 8
   %35 = bitcast [5 x %Nat8]* @func443_str5 to %Str
   %36 = load %Type*, %Type** @typeBool
@@ -13250,7 +13250,7 @@ define void @func443 () {
   store %Type* %54, %Type** @typeChar, align 8
   %77 = load %Type*, %Type** @typeChar; loadImmPtr
   %78 = inttoptr i64 0 to%TokenInfo*
-  %79 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %77, %TokenInfo* %78)
+  %79 = call %Type* (%Type*, %TokenInfo*) @func397 (%Type* %77, %TokenInfo* %78)
   store %Type* %79, %Type** @typeStr, align 8
   %80 = load %Type*, %Type** @typeStr
   %81 = getelementptr inbounds %Type, %Type* %80, i1 0, i32 2
@@ -13277,7 +13277,7 @@ define void @func443 () {
   call void (%Str, %Type*) @builtin_type_bind (%Str %92, %Type* %68)
   %93 = load %Type*, %Type** @typeUnit; loadImmPtr
   %94 = inttoptr i64 0 to%TokenInfo*
-  %95 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %93, %TokenInfo* %94)
+  %95 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %93, %TokenInfo* %94)
   store %Type* %95, %Type** @typeFreePtr, align 8
   %96 = bitcast [8 x %Nat8]* @func443_str40 to %Str
   %97 = call %Type* (%Str, %Nat32, i1) @func444 (%Str %96, %Nat32 0, i1 1)
@@ -13460,7 +13460,7 @@ define %Value* @value_new_poison (%TokenInfo*) {
   %6 = bitcast [56 x %Nat8]* %5 to %TypePoison*
   store %TypePoison %2, %TypePoison* %6, align 8
   %7 = load %union.9, %union.9* %3
-  %8 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 2, %union.9 %7, %Nat32 0, %TokenInfo* %0)
+  %8 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 2, %union.9 %7, %Nat32 0, %TokenInfo* %0)
   %9 = insertvalue %ValuePoison zeroinitializer, %TokenInfo* %0, 0
   %10 = alloca %union.10
 ; write variant 0
@@ -14327,7 +14327,7 @@ endif_3:
 else_0:
   %65 = getelementptr inbounds %AstValueWhenVariant, %AstValueWhenVariant* %5, i1 0, i32 0
   %66 = load %union.2*, %union.2** %65
-  %67 = call %Type* (%union.2*) @func413 (%union.2* %66)
+  %67 = call %Type* (%union.2*) @func414 (%union.2* %66)
   %68 = getelementptr inbounds %func478.type9, %func478.type9* %6, i1 0, i32 0
   %69 = load %Value*, %Value** %68
   %70 = getelementptr inbounds %Value, %Value* %69, i1 0, i32 0
@@ -14553,7 +14553,7 @@ endif_1:
   %30 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 0
   %31 = load %Type*, %Type** %30
   %32 = extractvalue %AstValueUnary %0, 1
-  %33 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %31, %TokenInfo* %32)
+  %33 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %31, %TokenInfo* %32)
   %34 = insertvalue %ValueUn zeroinitializer, %Type* %33, 0
   %35 = insertvalue %ValueUn %34, %Value* %3, 1
   %36 = extractvalue %AstValueUnary %0, 1
@@ -15474,7 +15474,7 @@ then_1:
 else_1:
   br label %endif_1
 endif_1:
-  %37 = call %Decl* (%Type*, %Str) @func401 (%Type* %28, %Str %6); loadImmPtr
+  %37 = call %Decl* (%Type*, %Str) @func402 (%Type* %28, %Str %6); loadImmPtr
   %38 = inttoptr i64 0 to%Decl*
   %39 = icmp eq %Decl* %37, %38
   br i1 %39, label %then_2, label %else_2
@@ -15541,7 +15541,7 @@ endif_0:
 }
 
 define %Value* @do_value_cast_ref (%Value*, %Type*, %TokenInfo*) {
-  %4 = call i1 (%Type*) @func403 (%Type* %1)
+  %4 = call i1 (%Type*) @func404 (%Type* %1)
   %5 = xor i1 %4, 1
   br i1 %5, label %then_0, label %else_0
 then_0:
@@ -15560,7 +15560,7 @@ define %Value* @do_value_cast_num (%Value*, %Type*, %TokenInfo*) {
   %5 = xor i1 %4, 1
   br i1 %5, label %then_0, label %else_0
 then_0:
-  %6 = call i1 (%Type*) @func403 (%Type* %1)
+  %6 = call i1 (%Type*) @func404 (%Type* %1)
   br i1 %6, label %then_1, label %else_1
 then_1:
   br label %endif_1
@@ -15651,7 +15651,7 @@ define void @func503 (%Unit*, %Unit*, %Unit*) {
   %6 = bitcast %Unit* %2 to %func502.type11*
   %7 = getelementptr inbounds %func502.type11, %func502.type11* %6, i1 0, i32 0
   %8 = load %Type*, %Type** %7
-  %9 = call %Decl* (%Type*, %Str) @func401 (%Type* %8, %Str %4); loadImmPtr
+  %9 = call %Decl* (%Type*, %Str) @func402 (%Type* %8, %Str %4); loadImmPtr
   %10 = inttoptr i64 0 to%Decl*
   %11 = icmp ne %Decl* %9, %10
   %12 = bitcast [32 x %Nat8]* @func502_func503_str1 to %Str
@@ -15745,7 +15745,7 @@ define %Value* @func505 (%AstValueValType) {
   %2 = extractvalue %AstValueValType %0, 0
   %3 = call %Value* (%union.4*) @func473 (%union.4* %2)
   %4 = extractvalue %AstValueValType %0, 1
-  %5 = call %Type* (%union.2*) @func413 (%union.2* %4)
+  %5 = call %Type* (%union.2*) @func414 (%union.2* %4)
   %6 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %7 = load %union.10, %union.10* %6
   %8 = extractvalue %union.10 %7, 0
@@ -15884,7 +15884,7 @@ fail:
 
 define %Value* @value_union_type_check (%union.4*, %union.2*, i1, %TokenInfo*) {
   %5 = call %Value* (%union.4*) @func473 (%union.4* %0)
-  %6 = call %Type* (%union.2*) @func413 (%union.2* %1)
+  %6 = call %Type* (%union.2*) @func414 (%union.2* %1)
   %7 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 0
   %8 = load %Type*, %Type** %7
   %9 = getelementptr inbounds %Type, %Type* %8, i1 0, i32 0
@@ -15964,7 +15964,7 @@ define %Value* @func510 (%AstValueValType) {
   %2 = extractvalue %AstValueValType %0, 0
   %3 = call %Value* (%union.4*) @func473 (%union.4* %2)
   %4 = extractvalue %AstValueValType %0, 1
-  %5 = call %Type* (%union.2*) @func413 (%union.2* %4)
+  %5 = call %Type* (%union.2*) @func414 (%union.2* %4)
   %6 = extractvalue %AstValueValType %0, 2
   %7 = getelementptr inbounds %Value, %Value* %3, i1 0, i32 1
   %8 = load %union.10, %union.10* %7
@@ -16032,7 +16032,7 @@ fail:
 
 define %Value* @func511 (%AstValueSizeof) {
   %2 = extractvalue %AstValueSizeof %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -16074,7 +16074,7 @@ fail:
 
 define %Value* @func512 (%AstValueAlignof) {
   %2 = extractvalue %AstValueAlignof %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -16186,9 +16186,9 @@ define %Value* @func515 (%AstValueString) {
   %4 = add %Nat32 %3, 1
   %5 = load %Type*, %Type** @typeChar
   %6 = extractvalue %AstValueString %0, 1
-  %7 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func397 (%Type* %5, %Nat32 %4, %TokenInfo* %6)
+  %7 = call %Type* (%Type*, %Nat32, %TokenInfo*) @func398 (%Type* %5, %Nat32 %4, %TokenInfo* %6)
   %8 = extractvalue %AstValueString %0, 1
-  %9 = call %Type* (%Type*, %TokenInfo*) @func395 (%Type* %7, %TokenInfo* %8)
+  %9 = call %Type* (%Type*, %TokenInfo*) @func396 (%Type* %7, %TokenInfo* %8)
   %10 = call %Str () @func149 ()
   %11 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
   %12 = call %Definition* (%Assembly*, %Str, %Str, %Nat32) @func261 (%Assembly* %11, %Str %10, %Str %2, %Nat32 %4)
@@ -16250,7 +16250,7 @@ define void @func517 (%Unit*, %Unit*, %Nat32, %Node*) {
 
 define %Value* @func516 (%AstValueFunc) {
   %2 = extractvalue %AstValueFunc %0, 0
-  %3 = call %Type* (%union.2*) @func413 (%union.2* %2)
+  %3 = call %Type* (%union.2*) @func414 (%union.2* %2)
   %4 = getelementptr inbounds %Type, %Type* %3, i1 0, i32 0
   %5 = load %TypeKind, %TypeKind* %4
   %6 = icmp eq %TypeKind %5, 2
@@ -16493,7 +16493,7 @@ define %Value* @func519 (%AstValueRecord) {
   %8 = bitcast [56 x %Nat8]* %7 to %TypeGenericRecord*
   store %TypeGenericRecord %4, %TypeGenericRecord* %8, align 8
   %9 = load %union.9, %union.9* %5
-  %10 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 4, %union.9 %9, %Nat32 0, %TokenInfo* %3)
+  %10 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 4, %union.9 %9, %Nat32 0, %TokenInfo* %3)
   %11 = getelementptr inbounds %Type, %Type* %10, i1 0, i32 11
   %12 = getelementptr inbounds %TypeRecord, %TypeRecord* %11, i1 0, i32 0
   %13 = call %List* () @map_new ()
@@ -16860,7 +16860,7 @@ endif_0:
   %7 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 0
   %8 = load %TypeKind, %TypeKind* %7
   %9 = icmp eq %TypeKind %8, 12
-  %10 = call i1 (%Type*) @func404 (%Type* %1)
+  %10 = call i1 (%Type*) @func405 (%Type* %1)
   %11 = or i1 %9, %10
   br i1 %11, label %then_1, label %else_1
 then_1:
@@ -16879,7 +16879,7 @@ then_2:
 else_2:
   br label %endif_2
 endif_2:
-  %17 = call i1 (%Type*) @func403 (%Type* %1)
+  %17 = call i1 (%Type*) @func404 (%Type* %1)
   br i1 %17, label %then_3, label %else_3
 then_3:
   ret i1 0
@@ -16899,7 +16899,7 @@ then_4:
   %26 = icmp eq %TypeKind %25, 11
   %27 = load %Type*, %Type** @typeBool
   %28 = call i1 (%Type*, %Type*) @func441 (%Type* %1, %Type* %27)
-  %29 = call i1 (%Type*) @func403 (%Type* %1)
+  %29 = call i1 (%Type*) @func404 (%Type* %1)
   %30 = or i1 %28, %29
   %31 = or i1 %26, %30
   br i1 %31, label %then_5, label %else_5
@@ -17073,7 +17073,7 @@ define i1 @func530 (%Unit*, %Unit*, %Nat32) {
   %7 = load %AstId*, %AstId** %6
   %8 = getelementptr inbounds %AstId, %AstId* %7, i1 0, i32 0
   %9 = load %Str, %Str* %8
-  %10 = call %Decl* (%Type*, %Str) @func401 (%Type* %5, %Str %9); loadImmPtr
+  %10 = call %Decl* (%Type*, %Str) @func402 (%Type* %5, %Str %9); loadImmPtr
   %11 = inttoptr i64 0 to%Decl*
   %12 = icmp eq %Decl* %10, %11
   br i1 %12, label %then_0, label %else_0
@@ -17096,7 +17096,7 @@ then_1:
   %22 = call i1 (%Type*) @type_is_generic_num (%Type* %21)
   %23 = getelementptr inbounds %Decl, %Decl* %10, i1 0, i32 1
   %24 = load %Type*, %Type** %23
-  %25 = call i1 (%Type*) @func408 (%Type* %24)
+  %25 = call i1 (%Type*) @func409 (%Type* %24)
   %26 = and i1 %22, %25
   br i1 %26, label %then_2, label %else_2
 then_2:
@@ -17112,7 +17112,7 @@ endif_2:
   %32 = icmp eq %TypeKind %31, 3
   %33 = getelementptr inbounds %Decl, %Decl* %10, i1 0, i32 1
   %34 = load %Type*, %Type** %33
-  %35 = call i1 (%Type*) @func403 (%Type* %34)
+  %35 = call i1 (%Type*) @func404 (%Type* %34)
   %36 = and i1 %32, %35
   br i1 %36, label %then_3, label %else_3
 then_3:
@@ -17242,7 +17242,7 @@ endif_1:
   %23 = getelementptr inbounds %Type, %Type* %22, i1 0, i32 0
   %24 = load %TypeKind, %TypeKind* %23
   %25 = icmp eq %TypeKind %24, 3
-  %26 = call i1 (%Type*) @func403 (%Type* %1)
+  %26 = call i1 (%Type*) @func404 (%Type* %1)
   %27 = and i1 %25, %26
   br i1 %27, label %then_2, label %else_2
 then_2:
@@ -17286,7 +17286,7 @@ then_5:
   %47 = getelementptr inbounds %Value, %Value* %0, i1 0, i32 0
   %48 = load %Type*, %Type** %47
   %49 = call i1 (%Type*) @type_is_generic_num (%Type* %48)
-  %50 = call i1 (%Type*) @func408 (%Type* %1)
+  %50 = call i1 (%Type*) @func409 (%Type* %1)
   %51 = and i1 %49, %50
   br i1 %51, label %then_6, label %else_6
 then_6:
@@ -17354,7 +17354,7 @@ define i1 @func532 (%Type*, %Type*) {
   %5 = getelementptr inbounds %Type, %Type* %1, i1 0, i32 0
   %6 = load %TypeKind, %TypeKind* %5
   %7 = call i1 (%Type*) @type_is_generic_num (%Type* %0)
-  %8 = call i1 (%Type*) @func408 (%Type* %1)
+  %8 = call i1 (%Type*) @func409 (%Type* %1)
   %9 = and i1 %7, %8
   br i1 %9, label %then_0, label %else_0
 then_0:
@@ -17388,10 +17388,10 @@ then_3:
   %19 = getelementptr inbounds %Type, %Type* %0, i1 0, i32 8
   %20 = getelementptr inbounds %TypePointer, %TypePointer* %19, i1 0, i32 0
   %21 = load %Type*, %Type** %20
-  %22 = call i1 (%Type*) @func404 (%Type* %21)
+  %22 = call i1 (%Type*) @func405 (%Type* %21)
   br i1 %22, label %then_4, label %else_4
 then_4:
-  %23 = call i1 (%Type*) @func406 (%Type* %1)
+  %23 = call i1 (%Type*) @func407 (%Type* %1)
   br i1 %23, label %then_5, label %else_5
 then_5:
   ret i1 1
@@ -17474,7 +17474,7 @@ then_1:
   %17 = extractvalue %ValueIndex %16, 1
   %18 = getelementptr inbounds %Value, %Value* %17, i1 0, i32 0
   %19 = load %Type*, %Type** %18
-  %20 = call i1 (%Type*) @func404 (%Type* %19)
+  %20 = call i1 (%Type*) @func405 (%Type* %19)
   %21 = extractvalue %ValueIndex %16, 1
   %22 = call i1 (%Value*) @func533 (%Value* %21)
   %23 = and i1 %22, %20
@@ -17548,7 +17548,7 @@ define void @func534 () {
   store %TypeGenericReference %10, %TypeGenericReference* %14, align 8
   %15 = load %union.9, %union.9* %11; loadImmPtr
   %16 = inttoptr i64 0 to%TokenInfo*
-  %17 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 3, %union.9 %15, %Nat32 8, %TokenInfo* %16); loadImmPtr
+  %17 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 3, %union.9 %15, %Nat32 8, %TokenInfo* %16); loadImmPtr
   %18 = inttoptr i64 0 to%TokenInfo*
   %19 = call %Value* (%Type*, %Int64, %TokenInfo*) @func454 (%Type* %17, %Int64 0, %TokenInfo* %18)
   %20 = bitcast [4 x %Nat8]* @func534_str3 to %Str
@@ -18010,7 +18010,7 @@ select_1_36:
   store %TypePoison %257, %TypePoison* %261, align 8
   %262 = load %union.9, %union.9* %258; loadImmPtr
   %263 = inttoptr i64 0 to%TokenInfo*
-  %264 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func393 (%TypeKind 2, %union.9 %262, %Nat32 0, %TokenInfo* %263)
+  %264 = call %Type* (%TypeKind, %union.9, %Nat32, %TokenInfo*) @func394 (%TypeKind 2, %union.9 %262, %Nat32 0, %TokenInfo* %263)
   br label %select_1_end
 select_1_end:
   %265 = phi %Type* [ %10, %select_1_0_ok ], [ %17, %select_1_1_ok ], [ %24, %select_1_2_ok ], [ %31, %select_1_3_ok ], [ %38, %select_1_4_ok ], [ %45, %select_1_5_ok ], [ %52, %select_1_6_ok ], [ %59, %select_1_7_ok ], [ %66, %select_1_8_ok ], [ %73, %select_1_9_ok ], [ %80, %select_1_10_ok ], [ %87, %select_1_11_ok ], [ %94, %select_1_12_ok ], [ %101, %select_1_13_ok ], [ %108, %select_1_14_ok ], [ %115, %select_1_15_ok ], [ %122, %select_1_16_ok ], [ %129, %select_1_17_ok ], [ %136, %select_1_18_ok ], [ %143, %select_1_19_ok ], [ %150, %select_1_20_ok ], [ %157, %select_1_21_ok ], [ %164, %select_1_22_ok ], [ %171, %select_1_23_ok ], [ %178, %select_1_24_ok ], [ %185, %select_1_25_ok ], [ %192, %select_1_26_ok ], [ %199, %select_1_27_ok ], [ %206, %select_1_28_ok ], [ %213, %select_1_29_ok ], [ %220, %select_1_30_ok ], [ %227, %select_1_31_ok ], [ %234, %select_1_32_ok ], [ %241, %select_1_33_ok ], [ %248, %select_1_34_ok ], [ %255, %select_1_35_ok ], [ %264, %select_1_36 ]
@@ -18786,7 +18786,7 @@ define %union.44 @func548 (%AstStmtTypeBind) {
   %3 = getelementptr inbounds %AstId, %AstId* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   %5 = extractvalue %AstStmtTypeBind %0, 1
-  %6 = call %Type* (%union.2*) @func413 (%union.2* %5)
+  %6 = call %Type* (%union.2*) @func414 (%union.2* %5)
   %7 = call %Str () @func145 ()
   %8 = getelementptr inbounds %Type, %Type* %6, i1 0, i32 2
   %9 = load %Str, %Str* %8; loadImmPtr
@@ -19211,7 +19211,7 @@ define void @func568 (%AstNodeBindType) {
   %3 = getelementptr inbounds %AstId, %AstId* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
   %5 = extractvalue %AstNodeBindType %0, 1
-  %6 = call %Type* (%union.2*) @func413 (%union.2* %5)
+  %6 = call %Type* (%union.2*) @func414 (%union.2* %5)
   %7 = call %Type* (%Str) @func141 (%Str %4); loadImmPtr
   %8 = inttoptr i64 0 to%Type*
   %9 = icmp ne %Type* %7, %8
@@ -19427,7 +19427,7 @@ define void @func571 (%AstNodeDeclValue) {
   %2 = extractvalue %AstNodeDeclValue %0, 0
   %3 = getelementptr inbounds %AstDecl, %AstDecl* %2, i1 0, i32 1
   %4 = load %union.2*, %union.2** %3
-  %5 = call %Type* (%union.2*) @func413 (%union.2* %4)
+  %5 = call %Type* (%union.2*) @func414 (%union.2* %4)
   %6 = getelementptr inbounds %AstDecl, %AstDecl* %2, i1 0, i32 0
   %7 = bitcast %Type* %5 to %Unit*
   call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %6, %ListForeachHandler @func572, %Unit* %7)
