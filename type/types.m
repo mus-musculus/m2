@@ -54,6 +54,9 @@ TypeKind = {
   // when TypeNumeric#power == 0 => it is GeneicNumeric
   #TypeNumeric
 
+  #TypeOr
+  #TypeAnd
+
   #TypeVar
 
   #TypeBool
@@ -75,11 +78,14 @@ TypeGenericRecord = Tagged (ti : *TokenInfo)
 TypeBool = Tagged (ti : *TokenInfo)
 TypeNo = {#TypeNo}
 
+TypeOr = Tagged TypeUnion
+
 Type2 = TypePoison or
        TypeUndefined or
        TypeGenericReference or
        TypeGenericRecord or
        TypeNumeric or
+       TypeOr or
        TypeVar or
        TypeBool or
        TypeFunc or

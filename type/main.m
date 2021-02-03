@@ -135,6 +135,7 @@ exist do_type_pointer : (x : AstTypePointer) -> *Type
 exist do_type_record  : (x : AstTypeRecord) -> *Type
 exist do_type_enum    : (x : AstTypeEnum) -> *Type
 exist do_type_union   : (x : AstTypeUnion) -> *Type
+exist do_type_or      : (x : AstTypeOr) -> *Type
 
 do_type = (x : *AstType) -> *Type {
   xx = *x
@@ -142,6 +143,7 @@ do_type = (x : *AstType) -> *Type {
     AstTypeNamed   => do_type_named   (xx as AstTypeNamed)
     AstTypeRecord  => do_type_record  (xx as AstTypeRecord)
     AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
+    AstTypeOr      => do_type_or      (xx as AstTypeOr)
     AstTypeVar     => do_type_var     (xx as AstTypeVar)
     AstTypeSpecial => do_type_special (xx as AstTypeSpecial)
     AstTypeArray   => do_type_array   (xx as AstTypeArray)
@@ -153,6 +155,18 @@ do_type = (x : *AstType) -> *Type {
   }
 }
 
+
+do_type_or = (x : AstTypeOr) -> *Type {
+  l = do_type (x.left)
+  r = do_type (x.right)
+
+  // если справа TypeOr - сливаем
+  if r.data is TypeOr {
+
+  }
+
+  return nil //type_new (#TypeOr)
+}
 
 // Tagged (NewType)
 spec_type_uid = 0 to Var Nat32
