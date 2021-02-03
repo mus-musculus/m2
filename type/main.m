@@ -168,7 +168,6 @@ exist do_type_array   : (x : AstTypeArray) -> *Type
 exist do_type_pointer : (x : AstTypePointer) -> *Type
 exist do_type_record  : (x : AstTypeRecord) -> *Type
 exist do_type_enum    : (x : AstTypeEnum) -> *Type
-exist do_type_union   : (x : AstTypeUnion) -> *Type
 exist do_type_or      : (x : AstTypeOr) -> *Type
 
 do_type = (x : *AstType) -> *Type {
@@ -184,7 +183,6 @@ do_type = (x : *AstType) -> *Type {
     AstTypeArrayU  => do_type_array_u (xx as AstTypeArrayU)
     AstTypePointer => do_type_pointer (xx as AstTypePointer)
     AstTypeEnum    => do_type_enum    (xx as AstTypeEnum)
-    AstTypeUnion   => do_type_union   (xx as AstTypeUnion)
     else => () -> *Type {fatal("unknown type kind"); return nil} ()
   }
 }
@@ -195,16 +193,7 @@ do_type_or = (x : AstTypeOr) -> *Type {
   r = do_type (x.right)
 
   // сливает воедино union и произвольный тип
-  merge_union_with = (u, t : *Type) -> *Type {
-//    printf("merge!\n")
-//    if t.kind == #TypeOr {
-//      // если справа тоже union то сливаем union с union!
-//      // а справа может оказаться union
-//      // если он идет через скобки или упоминание!
-//      // сделай рекурсивно это важно тк это алгебра
-//      printf("RIGHHHT!\n")
-//    }
-//
+  type_union_add = (u, t : *Type) -> *Type {
     list_append (&u.union.types, t)
     data_size = max (u.union.data_size, t.size)
     u.union.data_size := data_size
@@ -217,12 +206,12 @@ do_type_or = (x : AstTypeOr) -> *Type {
 
   // если слева TypeOr - сливаем
   if l.kind == #TypeUnion {
-    return merge_union_with (l, r)
+    return type_union_add (l, r)
   }
 
   // если справа TypeOr - сливаем
   if r.kind == #TypeUnion {
-    return merge_union_with (r, l)
+    return type_union_add (r, l)
   }
 
   // создаем новый пусто union
@@ -233,11 +222,17 @@ do_type_or = (x : AstTypeOr) -> *Type {
   t.aka := aka
 
   // добавляем в него левый и правый член
-  merge_union_with(t, l)
-  merge_union_with(t, r)
+  type_union_add(t, l)
+  type_union_add(t, r)
+
+  if type_is_maybe_ptr (t) {
+    // если это мейби указатель то нам подойдет простой указатель
+    t.union.impl := typeFreePtr  // пока юнионы только для ?указателей тест
+  }
 
   return t
 }
+
 
 // Tagged (NewType)
 spec_type_uid = 0 to Var Nat32
@@ -411,65 +406,6 @@ do_type_enum = (x : AstTypeEnum) -> *Type {
 
   return type_enum_new (items, x.ti)
 }
-
-
-do_type_union = (x : AstTypeUnion) -> *Type {
-  aka = name_union_get ()
-
-  t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
-  list_init (&t.union.types)
-  t.aka := aka
-
-  CtxUnion = (
-    tlist : *List
-    max_size : Nat
-  )
-
-  ctx = (tlist=&t.union.types) to Var CtxUnion
-
-  do_variant = ListForeachHandler {
-    ast_type = data to *AstType
-    c = ctx to *CtxUnion
-
-    tlist = ctx to *List
-    t = do_type (ast_type)
-
-    // получаем размер самого большого варианта
-    c.max_size := when true {
-      t.size > c.max_size => t.size
-      else => c.max_size
-    }
-
-    if type_present_in_list(c.tlist, t) {
-      error("this type already present in union", t.ti)
-    }
-
-    list_append(c.tlist, t)
-  }
-  list_foreach(&(x.types to Var List), do_variant, &ctx)
-
-  size = propagation(align(ctx.max_size + 2, 4))
-
-
-  t.size := size
-  t.align := size
-
-  t.union.data_size := ctx.max_size
-
-  list_append (&unions, t)
-
-  if type_is_maybe_ptr (t) {
-    // если это мейби указатель то нам подойдет простой указатель
-    u = typeFreePtr  // пока юнионы только для ?указателей тест
-    t.union.impl := u
-
-  } else {
-    t.union.impl := nil  // классический юнион
-  }
-
-  return t
-}
-
 
 
 type_eq_numeric = (a, b : TypeNumeric) -> Bool {
