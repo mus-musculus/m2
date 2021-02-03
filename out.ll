@@ -182,7 +182,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 %AstTypePointer = type {%union.2*, %TokenInfo*}
 %AstTypeFunc = type {%union.2*, %union.2*, i1, %TokenInfo*}
 %AstTypeVar = type {%union.2*, %TokenInfo*}
-%AstTypeSpecial = type {%union.2*, %TokenInfo*}
+%AstTypeNewType = type {%union.2*, %TokenInfo*}
 %AstTypeUnion = type {%List, %TokenInfo*}
 %AstTypeBinary = type {%union.2*, %union.2*, %TokenInfo*}
 %AstTypeOr = type {%union.2*, %union.2*, %TokenInfo*}
@@ -5337,17 +5337,17 @@ endif_0:
   br i1 %7, label %then_1, label %else_1
 then_1:
   %8 = call %union.2* () @func204 ()
-  %9 = insertvalue %AstTypeSpecial zeroinitializer, %union.2* %8, 0
+  %9 = insertvalue %AstTypeNewType zeroinitializer, %union.2* %8, 0
   %10 = getelementptr inbounds %Token, %Token* %5, i1 0, i32 1
-  %11 = insertvalue %AstTypeSpecial %9, %TokenInfo* %10, 1
+  %11 = insertvalue %AstTypeNewType %9, %TokenInfo* %10, 1
   %12 = alloca %union.2
 ; write variant 0
   %13 = getelementptr inbounds %union.2, %union.2* %12, i1 0, i32 0
   store %Int16 0, %Int16* %13, align 2
 ; write data
   %14 = getelementptr inbounds %union.2, %union.2* %12, i1 0, i32 1
-  %15 = bitcast [40 x %Nat8]* %14 to %AstTypeSpecial*
-  store %AstTypeSpecial %11, %AstTypeSpecial* %15, align 8
+  %15 = bitcast [40 x %Nat8]* %14 to %AstTypeNewType*
+  store %AstTypeNewType %11, %AstTypeNewType* %15, align 8
   %16 = load %union.2, %union.2* %12
   %17 = call %union.2* (%union.2) @ast_type_new (%union.2 %16)
   ret %union.2* %17
@@ -12146,9 +12146,9 @@ select_1_5_ok:
   %41 = alloca %union.2
   store %union.2 %2, %union.2* %41, align 64
   %42 = getelementptr inbounds %union.2, %union.2* %41, i1 0, i32 1
-  %43 = bitcast [40 x %Nat8]* %42 to %AstTypeSpecial*
-  %44 = load %AstTypeSpecial, %AstTypeSpecial* %43
-  %45 = call %Type* (%AstTypeSpecial) @func419 (%AstTypeSpecial %44)
+  %43 = bitcast [40 x %Nat8]* %42 to %AstTypeNewType*
+  %44 = load %AstTypeNewType, %AstTypeNewType* %43
+  %45 = call %Type* (%AstTypeNewType) @func419 (%AstTypeNewType %44)
   br label %select_1_end
 select_1_6:
   %46 = bitcast %Int16 6 to %Int16
@@ -12297,10 +12297,10 @@ endif_2:
   ret %Type* %23
 }
 
-define %Type* @func419 (%AstTypeSpecial) {
-  %2 = extractvalue %AstTypeSpecial %0, 0
+define %Type* @func419 (%AstTypeNewType) {
+  %2 = extractvalue %AstTypeNewType %0, 0
   %3 = call %Type* (%union.2*) @func415 (%union.2* %2)
-  %4 = extractvalue %AstTypeSpecial %0, 1
+  %4 = extractvalue %AstTypeNewType %0, 1
   %5 = insertvalue %TypePoison zeroinitializer, %TokenInfo* %4, 0
   %6 = alloca %union.8
 ; write variant 15
@@ -12311,7 +12311,7 @@ define %Type* @func419 (%AstTypeSpecial) {
   %9 = bitcast [56 x %Nat8]* %8 to %TypePoison*
   store %TypePoison %5, %TypePoison* %9, align 8
   %10 = load %union.8, %union.8* %6
-  %11 = extractvalue %AstTypeSpecial %0, 1
+  %11 = extractvalue %AstTypeNewType %0, 1
   %12 = call %Type* (%TypeKind, %union.8, %Nat32, %TokenInfo*) @func395 (%TypeKind 2, %union.8 %10, %Nat32 0, %TokenInfo* %11)
   %13 = bitcast %Type* %12 to %Unit*
   %14 = bitcast %Type* %3 to %Unit*

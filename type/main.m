@@ -161,7 +161,7 @@ type_is_maybe_ptr = (t : *Type) -> Bool {
 
 exist do_type_named   : (x : AstTypeNamed) -> *Type
 exist do_type_var     : (x : AstTypeVar) -> *Type
-exist do_type_special : (x : AstTypeSpecial) -> *Type
+exist do_type_special : (x : AstTypeNewType) -> *Type
 exist do_type_func    : (x : AstTypeFunc) -> *Type
 exist do_type_array_u : (x : AstTypeArrayU) -> *Type
 exist do_type_array   : (x : AstTypeArray) -> *Type
@@ -178,7 +178,7 @@ do_type = (x : *AstType) -> *Type {
     AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
     AstTypeOr      => do_type_or      (xx as AstTypeOr)
     AstTypeVar     => do_type_var     (xx as AstTypeVar)
-    AstTypeSpecial => do_type_special (xx as AstTypeSpecial)
+    AstTypeNewType => do_type_special (xx as AstTypeNewType)
     AstTypeArray   => do_type_array   (xx as AstTypeArray)
     AstTypeArrayU  => do_type_array_u (xx as AstTypeArrayU)
     AstTypePointer => do_type_pointer (xx as AstTypePointer)
@@ -236,7 +236,7 @@ do_type_or = (x : AstTypeOr) -> *Type {
 
 // Tagged (NewType)
 spec_type_uid = 0 to Var Nat32
-do_type_special = (x : AstTypeSpecial) -> *Type {
+do_type_special = (x : AstTypeNewType) -> *Type {
   spec_type = do_type(x.type)
   // создем новый (!) tagged тип на основе полученного
   nt = type_new (#TypePoison, (ti=x.ti) to TypePoison, 0, x.ti)

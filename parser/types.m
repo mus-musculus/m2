@@ -59,7 +59,7 @@ AstTypeArrayU  = NewType (of : *AstType, ti : *TokenInfo)
 AstTypePointer = NewType (to : *AstType, ti : *TokenInfo)
 AstTypeFunc    = NewType (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
 AstTypeVar     = NewType (of : *AstType, ti : *TokenInfo)
-AstTypeSpecial = NewType (type : *AstType, ti : *TokenInfo)
+AstTypeNewType = NewType (type : *AstType, ti : *TokenInfo)
 AstTypeUnion   = NewType (types : AstTypeList, ti : *TokenInfo)
 
 AstTypeBinary = (left, right : *AstType, ti : *TokenInfo)
@@ -78,7 +78,7 @@ AstType = AstTypeNamed or
           AstTypePointer or
           AstTypeFunc or
           AstTypeVar or
-          AstTypeSpecial or
+          AstTypeNewType or
           AstTypeUnion
 
 
