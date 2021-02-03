@@ -6,7 +6,7 @@
 NoBlock = {#NoBlock}
 
 // Compound Statement
-StmtBlock = Tagged (
+StmtBlock = NewType (
   parent  : *StmtBlock  // block-parent or nil
   index   : Index   // local index
   stmts   : List    // list of statements
@@ -21,18 +21,18 @@ StmtBlock = Tagged (
 MaybeBlock = StmtBlock or NoBlock
 
 // ?пока нужно но потом?
-StmtVarDef   = Tagged (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
+StmtVarDef   = NewType (id : *AstId, no : Nat, type : *Type, init_value : *Value, ti : *TokenInfo)
 
-StmtValBind  = Tagged (v : *Value, no : Nat, ti : *TokenInfo)
-StmtExpr     = Tagged (v : *Value, ti : *TokenInfo)
-StmtAssign   = Tagged (l, r : *Value, ti : *TokenInfo)
-StmtIf       = Tagged (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
-StmtWhile    = Tagged (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
-StmtReturn   = Tagged (value : *Value or Unit, ti : *TokenInfo)
-StmtBreak    = Tagged (ti : *TokenInfo)
-StmtAgain    = Tagged (ti : *TokenInfo)
-StmtGoto     = Tagged (label : Str, ti : *TokenInfo)
-StmtLabel    = Tagged (label : Str, ti : *TokenInfo)
+StmtValBind  = NewType (v : *Value, no : Nat, ti : *TokenInfo)
+StmtExpr     = NewType (v : *Value, ti : *TokenInfo)
+StmtAssign   = NewType (l, r : *Value, ti : *TokenInfo)
+StmtIf       = NewType (cond : *Value, then : *Stmt, else : *Stmt or Unit, ti : *TokenInfo)
+StmtWhile    = NewType (cond : *Value, stmt : *Stmt, ti : *TokenInfo)
+StmtReturn   = NewType (value : *Value or Unit, ti : *TokenInfo)
+StmtBreak    = NewType (ti : *TokenInfo)
+StmtAgain    = NewType (ti : *TokenInfo)
+StmtGoto     = NewType (label : Str, ti : *TokenInfo)
+StmtLabel    = NewType (label : Str, ti : *TokenInfo)
 
 
 Stmt =  StmtExpr or

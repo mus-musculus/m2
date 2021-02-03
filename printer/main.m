@@ -63,12 +63,12 @@ LLVM_ValueEmpty = (empty : Bool)
 LLVM_ValueById = (type : *Type, id : Str)
 LLVM_ValueByReg = (type : *Type, reg : Nat32)
 
-LLVM_ValueImmediate = Tagged (type : *Type, imm : Int64)
-LLVM_ValueGlobalConst = Tagged LLVM_ValueById
-LLVM_ValueGlobalVar = Tagged LLVM_ValueById
-LLVM_ValueLocalVar = Tagged LLVM_ValueByReg
-LLVM_ValueAddress = Tagged LLVM_ValueByReg
-LLVM_ValueRegister = Tagged LLVM_ValueByReg
+LLVM_ValueImmediate = NewType (type : *Type, imm : Int64)
+LLVM_ValueGlobalConst = NewType LLVM_ValueById
+LLVM_ValueGlobalVar = NewType LLVM_ValueById
+LLVM_ValueLocalVar = NewType LLVM_ValueByReg
+LLVM_ValueAddress = NewType LLVM_ValueByReg
+LLVM_ValueRegister = NewType LLVM_ValueByReg
 
 LLVM_Value2 = LLVM_ValueUndef or
               LLVM_ValueZero or

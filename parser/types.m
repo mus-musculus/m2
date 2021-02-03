@@ -26,13 +26,13 @@ AstDecl = (
   extern, arghack : Bool
 )
 
-AstNodeComment   = Tagged (text : Str, ti : *TokenInfo)
-AstNodeImport    = Tagged (line : Str, ti : *TokenInfo)
-AstNodeBindType  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
-AstNodeBindValue = Tagged (id : *AstId, value : *AstValue, ti : *TokenInfo)
-AstNodeDeclType  = Tagged (id : *AstId)
-AstNodeDeclValue = Tagged (decl : *AstDecl)
-AstNodeDeclVar   = Tagged (decl : *AstDecl)
+AstNodeComment   = NewType (text : Str, ti : *TokenInfo)
+AstNodeImport    = NewType (line : Str, ti : *TokenInfo)
+AstNodeBindType  = NewType (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstNodeBindValue = NewType (id : *AstId, value : *AstValue, ti : *TokenInfo)
+AstNodeDeclType  = NewType (id : *AstId)
+AstNodeDeclValue = NewType (decl : *AstDecl)
+AstNodeDeclVar   = NewType (decl : *AstDecl)
 
 
 AstNode = AstNodeComment or
@@ -52,19 +52,19 @@ AstDeclList = List
 AstTypeList = List
 
 AstTypeNamed   = AstName
-AstTypeEnum    = Tagged (items : List, ti : *TokenInfo)
-AstTypeRecord  = Tagged (decls : AstDeclList, ti : *TokenInfo)
-AstTypeArray   = Tagged (of : *AstType, size : *AstValue, ti : *TokenInfo)
-AstTypeArrayU  = Tagged (of : *AstType, ti : *TokenInfo)
-AstTypePointer = Tagged (to : *AstType, ti : *TokenInfo)
-AstTypeFunc    = Tagged (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
-AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
-AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
-AstTypeUnion   = Tagged (types : AstTypeList, ti : *TokenInfo)
+AstTypeEnum    = NewType (items : List, ti : *TokenInfo)
+AstTypeRecord  = NewType (decls : AstDeclList, ti : *TokenInfo)
+AstTypeArray   = NewType (of : *AstType, size : *AstValue, ti : *TokenInfo)
+AstTypeArrayU  = NewType (of : *AstType, ti : *TokenInfo)
+AstTypePointer = NewType (to : *AstType, ti : *TokenInfo)
+AstTypeFunc    = NewType (from, to : *AstType, arghack : Bool, ti : *TokenInfo)
+AstTypeVar     = NewType (of : *AstType, ti : *TokenInfo)
+AstTypeSpecial = NewType (type : *AstType, ti : *TokenInfo)
+AstTypeUnion   = NewType (types : AstTypeList, ti : *TokenInfo)
 
 AstTypeBinary = (left, right : *AstType, ti : *TokenInfo)
-AstTypeOr = Tagged AstTypeBinary
-AstTypeAnd = Tagged AstTypeBinary
+AstTypeOr = NewType AstTypeBinary
+AstTypeAnd = NewType AstTypeBinary
 
 TypeParserError = {#TypeParserError}
 
@@ -92,10 +92,10 @@ AstValueIndex  = (array, index : *AstValue, ti : *TokenInfo)
 AstValueAccess = (rec : *AstValue, field_id : *AstId, ti : *TokenInfo)
 
 AstValueValType = (value : *AstValue, type : *AstType, ti : *TokenInfo)
-AstValueCast   = Tagged AstValueValType
-AstValueIs     = Tagged AstValueValType
-AstValueIsnt   = Tagged AstValueValType
-AstValueAs     = Tagged AstValueValType
+AstValueCast   = NewType AstValueValType
+AstValueIs     = NewType AstValueValType
+AstValueIsnt   = NewType AstValueValType
+AstValueAs     = NewType AstValueValType
 
 AstValueWhenVariant = (is_t : *AstType, x, y : *AstValue, ti : *TokenInfo)
 AstValueWhen = (x : *AstValue, variants : List, other : *AstValue, ti : *TokenInfo)
@@ -104,35 +104,35 @@ AstValueRecord = (values : Map, ti : *TokenInfo)
 AstValueArray  = (items : List, ti : *TokenInfo)
 
 AstValueBinary = (left, right : *AstValue, ti : *TokenInfo)
-AstValueAdd = Tagged AstValueBinary
-AstValueSub = Tagged AstValueBinary
-AstValueMul = Tagged AstValueBinary
-AstValueDiv = Tagged AstValueBinary
-AstValueMod = Tagged AstValueBinary
-AstValueAnd = Tagged AstValueBinary
-AstValueOr  = Tagged AstValueBinary
-AstValueXor = Tagged AstValueBinary
-AstValueEq  = Tagged AstValueBinary
-AstValueNe  = Tagged AstValueBinary
-AstValueLt  = Tagged AstValueBinary
-AstValueGt  = Tagged AstValueBinary
-AstValueLe  = Tagged AstValueBinary
-AstValueGe  = Tagged AstValueBinary
-AstValueShl = Tagged AstValueBinary
-AstValueShr = Tagged AstValueBinary
+AstValueAdd = NewType AstValueBinary
+AstValueSub = NewType AstValueBinary
+AstValueMul = NewType AstValueBinary
+AstValueDiv = NewType AstValueBinary
+AstValueMod = NewType AstValueBinary
+AstValueAnd = NewType AstValueBinary
+AstValueOr  = NewType AstValueBinary
+AstValueXor = NewType AstValueBinary
+AstValueEq  = NewType AstValueBinary
+AstValueNe  = NewType AstValueBinary
+AstValueLt  = NewType AstValueBinary
+AstValueGt  = NewType AstValueBinary
+AstValueLe  = NewType AstValueBinary
+AstValueGe  = NewType AstValueBinary
+AstValueShl = NewType AstValueBinary
+AstValueShr = NewType AstValueBinary
 
 AstValueUnary = (value : *AstValue, ti : *TokenInfo)
-AstValueRef   = Tagged AstValueUnary
-AstValueDeref = Tagged AstValueUnary
-AstValueMinus = Tagged AstValueUnary
-AstValuePlus  = Tagged AstValueUnary
-AstValueNot   = Tagged AstValueUnary
+AstValueRef   = NewType AstValueUnary
+AstValueDeref = NewType AstValueUnary
+AstValueMinus = NewType AstValueUnary
+AstValuePlus  = NewType AstValueUnary
+AstValueNot   = NewType AstValueUnary
 
-AstValueSizeof  = Tagged (type : *AstType, ti : *TokenInfo)
-AstValueAlignof = Tagged (type : *AstType, ti : *TokenInfo)
+AstValueSizeof  = NewType (type : *AstType, ti : *TokenInfo)
+AstValueAlignof = NewType (type : *AstType, ti : *TokenInfo)
 
-AstValueString = Tagged (string : Str, ti : *TokenInfo)
-AstValueNumber = Tagged (string : Str, ti : *TokenInfo)
+AstValueString = NewType (string : Str, ti : *TokenInfo)
+AstValueNumber = NewType (string : Str, ti : *TokenInfo)
 
 AstValueName = AstName
 
@@ -189,24 +189,24 @@ ValueParserResult = AstValue or ValueParserError
 //  Parser Statement
 //
 
-AstStmtValueBind = Tagged (id : *AstId, expr : *AstValue, ti : *TokenInfo)
-AstStmtTypeBind  = Tagged (id : *AstId, type : *AstType, ti : *TokenInfo)
-AstStmtExpr      = Tagged (expr : *AstValue, ti : *TokenInfo)
-AstStmtAssign    = Tagged (l, r : *AstValue, ti : *TokenInfo)
-AstStmtBlock     = Tagged (stmts : List, ti : *TokenInfo)
-AstStmtIf = Tagged (
+AstStmtValueBind = NewType (id : *AstId, expr : *AstValue, ti : *TokenInfo)
+AstStmtTypeBind  = NewType (id : *AstId, type : *AstType, ti : *TokenInfo)
+AstStmtExpr      = NewType (expr : *AstValue, ti : *TokenInfo)
+AstStmtAssign    = NewType (l, r : *AstValue, ti : *TokenInfo)
+AstStmtBlock     = NewType (stmts : List, ti : *TokenInfo)
+AstStmtIf = NewType (
   cond : *AstValue
   then : *AstStmt
   else : *AstStmt or Unit
   ti   : *TokenInfo
 )
 
-AstStmtWhile    = Tagged (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
-AstStmtReturn   = Tagged (value : *AstValue or Unit, ti : *TokenInfo)
-AstStmtGoto     = Tagged (label : *AstId, ti : *TokenInfo)
-AstStmtLabel    = Tagged (label : *AstId, ti : *TokenInfo)
-AstStmtBreak    = Tagged (ti : *TokenInfo)
-AstStmtAgain    = Tagged (ti : *TokenInfo)
+AstStmtWhile    = NewType (cond : *AstValue, block : *AstStmt, ti : *TokenInfo)
+AstStmtReturn   = NewType (value : *AstValue or Unit, ti : *TokenInfo)
+AstStmtGoto     = NewType (label : *AstId, ti : *TokenInfo)
+AstStmtLabel    = NewType (label : *AstId, ti : *TokenInfo)
+AstStmtBreak    = NewType (ti : *TokenInfo)
+AstStmtAgain    = NewType (ti : *TokenInfo)
 
 
 AstStmt = AstStmtAssign or

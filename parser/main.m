@@ -402,7 +402,7 @@ parse_type4 = AstTypeParser {
 
   tk = ctok()
 
-  if match("Tagged") {
+  if match("NewType") {
     spec_type = parse_type()
     return ast_type_new ((type=spec_type, ti=&tk.ti) to AstTypeSpecial)
   }

@@ -227,7 +227,7 @@ do_type_or = (x : AstTypeOr) -> *Type {
 
   if type_is_maybe_ptr (t) {
     // если это мейби указатель то нам подойдет простой указатель
-    t.union.impl := typeFreePtr  // пока юнионы только для ?указателей тест
+    t.union.impl := typeFreePtr
   }
 
   return t

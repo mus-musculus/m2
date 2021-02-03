@@ -55,65 +55,65 @@ ValueKind = {
   #ValueWhen
 }
 
-ValuePoison  = Tagged (ti : *TokenInfo)
-ValueUndefined = Tagged (type : *Type, ti : *TokenInfo)
-ValueImm     = Tagged (type : *Type, value : Int64, ti : *TokenInfo)
-ValueGenericRecord = Tagged (type : *Type, values : Map, ti : *TokenInfo)
-ValueRecord  = Tagged (type : *Type, values : Map, ti : *TokenInfo)
-ValueArray   = Tagged (type : *Type, items : List, ti : *TokenInfo)
-ValueMention = Tagged (type : *Type, of : *Value, ti : *TokenInfo)
+ValuePoison  = NewType (ti : *TokenInfo)
+ValueUndefined = NewType (type : *Type, ti : *TokenInfo)
+ValueImm     = NewType (type : *Type, value : Int64, ti : *TokenInfo)
+ValueGenericRecord = NewType (type : *Type, values : Map, ti : *TokenInfo)
+ValueRecord  = NewType (type : *Type, values : Map, ti : *TokenInfo)
+ValueArray   = NewType (type : *Type, items : List, ti : *TokenInfo)
+ValueMention = NewType (type : *Type, of : *Value, ti : *TokenInfo)
 
 ValueUn     = (type : *Type, value : *Value, ti : *TokenInfo)
 
-ValueRef = Tagged ValueUn
-ValueDeref = Tagged ValueUn
-ValueNot = Tagged ValueUn
-ValueMinus = Tagged ValueUn
-ValuePlus = Tagged ValueUn
+ValueRef = NewType ValueUn
+ValueDeref = NewType ValueUn
+ValueNot = NewType ValueUn
+ValueMinus = NewType ValueUn
+ValuePlus = NewType ValueUn
 
 ValueBin    = (type : *Type, left, right : *Value, ti : *TokenInfo)
 
-ValueAdd = Tagged ValueBin
-ValueSub = Tagged ValueBin
-ValueMul = Tagged ValueBin
-ValueDiv = Tagged ValueBin
-ValueMod = Tagged ValueBin
-ValueOr = Tagged ValueBin
-ValueXor = Tagged ValueBin
-ValueAnd = Tagged ValueBin
-ValueEq = Tagged ValueBin
-ValueNe = Tagged ValueBin
-ValueLt = Tagged ValueBin
-ValueGt = Tagged ValueBin
-ValueLe = Tagged ValueBin
-ValueGe = Tagged ValueBin
-ValueShl = Tagged ValueBin
-ValueShr = Tagged ValueBin
+ValueAdd = NewType ValueBin
+ValueSub = NewType ValueBin
+ValueMul = NewType ValueBin
+ValueDiv = NewType ValueBin
+ValueMod = NewType ValueBin
+ValueOr = NewType ValueBin
+ValueXor = NewType ValueBin
+ValueAnd = NewType ValueBin
+ValueEq = NewType ValueBin
+ValueNe = NewType ValueBin
+ValueLt = NewType ValueBin
+ValueGt = NewType ValueBin
+ValueLe = NewType ValueBin
+ValueGe = NewType ValueBin
+ValueShl = NewType ValueBin
+ValueShr = NewType ValueBin
 
-ValueCall   = Tagged (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
-ValueAccess = Tagged (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
-ValueIndex  = Tagged (type : *Type, array, index : *Value, ti : *TokenInfo)
-ValueCast   = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
-ValueAs     = Tagged (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
-ValueIs     = Tagged (type : *Type, value : *Value, logic : Bool, variant : Nat, ti : *TokenInfo)
-ValueIsnt = Tagged ValueIs
+ValueCall   = NewType (type : *Type, func : *Value, args : *List, ti : *TokenInfo)
+ValueAccess = NewType (type : *Type, value : *Value, field : Str, ti : *TokenInfo)
+ValueIndex  = NewType (type : *Type, array, index : *Value, ti : *TokenInfo)
+ValueCast   = NewType (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueAs     = NewType (type : *Type, value : *Value, type : *Type, ti : *TokenInfo)
+ValueIs     = NewType (type : *Type, value : *Value, logic : Bool, variant : Nat, ti : *TokenInfo)
+ValueIsnt = NewType ValueIs
 
-ValueWhenVariant = Tagged (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
-ValueWhen   = Tagged (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
+ValueWhenVariant = NewType (t : *Type, x, y : *Value, t_no : Nat, ti : *TokenInfo)
+ValueWhen   = NewType (type : *Type, iss : Bool, x : *Value, variants : List, other : *Value, ti : *TokenInfo)
 
 
 // и ValueGlobalVar и ValueGlobalConst юзают ссылку на определение
 // в котором лежит их id. Сделано так потому что id в определении
 // может меняться ренеймом, тк изначально они анонимны, а потом как бог даст.
-ValueGlobalVar   = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
-ValueGlobalConst = Tagged (type : *Type, def : *Definition, ti : *TokenInfo)
+ValueGlobalVar   = NewType (type : *Type, def : *Definition, ti : *TokenInfo)
+ValueGlobalConst = NewType (type : *Type, def : *Definition, ti : *TokenInfo)
 // у параметра в no просто его порядковый номер
-ValueParam = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
+ValueParam = NewType (type : *Type, no : Nat, ti : *TokenInfo)
 
 // no - уникальный порядковый номер для каждой переменной
 // (или просто номер для параметра)
-ValueLocalVar = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
-ValueLocalVal = Tagged (type : *Type, no : Nat, ti : *TokenInfo)
+ValueLocalVar = NewType (type : *Type, no : Nat, ti : *TokenInfo)
+ValueLocalVal = NewType (type : *Type, no : Nat, ti : *TokenInfo)
 
 ValueNo = {#ValueNo}
 
