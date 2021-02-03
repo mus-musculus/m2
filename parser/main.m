@@ -320,10 +320,10 @@ exist parse_type_rec   : AstTypeParser
 exist parse_type   : AstTypeParser
 exist parse_type0  : AstTypeParser
 exist parse_type1  : AstTypeParser
+exist parse_type22  : AstTypeParser
 exist parse_type2  : AstTypeParser
 exist parse_type3  : AstTypeParser
 exist parse_type4  : AstTypeParser
-
 
 
 parse_type0 = AstTypeParser {
@@ -335,7 +335,6 @@ parse_type0 = AstTypeParser {
     _to = parse_type()
 
     ft = ast_type_new ((from=from, to=_to, ti=&tk.ti) to AstTypeFunc)
-    //ft.func := (from=from, to=_to, ti=&tk.ti)
     return ft
   }
 
@@ -343,13 +342,28 @@ parse_type0 = AstTypeParser {
 }
 
 parse_type1 = AstTypeParser {
-  t = parse_type2()
+  t = parse_type22()
 
   tk = ctok()
   if match ("or") {
     skip_nl()
     r = parse_type1 ()
     return ast_type_new ((left=t, right=r, ti=&tk.ti) to AstTypeOr)
+  }
+
+  return t
+}
+
+parse_type22 = AstTypeParser {
+  t = parse_type2()
+
+  tk = ctok()
+  if match ("and") {
+    skip_nl()
+    ti = &tk.ti
+    r = parse_type22 ()
+    error("type `and` not implemented", ti)
+    return ast_type_new ((left=t, right=r, ti=ti) to AstTypeAnd)
   }
 
   return t
