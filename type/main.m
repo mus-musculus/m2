@@ -3,7 +3,7 @@
 /*****************************************************************************/
 
 
-type_new = (k : TypeKind, size : Nat, ti : *TokenInfo) -> *Type {
+type_new = (k : TypeKind, x : Type2, size : Nat, ti : *TokenInfo) -> *Type {
   t = malloc (sizeof Type) to *Type
   assert (t != nil, "type_new")
   *t := (kind=k, size=size, align=size, ti=ti)
@@ -11,34 +11,34 @@ type_new = (k : TypeKind, size : Nat, ti : *TokenInfo) -> *Type {
 }
 
 type_var_new = (of : *Type, ti : *TokenInfo) -> *Type {
-  tn = type_new (#TypeVar, of.size, ti)
+  tn = type_new (#TypeVar, (of=of) to TypeVar, of.size, ti)
   tn.align := of.align
   tn.var := (of=of)
   return tn
 }
 
 type_pointer_new = (to : *Type, ti : *TokenInfo) -> *Type {
-  t = type_new (#TypePointer, cfgPointerSize, ti)
+  t = type_new (#TypePointer, (to=to) to TypePointer, cfgPointerSize, ti)
   t.pointer := (to=to)
   return t
 }
 
 type_array_u_new = (of : *Type, ti : *TokenInfo) -> *Type {
-  t = type_new (#TypeArrayU, cfgPointerSize, ti)
+  t = type_new (#TypeArrayU, (of=of) to TypeArrayU, cfgPointerSize, ti)
   t.array_u := (of=of)
   return t
 }
 
 type_array_new = (of : *Type, volume : Nat32, ti : *TokenInfo) -> *Type {
   size = volume * of.size
-  t = type_new (#TypeArray, size, ti)
+  t = type_new (#TypeArray, (of=of, volume=volume) to TypeArray, size, ti)
   t.align := of.align
   t.array := (of=of, volume=volume)
   return t
 }
 
 type_enum_new = (items : *List, ti : *TokenInfo) -> *Type {
-  t = type_new (#TypeEnum, cfgEnumSize, ti)
+  t = type_new (#TypeEnum, #TypeNo, cfgEnumSize, ti)
   create_constructor = ListForeachHandler {
     cons = data to *EnumConstructor
     enum_type = ctx to *Type
@@ -51,7 +51,7 @@ type_enum_new = (items : *List, ti : *TokenInfo) -> *Type {
 
 
 type_func_new = (from, _to : *Type, arghack : Bool, ti : *TokenInfo) -> *Type {
-  t = type_new (#TypeFunc, cfgPointerSize, ti)
+  t = type_new (#TypeFunc, (from=from, to=_to, arghack=arghack) to TypeFunc, cfgPointerSize, ti)
   t.func := (from=from, to=_to, arghack=arghack)
   return t
 }
@@ -159,7 +159,7 @@ spec_type_uid = 0 to Var Nat32
 do_type_special = (x : AstTypeSpecial) -> *Type {
   spec_type = do_type(x.type)
   // создем новый (!) tagged тип на основе полученного
-  nt = type_new (#TypePoison, 0, x.ti)
+  nt = type_new (#TypePoison, (ti=x.ti) to TypePoison, 0, x.ti)
   memcpy(nt, spec_type, sizeof Type)
   nt.uid := spec_type_uid
   spec_type_uid := spec_type_uid + 1
@@ -178,7 +178,7 @@ do_type_named = (x : AstTypeNamed) -> *Type {
   xt = get_type (id)
   if xt == nil {
     // создаем неопределенный тип если типа с таким именем не было
-    nt = type_new (#TypeUndefined, 0, x.ti)
+    nt = type_new (#TypeUndefined, (ti=x.ti) to TypeUndefined, 0, x.ti)
     nt.ti := x.ti
     bind_type (&module.private, id, nt)
     return nt
@@ -210,7 +210,7 @@ do_type_array = (x : AstTypeArray) -> *Type {
   if of.kind == #TypePoison {return of}
 
   size = do_valuex (x.size, false)
-  if size.data is ValuePoison {return type_new (#TypePoison, 0, x.ti)}
+  if size.data is ValuePoison {return type_new (#TypePoison, (ti=x.ti) to TypePoison, 0, x.ti)}
 
   vol = (size.data as ValueImm).value
 
@@ -243,7 +243,7 @@ type_record_field_new = (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl {
 
 do_type_record = (x : AstTypeRecord) -> *Type {
   old_ctype = ctype
-  t = type_new (#TypeRecord, 0, x.ti)
+  t = type_new (#TypeRecord, #TypeNo, 0, x.ti)
   ctype := t
 
   Ctx0 = (fields : *List, undef_field : Bool)
@@ -367,7 +367,7 @@ do_type_union = (x : AstTypeUnion) -> *Type {
   aka = cat("union.", xuid)
   union_id := union_id + 1
 
-  t = type_new (#TypeUnion, 0, x.ti)
+  t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
   list_init (&t.union.types)
   t.aka := aka
 
@@ -499,19 +499,20 @@ type_init = () -> () {
   builtin_type_bind ("Void", typeVoid)
 
   // Unit is an empty record
-  typeUnit := type_new (#TypeRecord, 0, nil)
-  typeUnit.record := (decls=list_new ())
+  unit_decls = list_new ()
+  typeUnit := type_new (#TypeRecord, (decls=unit_decls) to TypeRecord, 0, nil)
+  typeUnit.record := (decls=unit_decls)
 
   typeUnit.aka := "Unit"
   builtin_type_bind ("Unit", typeUnit)
 
   // Bool is an enum with false & true items
-  typeBool := type_new (#TypeBool, 1, nil)
+  typeBool := type_new (#TypeBool, (ti=nil) to TypeBool, 1, nil)
   builtin_type_bind ("Bool", typeBool)
 
   type_numeric_new = (id : Str, power : Nat, signed : Bool) -> *Type {
     size = power / 8
-    t = type_new (#TypeNumeric, size, nil)
+    t = type_new (#TypeNumeric, (power=power, signed=signed) to TypeNumeric, size, nil)
     t.aka := id
     t.num := (power=power, signed=signed)
     return t

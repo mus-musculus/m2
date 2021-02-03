@@ -41,7 +41,7 @@ value_new = (x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
 
 
 value_new_poison = (ti : *TokenInfo) -> *Value {
-  tp = type_new (#TypePoison, 0, ti)
+  tp = type_new (#TypePoison, (ti=ti) to TypePoison, 0, ti)
   return value_new ((ti=ti) to ValuePoison, tp, ti)
 }
 
@@ -988,7 +988,7 @@ do_value_record = (x : AstValueRecord) -> *Value {
   ti = &ctok().ti
   Ctx9 = (type : *Type, vl : Map)
 
-  t = type_new (#TypeGenericRecord, 0, ti)
+  t = type_new (#TypeGenericRecord, (ti=ti) to TypeGenericRecord, 0, ti)
   t.record.decls := list_new()  // TODO сделай потом лист просто без ню чтобы
 
   ctx = (type=t) to Var Ctx9
@@ -1413,7 +1413,7 @@ value_init = () -> () {
   builtin_value_bind ("true", _true)
 
   // nil
-  nil_type = type_new(#TypeGenericReference, cfgPointerSize, nil)
+  nil_type = type_new(#TypeGenericReference, (ti=nil) to TypeGenericReference, cfgPointerSize, nil)
   _nil = value_new_imm (nil_type, 0, nil)
   builtin_value_bind ("nil", _nil)
 
@@ -1466,6 +1466,6 @@ value_type_get = (x : Value) -> *Type {
     ValueRecord => (xx as ValueRecord).type
     ValueArray  => (xx as ValueArray).type
 
-    else => type_new (#TypePoison, 0, nil)
+    else => type_new (#TypePoison, (ti=x.ti) to TypePoison, 0, nil)
   }
 }

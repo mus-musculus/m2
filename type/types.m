@@ -3,15 +3,15 @@
 /*****************************************************************************/
 
 
-TypeNumeric = Tagged (power : Nat, signed : Bool)
-TypeArray   = Tagged (of : *Type, volume : Nat)
-TypeArrayU  = Tagged (of : *Type)
-TypeFunc    = Tagged (from, to : *Type, arghack : Bool)
-TypePointer = Tagged (to : *Type)
-TypeRecord  = Tagged (decls : *List, end : Nat)
-TypeVar     = Tagged (of : *Type)
-TypeEnum    = Tagged (cons : *List)
-TypeUnion   = Tagged (types : List, impl : *Type, data_size : Nat)
+TypeNumeric = Tagged (power : Nat, signed : Bool, ti : *TokenInfo)
+TypeArray   = Tagged (of : *Type, volume : Nat, ti : *TokenInfo)
+TypeArrayU  = Tagged (of : *Type, ti : *TokenInfo)
+TypeFunc    = Tagged (from, to : *Type, arghack : Bool, ti : *TokenInfo)
+TypePointer = Tagged (to : *Type, ti : *TokenInfo)
+TypeRecord  = Tagged (decls : *List, end : Nat, ti : *TokenInfo)
+TypeVar     = Tagged (of : *Type, ti : *TokenInfo)
+TypeEnum    = Tagged (cons : *List, ti : *TokenInfo)
+TypeUnion   = Tagged (types : List, impl : *Type, data_size : Nat, ti : *TokenInfo)
 
 EnumConstructor = (id : *AstId, d : Nat32, ti : *TokenInfo)
 
@@ -68,7 +68,15 @@ TypeKind = {
 }
 
 
+TypePoison = Tagged (ti : *TokenInfo)
+TypeUndefined = Tagged (ti : *TokenInfo)
+TypeGenericReference = Tagged (ti : *TokenInfo)
+TypeGenericRecord = Tagged (ti : *TokenInfo)
+TypeBool = Tagged (ti : *TokenInfo)
+TypeNo = {#TypeNo}
+
 Type2 = TypePoison or
+       TypeUndefined or
        TypeGenericReference or
        TypeGenericRecord or
        TypeNumeric or
@@ -80,7 +88,8 @@ Type2 = TypePoison or
        TypePointer or
        TypeArray or
        TypeArrayU or
-       TypeUnion
+       TypeUnion or
+       TypeNo
 
 /*
  * Type Structure
