@@ -62,10 +62,16 @@ AstTypeVar     = Tagged (of : *AstType, ti : *TokenInfo)
 AstTypeSpecial = Tagged (type : *AstType, ti : *TokenInfo)
 AstTypeUnion   = Tagged (types : AstTypeList, ti : *TokenInfo)
 
+AstTypeBinary = (l, r : *AstType, ti : *TokenInfo)
+AstTypeOr = Tagged AstTypeBinary
+AstTypeAnd = Tagged AstTypeBinary
+
 TypeParserError = {#TypeParserError}
 
 AstType = AstTypeNamed or
           AstTypeEnum or
+          AstTypeOr or
+          AstTypeAnd or
           AstTypeRecord or
           AstTypeArray or
           AstTypeArrayU or

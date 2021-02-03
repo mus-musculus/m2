@@ -346,7 +346,10 @@ parse_type1 = AstTypeParser {
   t = parse_type2()
 
   tk = ctok()
-  if match("or") {
+  if match ("or2") {
+    r = parse_type1 ()
+    return ast_type_new ((l=t, r=r, ti=&tk.ti) to AstTypeOr)
+  } else if match("or") {
 
     types = 0 to Var List
     list_init(&types)
