@@ -2,6 +2,31 @@
 /*                                 Type                                      */
 /*****************************************************************************/
 
+union_id = 0 to Var Nat
+name_union_get = () -> Str {
+  xuid = str_new(10)
+  sprintf(&xuid[0], "%d", union_id)
+  aka = cat("union.", xuid)
+  union_id := union_id + 1
+  return aka
+}
+
+align = (req_sz : Nat32, align : Nat) -> Nat32 {
+  assert (align != 0, "alignment : align=0")
+  a = req_sz % align
+  return when a {
+    0 => req_sz
+    else => req_sz + (align - a)
+  }
+}
+
+// выравнивание до ближайшей степени двойки
+propagation = (x : Nat) -> Nat {
+  y = 1 to Var Nat
+  while y < x {y := y << 1}
+  return y
+}
+
 
 type_new = (k : TypeKind, x : Type2, size : Nat, ti : *TokenInfo) -> *Type {
   t = malloc (sizeof Type) to *Type
@@ -155,17 +180,64 @@ do_type = (x : *AstType) -> *Type {
   }
 }
 
+max = (a, b : Nat) -> Nat {
+  return when true {
+    a > b => a
+    a < b => b
+    else => a
+  }
+}
 
 do_type_or = (x : AstTypeOr) -> *Type {
   l = do_type (x.left)
   r = do_type (x.right)
 
-  // если справа TypeOr - сливаем
-  if r.data is TypeOr {
 
+
+
+  // сливает воедино union и произвольный тип
+  merge_union_with = (u, t : *Type) -> *Type {
+//    printf("merge!\n")
+//    if t.kind == #TypeOr {
+//      // если справа тоже union то сливаем union с union!
+//      // а справа может оказаться union
+//      // если он идет через скобки или упоминание!
+//      // сделай рекурсивно это важно тк это алгебра
+//      printf("RIGHHHT!\n")
+//    }
+//
+    list_append (&u.union.types, t)
+    data_size = max (u.union.data_size, t.size)
+    u.union.data_size := data_size
+    size = propagation (align (data_size + 2, 4))
+    u.size := size
+    u.align := size
+    u.union.impl := nil
+    return u
   }
 
-  return nil //type_new (#TypeOr)
+  // если слева TypeOr - сливаем
+  if l.kind == #TypeUnion {
+    return merge_union_with (l, r)
+  }
+
+  // если справа TypeOr - сливаем
+  if r.kind == #TypeUnion {
+    return merge_union_with (r, l)
+  }
+
+  // создаем новый пусто union
+  aka = name_union_get ()
+  t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
+  list_append (&unions, t)
+  list_init (&t.union.types)
+  t.aka := aka
+
+  // добавляем в него левый и правый член
+  merge_union_with(t, l)
+  merge_union_with(t, r)
+
+  return t
 }
 
 // Tagged (NewType)
@@ -236,16 +308,6 @@ do_type_pointer = (x : AstTypePointer) -> *Type {
   _to = do_type (x.to)
   if _to.kind == #TypePoison {return _to}
   return type_pointer_new (_to, x.ti)
-}
-
-
-align = (req_sz : Nat32, align : Nat) -> Nat32 {
-  assert (align != 0, "alignment : align=0")
-  a = req_sz % align
-  return when a {
-    0 => req_sz
-    else => req_sz + (align - a)
-  }
 }
 
 type_record_field_new = (id : *AstId, t : *Type, ti : *TokenInfo) -> *Decl {
@@ -352,34 +414,8 @@ do_type_enum = (x : AstTypeEnum) -> *Type {
 }
 
 
-union_id = 0 to Var Nat
-
-
-// тупое как топор выравнивание до ближайшей степени двойки
-// потом надо придумать алгоритм а сечас как всегда мне некогда!!
-propagation = (x : Nat) -> Nat {
-  return when true {
-    x <= 2 => 2 to Nat
-    x <= 4 => 4 to Nat
-    x <= 8 => 8 to Nat
-    x <= 16 => 16 to Nat
-    x <= 32 => 32 to Nat
-    x <= 64 => 64 to Nat
-    x <= 128 => 128 to Nat
-    x <= 256 => 256 to Nat
-    x <= 512 => 512 to Nat
-    x <= 1024 => 1024 to Nat
-    x <= 2048 => 2048 to Nat
-    x <= 4096 => 4096 to Nat
-    else => x
-  }
-}
-
 do_type_union = (x : AstTypeUnion) -> *Type {
-  xuid = str_new(10)
-  sprintf(&xuid[0], "%d", union_id)
-  aka = cat("union.", xuid)
-  union_id := union_id + 1
+  aka = name_union_get ()
 
   t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
   list_init (&t.union.types)
