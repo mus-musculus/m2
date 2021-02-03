@@ -347,6 +347,7 @@ parse_type1 = AstTypeParser {
 
   tk = ctok()
   if match ("or2") {
+    skip_nl()
     r = parse_type1 ()
     return ast_type_new ((left=t, right=r, ti=&tk.ti) to AstTypeOr)
   } else if match("or") {

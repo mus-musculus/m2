@@ -5158,6 +5158,7 @@ define %union.2* @func205 () {
   %4 = call i1 (%Str) @func193 (%Str %3)
   br i1 %4, label %then_0, label %else_0
 then_0:
+  call void () @skip_nl ()
   %5 = call %union.2* () @func205 ()
   %6 = insertvalue %AstTypeBinary zeroinitializer, %union.2* %1, 0
   %7 = insertvalue %AstTypeBinary %6, %union.2* %5, 1

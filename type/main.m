@@ -192,9 +192,6 @@ do_type_or = (x : AstTypeOr) -> *Type {
   l = do_type (x.left)
   r = do_type (x.right)
 
-
-
-
   // сливает воедино union и произвольный тип
   merge_union_with = (u, t : *Type) -> *Type {
 //    printf("merge!\n")
