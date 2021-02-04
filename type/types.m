@@ -76,9 +76,9 @@ TypeUndefined = NewType (ti : *TokenInfo)
 TypeGenericReference = NewType (ti : *TokenInfo)
 TypeGenericRecord = NewType (ti : *TokenInfo)
 TypeBool = NewType (ti : *TokenInfo)
+TypeOr = NewType (left, right : *Type, ti : *TokenInfo)
 TypeNo = {#TypeNo}
 
-TypeOr = NewType TypeUnion
 
 Type2 = TypePoison or
        TypeUndefined or
@@ -122,6 +122,7 @@ Type = (
     enum     : TypeEnum
     var      : TypeVar
     union    : TypeUnion
+    or       : TypeOr
 //)
 
   ti : *TokenInfo  // place in code where type was mentioned

@@ -984,6 +984,7 @@ eval_cast_to_basic = EvalCast {
     #TypeEnum => eval_cast_enum_to_basic (v, t)
     #TypeBool => llvm_cast ("zext", v, t)
     #TypeUnion => llvm_cast ("bitcast", v, t)
+    #TypeOr    => llvm_cast ("bitcast", v, t)
 
     #TypeRecord => llvm_cast ("bitcast", v, t)
 
@@ -1152,6 +1153,12 @@ eval_cast = (x : ValueCast) -> LLVM_Value {
   }
 
   if v.type.kind == #TypeUnion {
+    if v.type.union.impl == nil {
+      return eval_cast_union_to (v, t)
+    }
+  }
+
+  if v.type.kind == #TypeOr {
     if v.type.union.impl == nil {
       return eval_cast_union_to (v, t)
     }
@@ -1756,6 +1763,7 @@ printTypeSpec = (t : *Type, print_alias, func_as_ptr : Bool) -> () {
     #TypeFunc    => printTypeFunc    (&t.func, func_as_ptr)
     #TypeBool    => o ("i1")
     #TypeUnion   => fprintf (fout, "%%%s", t.aka) to ()
+    #TypeOr      => fprintf (fout, "%%%s", t.aka) to ()
     else => (t : *Type) -> () {
       o ("<type-unknown-kind>")
       printf ("unk type kind %d\n", t.kind)

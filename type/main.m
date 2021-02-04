@@ -169,7 +169,7 @@ exist do_type_pointer : (x : AstTypePointer) -> *Type
 exist do_type_record  : (x : AstTypeRecord) -> *Type
 exist do_type_enum    : (x : AstTypeEnum) -> *Type
 exist do_type_or      : (x : AstTypeOr) -> *Type
-exist do_type_union   : (x : AstTypeUnion) -> *Type
+
 
 do_type = (x : *AstType) -> *Type {
   xx = *x
@@ -177,7 +177,6 @@ do_type = (x : *AstType) -> *Type {
     AstTypeNamed   => do_type_named   (xx as AstTypeNamed)
     AstTypeRecord  => do_type_record  (xx as AstTypeRecord)
     AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
-    AstTypeUnion   => do_type_union   (xx as AstTypeUnion)
     AstTypeOr      => do_type_or      (xx as AstTypeOr)
     AstTypeVar     => do_type_var     (xx as AstTypeVar)
     AstTypeNewType => do_type_special (xx as AstTypeNewType)
@@ -280,65 +279,18 @@ do_type_or = (x : AstTypeOr) -> *Type {
 }
 
 
-
-do_type_union = (x : AstTypeUnion) -> *Type {
-  xuid = str_new(10)
-  sprintf(&xuid[0], "%d", union_id)
-  aka = cat("union.", xuid)
-  union_id := union_id + 1
-
-  t = type_new (#TypeUnion, #TypeNo, 0, x.ti)
-  list_init (&t.union.types)
-  t.aka := aka
-
-  CtxUnion = (
-    tlist : *List
-    max_size : Nat
-  )
-
-  ctx = (tlist=&t.union.types) to Var CtxUnion
-
-  do_variant = ListForeachHandler {
-    ast_type = data to *AstType
-    c = ctx to *CtxUnion
-
-    tlist = ctx to *List
-    t = do_type (ast_type)
-
-    // получаем размер самого большого варианта
-    c.max_size := when true {
-      t.size > c.max_size => t.size
-      else => c.max_size
-    }
-
-    if type_present_in_list(c.tlist, t) {
-      error("this type already present in union", t.ti)
-    }
-
-    list_append(c.tlist, t)
-  }
-  list_foreach(&(x.types to Var List), do_variant, &ctx)
-
-  size = propagation(align(ctx.max_size + 2, 4))
-
-
-  t.size := size
-  t.align := size
-
-  t.union.data_size := ctx.max_size
-
-  list_append (&unions, t)
-
-  if type_is_maybe_ptr (t) {
-    // если это мейби указатель то нам подойдет простой указатель
-    u = typeFreePtr  // пока юнионы только для ?указателей тест
-    t.union.impl := u
-
-  } else {
-    t.union.impl := nil  // классический юнион
+is_type_in_type_or = (t_or, t : *Type) -> Bool {
+  if t.or.left.kind == #TypeOr {
+    if self (t.or.left, t) {return true}
   }
 
-  return t
+  if t.or.right.kind == #TypeOr {
+    if self (t.or.right, t) {return true}
+  }
+
+  if type_eq(t.or.left, t) or type_eq(t.or.right, t) {return true}
+
+  return false
 }
 
 
@@ -548,6 +500,10 @@ type_eq_union = (a, b : TypeUnion) -> Bool {
   return list_compare (&(a.types to Var List), &(b.types to Var List), check_types, nil)
 }
 
+type_eq_or = (a, b : TypeOr) -> Bool {
+  return type_eq(a.left, b.left) and type_eq(a.right, b.right)
+}
+
 
 type_eq = (a, b : *Type) -> Bool {
   if a == b {return true}
@@ -567,6 +523,7 @@ type_eq = (a, b : *Type) -> Bool {
     #TypeFunc    => type_eq_func    (a.func, b.func)
     #TypeRecord  => type_eq_record  (a.record, b.record)
     #TypeUnion   => type_eq_union   (a.union, b.union)
+    #TypeOr      => type_eq_or      (a.or, b.or)
     #TypeEnum    => false
     #TypeBool    => true
     else => false
