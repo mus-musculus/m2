@@ -347,28 +347,14 @@ parse_type1 = AstTypeParser {
 
   tk = ctok()
   if match("or") {
-
-    types = 0 to Var List
-    list_init(&types)
-
-    list_append(&types, t)
-
     skip_nl()
-    t = parse_type2()
-
-    list_append(&types, t)
-
-    while match("or") {
-      skip_nl()
-      t = parse_type2()
-      list_append(&types, t)
-    }
-
-    return ast_type_new ((types=types, ti=&tk.ti) to AstTypeUnion)
+    r = parse_type1()
+    return ast_type_new ((left=t, right=r, ti=&tk.ti) to AstTypeOr)
   }
 
   return t
 }
+
 
 parse_type2 = AstTypeParser {
   tk = ctok()

@@ -178,6 +178,7 @@ do_type = (x : *AstType) -> *Type {
     AstTypeRecord  => do_type_record  (xx as AstTypeRecord)
     AstTypeFunc    => do_type_func    (xx as AstTypeFunc)
     AstTypeUnion   => do_type_union   (xx as AstTypeUnion)
+    AstTypeOr      => do_type_or      (xx as AstTypeOr)
     AstTypeVar     => do_type_var     (xx as AstTypeVar)
     AstTypeNewType => do_type_special (xx as AstTypeNewType)
     AstTypeArray   => do_type_array   (xx as AstTypeArray)
@@ -188,6 +189,95 @@ do_type = (x : *AstType) -> *Type {
   }
 }
 
+
+
+type_new_or = (ti : *TokenInfo) -> *Type {
+  // создаем новый пустой union
+  aka = name_union_get ()
+  t = type_new (#TypeUnion, #TypeNo, 0, ti)
+  list_append (&unions, t)
+  list_init (&t.union.types)
+  t.aka := aka
+  return t
+}
+
+// добавляет к union произвольный тип
+type_or_add = (u, t : *Type) -> *Type {
+  list_append (&u.union.types, t)
+  data_size = max (u.union.data_size, t.size)
+  u.union.data_size := data_size
+  size = propagation (align (data_size + 2, 4))
+  u.size := size
+  u.align := size
+  u.union.impl := nil
+  return u
+}
+
+// создает новый TypeOr и наполняет его элементами u0 и u1 (TypeOr)
+type_union_merge = (u0, u1 : *Type, ti : *TokenInfo) -> *Type {
+  u = type_new_or (ti)
+
+  merge0 = ListForeachHandler {
+    type = data to *Type
+    or_t = ctx to *Type
+    type_or_add (or_t, type)
+  }
+  list_foreach (&u0.union.types, merge0, u)
+
+  merge1 = ListForeachHandler {
+    type = data to *Type
+    or_t = ctx to *Type
+    type_or_add (or_t, type)
+  }
+  list_foreach (&u1.union.types, merge1, u)
+
+  return u
+}
+
+// создает новый TypeOr и наполняет его типами t0 и t1
+type_new_or2 = (left, right : *Type, ti : *TokenInfo) -> *Type {
+  t = type_new_or (ti)
+  // добавляем в него левый и правый член
+  type_or_add(t, left)
+  type_or_add(t, right)
+
+  if type_is_maybe_ptr (t) {
+    // если это мейби указатель то нам подойдет простой указатель
+    t.union.impl := typeFreePtr
+  }
+
+  return t
+}
+
+do_type_or = (x : AstTypeOr) -> *Type {
+  l = do_type (x.left)
+  r = do_type (x.right)
+
+  // если слева и справа TypeOr
+  if l.kind == #TypeUnion and r.kind == #TypeUnion {
+    // если оба `плоские` (A or B) or (C or D)
+    // - сливаем их воедино
+    if l.uid == 0 and r.uid == 0 {
+      return type_union_merge (l, r, x.ti)
+    } else {
+      // разные => создаем новы плоский TypeOr и вливаем их в него
+      return type_new_or2 (l, r, x.ti)
+    }
+  }
+
+  // если слева TypeOr
+  if l.kind == #TypeUnion {
+    if l.uid == 0 {}
+    return type_or_add (l, r)
+  }
+
+  // если справа TypeOr - сливаем
+  if r.kind == #TypeUnion {
+    return type_or_add (r, l)
+  }
+
+  return type_new_or2 (l, r, x.ti)
+}
 
 
 
