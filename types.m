@@ -9,7 +9,8 @@ Index = (types, values : Map)  // Symtab
 
 Symtab = Index
 
-Context = (parent : *Self, symtab : Symtab)
+Context = (parent : *Self, index : Index)
+
 
 Module = (public, private, undef : Index)
 

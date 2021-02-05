@@ -16,6 +16,12 @@ import "proto"
 exist ctype : Var *Type*/
 
 
+context_init = (ctx, parent : *Context) -> () {
+  index_init(&ctx.index)
+  ctx.parent := parent
+}
+
+
 builtinIndex = 0 to Var Index
 
 builtin_value_bind = (id : Str, v : *Value) -> ()

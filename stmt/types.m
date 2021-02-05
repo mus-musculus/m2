@@ -11,6 +11,8 @@ StmtBlock = NewType (
   index   : Index   // local index
   stmts   : List    // list of statements
 
+  ctx     : Context
+
   ti : *TokenInfo
 )
 
