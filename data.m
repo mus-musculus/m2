@@ -56,11 +56,17 @@ context_value_append = (ctx : *Context, id : Str, v : *Value) -> () {
 
 
 context_type_get = (ctx : *Context, id : Str) -> *Type {
-  return index_type_get (&cctx.index, id)
+  if ctx == nil {return nil}
+  t = index_type_get (&cctx.index, id)
+  if t != nil {return t}
+  return self (ctx.parent, id)
 }
 
 context_value_get = (ctx : *Context, id : Str) -> *Value {
-  return index_value_get (&cctx.index, id)
+  if ctx == nil {return nil}
+  v = index_value_get (&cctx.index, id)
+  if v != nil {return v}
+  return self (ctx.parent, id)
 }
 
 

@@ -3089,18 +3089,62 @@ define void @context_value_append (%Context*, %Str, %Value*) {
   ret void
 }
 
-define %Type* @context_type_get (%Context*, %Str) {
-  %3 = load %Context*, %Context** @cctx
-  %4 = getelementptr inbounds %Context, %Context* %3, i1 0, i32 1
-  %5 = call %Type* (%Index*, %Str) @index_type_get (%Index* %4, %Str %1)
+define %Type* @context_type_get (%Context*, %Str) {; loadImmPtr
+  %3 = inttoptr i64 0 to%Context*
+  %4 = icmp eq %Context* %0, %3
+  br i1 %4, label %then_0, label %else_0
+then_0:; loadImmPtr
+  %5 = inttoptr i64 0 to%Type*
   ret %Type* %5
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+  %7 = load %Context*, %Context** @cctx
+  %8 = getelementptr inbounds %Context, %Context* %7, i1 0, i32 1
+  %9 = call %Type* (%Index*, %Str) @index_type_get (%Index* %8, %Str %1); loadImmPtr
+  %10 = inttoptr i64 0 to%Type*
+  %11 = icmp ne %Type* %9, %10
+  br i1 %11, label %then_1, label %else_1
+then_1:
+  ret %Type* %9
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
+  %13 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
+  %14 = load %Context*, %Context** %13
+  %15 = call %Type* (%Context*, %Str) @context_type_get (%Context* %14, %Str %1)
+  ret %Type* %15
 }
 
-define %Value* @context_value_get (%Context*, %Str) {
-  %3 = load %Context*, %Context** @cctx
-  %4 = getelementptr inbounds %Context, %Context* %3, i1 0, i32 1
-  %5 = call %Value* (%Index*, %Str) @index_value_get (%Index* %4, %Str %1)
+define %Value* @context_value_get (%Context*, %Str) {; loadImmPtr
+  %3 = inttoptr i64 0 to%Context*
+  %4 = icmp eq %Context* %0, %3
+  br i1 %4, label %then_0, label %else_0
+then_0:; loadImmPtr
+  %5 = inttoptr i64 0 to%Value*
   ret %Value* %5
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+  %7 = load %Context*, %Context** @cctx
+  %8 = getelementptr inbounds %Context, %Context* %7, i1 0, i32 1
+  %9 = call %Value* (%Index*, %Str) @index_value_get (%Index* %8, %Str %1); loadImmPtr
+  %10 = inttoptr i64 0 to%Value*
+  %11 = icmp ne %Value* %9, %10
+  br i1 %11, label %then_1, label %else_1
+then_1:
+  ret %Value* %9
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
+  %13 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
+  %14 = load %Context*, %Context** %13
+  %15 = call %Value* (%Context*, %Str) @context_value_get (%Context* %14, %Str %1)
+  ret %Value* %15
 }
 
 define void @builtin_value_bind (%Str, %Value*) {
