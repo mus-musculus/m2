@@ -70,8 +70,13 @@ context_value_get = (ctx : *Context, id : Str) -> *Value {
 }
 
 
+typebind = (id : Str, t : *Type) -> () {
+  context_type_append (cctx, id, t)
+}
 
-
+valbind = (id : Str, v : *Value) -> () {
+  context_value_append (cctx, id, v)
+}
 
 
 
