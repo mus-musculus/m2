@@ -21,20 +21,10 @@ smalloc = (size : Nat) -> *Unit or Unit {
   }*/
 }
 
-// я не умею приводить указатель к мейби типу поэтому пишу пока через функцию
-vn = () -> *Value or Unit  {
-  x = malloc (sizeof Value) to *Value
-  if x == nil {
-    assert (false, "value_new : v != nil")
-    return unit
-  }
-  return x
-}
 
 value_new = (x : Value2, t : *Type, ti : *TokenInfo) -> *Value {
   v = malloc (sizeof Value) to *Value
   assert (v != nil, "value_new : v != nil")
-
   *v := (type=t, ti=ti, data=x)
   return v
 }
@@ -196,7 +186,10 @@ do_valuex = (x : *AstValue, load : Bool) -> *Value {
     AstValueSizeof  => do_value_sizeof  (xx as AstValueSizeof)
     AstValueAlignof => do_value_alignof (xx as AstValueAlignof)
     AstValueWhen    => do_value_when    (xx as AstValueWhen)
-    else => () -> *Value {fatal("do_value : v == nil"); return nil} ()
+    else => (x : *AstValue) -> *Value {
+      fatal("do_value : v == nil")
+      return value_new_poison (nil)
+    } (x)
   }
 
   if v.data is ValuePoison {return v}
