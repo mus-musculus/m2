@@ -18378,16 +18378,14 @@ endif_0:
   ret %union.36 %57
 }
 
-define %StmtBlock* @func543 (%StmtBlock*, %StmtBlock*) {
-  %3 = bitcast %StmtBlock* %0 to %Unit*
-  %4 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %3, %Nat8 0, %Nat32 120)
-  %5 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 0
-  store %StmtBlock* %1, %StmtBlock** %5, align 8
-  %6 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 2
-  %7 = load %Context*, %Context** @cctx
-  call void (%Context*, %Context*) @context_init (%Context* %6, %Context* %7)
-  %8 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 1
-  call void (%List*) @map_init (%List* %8)
+define %StmtBlock* @func543 (%StmtBlock*) {
+  %2 = bitcast %StmtBlock* %0 to %Unit*
+  %3 = call %Unit* (%Unit*, %Nat8, %Nat32) @memset (%Unit* %2, %Nat8 0, %Nat32 120)
+  %4 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 2
+  %5 = load %Context*, %Context** @cctx
+  call void (%Context*, %Context*) @context_init (%Context* %4, %Context* %5)
+  %6 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 1
+  call void (%List*) @map_init (%List* %6)
   ret %StmtBlock* %0
 }
 
@@ -18415,10 +18413,10 @@ define %union.37 @func544 (%AstStmtBlock) {
   %2 = alloca %StmtBlock
   store %StmtBlock zeroinitializer, %StmtBlock* %2, align 8
   %3 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0
-  %4 = load %FuncContext*, %FuncContext** @fctx
-  %5 = getelementptr inbounds %FuncContext, %FuncContext* %4, i1 0, i32 2
-  %6 = load %StmtBlock*, %StmtBlock** %5
-  %7 = call %StmtBlock* (%StmtBlock*, %StmtBlock*) @func543 (%StmtBlock* %3, %StmtBlock* %6)
+  %4 = call %StmtBlock* (%StmtBlock*) @func543 (%StmtBlock* %3)
+  %5 = load %FuncContext*, %FuncContext** @fctx
+  %6 = getelementptr inbounds %FuncContext, %FuncContext* %5, i1 0, i32 2
+  %7 = load %StmtBlock*, %StmtBlock** %6
   %8 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 2
   %9 = load %Context*, %Context** @cctx
   call void (%Context*, %Context*) @context_init (%Context* %8, %Context* %9)
@@ -18441,29 +18439,27 @@ define %union.37 @func544 (%AstStmtBlock) {
   store %Context* %21, %Context** @cctx, align 8
   %22 = load %FuncContext*, %FuncContext** @fctx
   %23 = getelementptr inbounds %FuncContext, %FuncContext* %22, i1 0, i32 2
-  %24 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 0
-  %25 = load %StmtBlock*, %StmtBlock** %24
-  store %StmtBlock* %25, %StmtBlock** %23, align 8
-  %26 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 1
-  %27 = load %List, %List* %26
-  %28 = insertvalue %StmtBlock zeroinitializer, %List %27, 1
-  %29 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 0
-  %30 = load %StmtBlock*, %StmtBlock** %29
-  %31 = insertvalue %StmtBlock %28, %StmtBlock* %30, 0
-  %32 = extractvalue %AstStmtBlock %0, 1
-  %33 = insertvalue %StmtBlock %31, %TokenInfo* %32, 3
-  %34 = alloca %union.13
+  store %StmtBlock* %7, %StmtBlock** %23, align 8
+  %24 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 1
+  %25 = load %List, %List* %24
+  %26 = insertvalue %StmtBlock zeroinitializer, %List %25, 1
+  %27 = getelementptr inbounds %StmtBlock, %StmtBlock* %2, i1 0, i32 0
+  %28 = load %StmtBlock*, %StmtBlock** %27
+  %29 = insertvalue %StmtBlock %26, %StmtBlock* %28, 0
+  %30 = extractvalue %AstStmtBlock %0, 1
+  %31 = insertvalue %StmtBlock %29, %TokenInfo* %30, 3
+  %32 = alloca %union.13
 ; write variant 9
-  %35 = getelementptr inbounds %union.13, %union.13* %34, i1 0, i32 0
-  store %Int16 9, %Int16* %35, align 2
+  %33 = getelementptr inbounds %union.13, %union.13* %32, i1 0, i32 0
+  store %Int16 9, %Int16* %33, align 2
 ; write data
-  %36 = getelementptr inbounds %union.13, %union.13* %34, i1 0, i32 1
-  %37 = bitcast [120 x %Nat8]* %36 to %StmtBlock*
-  store %StmtBlock %33, %StmtBlock* %37, align 8
-  %38 = load %union.13, %union.13* %34
-  %39 = call %union.13* (%union.13) @stmt_new (%union.13 %38)
-  %40 = bitcast %union.13* %39 to %union.37
-  ret %union.37 %40
+  %34 = getelementptr inbounds %union.13, %union.13* %32, i1 0, i32 1
+  %35 = bitcast [120 x %Nat8]* %34 to %StmtBlock*
+  store %StmtBlock %31, %StmtBlock* %35, align 8
+  %36 = load %union.13, %union.13* %32
+  %37 = call %union.13* (%union.13) @stmt_new (%union.13 %36)
+  %38 = bitcast %union.13* %37 to %union.37
+  ret %union.37 %38
 }
 
 define %union.38 @func546 (%AstStmtExpr) {
