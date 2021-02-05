@@ -1596,11 +1596,11 @@ create_array = (x : LLVM_Value) -> LLVM_Value {
 
 exist print_stmt         : (s : *Stmt) -> ()
 exist print_stmt_assign  : (x : StmtAssign) -> ()
-exist print_stmt_var     : (v : StmtVarDef) -> ()
+exist print_stmt_var     : (x : StmtVarDef) -> ()
 exist print_stmt_valbind : (x : StmtValBind) -> ()
 exist print_stmt_expr    : (x : StmtExpr) -> ()
-exist print_stmt_if      : (i : StmtIf) -> ()
-exist print_stmt_while   : (w : StmtWhile) -> ()
+exist print_stmt_if      : (x : StmtIf) -> ()
+exist print_stmt_while   : (x : StmtWhile) -> ()
 
 exist print_stmt_return   : (x : StmtReturn) -> ()
 exist print_stmt_break    : (x : StmtBreak) -> ()
@@ -1609,8 +1609,8 @@ exist print_stmt_goto     : (x : StmtGoto) -> ()
 exist print_stmt_label    : (x : StmtLabel) -> ()
 
 
-print_stmt = (s : *Stmt) -> () {
-  ss = *s
+print_stmt = (x : *Stmt) -> () {
+  ss = *x
   when ss {
     StmtBlock    => print_block         (ss as StmtBlock)
     StmtValBind  => print_stmt_valbind  (ss as StmtValBind)
@@ -1636,15 +1636,15 @@ print_stmt_assign = (x : StmtAssign) -> () {print_st (x.l, x.r)}
 // или непосредственная константа (которая никак не вычисляется в LLVM)
 
 
-print_stmt_var = (v : StmtVarDef) -> () {
-  reg = operation_with_type ("alloca", v.type)
+print_stmt_var = (x : StmtVarDef) -> () {
+  reg = operation_with_type ("alloca", x.type)
   // сохраняем номер полученного регистра по нашему номеру
-  local_vars_map[v.no] :=reg
+  local_vars_map[x.no] :=reg
   // initialization
-  iv = v.init_value
+  iv = x.init_value
   if iv != nil {
     init_value = reval (iv)
-    lo = (kind=#LLVM_ValueLocalVar, type=v.type, reg=reg)
+    lo = (kind=#LLVM_ValueLocalVar, type=x.type, reg=reg)
     llvm_st (lo, init_value)
   }
 }

@@ -174,7 +174,7 @@ do_value_bind = (x : AstNodeBindValue) -> () {
    * который был декларирован ранее. Поэтому просто подменим ему пустое тело!
    * А возможно это ошибка - попытка переопределить определенное значение
    */
-  y = get_value_global(id)
+  y = valget (id)
   if y != nil {
     if y.data isnt ValueUndefined {
       error("value redefination", x.ti)
