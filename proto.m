@@ -192,4 +192,8 @@ exist value_print_select : (v : *Value) -> ()
 
 exist value_type_get : (x : Value) -> *Type
 
+
+exist stmt_new_vardef : (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Stmt
+
 //exist is_value_imm_num : (v : *Value) -> Bool
+

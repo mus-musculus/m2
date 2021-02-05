@@ -46,8 +46,6 @@ exist do_import : (x : AstNodeImport) -> ()
 exist do_type_bind : (x : AstNodeBindType) -> ()
 exist do_value_bind : (x : AstNodeBindValue) -> ()
 exist do_value_decl : (x : AstNodeDeclValue) -> ()
-//exist do_var_decl : (x : *AstDecl) -> ()
-//exist do_type_decl : (x : *AstNodeDeclType) -> ()
 
 compile = (a : AstModule) -> *Assembly {
   do_node = ListForeachHandler {
@@ -99,25 +97,6 @@ do_import = (x : AstNodeImport) -> () {
 
   error("unknown import", x.ti)
 }
-
-
-/*
-do_var_decl = (x : *AstDecl) -> () {
-  add_var = ListForeachHandler {
-    ast_id = data to *AstId
-    t = do_type(ctx to *AstType)
-    init_value = nil
-    create_global_var (ast_id.str, t, init_value, ast_id.ti)
-  }
-  list_foreach(&x.ids, add_var, x.type)
-}
-*/
-
-/*do_type_decl = (x : *AstNodeDeclType) -> () {
-  id = x.id
-  t = type_new(#TypeUndefined, 0, 0, id.ti)
-  bind_type(&module.public, id.str, t)
-}*/
 
 
 do_type_bind = (x : AstNodeBindType) -> () {
@@ -224,31 +203,4 @@ value_decl_global = (id : *AstId, t : *Type) -> () {
 
 
 
-create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
-  // создадим фейковый value который будет занесен в индекс
-  // и будет ссылаться на переменную (просто нести тот же id)
-  def = asmVarAdd (&asm0, id.str, t, init_value)
-  v = value_new ((type=t, def=def, ti=id.ti) to ValueGlobalVar, t, id.ti)
-  valbind (id.str, v)
-  return v
-}
-
-
-
-
-
-
-create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
-  // добавляем в код функции стейтмент с определением этой переменной
-  vd = stmt_new_vardef(id, t, init_value, nil)
-  list_append(&fctx.cblock.stmts, vd)
-
-  no = (*vd as StmtVarDef).no
-
-  // создадим фейковый value который будет занесен в индекс
-  // и будет ссылаться на переменную (просто нести тот же id)
-  v = value_new ((type=t, no=no, ti=ti) to ValueLocalVar, t, ti)
-  valbind (id.str, v)
-  return v
-}
 

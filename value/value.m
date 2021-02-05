@@ -701,6 +701,29 @@ do_value_cast_to_var = DoValueCast {
 
   ast_id = (str=varname, ti=ti) to Var AstId
 
+
+  create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
+    // создадим фейковый value который будет занесен в индекс
+    // и будет ссылаться на переменную (просто нести тот же id)
+    def = asmVarAdd (&asm0, id.str, t, init_value)
+    v = value_new ((type=t, def=def, ti=id.ti) to ValueGlobalVar, t, id.ti)
+    valbind (id.str, v)
+    return v
+  }
+
+  create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
+    // добавляем в код функции стейтмент с определением этой переменной
+    vd = stmt_new_vardef(id, t, init_value, nil)
+    list_append(&fctx.cblock.stmts, vd)
+
+    no = (*vd as StmtVarDef).no
+
+    // создадим value который будет ссылаться на переменную (просто нести тот же id)
+    v = value_new ((type=t, no=no, ti=ti) to ValueLocalVar, t, ti)
+    valbind (id.str, v)
+    return v
+  }
+
   return when fctx {
     nil  => create_global_var (&ast_id, t, init_value, ti)
     else => create_local_var  (&ast_id, t, init_value, ti)
