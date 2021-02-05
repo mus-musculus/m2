@@ -18,8 +18,7 @@ unsafe = false to Var Bool
 // used only for "Self" type
 ctype = nil to Var *Type
 
-// current function context attributes
-fctx = nil to Var *FuncContext
+
 
 // result assembly
 asm0 = 0 to Var Assembly
@@ -37,5 +36,11 @@ nocnt2 = 0 to Var Nat  // wtf?
 cctx = 0 to Var *Context
 
 builtinContext = 0 to Var Context
+
+module = nil to Var *Module
+
+// current function context attributes
+fctx = nil to Var *FuncContext
+
 
 

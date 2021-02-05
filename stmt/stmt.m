@@ -141,6 +141,8 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   sb = 0 to Var StmtBlock
   stmt_block_init (&sb, fctx.cblock)
 
+  context_init (&sb.ctx, cctx)
+
   fctx.cblock := &sb
 
   hstmt = ListForeachHandler {
@@ -153,6 +155,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   }
   list_foreach (&(x.stmts to Var List), hstmt, &sb.stmts)
 
+  cctx := sb.ctx.parent
   fctx.cblock := sb.parent  // restore old cblock value
 
   return stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, ti=x.ti) to StmtBlock)

@@ -955,6 +955,9 @@ do_value_func = (x : AstValueFunc) -> *Value {
   fctx.cblock := param_block
   fctx.cfunc := fv
 
+  context_init (&fctx.ctx, cctx)
+  cctx := &fctx.ctx
+
 
   // DO FUNCTION BLOCK
   bx0 = do_stmt (block as *AstStmt)
@@ -967,6 +970,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   fv.data := (type=t, def=def, ti=x.ti) to ValueGlobalConst
 
+  cctx := fctx.ctx.parent
   fctx := old_fctx  // restore func context before exit
 
   nocnt := old_nocnt
@@ -974,6 +978,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   return fv
 
 fail:
+  cctx := fctx.ctx.parent
   fctx := old_fctx  // restore func context before exit
   return value_new_poison (x.ti)
 }

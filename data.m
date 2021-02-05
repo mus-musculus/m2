@@ -77,7 +77,6 @@ builtin_type_bind = (id : Str, t : *Type) -> ()
 
 
 
-module = nil to Var *Module
 
 
 
