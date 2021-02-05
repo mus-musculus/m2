@@ -1102,9 +1102,10 @@ parse_stmt = () -> *AstStmt or Unit {
 parse_stmt_expr = AstStmtParser {
   x = parse_value ()
 
+  assign_ti = &ctok().ti
   if match (":=") {
     v = parse_value ()
-    return ast_stmt_boxing ((l=x, r=v, ti=ti) to AstStmtAssign)
+    return ast_stmt_boxing ((l=x, r=v, ti=assign_ti) to AstStmtAssign)
   }
 
   return ast_stmt_boxing ((expr=x, ti=ti) to AstStmtExpr)

@@ -151,14 +151,16 @@ do_value_bind = (x : AstNodeBindValue) -> () {
    * который был декларирован ранее. Поэтому просто подменим ему пустое тело!
    * А возможно это ошибка - попытка переопределить определенное значение
    */
-  y = valget (id)
-  if y != nil {
-    if y.data isnt ValueUndefined {
+  ae = valget (id)
+  if ae isnt Unit {
+    ae = ae as *Value
+
+    if ae.data isnt ValueUndefined {
       error("value redefination", x.ti)
       return
     }
 
-    memcpy(y to *Unit, v to *Unit, sizeof Value)
+    memcpy(ae to *Unit, v to *Unit, sizeof Value)
     return
   }
 

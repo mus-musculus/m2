@@ -30,12 +30,12 @@ context_value_get = (ctx : *Context, id : Str) -> *Value {
 }
 
 
-valget = (id : Str) -> *Value {
+valget = (id : Str) -> *Value or Unit {
   v = context_value_get (cctx, id)
   if v != nil {return v}
   // maybe it is `self`?
   if fctx != nil {if strcmp(id, "self") == 0 {return fctx.cfunc}}
-  return nil
+  return unit
 }
 
 typeget = (id : Str) -> *Type or Unit {
@@ -72,7 +72,8 @@ valbind = (id : Str, v : *Value) -> () {
 
   // проверяем если
   ae = valget(id)
-  if ae != nil {
+  if ae isnt Unit {
+    ae = ae as *Value
     // если значение уже есть но не определено
     if ae.data isnt ValueUndefined {
       error("value bind error: id already bound", v.ti)
