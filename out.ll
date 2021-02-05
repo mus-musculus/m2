@@ -12818,12 +12818,13 @@ define void @func434 (%Unit*, %Unit*, %Nat32, %Node*) {
   %7 = call %Unit* (%Nat32) @malloc (%Nat32 24)
   %8 = bitcast %Unit* %7 to %EnumConstructor*
   %9 = insertvalue %EnumConstructor zeroinitializer, %AstId* %5, 0
-  %10 = insertvalue %EnumConstructor %9, %Nat32 %2, 1; loadImmPtr
-  %11 = inttoptr i64 0 to%TokenInfo*
-  %12 = insertvalue %EnumConstructor %10, %TokenInfo* %11, 2
-  store %EnumConstructor %12, %EnumConstructor* %8, align 8
-  %13 = bitcast %EnumConstructor* %8 to %Unit*
-  %14 = call i1 (%List*, %Unit*) @list_append (%List* %6, %Unit* %13)
+  %10 = insertvalue %EnumConstructor %9, %Nat32 %2, 1
+  %11 = getelementptr inbounds %AstId, %AstId* %5, i1 0, i32 1
+  %12 = load %TokenInfo*, %TokenInfo** %11
+  %13 = insertvalue %EnumConstructor %10, %TokenInfo* %12, 2
+  store %EnumConstructor %13, %EnumConstructor* %8, align 8
+  %14 = bitcast %EnumConstructor* %8 to %Unit*
+  %15 = call i1 (%List*, %Unit*) @list_append (%List* %6, %Unit* %14)
   ret void
 }
 

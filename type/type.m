@@ -459,7 +459,7 @@ do_type_enum = (x : AstTypeEnum) -> *Type {
     cons_id = data to *AstId
     cons_list = ctx to *List
     ec = malloc (sizeof EnumConstructor) to *EnumConstructor
-    *ec := (id=cons_id, d=index, ti=nil to *TokenInfo)
+    *ec := (id=cons_id, d=index, ti=cons_id.ti)
     list_append (cons_list, ec)
   }
   list_foreach (&(x.items to Var List), hc, items)
