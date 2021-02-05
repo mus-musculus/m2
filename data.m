@@ -82,6 +82,8 @@ valget = (id : Str) -> *Value {return context_value_get (cctx, id)}
 typeget = (id : Str) -> *Type {return context_type_get (cctx, id)}
 
 
+
+
 builtin_value_bind = (id : Str, v : *Value) -> ()
 {map_append(&builtinContext.index.values, id, v)}
 
