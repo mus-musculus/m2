@@ -123,24 +123,12 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
 }
 
 
-stmt_block_init = (b : *StmtBlock) -> *StmtBlock {
-  memset (b, 0, sizeof StmtBlock)
-  // old
-
-
-  // new
-  context_init (&b.ctx, cctx)
-
-  list_init (&b.stmts)
-
-  return b
-}
-
-
 do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   sb = 0 to Var StmtBlock
+  context_init (&sb.ctx, cctx)
+  list_init (&sb.stmts)
 
-  stmt_block_init (&sb)
+  //stmt_block_init (&sb)
   old_cblock = fctx.cblock
 
   context_init (&sb.ctx, cctx)
@@ -161,7 +149,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   cctx := sb.ctx.parent
   fctx.cblock := old_cblock  // restore old cblock value
 
-  return stmt_new ((stmts=sb.stmts, parent=sb.parent, ti=x.ti) to StmtBlock)
+  return stmt_new ((stmts=sb.stmts, ti=x.ti) to StmtBlock)
 }
 
 

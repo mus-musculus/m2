@@ -7,11 +7,9 @@ NoBlock = {#NoBlock}
 
 // Compound Statement
 StmtBlock = NewType (
-  parent  : *StmtBlock  // block-parent or nil
-  //index   : Index   // local index
-  stmts   : List    // list of statements
-
   ctx     : Context
+
+  stmts   : List
 
   ti : *TokenInfo
 )

@@ -910,21 +910,6 @@ do_value_func = (x : AstValueFunc) -> *Value {
     return value_new ((type=t, def=def, ti=x.ti) to ValueGlobalConst, t, x.ti)
   }
 
-  // создаем фиктивный parent-block c параметрами
-  // он просто значится как parent
-  // делаю именно так а не ищу каждый раз в индексе в типе функции
-  // тк тогда придется каждый раз заново создавать значения для параметров
-  // TODO вообще правильней всего просто засунуть их первыми в рут блок а не
-  // делать этот фиктивный. Но пока так
-  /*param_block = stmt_block_init (malloc (sizeof StmtBlock) to *StmtBlock, nil)
-  getparam = ListForeachHandler {
-    decl = data to *Decl
-    param_block = ctx to *StmtBlock
-    param_value = value_new ((type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
-    map_append (&param_block.index.values, decl.id.str, param_value)
-  }
-  list_foreach (t.func.from.record.decls, getparam, param_block)*/
-
   block = x.block_stmt
 
   if block is Unit {goto fail}
@@ -961,8 +946,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   context_init (&fctx.ctx, &module.ctx)
   cctx := &fctx.ctx
 
-
-
+  // праметры попадают в контекст FuncContext#ctx
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_value = value_new ((type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
