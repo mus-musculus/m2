@@ -128,7 +128,6 @@ stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
   b.parent := parent
   index_init (&b.index)
   list_init (&b.stmts)
-  list_init (&b.local_funcs)
   return b
 }
 
@@ -151,7 +150,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 
   fctx.cblock := sb.parent  // restore old cblock value
 
-  return stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, local_funcs=sb.local_funcs, ti=x.ti) to StmtBlock)
+  return stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, ti=x.ti) to StmtBlock)
 }
 
 

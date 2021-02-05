@@ -934,7 +934,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   // we're in func?
   // add current func to parant func local_funcs list
   if fctx != nil {
-    list_append (&fctx.cblock.local_funcs, fv)
+    list_append (&fctx.local_funcs, fv)
   }
 
   // save global func context
@@ -943,6 +943,8 @@ do_value_func = (x : AstValueFunc) -> *Value {
   // create new func context
   fctx := malloc (sizeof FuncContext) to *FuncContext
   memset (fctx, 0, sizeof FuncContext)
+
+  list_init (&fctx.local_funcs)
 
   fctx.id := when old_fctx {
     nil => uid

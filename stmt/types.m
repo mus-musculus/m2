@@ -11,10 +11,6 @@ StmtBlock = NewType (
   index   : Index   // local index
   stmts   : List    // list of statements
 
-  // список в который попадают все локальные функции
-  // для того чтобы их тела потом при check'инге почекать
-  local_funcs : List
-
   ti : *TokenInfo
 )
 
