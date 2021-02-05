@@ -12,7 +12,7 @@ Symtab = Index
 Context = (parent : *Self, index : Index)
 
 
-Module = (public, private, undef : Index, ctx : Context)
+Module = (ctx : Context)
 
 // parsing function context
 FuncContext = (

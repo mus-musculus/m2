@@ -127,7 +127,7 @@ stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
   memset (b, 0, sizeof StmtBlock)
   // old
   b.parent := parent
-  index_init (&b.index)
+
   // new
   context_init (&b.ctx, &parent.ctx)
 
@@ -159,7 +159,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   cctx := sb.ctx.parent
   fctx.cblock := sb.parent  // restore old cblock value
 
-  return stmt_new ((stmts=sb.stmts, parent=sb.parent, index=sb.index, ti=x.ti) to StmtBlock)
+  return stmt_new ((stmts=sb.stmts, parent=sb.parent, ti=x.ti) to StmtBlock)
 }
 
 

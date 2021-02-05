@@ -2,8 +2,6 @@
 
 
 module_init = (m : *Module, parent_ctx : *Context) -> () {
-  index_init(&m.private)
-  index_init(&m.public)
   context_init(&m.ctx, parent_ctx)
 }
 
@@ -21,7 +19,6 @@ compiler_init = () -> () {
   module := malloc(sizeof Module) to *Module
   module_init(module, cctx)
   cctx := &module.ctx
-
 
   asm_init (&asm0, #Arch-x64, "<name>")
   printf("##\n")
