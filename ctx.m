@@ -38,12 +38,12 @@ valget = (id : Str) -> *Value {
   return nil
 }
 
-typeget = (id : Str) -> *Type {
+typeget = (id : Str) -> *Type or Unit {
   t = context_type_get (cctx, id)
   if t != nil {return t}
   // Self type (todo.)
   if strcmp(id, "Self") == 0 {return ctype}
-  return nil
+  return unit
 }
 
 
@@ -51,7 +51,8 @@ typebind = (id : Str, t : *Type) -> () {
   assert (cctx != nil, "typebind")
 
   ae = typeget (id)
-  if ae != nil {
+  if ae isnt Unit {
+    ae = ae as *Type
     // define already declared type (TypeUndefined)
     if ae.kind != #TypeUndefined {
       error("type bind error: attempt to id redefinition", t.ti)

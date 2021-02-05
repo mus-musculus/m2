@@ -166,6 +166,8 @@ Value2 = ValuePoison or
         ValueNo
 
 
+//StorageClass = {#Immediate, #Register, #Memory}
+
 Value = (
   type : *Type
 

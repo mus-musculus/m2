@@ -316,7 +316,7 @@ do_type_var = (x : AstTypeVar) -> *Type {
 do_type_named = (x : AstTypeNamed) -> *Type {
   id = x.id.str
   xt = typeget (id)
-  if xt == nil {
+  if xt is Unit {
     // создаем неопределенный тип если типа с таким именем не было
     nt = type_new (#TypeUndefined, (ti=x.ti) to TypeUndefined, 0, x.ti)
     nt.ti := x.ti
@@ -324,7 +324,7 @@ do_type_named = (x : AstTypeNamed) -> *Type {
     return nt
   }
 
-  return xt
+  return xt as *Type
 }
 
 do_type_func = (x : AstTypeFunc) -> *Type {
@@ -636,7 +636,7 @@ type_init = () -> () {
 
 
 getIntByPower = (size : Nat) -> *Type {
-  return when size {
+  return (when size {
     1    => typeget("Int8")
     2    => typeget("Int16")
     4    => typeget("Int32")
@@ -646,7 +646,7 @@ getIntByPower = (size : Nat) -> *Type {
     64   => typeget("Int512")
     128  => typeget("Int1024")
     else => () -> *Type {fatal ("unsupported cfgIntegerSize"); return nil} ()
-  }
+  } as *Type)
 }
 
 

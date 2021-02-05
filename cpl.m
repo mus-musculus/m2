@@ -103,18 +103,19 @@ do_type_bind = (x : AstNodeBindType) -> () {
   id = x.id.str
   t = do_type(x.type)
 
-  y = typeget (id)
-  if y != nil {
+  ae = typeget (id)
+  if ae isnt Unit {
+    ae = ae as *Type
     // определение ранее задекларированого типа
-    if y.kind != #TypeUndefined {
+    if ae.kind != #TypeUndefined {
       error("type redefination", x.ti)
       return
     }
 
     if t.aka == nil {t.aka := id}
 
-    memcpy(y to *Unit, t to *Unit, sizeof Type)
-    asmTypedefAdd(&asm0, id, y)
+    memcpy(ae to *Unit, t to *Unit, sizeof Type)
+    asmTypedefAdd(&asm0, id, ae)
     return
   } else {
     // определение неизвестного типа
