@@ -83,8 +83,8 @@ map_extend = (map1, map2 : *Map) -> Bool {
   if map1 == nil or map2 == nil {return false}
 
   mext = MapForeachHandler {
-    map1 = ctx to *Map
-    map_append(map1, k to Str, v)
+    map = ctx to *Map
+    map_append(map, k to Str, v)
   }
   map_foreach(map2, mext, map1)
 

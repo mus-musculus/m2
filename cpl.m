@@ -9,15 +9,19 @@ module_init = (m : *Module, parent_ctx : *Context) -> () {
 
 
 compiler_init = () -> () {
+  // инициализируем встроенный контекст
   context_init(&builtinContext, nil)
   cctx := &builtinContext
 
   type_init()
   value_init()
 
+
+  // инициализируем корнвой модуль
   module := malloc(sizeof Module) to *Module
   module_init(module, cctx)
   cctx := &module.ctx
+
 
   asm_init (&asm0, #Arch-x64, "<name>")
   printf("##\n")
@@ -123,7 +127,7 @@ do_type_bind = (x : AstNodeBindType) -> () {
   id = x.id.str
   t = do_type(x.type)
 
-  y = get_type_global(id)
+  y = typeget (id)
   if y != nil {
     // определение ранее задекларированого типа
     if y.kind != #TypeUndefined {
@@ -138,10 +142,10 @@ do_type_bind = (x : AstNodeBindType) -> () {
     return
   } else {
     // определение неизвестного типа
-    bind_type(&module.public, id, t)
+    typebind (id, t)
   }
 
-  asmTypedefAdd(&asm0, id, t)
+  asmTypedefAdd (&asm0, id, t)
 
   if t.aka == nil {t.aka := id}
 }
@@ -181,7 +185,7 @@ do_value_bind = (x : AstNodeBindValue) -> () {
     return
   }
 
-  bind_value_global(id, v)
+  valbind(id, v)
 
   // временно даю аргхак так
   v.type.func.arghack := strcmp("printf", id) == 0 or
@@ -209,7 +213,7 @@ do_value_decl = (x : AstNodeDeclValue) -> () {
   de = ListForeachHandler {
     id = data to *AstId
     t = ctx to *Type
-    if t.kind == #TypeUndefined {error("undefined type", t.ti)}
+    if t.kind == #TypeUndefined {error("undefined type5", t.ti)}
     value_decl_global(id, t)
   }
   list_foreach(&decl.ids, de, t)
@@ -218,7 +222,7 @@ do_value_decl = (x : AstNodeDeclValue) -> () {
 
 value_decl_global = (id : *AstId, t : *Type) -> () {
   v = value_new ((type=t, ti=id.ti) to ValueUndefined, t, id.ti)
-  bind_value_global(id.str, v)
+  valbind (id.str, v)
 }
 
 
@@ -226,9 +230,9 @@ value_decl_global = (id : *AstId, t : *Type) -> () {
 create_global_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo) -> *Value {
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
-  def = asmVarAdd(&asm0, id.str, t, init_value)
+  def = asmVarAdd (&asm0, id.str, t, init_value)
   v = value_new ((type=t, def=def, ti=id.ti) to ValueGlobalVar, t, id.ti)
-  bind_value_global(id.str, v)
+  valbind (id.str, v)
   return v
 }
 
@@ -247,7 +251,7 @@ create_local_var = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo
   // создадим фейковый value который будет занесен в индекс
   // и будет ссылаться на переменную (просто нести тот же id)
   v = value_new ((type=t, no=no, ti=ti) to ValueLocalVar, t, ti)
-  bind_value_local(id.str, v)
+  valbind (id.str, v)
   return v
 }
 

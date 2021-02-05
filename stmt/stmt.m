@@ -104,7 +104,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
 
   if is_constbind or is_varbind {
     // просто связываем имя с константным значением или новой переменной
-    bind_value_in_block (fctx.cblock, id, v)
+    valbind_local (id, v)
     return unit
   }
 
@@ -116,7 +116,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
 
   // и создаем значение которое ссылается на вырадение в стейтменте
   v0 = value_new ((type=v.type, no=nocnt2, ti=x.ti) to ValueLocalVal, v.type, x.ti)
-  bind_value_local (id, v0)
+  valbind_local (id, v0)
 
   nocnt2 := nocnt2 + 1
   return se
@@ -270,8 +270,12 @@ do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
 //  // bind type in local index
 //  bind_type(&cblock.index, id, _type)
 
-  // in GLOBAL index (временно тк не могу скомпилить сам себя, изза этого)
-  bind_type (&module.private, id, _type)
+  // ПОКА даже локальные тпы идут в индекс модуля,
+  // тк локальные функции исользуют контекст модуля и им часто нужны
+  // локалные типы связанные в контексте функции-родителя
+  //typebind (id, _type)
+  context_type_append (&module.ctx, id, _type)
+
   // creating data for printer
   asmTypedefAdd (&asm0, uid, _type)
 

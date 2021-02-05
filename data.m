@@ -57,32 +57,83 @@ context_value_append = (ctx : *Context, id : Str, v : *Value) -> () {
 
 context_type_get = (ctx : *Context, id : Str) -> *Type {
   if ctx == nil {return nil}
-  t = index_type_get (&cctx.index, id)
+  t = index_type_get (&ctx.index, id)
   if t != nil {return t}
   return self (ctx.parent, id)
 }
 
 context_value_get = (ctx : *Context, id : Str) -> *Value {
   if ctx == nil {return nil}
-  v = index_value_get (&cctx.index, id)
+  v = index_value_get (&ctx.index, id)
   if v != nil {return v}
   return self (ctx.parent, id)
 }
 
 
+valget = (id : Str) -> *Value {
+  v = context_value_get (cctx, id)
+  if v != nil {return v}
+  // maybe it is `self`?
+  if fctx != nil {if strcmp(id, "self") == 0 {return fctx.cfunc}}
+  return nil
+}
+
+typeget = (id : Str) -> *Type {
+  t = context_type_get (cctx, id)
+  if t != nil {return t}
+  // Self type (todo.)
+  if strcmp(id, "Self") == 0 {return ctype}
+  return nil
+}
+
+
 typebind = (id : Str, t : *Type) -> () {
+  assert (cctx != nil, "typebind")
+
+  ae = typeget (id)
+  if ae != nil {
+    // define already declared type (TypeUndefined)
+    if ae.kind != #TypeUndefined {
+      error("type bind error: attempt to id redefinition", t.ti)
+      return
+    }
+    printf("bind AE_type: %s\n", id)
+    memcpy(ae, t, sizeof Type)
+    return
+  }
+
   context_type_append (cctx, id, t)
 }
 
+
 valbind = (id : Str, v : *Value) -> () {
+  assert (cctx != nil, "valbind")
+
+  // проверяем если
+  ae = valget(id)
+  if ae != nil {
+    // если значение уже есть но не определено
+    if ae.data isnt ValueUndefined {
+      error("value bind error: id already bound", v.ti)
+      warning("first defined here", ae.ti)
+      return
+    }
+
+    // это позволяет юзать глобальные значения до того как они будут объявлены
+    memcpy(ae, v, sizeof Value)
+    return
+  }
+
   context_value_append (cctx, id, v)
 }
 
-valget = (id : Str) -> *Value {return context_value_get (cctx, id)}
-typeget = (id : Str) -> *Type {return context_type_get (cctx, id)}
+
+valbind_local = (id : Str, v : *Value) -> () {
+  context_value_append (cctx, id, v)
+}
 
 
-
+/*
 
 builtin_value_bind = (id : Str, v : *Value) -> ()
 {map_append(&builtinContext.index.values, id, v)}
@@ -90,6 +141,7 @@ builtin_value_bind = (id : Str, v : *Value) -> ()
 builtin_type_bind = (id : Str, t : *Type) -> ()
 {map_append(&builtinContext.index.types, id, t)}
 
+*/
 
 
 
@@ -107,6 +159,7 @@ get_value_global = (id : Str) -> *Value {
 }
 
 
+/*
 get_value = (id : Str) -> *Value {
   // ищет запись о значении во стеке блоков вплоть до корневого
   search_value_in_block_stack = (id : Str, b : *StmtBlock) -> *Value {
@@ -135,8 +188,10 @@ get_value = (id : Str) -> *Value {
 
   return nil
 }
+*/
 
 
+/*
 bind_value = (index : *Index, id : Str, v : *Value) -> () {
   ae = index_value_get(index, id)
   if ae != nil {
@@ -153,9 +208,11 @@ bind_value = (index : *Index, id : Str, v : *Value) -> () {
   }
   index_value_append(index, id, v)
 }
+*/
 
 
 // Add bind into a block
+/*
 bind_value_in_block = (b : *StmtBlock, id : Str, v : *Value) -> () {bind_value(&b.index, id, v)}
 
 // Add bind into current block
@@ -165,9 +222,10 @@ bind_value_local = (id : Str, v : *Value) -> ()
 // Add bind to global module
 bind_value_global = (id : Str, v : *Value) -> ()
 {bind_value(&module.public, id, v)}
+*/
 
 
-bind_type = (index : *Index, id : Str, t : *Type) -> () {
+//bind_type = (index : *Index, id : Str, t : *Type) -> () {
   /*if map_get(index, id) != nil {
     error("type bind error: attempt to id redefinition", t.ti)
     return
@@ -186,20 +244,21 @@ bind_type = (index : *Index, id : Str, t : *Type) -> () {
     return
   }*/
 
-  index_type_append(index, id, t)
-}
+//  index_type_append(index, id, t)
+//}
 
 
 
-get_type_global = (id : Str) -> *Type {
+/*get_type_global = (id : Str) -> *Type {
   // searching in current module
   m = index_type_get(&module.public, id)
   if m != nil {return m}
 
   // searching amoung imported types
   return index_type_get(&module.private, id)
-}
+}*/
 
+/*
 
 get_type = (id : Str) -> *Type {
   // firstly search in globalTypeIndex тк наибольшая вероятность что тип там
@@ -229,6 +288,7 @@ get_type = (id : Str) -> *Type {
 
   return nil
 }
+*/
 
 
 

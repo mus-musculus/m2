@@ -852,7 +852,7 @@ fail:
 
 do_value_named = (x : AstValueName) -> *Value {
   id = x.id.str
-  v = get_value (id)
+  v = valget (id)
 
   if v == nil {
     error ("unknown value7\n", x.ti)
@@ -916,14 +916,14 @@ do_value_func = (x : AstValueFunc) -> *Value {
   // тк тогда придется каждый раз заново создавать значения для параметров
   // TODO вообще правильней всего просто засунуть их первыми в рут блок а не
   // делать этот фиктивный. Но пока так
-  param_block = stmt_block_init (malloc (sizeof StmtBlock) to *StmtBlock, nil)
+  /*param_block = stmt_block_init (malloc (sizeof StmtBlock) to *StmtBlock, nil)
   getparam = ListForeachHandler {
     decl = data to *Decl
     param_block = ctx to *StmtBlock
     param_value = value_new ((type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
     map_append (&param_block.index.values, decl.id.str, param_value)
   }
-  list_foreach (t.func.from.record.decls, getparam, param_block)
+  list_foreach (t.func.from.record.decls, getparam, param_block)*/
 
   block = x.block_stmt
 
@@ -952,11 +952,23 @@ do_value_func = (x : AstValueFunc) -> *Value {
   }
 
   // set current block ^^ (after add to parent)
-  fctx.cblock := param_block
+  fctx.cblock := nil
   fctx.cfunc := fv
 
-  context_init (&fctx.ctx, cctx)
+  // РОДИТЕЛЬ КОНТЕКСТА ЛЮБОЙ ФУНКЦИИ - КОНТЕКСТ МОДУЛЯ!
+  // ПОКА ТАК. (для вложенных функций)
+  old_cctx = cctx
+  context_init (&fctx.ctx, &module.ctx)
   cctx := &fctx.ctx
+
+
+
+  getparam = ListForeachHandler {
+    decl = data to *Decl
+    param_value = value_new ((type=decl.type, no=decl.offset to Nat32, ti=decl.ti) to ValueParam, decl.type, decl.ti)
+    valbind_local (decl.id.str, param_value)
+  }
+  list_foreach (t.func.from.record.decls, getparam, nil)
 
 
   // DO FUNCTION BLOCK
@@ -970,7 +982,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
 
   fv.data := (type=t, def=def, ti=x.ti) to ValueGlobalConst
 
-  cctx := fctx.ctx.parent
+  cctx := old_cctx
   fctx := old_fctx  // restore func context before exit
 
   nocnt := old_nocnt
@@ -978,7 +990,7 @@ do_value_func = (x : AstValueFunc) -> *Value {
   return fv
 
 fail:
-  cctx := fctx.ctx.parent
+  cctx := old_cctx
   fctx := old_fctx  // restore func context before exit
   return value_new_poison (x.ti)
 }
@@ -1415,20 +1427,20 @@ value_is_readonly = (v : *Value) -> Bool {
 value_init = () -> () {
   // false
   _false = value_new_imm (typeBool, 0, nil)
-  builtin_value_bind ("false", _false)
+  valbind ("false", _false)
 
   // true
   _true = value_new_imm (typeBool, 1, nil)
-  builtin_value_bind ("true", _true)
+  valbind ("true", _true)
 
   // nil
   nil_type = type_new(#TypeGenericReference, (ti=nil) to TypeGenericReference, cfgPointerSize, nil)
   _nil = value_new_imm (nil_type, 0, nil)
-  builtin_value_bind ("nil", _nil)
+  valbind ("nil", _nil)
 
   // unit
   _unit = value_new_imm (typeUnit, 0, nil)
-  builtin_value_bind ("unit", _unit)
+  valbind ("unit", _unit)
 }
 
 

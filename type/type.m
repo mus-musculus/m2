@@ -77,7 +77,7 @@ type_enum_new = (items : *List, ti : *TokenInfo) -> *Type {
     cons = data to *EnumConstructor
     enum_type = ctx to *Type
     v = value_new_imm (enum_type, cons.d to Int64, cons.ti)
-    bind_value (&module.public, cons.id.str, v)
+    valbind (cons.id.str, v)
   }
   list_foreach (items, create_constructor, t)
   return t
@@ -315,12 +315,12 @@ do_type_var = (x : AstTypeVar) -> *Type {
 
 do_type_named = (x : AstTypeNamed) -> *Type {
   id = x.id.str
-  xt = get_type (id)
+  xt = typeget (id)
   if xt == nil {
     // создаем неопределенный тип если типа с таким именем не было
     nt = type_new (#TypeUndefined, (ti=x.ti) to TypeUndefined, 0, x.ti)
     nt.ti := x.ti
-    bind_type (&module.private, id, nt)
+    typebind (id, nt)
     return nt
   }
 
@@ -411,7 +411,7 @@ do_type_record = (x : AstTypeRecord) -> *Type {
     decl = data to *Decl
 
     if decl.type.kind == #TypeUndefined {
-      error("undefined type", decl.type.ti)
+      error("undefined type3", decl.type.ti)
       return
     }
 
@@ -546,7 +546,7 @@ type_init = () -> () {
   // Void is an empty enum
   typeVoid := type_enum_new (list_new(), nil)
   typeVoid.aka := "Void"
-  builtin_type_bind ("Void", typeVoid)
+  typebind ("Void", typeVoid)
 
   // Unit is an empty record
   unit_decls = list_new ()
@@ -554,11 +554,11 @@ type_init = () -> () {
   typeUnit.record := (decls=unit_decls)
 
   typeUnit.aka := "Unit"
-  builtin_type_bind ("Unit", typeUnit)
+  typebind ("Unit", typeUnit)
 
   // Bool is an enum with false & true items
   typeBool := type_new (#TypeBool, (ti=nil) to TypeBool, 1, nil)
-  builtin_type_bind ("Bool", typeBool)
+  typebind ("Bool", typeBool)
 
   type_numeric_new = (id : Str, power : Nat, signed : Bool) -> *Type {
     size = power / 8
@@ -592,36 +592,36 @@ type_init = () -> () {
 
 
   // Add most popular types
-  builtin_type_bind ("Int64", typeInt64)
-  builtin_type_bind ("Nat64", typeNat64)
+  typebind ("Int64", typeInt64)
+  typebind ("Nat64", typeNat64)
 
-  builtin_type_bind ("Int32", typeInt32)
-  builtin_type_bind ("Nat32", typeNat32)
+  typebind ("Int32", typeInt32)
+  typebind ("Nat32", typeNat32)
 
-  builtin_type_bind ("Int8", typeInt8)
-  builtin_type_bind ("Nat8", typeNat8)
+  typebind ("Int8", typeInt8)
+  typebind ("Nat8", typeNat8)
 
-  builtin_type_bind ("Int16", typeInt16)
-  builtin_type_bind ("Nat16", typeNat16)
+  typebind ("Int16", typeInt16)
+  typebind ("Nat16", typeNat16)
 
 
   // Add builtin type Str
   typeChar := typeNat8
   typeStr := type_array_u_new (typeChar, nil)
   typeStr.aka := "Str"
-  builtin_type_bind ("Str", typeStr)
+  typebind ("Str", typeStr)
 
 
   // Add heavy types
-  builtin_type_bind ("Int128", typeInt128)
-  builtin_type_bind ("Int256", typeInt256)
-  builtin_type_bind ("Int512", typeInt512)
-  builtin_type_bind ("Int1024", typeInt1024)
+  typebind ("Int128", typeInt128)
+  typebind ("Int256", typeInt256)
+  typebind ("Int512", typeInt512)
+  typebind ("Int1024", typeInt1024)
 
-  builtin_type_bind ("Nat128", typeNat128)
-  builtin_type_bind ("Nat256", typeNat256)
-  builtin_type_bind ("Nat512", typeNat512)
-  builtin_type_bind ("Nat1024", typeNat1024)
+  typebind ("Nat128", typeNat128)
+  typebind ("Nat256", typeNat256)
+  typebind ("Nat512", typeNat512)
+  typebind ("Nat1024", typeNat1024)
 
   // main types shortcuts
 
@@ -637,14 +637,14 @@ type_init = () -> () {
 
 getIntByPower = (size : Nat) -> *Type {
   return when size {
-    1    => get_type("Int8")
-    2    => get_type("Int16")
-    4    => get_type("Int32")
-    8    => get_type("Int64")
-    16   => get_type("Int128")
-    32   => get_type("Int256")
-    64   => get_type("Int512")
-    128  => get_type("Int1024")
+    1    => typeget("Int8")
+    2    => typeget("Int16")
+    4    => typeget("Int32")
+    8    => typeget("Int64")
+    16   => typeget("Int128")
+    32   => typeget("Int256")
+    64   => typeget("Int512")
+    128  => typeget("Int1024")
     else => () -> *Type {fatal ("unsupported cfgIntegerSize"); return nil} ()
   }
 }

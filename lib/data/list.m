@@ -122,8 +122,8 @@ list_extend = (list1, list2 : *List) -> Bool {
   if list1 == nil or list2 == nil {return false}
 
   eext = ListForeachHandler {
-    list1 = ctx to *List
-    list_append(list1, data)
+    list = ctx to *List
+    list_append(list, data)
   }
   list_foreach(list2, eext, list1 to *Unit)
 
