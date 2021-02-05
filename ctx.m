@@ -33,7 +33,6 @@ context_value_get = (ctx : *Context, id : Str) -> *Value {
 valget = (id : Str) -> *Value or Unit {
   v = context_value_get (cctx, id)
   if v != nil {return v}
-  // maybe it is `self`?
   if fctx != nil {if strcmp(id, "self") == 0 {return fctx.cfunc}}
   return unit
 }
@@ -41,7 +40,6 @@ valget = (id : Str) -> *Value or Unit {
 typeget = (id : Str) -> *Type or Unit {
   t = context_type_get (cctx, id)
   if t != nil {return t}
-  // Self type (todo.)
   if strcmp(id, "Self") == 0 {return ctype}
   return unit
 }

@@ -181,11 +181,6 @@ do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
     }
   }
 
-//  _else = when x.if._else {
-//    nil => nil to *Stmt
-//    else => do_stmt (x.if._else)
-//  }
-
   if cond.data is ValuePoison {return unit}
 
   if not type_check (typeBool, cond.type, cond.ti) {
@@ -238,19 +233,6 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
   return stmt_new ((value=v, ti=x.ti) to StmtReturn)
 }
 
-
-/*do_stmt_vardef = (x : *AstStmtVarDef) -> *Stmt or Unit {
-  type = do_type(x.vardef.type)
-  ti = x.vardef.ti
-  add_var = ListForeachHandler {
-    ast_id = data to *AstId
-    type = ctx to *Type
-    create_local_var(ast_id, type, nil, ast_id.ti)
-  }
-  list_foreach(&x.vardef.ids, add_var, type)
-
-  return unit
-}*/
 
 do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
   id = x.id.str
