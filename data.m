@@ -16,25 +16,6 @@ import "proto"
 exist ctype : Var *Type*/
 
 
-context_init = (ctx, parent : *Context) -> () {
-  index_init(&ctx.index)
-  ctx.parent := parent
-}
-
-
-builtinContext = 0 to Var Context
-
-builtin_value_bind = (id : Str, v : *Value) -> ()
-{map_append(&builtinContext.index.values, id, v)}
-
-builtin_type_bind = (id : Str, t : *Type) -> ()
-{map_append(&builtinContext.index.types, id, t)}
-
-
-
-module = nil to Var *Module
-
-
 index_init = (index : *Index) -> () {
   map_init(&index.types)
   map_init(&index.values)
@@ -51,20 +32,64 @@ index_type_append = (index : *Index, id : Str, t : *Type) -> ()
 index_value_append = (index : *Index, id : Str, v : *Value) -> ()
 {map_append(&index.values, id, v)}
 
-index_get_type = (index : *Index, id : Str) -> *Type
+index_type_get = (index : *Index, id : Str) -> *Type
 {return map_get(&index.types, id) to *Type}
 
-index_get_value = (index : *Index, id : Str) -> *Value
+index_value_get = (index : *Index, id : Str) -> *Value
 {return map_get(&index.values, id) to *Value}
+
+
+
+
+context_init = (ctx, parent : *Context) -> () {
+  index_init(&ctx.index)
+  ctx.parent := parent
+}
+
+context_type_append = (ctx : *Context, id : Str, t : *Type) -> () {
+  index_type_append (&ctx.index, id, t)
+}
+
+context_value_append = (ctx : *Context, id : Str, v : *Value) -> () {
+  index_value_append (&ctx.index, id, v)
+}
+
+
+context_type_get = (ctx : *Context, id : Str) -> *Type {
+  return index_type_get (&cctx.index, id)
+}
+
+context_value_get = (ctx : *Context, id : Str) -> *Value {
+  return index_value_get (&cctx.index, id)
+}
+
+
+
+
+
+
+
+builtin_value_bind = (id : Str, v : *Value) -> ()
+{map_append(&builtinContext.index.values, id, v)}
+
+builtin_type_bind = (id : Str, t : *Type) -> ()
+{map_append(&builtinContext.index.types, id, t)}
+
+
+
+module = nil to Var *Module
+
+
+
 
 
 get_value_global = (id : Str) -> *Value {
   // in module::public
-  x = index_get_value(&module.public, id)
+  x = index_value_get(&module.public, id)
   if x != nil {return x}
 
   // in module::private
-  return index_get_value(&module.private, id)
+  return index_value_get(&module.private, id)
 }
 
 
@@ -72,7 +97,7 @@ get_value = (id : Str) -> *Value {
   // ищет запись о значении во стеке блоков вплоть до корневого
   search_value_in_block_stack = (id : Str, b : *StmtBlock) -> *Value {
     if b == nil {return nil}
-    v = index_get_value(&b.index, id)
+    v = index_value_get(&b.index, id)
     if v != nil {return v}
     return self(id, b.parent)
   }
@@ -88,7 +113,7 @@ get_value = (id : Str) -> *Value {
   if x != nil {return x}
 
   // in builtin_module
-  builtin = index_get_value(&builtinContext.index, id)
+  builtin = index_value_get(&builtinContext.index, id)
   if builtin != nil {return builtin}
 
   // maybe it is `self`?
@@ -99,7 +124,7 @@ get_value = (id : Str) -> *Value {
 
 
 bind_value = (index : *Index, id : Str, v : *Value) -> () {
-  ae = index_get_value(index, id)
+  ae = index_value_get(index, id)
   if ae != nil {
     // если значение уже есть но не определено
     if ae.data isnt ValueUndefined {
@@ -135,7 +160,7 @@ bind_type = (index : *Index, id : Str, t : *Type) -> () {
   }*/
 
   /*printf("bind_type %s\n", id)
-  ae = index_get_type(index, id)
+  ae = index_type_get(index, id)
   if ae != nil {
     // define already declared type (TypeUndefined)
     if ae.kind != #TypeUndefined {
@@ -154,18 +179,18 @@ bind_type = (index : *Index, id : Str, t : *Type) -> () {
 
 get_type_global = (id : Str) -> *Type {
   // searching in current module
-  m = index_get_type(&module.public, id)
+  m = index_type_get(&module.public, id)
   if m != nil {return m}
 
   // searching amoung imported types
-  return index_get_type(&module.private, id)
+  return index_type_get(&module.private, id)
 }
 
 
 get_type = (id : Str) -> *Type {
   // firstly search in globalTypeIndex тк наибольшая вероятность что тип там
   // тк встроенные типы чаще всего встречаются в коде
-  builtin_t = index_get_type(&builtinContext.index, id)
+  builtin_t = index_type_get(&builtinContext.index, id)
   if builtin_t != nil {return builtin_t}
 
   // searching in local block stack
@@ -173,7 +198,7 @@ get_type = (id : Str) -> *Type {
     // ищет запись о значении во стеке блоков вплоть до корневого
     search_type_in_block_stack = (id : Str, b : *StmtBlock) -> *Type {
       if b == nil {return nil}
-      t = index_get_type(&b.index, id)
+      t = index_type_get(&b.index, id)
       if t != nil {return t}
       return self(id, b.parent)
     }

@@ -34,3 +34,8 @@ nocnt = 0 to Var Nat
 nocnt2 = 0 to Var Nat  // wtf?
 
 
+cctx = 0 to Var *Context
+
+builtinContext = 0 to Var Context
+
+

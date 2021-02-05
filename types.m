@@ -12,7 +12,7 @@ Symtab = Index
 Context = (parent : *Self, index : Index)
 
 
-Module = (public, private, undef : Index)
+Module = (public, private, undef : Index, ctx : Context)
 
 // parsing function context
 FuncContext = (
@@ -20,6 +20,8 @@ FuncContext = (
 
   cfunc  : *Value
   cblock : *StmtBlock
+
+  ctx : Context
 
   local_funcs : List // вообще не юзается принтером почему то,,,,
 
