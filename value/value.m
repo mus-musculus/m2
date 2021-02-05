@@ -227,7 +227,7 @@ do_lvalue = (x : *AstValue) -> *Value {
 do_value_when = (x : AstValueWhen) -> *Value {
   val = do_value (x.x)
 
-  Kit = (val : *Value, type : *Type, variants : List, other : *Value)
+  Kit = (val : *Value, x_name : Str, type : *Type, variants : List, other : *Value)
   kit = (val=val) to Var Kit
 
   do_variants = ListForeachHandler {
@@ -272,7 +272,18 @@ do_value_when = (x : AstValueWhen) -> *Value {
         error ("type error", tx.ti)
       }
 
+      // создаем локальный when контекст для ветки
+      when_ctx = (parent=cctx) to Var Context
+      old_cctx = cctx
+
+      //x_as = cast (kit.val, tx, kit.val.ti)
+      //valbind_local ("xxx", x_as)
+
+
+      // when x then
       val0 = do_value (variant.y)
+
+      cctx := old_cctx
 
       if kit.type == nil {
         kit.type := val0.type

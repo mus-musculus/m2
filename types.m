@@ -6,10 +6,10 @@ import "data/map"
 
 
 
-
 Context = (parent : *Self, index : Index)
 
 Module = (ctx : Context)
+
 
 // parsing function context
 FuncContext = (
@@ -18,7 +18,7 @@ FuncContext = (
   cfunc  : *Value
   cblock : *StmtBlock
 
-  ctx : Context
+  ctx    : Context   // собственный контекст функции (параметры)
 
   local_funcs : List // вообще не юзается принтером почему то,,,,
 
