@@ -17,6 +17,7 @@ import "data/map"
 import "sys/fs"
 import "nothing"
 
+import "index"
 import "types"
 import "scanner/types"
 import "parser/types"
@@ -32,6 +33,9 @@ import "debug"
 import "error"
 import "cfg"
 import "data"
+
+
+import "ctx"
 import "scanner/scanner"
 import "parser/parser"
 import "printer/printer"

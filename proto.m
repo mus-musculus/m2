@@ -126,21 +126,6 @@ exist asmVarAdd : (a : *Assembly, id : Str, t : *Type, init_value : *Value) -> *
 exist asmAliasAdd : (a : *Assembly, id : Str, type : *Type, org : Str) -> *Definition
 
 
-exist index_init : (index : *Index) -> ()
-exist index_extend : (dst, src : *Index) -> ()
-exist index_type_append : (index : *Index, id : Str, t : *Type) -> ()
-exist index_value_append : (index : *Index, id : Str, v : *Value) -> ()
-exist index_get_type : (index : *Index, id : Str) -> *Type
-exist index_get_value : (index : *Index, id : Str) -> *Value
-exist get_value_global : (id : Str) -> *Value
-exist get_value : (id : Str) -> *Value
-exist bind_value : (index : *Index, id : Str, v : *Value) -> ()
-exist bind_value_in_block : (b : *StmtBlock, id : Str, v : *Value) -> ()
-exist bind_value_local : (id : Str, v : *Value) -> ()
-exist bind_value_global : (id : Str, v : *Value) -> ()
-exist bind_type : (index : *Index, id : Str, t : *Type) -> ()
-exist get_type : (id : Str) -> *Type
-exist get_type_global : (id : Str) -> *Type
 
 exist type_present_in_list : (list : *List, t : *Type) -> Bool
 

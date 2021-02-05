@@ -5,12 +5,9 @@ import "data/list"
 import "data/map"
 
 
-Index = (types, values : Map)  // Symtab
 
-Symtab = Index
 
 Context = (parent : *Self, index : Index)
-
 
 Module = (ctx : Context)
 
