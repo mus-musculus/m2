@@ -142,6 +142,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
   stmt_block_init (&sb, fctx.cblock)
 
   context_init (&sb.ctx, cctx)
+  cctx := &sb.ctx
 
   fctx.cblock := &sb
 
