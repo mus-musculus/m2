@@ -888,6 +888,11 @@ do_value_named = (x : AstValueName) -> *Value {
   id = x.id.str
   v = valget (id)
 
+  // ЭТО НЕВЕРНО. по хорошему тут должно создаваться значение-упоминание
+  // но поскольку у нас есть ValueUndefined мы не можем создавать упоминания...
+  // как то надо решить хз когда и как
+  v.ti := x.ti
+
   if v == nil {
     error ("unknown value7\n", x.ti)
     nv = value_new_poison (x.ti)

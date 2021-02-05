@@ -16178,17 +16178,20 @@ define %Value* @func517 (%AstName) {
   %2 = extractvalue %AstName %0, 0
   %3 = getelementptr inbounds %AstId, %AstId* %2, i1 0, i32 0
   %4 = load %Str, %Str* %3
-  %5 = call %Value* (%Str) @valget (%Str %4); loadImmPtr
-  %6 = inttoptr i64 0 to%Value*
-  %7 = icmp eq %Value* %5, %6
-  br i1 %7, label %then_0, label %else_0
+  %5 = call %Value* (%Str) @valget (%Str %4)
+  %6 = getelementptr inbounds %Value, %Value* %5, i1 0, i32 3
+  %7 = extractvalue %AstName %0, 2
+  store %TokenInfo* %7, %TokenInfo** %6, align 8; loadImmPtr
+  %8 = inttoptr i64 0 to%Value*
+  %9 = icmp eq %Value* %5, %8
+  br i1 %9, label %then_0, label %else_0
 then_0:
-  %8 = bitcast [16 x %Nat8]* @func517_str1 to %Str
-  %9 = extractvalue %AstName %0, 2
-  call void (%Str, %TokenInfo*) @error (%Str %8, %TokenInfo* %9)
-  %10 = extractvalue %AstName %0, 2
-  %11 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %10)
-  ret %Value* %11
+  %10 = bitcast [16 x %Nat8]* @func517_str1 to %Str
+  %11 = extractvalue %AstName %0, 2
+  call void (%Str, %TokenInfo*) @error (%Str %10, %TokenInfo* %11)
+  %12 = extractvalue %AstName %0, 2
+  %13 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %12)
+  ret %Value* %13
   br label %endif_0
 else_0:
   br label %endif_0
@@ -18438,12 +18441,15 @@ endif_0:
   %52 = load %Type*, %Type** %51
   %53 = extractvalue %AstStmtValueBind %0, 2
   %54 = call %Value* (%union.9, %Type*, %TokenInfo*) @func454 (%union.9 %50, %Type* %52, %TokenInfo* %53)
+  %55 = getelementptr inbounds %Value, %Value* %54, i1 0, i32 2
+  %56 = extractvalue %AstStmtValueBind %0, 2
+  store %TokenInfo* %56, %TokenInfo** %55, align 8
   call void (%Str, %Value*) @valbind_local (%Str %4, %Value* %54)
-  %55 = load %Nat32, %Nat32* @nocnt2
-  %56 = add %Nat32 %55, 1
-  store %Nat32 %56, %Nat32* @nocnt2, align 4
-  %57 = bitcast %union.13* %38 to %union.36
-  ret %union.36 %57
+  %57 = load %Nat32, %Nat32* @nocnt2
+  %58 = add %Nat32 %57, 1
+  store %Nat32 %58, %Nat32* @nocnt2, align 4
+  %59 = bitcast %union.13* %38 to %union.36
+  ret %union.36 %59
 }
 
 define void @func546 (%Unit*, %Unit*, %Nat32, %Node*) {
