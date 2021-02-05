@@ -18384,7 +18384,7 @@ define %StmtBlock* @func543 (%StmtBlock*, %StmtBlock*) {
   %5 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 0
   store %StmtBlock* %1, %StmtBlock** %5, align 8
   %6 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 2
-  %7 = getelementptr inbounds %StmtBlock, %StmtBlock* %1, i1 0, i32 2
+  %7 = load %Context*, %Context** @cctx
   call void (%Context*, %Context*) @context_init (%Context* %6, %Context* %7)
   %8 = getelementptr inbounds %StmtBlock, %StmtBlock* %0, i1 0, i32 1
   call void (%List*) @map_init (%List* %8)

@@ -129,7 +129,7 @@ stmt_block_init = (b, parent : *StmtBlock) -> *StmtBlock {
   b.parent := parent
 
   // new
-  context_init (&b.ctx, &parent.ctx)
+  context_init (&b.ctx, cctx)
 
   list_init (&b.stmts)
 
