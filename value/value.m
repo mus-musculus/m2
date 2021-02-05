@@ -940,8 +940,9 @@ do_value_func = (x : AstValueFunc) -> *Value {
   fctx.cblock := nil
   fctx.cfunc := fv
 
-  // РОДИТЕЛЬ КОНТЕКСТА ЛЮБОЙ ФУНКЦИИ - КОНТЕКСТ МОДУЛЯ!
-  // ПОКА ТАК. (для вложенных функций)
+  // SET FUNCTION CONTEXT
+  // пока родитель контекста любой функции - контекст модуля
+  // (это сделано для работы вложенных функций)
   old_cctx = cctx
   context_init (&fctx.ctx, &module.ctx)
   cctx := &fctx.ctx
