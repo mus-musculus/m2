@@ -1051,7 +1051,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @nocnt2 = global %Nat32 0
 @warncnt = global %Nat32 0
 @errcnt = global %Int32 0
-@builtinIndex = global %Index zeroinitializer
+@builtinContext = global %Context zeroinitializer
 @module = global %Module* zeroinitializer
 @local_type_id_cnt = global %Nat32 0
 @func_uid = global %Nat32 0
@@ -3031,16 +3031,18 @@ define void @context_init (%Context*, %Context*) {
 }
 
 define void @builtin_value_bind (%Str, %Value*) {
-  %3 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0, i32 1
-  %4 = bitcast %Value* %1 to %Unit*
-  %5 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %3, %Str %0, %Unit* %4)
+  %3 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0, i32 1
+  %4 = getelementptr inbounds %Index, %Index* %3, i1 0, i32 1
+  %5 = bitcast %Value* %1 to %Unit*
+  %6 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %4, %Str %0, %Unit* %5)
   ret void
 }
 
 define void @builtin_type_bind (%Str, %Type*) {
-  %3 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0, i32 0
-  %4 = bitcast %Type* %1 to %Unit*
-  %5 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %3, %Str %0, %Unit* %4)
+  %3 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0, i32 1
+  %4 = getelementptr inbounds %Index, %Index* %3, i1 0, i32 0
+  %5 = bitcast %Type* %1 to %Unit*
+  %6 = call i1 (%List*, %Str, %Unit*) @map_append (%List* %4, %Str %0, %Unit* %5)
   ret void
 }
 
@@ -3170,7 +3172,7 @@ then_2:
 else_2:
   br label %endif_2
 endif_2:
-  %16 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0
+  %16 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0, i32 1
   %17 = call %Value* (%Index*, %Str) @func133 (%Index* %16, %Str %0); loadImmPtr
   %18 = inttoptr i64 0 to%Value*
   %19 = icmp ne %Value* %17, %18
@@ -3319,7 +3321,7 @@ endif_1:
 }
 
 define %Type* @func143 (%Str) {
-  %2 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0
+  %2 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0, i32 1
   %3 = call %Type* (%Index*, %Str) @func132 (%Index* %2, %Str %0); loadImmPtr
   %4 = inttoptr i64 0 to%Type*
   %5 = icmp ne %Type* %3, %4
@@ -8272,47 +8274,48 @@ endif_0:
   call void (%Str) @ol (%Str %32)
   %33 = bitcast [20 x %Nat8]* @func274_str12 to %Str
   call void (%Str) @ol (%Str %33)
-  %34 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0, i32 0; loadImmPtr
-  %35 = inttoptr i64 0 to%Unit*
-  call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %34, %MapForeachHandler @func275, %Unit* %35)
-  %36 = bitcast [12 x %Nat8]* @func274_str13 to %Str
-  call void (%Str) @ol (%Str %36)
-  %37 = getelementptr inbounds %List, %List* @unions, i1 0; loadImmPtr
-  %38 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %37, %ListForeachHandler @func276, %Unit* %38)
+  %34 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0, i32 1
+  %35 = getelementptr inbounds %Index, %Index* %34, i1 0, i32 0; loadImmPtr
+  %36 = inttoptr i64 0 to%Unit*
+  call void (%List*, %MapForeachHandler, %Unit*) @map_foreach (%List* %35, %MapForeachHandler @func275, %Unit* %36)
+  %37 = bitcast [12 x %Nat8]* @func274_str13 to %Str
+  call void (%Str) @ol (%Str %37)
+  %38 = getelementptr inbounds %List, %List* @unions, i1 0; loadImmPtr
+  %39 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %38, %ListForeachHandler @func276, %Unit* %39)
   call void () @nl ()
-  %39 = bitcast [11 x %Nat8]* @func274_str14 to %Str
-  call void (%Str) @o (%Str %39)
-  %40 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 3; loadImmPtr
-  %41 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %40, %ListForeachHandler @func277, %Unit* %41)
-  %42 = bitcast [13 x %Nat8]* @func274_str15 to %Str
-  call void (%Str) @o (%Str %42)
-  %43 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 6; loadImmPtr
-  %44 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %43, %ListForeachHandler @func278, %Unit* %44)
-  %45 = bitcast [12 x %Nat8]* @func274_str16 to %Str
-  call void (%Str) @o (%Str %45)
-  %46 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 5; loadImmPtr
-  %47 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %46, %ListForeachHandler @func279, %Unit* %47)
-  %48 = bitcast [10 x %Nat8]* @func274_str17 to %Str
-  call void (%Str) @o (%Str %48)
-  %49 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 7; loadImmPtr
-  %50 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %49, %ListForeachHandler @func280, %Unit* %50)
-  %51 = bitcast [11 x %Nat8]* @func274_str18 to %Str
-  call void (%Str) @o (%Str %51)
-  %52 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 8; loadImmPtr
-  %53 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %52, %ListForeachHandler @func281, %Unit* %53)
-  %54 = bitcast [13 x %Nat8]* @func274_str19 to %Str
-  call void (%Str) @o (%Str %54)
-  %55 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 4; loadImmPtr
-  %56 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %55, %ListForeachHandler @func282, %Unit* %56)
-  %57 = bitcast [14 x %Nat8]* @func274_str20 to %Str
-  call void (%Str) @o (%Str %57)
+  %40 = bitcast [11 x %Nat8]* @func274_str14 to %Str
+  call void (%Str) @o (%Str %40)
+  %41 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 3; loadImmPtr
+  %42 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %41, %ListForeachHandler @func277, %Unit* %42)
+  %43 = bitcast [13 x %Nat8]* @func274_str15 to %Str
+  call void (%Str) @o (%Str %43)
+  %44 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 6; loadImmPtr
+  %45 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %44, %ListForeachHandler @func278, %Unit* %45)
+  %46 = bitcast [12 x %Nat8]* @func274_str16 to %Str
+  call void (%Str) @o (%Str %46)
+  %47 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 5; loadImmPtr
+  %48 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %47, %ListForeachHandler @func279, %Unit* %48)
+  %49 = bitcast [10 x %Nat8]* @func274_str17 to %Str
+  call void (%Str) @o (%Str %49)
+  %50 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 7; loadImmPtr
+  %51 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %50, %ListForeachHandler @func280, %Unit* %51)
+  %52 = bitcast [11 x %Nat8]* @func274_str18 to %Str
+  call void (%Str) @o (%Str %52)
+  %53 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 8; loadImmPtr
+  %54 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %53, %ListForeachHandler @func281, %Unit* %54)
+  %55 = bitcast [13 x %Nat8]* @func274_str19 to %Str
+  call void (%Str) @o (%Str %55)
+  %56 = getelementptr inbounds %Assembly, %Assembly* %0, i1 0, i32 4; loadImmPtr
+  %57 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %56, %ListForeachHandler @func282, %Unit* %57)
+  %58 = bitcast [14 x %Nat8]* @func274_str20 to %Str
+  call void (%Str) @o (%Str %58)
   ret void
 }
 
@@ -18976,15 +18979,16 @@ define void @compiler_init () {
   store %Module* %2, %Module** @module, align 8
   %3 = load %Module*, %Module** @module
   call void (%Module*) @module_init (%Module* %3)
-  %4 = getelementptr inbounds %Index, %Index* @builtinIndex, i1 0
-  call void (%Index*) @func128 (%Index* %4)
+  %4 = getelementptr inbounds %Context, %Context* @builtinContext, i1 0; loadImmPtr
+  %5 = inttoptr i64 0 to%Context*
+  call void (%Context*, %Context*) @context_init (%Context* %4, %Context* %5)
   call void () @func449 ()
   call void () @func540 ()
-  %5 = bitcast [4 x %Nat8]* @func560_str1 to %Str
-  %6 = call %Int32 (%Str, ...) @printf (%Str %5)
-  %7 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
-  %8 = bitcast [7 x %Nat8]* @func560_str2 to %Str
-  call void (%Assembly*, %Arch, %Str) @func256 (%Assembly* %7, %Arch 1, %Str %8)
+  %6 = bitcast [4 x %Nat8]* @func560_str1 to %Str
+  %7 = call %Int32 (%Str, ...) @printf (%Str %6)
+  %8 = getelementptr inbounds %Assembly, %Assembly* @asm0, i1 0
+  %9 = bitcast [7 x %Nat8]* @func560_str2 to %Str
+  call void (%Assembly*, %Arch, %Str) @func256 (%Assembly* %8, %Arch 1, %Str %9)
   ret void
 }
 

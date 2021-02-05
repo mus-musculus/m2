@@ -11,7 +11,7 @@ compiler_init = () -> () {
   module := malloc(sizeof Module) to *Module
   module_init(module)
 
-  index_init(&builtinIndex)
+  context_init(&builtinContext, nil)
 
   type_init()
   value_init()

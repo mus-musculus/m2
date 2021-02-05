@@ -242,7 +242,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
       fprintf (fout, "\n%%%s = type i%d", tid, t.num.power)
     }
   }
-  map_foreach (&builtinIndex.types, prt_itype, nil)
+  map_foreach (&builtinContext.index.types, prt_itype, nil)
 
 
   ol ("\n; aliases:")

@@ -22,13 +22,13 @@ context_init = (ctx, parent : *Context) -> () {
 }
 
 
-builtinIndex = 0 to Var Index
+builtinContext = 0 to Var Context
 
 builtin_value_bind = (id : Str, v : *Value) -> ()
-{map_append(&builtinIndex.values, id, v)}
+{map_append(&builtinContext.index.values, id, v)}
 
 builtin_type_bind = (id : Str, t : *Type) -> ()
-{map_append(&builtinIndex.types, id, t)}
+{map_append(&builtinContext.index.types, id, t)}
 
 
 
@@ -88,7 +88,7 @@ get_value = (id : Str) -> *Value {
   if x != nil {return x}
 
   // in builtin_module
-  builtin = index_get_value(&builtinIndex, id)
+  builtin = index_get_value(&builtinContext.index, id)
   if builtin != nil {return builtin}
 
   // maybe it is `self`?
@@ -165,7 +165,7 @@ get_type_global = (id : Str) -> *Type {
 get_type = (id : Str) -> *Type {
   // firstly search in globalTypeIndex тк наибольшая вероятность что тип там
   // тк встроенные типы чаще всего встречаются в коде
-  builtin_t = index_get_type(&builtinIndex, id)
+  builtin_t = index_get_type(&builtinContext.index, id)
   if builtin_t != nil {return builtin_t}
 
   // searching in local block stack
