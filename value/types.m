@@ -11,16 +11,16 @@ ValueKind = {
 
   /* Terminals */
 
-  #ValueImmediate,    // Value#imm
+  #ValueImmediate,    // Value#imm {#StorageImmediate}
+  #ValueGenericRecord // #type=nil, need cast
   #ValueMention,      // Using value by name
 
-  #ValueGlobalConst,  // Value#assembly_item (id)
-  #ValueGlobalVar,    // Value#assembly_item (id)
+  #ValueGlobalConst,  // Value#assembly_item (id) {#StorageMemory}
+  #ValueGlobalVar,    // Value#assembly_item (id) {#StorageMemory}
 
-  #ValueParam,        // Value#reg
-  #ValueRecord,       // Value#reg
-  #ValueGenericRecord // #type=nil, need cast
-  #ValueArray,        // Value#reg
+  #ValueParam,        // Value#reg {#StorageRegister}
+  #ValueRecord,       // Value#reg {#StorageRegister}
+  #ValueArray,        // Value#reg {#StorageRegister}
 
   #ValueLocalConst,   // Value#expr (reg)
   #ValueLocalVar,     // Value#vardef (reg)

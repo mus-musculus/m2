@@ -2698,51 +2698,51 @@ define void @func98 (%TypeUnion*) {
   ret void
 }
 
-define void @func100 (%Value*) {
+define void @value_print_undefined (%Value*) {
   ret void
 }
 
-define void @func101 (%Value*) {
+define void @value_print_immediate (%Value*) {
   ret void
 }
 
-define void @func102 (%Value*) {
+define void @value_print_global_const (%Value*) {
   ret void
 }
 
-define void @func103 (%Value*) {
+define void @value_print_global_var (%Value*) {
   ret void
 }
 
-define void @func104 (%Value*) {
+define void @value_print_param (%Value*) {
   ret void
 }
 
-define void @func105 (%Value*) {
+define void @value_print_local_const (%Value*) {
   ret void
 }
 
-define void @func106 (%Value*) {
+define void @value_print_local_var (%Value*) {
   ret void
 }
 
-define void @func107 (%Value*) {
+define void @value_print_ref (%Value*) {
   ret void
 }
 
-define void @func108 (%Value*) {
+define void @value_print_deref (%Value*) {
   ret void
 }
 
-define void @func109 (%Value*) {
+define void @value_print_not (%Value*) {
   ret void
 }
 
-define void @func110 (%Value*) {
+define void @value_print_minus (%Value*) {
   ret void
 }
 
-define void @func111 (%Value*) {
+define void @value_print_plus (%Value*) {
   ret void
 }
 
@@ -2750,35 +2750,35 @@ define void @func112 (%Value*, %Str) {
   ret void
 }
 
-define void @func113 (%Value*) {
+define void @value_print_load (%Value*) {
   ret void
 }
 
-define void @func114 (%Value*) {
+define void @value_print_shl (%Value*) {
   ret void
 }
 
-define void @func115 (%Value*) {
+define void @value_print_shr (%Value*) {
   ret void
 }
 
-define void @func116 (%Value*) {
+define void @value_print_call (%Value*) {
   ret void
 }
 
-define void @func117 (%Value*) {
+define void @value_print_index (%Value*) {
   ret void
 }
 
-define void @func118 (%Value*) {
+define void @value_print_access (%Value*) {
   ret void
 }
 
-define void @func119 (%Value*) {
+define void @value_print_cast (%Value*) {
   ret void
 }
 
-define void @func120 (%Value*) {
+define void @value_print_select (%Value*) {
   ret void
 }
 

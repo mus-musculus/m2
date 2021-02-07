@@ -165,30 +165,10 @@ exist printTypeFunc : (f : *TypeFunc, func_as_ptr : Bool) -> ()
 
 
 // debug
-exist value_print_undefined : (v : *Value) -> ()
-exist value_print_immediate : (v : *Value) -> ()
-exist value_print_global_const : (v : *Value) -> ()
-exist value_print_global_var : (v : *Value) -> ()
-exist value_print_param : (v : *Value) -> ()
-exist value_print_local_const : (v : *Value) -> ()
-exist value_print_local_var : (v : *Value) -> ()
 
-exist value_print_ref : (v : *Value) -> ()
-exist value_print_deref : (v : *Value) -> ()
-exist value_print_not : (v : *Value) -> ()
-exist value_print_minus : (v : *Value) -> ()
-exist value_print_plus : (v : *Value) -> ()
 
 exist value_print_bin : (v : *Value, op : Str) -> ()
 
-exist value_print_load : (v : *Value) -> ()
-exist value_print_shl : (v : *Value) -> ()
-exist value_print_shr : (v : *Value) -> ()
-exist value_print_call : (v : *Value) -> ()
-exist value_print_index : (v : *Value) -> ()
-exist value_print_access : (v : *Value) -> ()
-exist value_print_cast : (v : *Value) -> ()
-exist value_print_select : (v : *Value) -> ()
 
 exist value_type_get : (x : Value) -> *Type
 
