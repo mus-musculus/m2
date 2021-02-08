@@ -3230,19 +3230,21 @@ else_0:
   br label %endif_0
 endif_0:
   %7 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 1
-  %8 = call %Type* (%Index*, %Str) @index_type_get (%Index* %7, %Str %1); loadImmPtr
+  %8 = call %Type* (%Index*, %Str) @index_type_get (%Index* %7, %Str %1)
+  br label %select_1_0
+select_1_0:; loadImmPtr
   %9 = inttoptr i64 0 to%Type*
-  %10 = icmp ne %Type* %8, %9
-  br i1 %10, label %then_1, label %else_1
-then_1:
-  ret %Type* %8
-  br label %endif_1
-else_1:
-  br label %endif_1
-endif_1:
-  %12 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
-  %13 = load %Context*, %Context** %12
-  %14 = call %Type* (%Context*, %Str) @context_type_get (%Context* %13, %Str %1)
+  %10 = icmp eq %Type* %8, %9
+  br i1 %10, label %select_1_0_ok, label %select_1_1
+select_1_0_ok:
+  %11 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
+  %12 = load %Context*, %Context** %11
+  %13 = call %Type* (%Context*, %Str) @context_type_get (%Context* %12, %Str %1)
+  br label %select_1_end
+select_1_1:
+  br label %select_1_end
+select_1_end:
+  %14 = phi %Type* [ %13, %select_1_0_ok ], [ %8, %select_1_1 ]
   ret %Type* %14
 }
 
@@ -3258,19 +3260,21 @@ else_0:
   br label %endif_0
 endif_0:
   %7 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 1
-  %8 = call %Value* (%Index*, %Str) @index_value_get (%Index* %7, %Str %1); loadImmPtr
+  %8 = call %Value* (%Index*, %Str) @index_value_get (%Index* %7, %Str %1)
+  br label %select_1_0
+select_1_0:; loadImmPtr
   %9 = inttoptr i64 0 to%Value*
-  %10 = icmp ne %Value* %8, %9
-  br i1 %10, label %then_1, label %else_1
-then_1:
-  ret %Value* %8
-  br label %endif_1
-else_1:
-  br label %endif_1
-endif_1:
-  %12 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
-  %13 = load %Context*, %Context** %12
-  %14 = call %Value* (%Context*, %Str) @context_value_get (%Context* %13, %Str %1)
+  %10 = icmp eq %Value* %8, %9
+  br i1 %10, label %select_1_0_ok, label %select_1_1
+select_1_0_ok:
+  %11 = getelementptr inbounds %Context, %Context* %0, i1 0, i32 0
+  %12 = load %Context*, %Context** %11
+  %13 = call %Value* (%Context*, %Str) @context_value_get (%Context* %12, %Str %1)
+  br label %select_1_end
+select_1_1:
+  br label %select_1_end
+select_1_end:
+  %14 = phi %Value* [ %13, %select_1_0_ok ], [ %8, %select_1_1 ]
   ret %Value* %14
 }
 
@@ -3442,7 +3446,7 @@ then_0:
   %8 = bitcast [11 x %Nat8]* @func151_str1 to %Str
   %9 = getelementptr inbounds %Value, %Value* %1, i1 0, i32 3
   %10 = load %TokenInfo*, %TokenInfo** %9
-  call void (%Str, %TokenInfo*) @warning (%Str %8, %TokenInfo* %10)
+  call void (%Str, %TokenInfo*) @error (%Str %8, %TokenInfo* %10)
   br label %endif_0
 else_0:
   br label %endif_0

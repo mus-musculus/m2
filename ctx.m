@@ -18,15 +18,19 @@ context_value_append = (ctx : *Context, id : Str, v : *Value) -> () {
 context_type_get = (ctx : *Context, id : Str) -> *Type {
   if ctx == nil {return nil}
   t = index_type_get (&ctx.index, id)
-  if t != nil {return t}
-  return self (ctx.parent, id)
+  return when t {
+    nil => self (ctx.parent, id)
+    else => t
+  }
 }
 
 context_value_get = (ctx : *Context, id : Str) -> *Value {
   if ctx == nil {return nil}
   v = index_value_get (&ctx.index, id)
-  if v != nil {return v}
-  return self (ctx.parent, id)
+  return when v {
+    nil => self (ctx.parent, id)
+    else => v
+  }
 }
 
 
@@ -68,7 +72,7 @@ typebind = (id : Str, t : *Type) -> () {
 valbind = (id : Str, v : *Value) -> () {
   assert (cctx != nil, "valbind")
 
-  // проверяем если
+  // проверяем если это имя уже связано (по всей цепочке глобально)
   ae = valget(id)
   if ae isnt Unit {
     ae = ae as *Value
@@ -94,7 +98,7 @@ valbind = (id : Str, v : *Value) -> () {
 valbind_local = (id : Str, v : *Value) -> () {
   ae = index_value_get (&cctx.index, id)
   if ae != nil {
-    warning ("name error", v.ti)
+    error ("name error", v.ti)
   }
   context_value_append (cctx, id, v)
 }
