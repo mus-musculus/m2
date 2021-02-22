@@ -1029,13 +1029,15 @@ do_value_array = (x : AstValueArray) -> *Value {
 
     if v.data is ValuePoison {return}
 
+    vx = 0 to Var *Value
     if c.item_type is Unit {
-      c.item_type := v.type
+      vx := implicit_cast_int (v)
+      c.item_type := vx.type
     } else {
-      type_check (c.item_type as *Type, v.type, v.ti)
+      vx := implicit_cast (v, c.item_type as *Type)
+      type_check (c.item_type as *Type, vx.type, vx.ti)
     }
-
-    list_append (&c.items, v)
+    list_append (&c.items, vx)
   }
   list_foreach(&(x to Var AstValueArray).items, handle_list_item, &ctx)
 

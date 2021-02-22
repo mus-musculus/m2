@@ -140,8 +140,8 @@ asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
 
 asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : List) -> *Definition {
   x = definition_new (#DefArray, id)
-//  x.arraydef := (id=id, type=t, values=values)
-//  list_append (&a.arrays, x)
+  x.arraydef := (id=id, type=t, values=values)
+  list_append (&a.arrays, x)
   return x
 }
 
@@ -281,7 +281,7 @@ print_assembly = (a: *Assembly, fname : Str) -> () {
   o ("\n\n;arrays:\n")
   foreach_arraydef = ListForeachHandler {
     ad = &(data to *Definition).arraydef
-    arraydef (ad.id, ad.type, ad.values)
+    arraydef (ad.id, ad.type, &ad.values)
   }
   list_foreach (&a.arrays, foreach_arraydef, nil)
 

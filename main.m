@@ -55,6 +55,9 @@ arr = array [1, 2]
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
 
+  printf("arr:0 = %d\n", arr[0])
+  printf("arr:1 = %d\n", arr[1])
+
   m = parse ("main.m")
 
   if m is ParserError {return errcnt}
