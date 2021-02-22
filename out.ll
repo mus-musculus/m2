@@ -560,15 +560,14 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func221_str10 = private unnamed_addr constant [2 x i8] c".\00", align 1
 @func222_str1 = private unnamed_addr constant [2 x i8] c"(\00", align 1
 @func222_str2 = private unnamed_addr constant [2 x i8] c")\00", align 1
-@func223_func224_str1 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
-@func223_func224_str2 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
+@func223_func224_str1 = private unnamed_addr constant [2 x i8] c"@\00", align 1
+@func223_func224_str2 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
+@func223_func224_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
 @func223_func225_str1 = private unnamed_addr constant [19 x i8] c"unexpected symbol\0A\00", align 1
 @func223_func225_str2 = private unnamed_addr constant [14 x i8] c"received: %s\0A\00", align 1
 @func223_func225_str3 = private unnamed_addr constant [9 x i8] c"bad term\00", align 1
-@func226_str1 = private unnamed_addr constant [5 x i8] c"func\00", align 1
-@func226_str2 = private unnamed_addr constant [7 x i8] c"extern\00", align 1
-@func226_str3 = private unnamed_addr constant [6 x i8] c"array\00", align 1
-@func226_str4 = private unnamed_addr constant [5 x i8] c"when\00", align 1
+@func226_str1 = private unnamed_addr constant [7 x i8] c"extern\00", align 1
+@func226_str2 = private unnamed_addr constant [5 x i8] c"when\00", align 1
 @func227_str1 = private unnamed_addr constant [2 x i8] c"{\00", align 1
 @func227_str2 = private unnamed_addr constant [2 x i8] c"}\00", align 1
 @func227_str3 = private unnamed_addr constant [5 x i8] c"else\00", align 1
@@ -6602,13 +6601,23 @@ endif_1:
 }
 
 define %union.4* @func224 (%Token*) {
-  %2 = bitcast [19 x %Nat8]* @func223_func224_str1 to %Str
-  %3 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
-  call void (%Str, %TokenInfo*) @error (%Str %2, %TokenInfo* %3)
-  %4 = bitcast [9 x %Nat8]* @func223_func224_str2 to %Str
-  call void (i1, %Str) @assert (i1 0, %Str %4); loadImmPtr
-  %5 = inttoptr i64 0 to%union.4*
-  ret %union.4* %5
+  %2 = bitcast [2 x %Nat8]* @func223_func224_str1 to %Str
+  %3 = call i1 (%Str) @func191 (%Str %2)
+  br i1 %3, label %then_0, label %else_0
+then_0:
+  %4 = call %union.4* () @func230 ()
+  ret %union.4* %4
+  br label %endif_0
+else_0:
+  br label %endif_0
+endif_0:
+  %6 = bitcast [19 x %Nat8]* @func223_func224_str2 to %Str
+  %7 = getelementptr inbounds %Token, %Token* %0, i1 0, i32 1
+  call void (%Str, %TokenInfo*) @error (%Str %6, %TokenInfo* %7)
+  %8 = bitcast [9 x %Nat8]* @func223_func224_str3 to %Str
+  call void (i1, %Str) @assert (i1 0, %Str %8); loadImmPtr
+  %9 = inttoptr i64 0 to%union.4*
+  ret %union.4* %9
 }
 
 define %union.4* @func225 (%Token*) {
@@ -6666,74 +6675,54 @@ select_1_end:
 define %union.4* @func226 () {
   %1 = call %Token* () @func183 ()
   %2 = getelementptr inbounds %Token, %Token* %1, i1 0, i32 1
-  %3 = bitcast [5 x %Nat8]* @func226_str1 to %Str
+  %3 = bitcast [7 x %Nat8]* @func226_str1 to %Str
   %4 = call i1 (%Str) @func191 (%Str %3)
   br i1 %4, label %then_0, label %else_0
 then_0:
-  %5 = call %union.4* () @func231 ()
+  %5 = call %union.4* () @func232 ()
   ret %union.4* %5
   br label %endif_0
 else_0:
-  %7 = bitcast [7 x %Nat8]* @func226_str2 to %Str
+  %7 = bitcast [5 x %Nat8]* @func226_str2 to %Str
   %8 = call i1 (%Str) @func191 (%Str %7)
   br i1 %8, label %then_1, label %else_1
 then_1:
-  %9 = call %union.4* () @func232 ()
+  %9 = call %union.4* () @func227 ()
   ret %union.4* %9
   br label %endif_1
 else_1:
-  %11 = bitcast [6 x %Nat8]* @func226_str3 to %Str
-  %12 = call i1 (%Str) @func191 (%Str %11)
-  br i1 %12, label %then_2, label %else_2
-then_2:
-  %13 = call %union.4* () @func230 ()
-  ret %union.4* %13
-  br label %endif_2
-else_2:
-  %15 = bitcast [5 x %Nat8]* @func226_str4 to %Str
-  %16 = call i1 (%Str) @func191 (%Str %15)
-  br i1 %16, label %then_3, label %else_3
-then_3:
-  %17 = call %union.4* () @func227 ()
-  ret %union.4* %17
-  br label %endif_3
-else_3:
-  br label %endif_3
-endif_3:
-  br label %endif_2
-endif_2:
   br label %endif_1
 endif_1:
   br label %endif_0
 endif_0:
-  %19 = call %AstId* () @parse_id (); loadImmPtr
-  %20 = inttoptr i64 0 to%AstId*
-  %21 = icmp eq %AstId* %19, %20
-  br i1 %21, label %then_4, label %else_4
-then_4:; loadImmPtr
-  %22 = inttoptr i64 0 to%union.4*
-  ret %union.4* %22
-  br label %endif_4
-else_4:
-  br label %endif_4
-endif_4:
-  %24 = insertvalue %AstName zeroinitializer, %AstId* %19, 0
-  %25 = insertvalue %AstName %24, %TokenInfo* %2, 2
-  %26 = alloca %union.4
+  %11 = call %AstId* () @parse_id (); loadImmPtr
+  %12 = inttoptr i64 0 to%AstId*
+  %13 = icmp eq %AstId* %11, %12
+  br i1 %13, label %then_2, label %else_2
+then_2:; loadImmPtr
+  %14 = inttoptr i64 0 to%union.4*
+  ret %union.4* %14
+  br label %endif_2
+else_2:
+  br label %endif_2
+endif_2:
+  %16 = insertvalue %AstName zeroinitializer, %AstId* %11, 0
+  %17 = insertvalue %AstName %16, %TokenInfo* %2, 2
+  %18 = alloca %union.4
 ; write variant 36
-  %27 = getelementptr inbounds %union.4, %union.4* %26, i1 0, i32 0
-  store %Int16 36, %Int16* %27, align 2
+  %19 = getelementptr inbounds %union.4, %union.4* %18, i1 0, i32 0
+  store %Int16 36, %Int16* %19, align 2
 ; write data
-  %28 = getelementptr inbounds %union.4, %union.4* %26, i1 0, i32 1
-  %29 = bitcast [56 x %Nat8]* %28 to %AstName*
-  store %AstName %25, %AstName* %29, align 8
-  %30 = load %union.4, %union.4* %26
-  %31 = call %union.4* (%union.4) @func210 (%union.4 %30)
-  ret %union.4* %31
+  %20 = getelementptr inbounds %union.4, %union.4* %18, i1 0, i32 1
+  %21 = bitcast [56 x %Nat8]* %20 to %AstName*
+  store %AstName %17, %AstName* %21, align 8
+  %22 = load %union.4, %union.4* %18
+  %23 = call %union.4* (%union.4) @func210 (%union.4 %22)
+  ret %union.4* %23
   br label %fail
 fail:; loadImmPtr
-  %33 = inttoptr i64 0 to%union.4*
-  ret %union.4* %33
+  %25 = inttoptr i64 0 to%union.4*
+  ret %union.4* %25
 }
 
 define %union.4* @func227 () {

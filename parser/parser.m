@@ -862,6 +862,11 @@ parse_value_term = AstValueParser {
     #TokenString => parse_value_str()
 
     #TokenSym => (token : *Token) -> *AstValue {
+
+      if match("@") {
+        return parse_value_array()
+      }
+
       error("unexpected symbol\n", &token.ti)
       assert(false, "bad term")
       return nil to *AstValue
@@ -878,14 +883,10 @@ parse_value_term = AstValueParser {
 
 
 parse_value_id = AstValueParser {
-
   ti = &ctok().ti
-  if match("func") {
-    return parse_value_func()
-  } else if match("extern") {
+
+  if match("extern") {
     return parse_value_extern()
-  } else if match("array") {
-    return parse_value_array()
   } else if match("when") {
     return parse_value_when()
   }
