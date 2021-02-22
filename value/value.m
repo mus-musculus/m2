@@ -1018,9 +1018,10 @@ fail:
 do_value_array = (x : AstValueArray) -> *Value {
   //fatal("do_value_array")
   handle_list_item = ListForeachHandler {
-    printf("Yep!\n")
+    val = data to *AstValue
+    v = do_value(val)
   }
-  //list_foreach(&x.items, handle_list_item, nil)
+  list_foreach(&(x to Var AstValueArray).items, handle_list_item, nil)
 
 fail:
   return value_new_poison (x.ti)

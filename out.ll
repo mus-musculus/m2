@@ -16491,17 +16491,24 @@ fail:
 }
 
 define void @func523 (%Unit*, %Unit*, %Nat32, %Node*) {
-  %5 = bitcast [6 x %Nat8]* @func522_func523_str1 to %Str
-  %6 = call %Int32 (%Str, ...) @printf (%Str %5)
+  %5 = bitcast %Unit* %0 to %union.4*
+  %6 = call %Value* (%union.4*) @func475 (%union.4* %5)
+  %7 = bitcast [6 x %Nat8]* @func522_func523_str1 to %Str
+  %8 = call %Int32 (%Str, ...) @printf (%Str %7)
   ret void
 }
 
 define %Value* @func522 (%AstValueArray) {
+  %2 = alloca %AstValueArray
+  store %AstValueArray %0, %AstValueArray* %2, align 8
+  %3 = getelementptr inbounds %AstValueArray, %AstValueArray* %2, i1 0, i32 0; loadImmPtr
+  %4 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %3, %ListForeachHandler @func523, %Unit* %4)
   br label %fail
 fail:
-  %2 = extractvalue %AstValueArray %0, 1
-  %3 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %2)
-  ret %Value* %3
+  %5 = extractvalue %AstValueArray %0, 1
+  %6 = call %Value* (%TokenInfo*) @value_new_poison (%TokenInfo* %5)
+  ret %Value* %6
 }
 
 define void @func525 (%Unit*, %Unit*, %Unit*) {
