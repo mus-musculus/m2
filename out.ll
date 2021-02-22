@@ -982,16 +982,14 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func574_str5 = private unnamed_addr constant [8 x i8] c"sprintf\00", align 1
 @func574_str6 = private unnamed_addr constant [8 x i8] c"fprintf\00", align 1
 @func575_func576_str1 = private unnamed_addr constant [16 x i8] c"undefined type5\00", align 1
-@func578_str1 = private unnamed_addr constant [11 x i8] c"m2 v%d.%d\0A\00", align 1
-@func578_str2 = private unnamed_addr constant [12 x i8] c"arr:0 = %d\0A\00", align 1
-@func578_str3 = private unnamed_addr constant [12 x i8] c"arr:1 = %d\0A\00", align 1
-@func578_str4 = private unnamed_addr constant [7 x i8] c"main.m\00", align 1
-@func578_str5 = private unnamed_addr constant [11 x i8] c"lines: %d\0A\00", align 1
-@func578_str6 = private unnamed_addr constant [7 x i8] c"out.ll\00", align 1
+@func580_str1 = private unnamed_addr constant [11 x i8] c"m2 v%d.%d\0A\00", align 1
+@func580_str2 = private unnamed_addr constant [7 x i8] c"main.m\00", align 1
+@func580_str3 = private unnamed_addr constant [11 x i8] c"lines: %d\0A\00", align 1
+@func580_str4 = private unnamed_addr constant [7 x i8] c"out.ll\00", align 1
 
 ;arrays:
 
-@arr = private unnamed_addr constant [2 x %Int64] [%Int64 1, %Int64 2], align 16
+@arr = private unnamed_addr constant [2 x void ()*] [void ()* @xx, void ()* @yy], align 16
 
 ;vars:
 
@@ -19593,54 +19591,52 @@ define void @func577 (%AstId*, %Type*) {
   ret void
 }
 
+define void @xx () {
+  ret void
+}
+
+define void @yy () {
+  ret void
+}
+
 define %Int32 @main (%Nat32, %Str*) {
-  %3 = bitcast [11 x %Nat8]* @func578_str1 to %Str
+  %3 = bitcast [11 x %Nat8]* @func580_str1 to %Str
   %4 = call %Int32 (%Str, ...) @printf (%Str %3, %Int64 0, %Int64 5)
-  %5 = bitcast [12 x %Nat8]* @func578_str2 to %Str
-; index array
-  %6 = getelementptr inbounds [2 x %Int64], [2 x %Int64]* @arr, i1 0, %Int64 0
-  %7 = load %Int64, %Int64* %6
-  %8 = call %Int32 (%Str, ...) @printf (%Str %5, %Int64 %7)
-  %9 = bitcast [12 x %Nat8]* @func578_str3 to %Str
-; index array
-  %10 = getelementptr inbounds [2 x %Int64], [2 x %Int64]* @arr, i1 0, %Int64 1
-  %11 = load %Int64, %Int64* %10
-  %12 = call %Int32 (%Str, ...) @printf (%Str %9, %Int64 %11)
-  %13 = bitcast [7 x %Nat8]* @func578_str4 to %Str
-  %14 = call %union.0 (%Str) @parse (%Str %13)
-  %15 = extractvalue %union.0 %14, 0
-  %16 = bitcast %Int16 1 to %Int16
-  %17 = icmp eq %Int16 %15, %16
-  br i1 %17, label %then_0, label %else_0
+  %5 = bitcast [7 x %Nat8]* @func580_str2 to %Str
+  %6 = call %union.0 (%Str) @parse (%Str %5)
+  %7 = extractvalue %union.0 %6, 0
+  %8 = bitcast %Int16 1 to %Int16
+  %9 = icmp eq %Int16 %7, %8
+  br i1 %9, label %then_0, label %else_0
 then_0:
-  %18 = load %Int32, %Int32* @errcnt
-  ret %Int32 %18
+  %10 = load %Int32, %Int32* @errcnt
+  ret %Int32 %10
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
   call void () @compiler_init ()
-  %20 = alloca %union.0
-  store %union.0 %14, %union.0* %20, align 64
-  %21 = getelementptr inbounds %union.0, %union.0* %20, i1 0, i32 1
-  %22 = bitcast [40 x %Nat8]* %21 to %AstModule*
-  %23 = load %AstModule, %AstModule* %22
-  %24 = call %Assembly* (%AstModule) @func568 (%AstModule %23); loadImmPtr
-  %25 = inttoptr i64 0 to%Assembly*
-  %26 = icmp ne %Assembly* %24, %25
-  br i1 %26, label %then_1, label %else_1
+  %12 = alloca %union.0
+  store %union.0 %6, %union.0* %12, align 64
+  %13 = getelementptr inbounds %union.0, %union.0* %12, i1 0, i32 1
+  %14 = bitcast [40 x %Nat8]* %13 to %AstModule*
+  %15 = load %AstModule, %AstModule* %14
+  %16 = call %Assembly* (%AstModule) @func568 (%AstModule %15); loadImmPtr
+  %17 = inttoptr i64 0 to%Assembly*
+  %18 = icmp ne %Assembly* %16, %17
+  br i1 %18, label %then_1, label %else_1
 then_1:
-  %27 = bitcast [11 x %Nat8]* @func578_str5 to %Str
-  %28 = load %Nat32, %Nat32* @lines
-  %29 = call %Int32 (%Str, ...) @printf (%Str %27, %Nat32 %28)
-  %30 = bitcast [7 x %Nat8]* @func578_str6 to %Str
-  call void (%Assembly*, %Str) @func271 (%Assembly* %24, %Str %30)
+  %19 = bitcast [11 x %Nat8]* @func580_str3 to %Str
+  %20 = load %Nat32, %Nat32* @lines
+  %21 = call %Int32 (%Str, ...) @printf (%Str %19, %Nat32 %20)
+  %22 = bitcast [7 x %Nat8]* @func580_str4 to %Str
+  call void (%Assembly*, %Str) @func271 (%Assembly* %16, %Str %22)
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-  %31 = load %Int32, %Int32* @errcnt
-  ret %Int32 %31
+  %23 = load %Int32, %Int32* @errcnt
+  ret %Int32 %23
 }
 
 ;aliases:

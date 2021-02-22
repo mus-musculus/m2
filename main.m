@@ -50,13 +50,16 @@ compilerVersionMajor = 0
 compilerVersionMinor = 5
 
 
-arr = @[1, 2]
+xx = () -> () {}
+yy = () -> () {}
+
+arr = @[xx, yy]
 
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
 
-  printf("arr:0 = %d\n", arr[0])
-  printf("arr:1 = %d\n", arr[1])
+  //printf("arr:0 = %d\n", arr[0])
+  //printf("arr:1 = %d\n", arr[1])
 
   m = parse ("main.m")
 
