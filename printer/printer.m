@@ -439,6 +439,21 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
   // print initial value
   if v == nil {o ("zeroinitializer"); return}
 
+  if v.data is ValueRecord {
+    vr = v.data as ValueRecord
+    o ("{")
+    prt_ini_val = ListForeachHandler {
+      if index > 0 {o(", ")}
+      v = data to *Value
+      val = eval(v)
+      print_val_with_type(val)
+    }
+    list_foreach(&(vr to Var ValueRecord).values, prt_ini_val, nil)
+    o ("}")
+    printf("ValueGenericRecord!\n")
+    return
+  }
+
   ev = eval (v)
   if ev.kind != #LLVM_ValueImmediate {
     error ("expected constant init value", v.ti)
