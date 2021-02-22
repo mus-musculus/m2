@@ -138,10 +138,10 @@ asmStringAdd = (a : *Assembly, id : Str, s : Str, len : Nat) -> *Definition {
 }
 
 
-asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : *List) -> *Definition {
+asmArrayAdd = (a : *Assembly, id : Str, t : *Type, values : List) -> *Definition {
   x = definition_new (#DefArray, id)
-  x.arraydef := (id=id, type=t, values=values)
-  list_append (&a.arrays, x)
+//  x.arraydef := (id=id, type=t, values=values)
+//  list_append (&a.arrays, x)
   return x
 }
 

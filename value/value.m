@@ -1017,11 +1017,35 @@ fail:
 
 do_value_array = (x : AstValueArray) -> *Value {
   //fatal("do_value_array")
+  Ctx11 = (items : List, item_type : *Type or Unit)
+  ctx = 0 to Var Ctx11
+  ctx.item_type := unit
+  list_init(&ctx.items)
+
   handle_list_item = ListForeachHandler {
     val = data to *AstValue
+    c = ctx to *Ctx11
     v = do_value(val)
+
+    if v.data is ValuePoison {return}
+
+    if c.item_type is Unit {
+      c.item_type := v.type
+    } else {
+      type_check (c.item_type as *Type, v.type, v.ti)
+    }
+
+    list_append (&c.items, v)
   }
-  list_foreach(&(x to Var AstValueArray).items, handle_list_item, nil)
+  list_foreach(&(x to Var AstValueArray).items, handle_list_item, &ctx)
+
+  item_type = ctx.item_type as *Type
+  arr_type = type_array_new (item_type, ctx.items.volume to Nat32, x.ti)
+
+  id = get_name_arr ()
+  def = asmArrayAdd (&asm0, id, arr_type, ctx.items)
+
+  return value_new ((type=arr_type, def=def, ti=x.ti) to ValueGlobalConst, arr_type, x.ti)
 
 fail:
   return value_new_poison (x.ti)
