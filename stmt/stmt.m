@@ -10,22 +10,23 @@ stmt_new = (x : Stmt) -> *Stmt {
   return s
 }
 
+DoStmtResult = *Stmt or Unit
 
-exist do_stmt_assign   : (x : AstStmtAssign) -> *Stmt or Unit
-exist do_stmt_valbind  : (x : AstStmtValueBind) -> *Stmt or Unit
-exist do_stmt_block    : (x : AstStmtBlock) -> *Stmt or Unit
-exist do_stmt_expr     : (x : AstStmtExpr) -> *Stmt or Unit
-exist do_stmt_if       : (x : AstStmtIf) -> *Stmt or Unit
-exist do_stmt_while    : (x : AstStmtWhile) -> *Stmt or Unit
-exist do_stmt_return   : (x : AstStmtReturn) -> *Stmt or Unit
-exist do_stmt_typebind : (x : AstStmtTypeBind) -> *Stmt or Unit
-exist do_stmt_break    : (x : AstStmtBreak) -> *Stmt or Unit
-exist do_stmt_again    : (x : AstStmtAgain) -> *Stmt or Unit
-exist do_stmt_goto     : (x : AstStmtGoto) -> *Stmt or Unit
-exist do_stmt_label    : (x : AstStmtLabel) -> *Stmt or Unit
+exist do_stmt_assign   : (x : AstStmtAssign) -> DoStmtResult
+exist do_stmt_valbind  : (x : AstStmtValueBind) -> DoStmtResult
+exist do_stmt_block    : (x : AstStmtBlock) -> DoStmtResult
+exist do_stmt_expr     : (x : AstStmtExpr) -> DoStmtResult
+exist do_stmt_if       : (x : AstStmtIf) -> DoStmtResult
+exist do_stmt_while    : (x : AstStmtWhile) -> DoStmtResult
+exist do_stmt_return   : (x : AstStmtReturn) -> DoStmtResult
+exist do_stmt_typebind : (x : AstStmtTypeBind) -> DoStmtResult
+exist do_stmt_break    : (x : AstStmtBreak) -> DoStmtResult
+exist do_stmt_again    : (x : AstStmtAgain) -> DoStmtResult
+exist do_stmt_goto     : (x : AstStmtGoto) -> DoStmtResult
+exist do_stmt_label    : (x : AstStmtLabel) -> DoStmtResult
 
 
-do_stmt = (x : *AstStmt) -> *Stmt or Unit {
+do_stmt = (x : *AstStmt) -> DoStmtResult {
   xx = *x
   return when xx {
     AstStmtAssign    => do_stmt_assign   (xx to AstStmtAssign)
@@ -51,7 +52,7 @@ do_stmt = (x : *AstStmt) -> *Stmt or Unit {
 Значит мне придется явно передавать во все функции семейства do_value флаг
 lval - означающий что не нужно загружать значение окончательно.
 */
-do_stmt_assign = (x : AstStmtAssign) -> *Stmt or Unit {
+do_stmt_assign = (x : AstStmtAssign) -> DoStmtResult {
   rval0 = do_value (x.r)
 
   if rval0.data is ValuePoison {return unit}
@@ -91,7 +92,7 @@ stmt_new_vardef = (id : *AstId, t : *Type, init_value : *Value, ti : *TokenInfo)
 }
 
 
-do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
+do_stmt_valbind = (x : AstStmtValueBind) -> DoStmtResult {
   id = x.id.str
   v = do_valuex (x.expr, false)
 
@@ -125,7 +126,7 @@ do_stmt_valbind = (x : AstStmtValueBind) -> *Stmt or Unit {
 }
 
 
-do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
+do_stmt_block = (x : AstStmtBlock) -> DoStmtResult {
   sb = 0 to Var StmtBlock
   context_init (&sb.ctx, cctx)
   list_init (&sb.stmts)
@@ -138,7 +139,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 
   fctx.cblock := &sb
 
-  hstmt = ListForeachHandler {
+  do_stmt_in_block = ListForeachHandler {
     ast_stmt = data to *AstStmt
     stmt = do_stmt (ast_stmt)
     // just skip up broken statements
@@ -146,7 +147,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
     stmts = ctx to *List
     list_append (stmts, stmt as *Stmt)
   }
-  list_foreach (&(x.stmts to Var List), hstmt, &sb.stmts)
+  list_foreach (&(x.stmts to Var List), do_stmt_in_block, &sb.stmts)
 
   cctx := sb.ctx.parent
   fctx.cblock := old_cblock  // restore old cblock value
@@ -155,7 +156,7 @@ do_stmt_block = (x : AstStmtBlock) -> *Stmt or Unit {
 }
 
 
-do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
+do_stmt_expr = (x : AstStmtExpr) -> DoStmtResult {
   v = do_value (x.expr)
 
   if v.data is ValuePoison {return unit}
@@ -168,11 +169,11 @@ do_stmt_expr = (x : AstStmtExpr) -> *Stmt or Unit {
 }
 
 
-do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
+do_stmt_if = (x : AstStmtIf) -> DoStmtResult {
   cond = do_value (x.cond)
   then = do_stmt (x.then)
 
-  _else = unit to Var *Stmt or Unit
+  _else = unit to Var DoStmtResult
 
   if not (x.else is Unit) {
     els = do_stmt (x.else as *AstStmt)
@@ -193,7 +194,7 @@ do_stmt_if = (x : AstStmtIf) -> *Stmt or Unit {
 }
 
 
-do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
+do_stmt_while = (x : AstStmtWhile) -> DoStmtResult {
   cond = do_value (x.cond)
 
   fctx.loop := fctx.loop + 1
@@ -212,7 +213,7 @@ do_stmt_while = (x : AstStmtWhile) -> *Stmt or Unit {
 }
 
 
-do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
+do_stmt_return = (x : AstStmtReturn) -> DoStmtResult {
   func_to = fctx.cfunc.type.func.to
   rv = x.value
 
@@ -234,7 +235,7 @@ do_stmt_return = (x : AstStmtReturn) -> *Stmt or Unit {
 }
 
 
-do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
+do_stmt_typebind = (x : AstStmtTypeBind) -> DoStmtResult {
   id = x.id.str
   _type = do_type (x.type)
 
@@ -250,6 +251,8 @@ do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
   //typebind (id, _type)
   context_type_append (&module.ctx, id, _type)
 
+  //typebind_local (id, _type)
+
   // creating data for printer
   asmTypedefAdd (&asm0, uid, _type)
 
@@ -257,24 +260,24 @@ do_stmt_typebind = (x : AstStmtTypeBind) -> *Stmt or Unit {
 }
 
 
-do_stmt_break = (x : AstStmtBreak) -> *Stmt or Unit {
+do_stmt_break = (x : AstStmtBreak) -> DoStmtResult {
   if fctx.loop == 0 {error ("`break` outside a loop context", nil)}
   return stmt_new ((ti=x.ti) to StmtBreak)
 }
 
 
-do_stmt_again = (x : AstStmtAgain) -> *Stmt or Unit {
+do_stmt_again = (x : AstStmtAgain) -> DoStmtResult {
   if fctx.loop == 0 {error ("`again` outside a loop context", nil)}
   return stmt_new ((ti=x.ti) to StmtAgain)
 }
 
 
-do_stmt_goto = (x : AstStmtGoto) -> *Stmt or Unit {
+do_stmt_goto = (x : AstStmtGoto) -> DoStmtResult {
   return stmt_new ((label=x.label.str, ti=x.ti) to StmtGoto)
 }
 
 
-do_stmt_label = (x : AstStmtLabel) -> *Stmt or Unit {
+do_stmt_label = (x : AstStmtLabel) -> DoStmtResult {
   return stmt_new ((label=x.label.str, ti=x.ti) to StmtLabel)
 }
 

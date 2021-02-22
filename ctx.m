@@ -15,6 +15,7 @@ context_value_append = (ctx : *Context, id : Str, v : *Value) -> () {
 }
 
 
+// ищем в текущем контексте и всех родительских
 context_type_get = (ctx : *Context, id : Str) -> *Type {
   if ctx == nil {return nil}
   t = index_type_get (&ctx.index, id)
@@ -24,6 +25,7 @@ context_type_get = (ctx : *Context, id : Str) -> *Type {
   }
 }
 
+// ищем в текущем контексте и всех родительских
 context_value_get = (ctx : *Context, id : Str) -> *Value {
   if ctx == nil {return nil}
   v = index_value_get (&ctx.index, id)
@@ -92,8 +94,9 @@ valbind = (id : Str, v : *Value) -> () {
 }
 
 
-// когда связываем локальные имена мы смотрим только на то чтобы такой символ не был
-// связан в текущем контексте. На родительские контексты не смотрим, тк локаньные
+// когда связываем локальные имена мы смотрим только на то
+// чтобы такой символ не был связан в текущем контексте.
+// На родительские контексты не смотрим, тк локаньные
 // контексты могут перекрывать имена
 valbind_local = (id : Str, v : *Value) -> () {
   ae = index_value_get (&cctx.index, id)
@@ -103,5 +106,12 @@ valbind_local = (id : Str, v : *Value) -> () {
   context_value_append (cctx, id, v)
 }
 
+typebind_local = (id : Str, t : *Type) -> () {
+  ae = index_type_get (&cctx.index, id)
+  if ae != nil {
+    error ("name error", t.ti)
+  }
+  context_type_append (cctx, id, t)
+}
 
 

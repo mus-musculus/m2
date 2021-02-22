@@ -973,6 +973,8 @@ parse_value_rec = AstValueParser {
 parse_value_array = AstValueParser {
   ti = &ctok().ti
 
+  match("[")
+
   items = 0 to Var List  // of *Value
 
   len = 0 to Var Nat32

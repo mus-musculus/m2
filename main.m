@@ -46,13 +46,11 @@ import "stmt/stmt"
 import "cpl"
 
 
-
-// not_null реши что там за херня??!!
-
 compilerVersionMajor = 0
 compilerVersionMinor = 5
 
 
+arr = array [1, 2]
 
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
