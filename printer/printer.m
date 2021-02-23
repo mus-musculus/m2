@@ -439,18 +439,26 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
   // print initial value
   if v == nil {o ("zeroinitializer"); return}
 
+  // инициализация записью
   if v.data is ValueRecord {
     vr = v.data as ValueRecord
+
+    if vr.values.volume == 0 {
+      printf("UUU!\n")
+      o ("zeroinitializer")
+      return
+    }
+
     o ("{")
     prt_ini_val = ListForeachHandler {
-      if index > 0 {o(", ")}
+      if index > 0 {o (", ")}
       v = data to *Value
-      val = eval(v)
-      print_val_with_type(val)
+      val = eval (v)
+      print_val_with_type (val)
     }
     list_foreach(&(vr to Var ValueRecord).values, prt_ini_val, nil)
     o ("}")
-    printf("ValueGenericRecord!\n")
+
     return
   }
 
@@ -461,6 +469,8 @@ vardef = (id : Str, t : *Type, v : *Value) -> () {
     return
   }
   print_val (ev)
+  o("; 1")
+  //fprintf(fout, "; ?%d\n", ev.kind)
 }
 
 

@@ -21,12 +21,12 @@ ctype = nil to Var *Type
 
 
 // result assembly
-asm0 = 0 to Var Assembly
+asm0 = unit to Var Assembly
 
 
 // типы которые нужно будет распечатать в самом начале
 // ! перенеси в сборку!
-unions = 0 to Var List
+unions = unit to Var List
 
 
 nocnt = 0 to Var Nat
@@ -34,10 +34,10 @@ nocnt2 = 0 to Var Nat  // wtf?
 
 
 // pointer to current context (!)
-cctx = 0 to Var *Context
+cctx = nil to Var *Context
 
 
-builtinContext = 0 to Var Context
+builtinContext = unit to Var Context
 
 module = nil to Var *Module
 

@@ -57,7 +57,7 @@ arr = @[xx, yy]
 
 Point = (x, y : Int32)
 
-z = (x=1, y=2) to Var Point
+z = unit to Var Point
 
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)

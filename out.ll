@@ -670,12 +670,14 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func283_str12 = private unnamed_addr constant [14 x i8] c"\5C00\22, align 1\00", align 1
 @func284_str1 = private unnamed_addr constant [15 x i8] c"\0A@%s = global \00", align 1
 @func284_str2 = private unnamed_addr constant [16 x i8] c"zeroinitializer\00", align 1
-@func284_str3 = private unnamed_addr constant [2 x i8] c"{\00", align 1
+@func284_str3 = private unnamed_addr constant [6 x i8] c"UUU!\0A\00", align 1
+@func284_str4 = private unnamed_addr constant [16 x i8] c"zeroinitializer\00", align 1
+@func284_str5 = private unnamed_addr constant [2 x i8] c"{\00", align 1
 @func284_func285_str1 = private unnamed_addr constant [3 x i8] c", \00", align 1
-@func284_str4 = private unnamed_addr constant [2 x i8] c"}\00", align 1
-@func284_str5 = private unnamed_addr constant [21 x i8] c"ValueGenericRecord!\0A\00", align 1
-@func284_str6 = private unnamed_addr constant [29 x i8] c"expected constant init value\00", align 1
-@func284_str7 = private unnamed_addr constant [16 x i8] c"zeroinitializer\00", align 1
+@func284_str6 = private unnamed_addr constant [2 x i8] c"}\00", align 1
+@func284_str7 = private unnamed_addr constant [29 x i8] c"expected constant init value\00", align 1
+@func284_str8 = private unnamed_addr constant [16 x i8] c"zeroinitializer\00", align 1
+@func284_str9 = private unnamed_addr constant [4 x i8] c"; 1\00", align 1
 @func286_str1 = private unnamed_addr constant [20 x i8] c"prn/funcdef t = nil\00", align 1
 @func286_str2 = private unnamed_addr constant [9 x i8] c"\0Adeclare\00", align 1
 @func286_str3 = private unnamed_addr constant [9 x i8] c"\0A\0Adefine\00", align 1
@@ -998,53 +1000,53 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 ;vars:
 
-@lines = global %Nat32 0
-@typeVoid = global %Type* zeroinitializer
-@typeUnit = global %Type* zeroinitializer
-@typeBool = global %Type* zeroinitializer
-@typeChar = global %Type* zeroinitializer
-@typeStr = global %Type* zeroinitializer
-@typeBaseInt = global %Type* zeroinitializer
-@typeFreePtr = global %Type* zeroinitializer
-@typeNumeric = global %Type* zeroinitializer
-@unsafe = global i1 0
-@ctype = global %Type* zeroinitializer
-@asm0 = global %Assembly zeroinitializer
-@unions = global %List zeroinitializer
-@nocnt = global %Nat32 0
-@nocnt2 = global %Nat32 0
-@cctx = global %Context* zeroinitializer
-@builtinContext = global %Context zeroinitializer
-@module = global %Module* zeroinitializer
-@fctx = global %FuncContext* zeroinitializer
-@warncnt = global %Nat32 0
-@errcnt = global %Int32 0
-@local_type_id_cnt = global %Nat32 0
-@func_uid = global %Nat32 0
-@str_uid = global %Nat32 0
-@arr_uid = global %Nat32 0
-@var_uid = global %Nat32 0
-@type_uid = global %Nat32 0
-@lstate = global %LexerState zeroinitializer
-@pstat = global %ParserState zeroinitializer
-@external = global i1 0
-@comments = global i1 0
-@xarghack = global i1 0
-@fout = global %FILE* zeroinitializer
-@clab = global %Nat32 0
-@global_if_id = global %Nat32 0
-@global_while_id = global %Nat32 0
-@while_id = global %Nat32 0
-@blockno = global %Nat32 0
-@stmtno = global %Nat32 0
-@select_no = global %Nat32 0
-@local_vars_map = global [1024 x %Nat32] zeroinitializer
-@local_x_map = global [1024 x %Nat32] zeroinitializer
-@union_id = global %Nat32 0
-@spec_type_uid = global %Nat32 0
-@fuid = global %Nat32 0
-@imp_list = global %List zeroinitializer
-@z = global %Point {%Int32 1, %Int32 2}
+@lines = global %Nat32 0; 1
+@typeVoid = global %Type* zeroinitializer; 1
+@typeUnit = global %Type* zeroinitializer; 1
+@typeBool = global %Type* zeroinitializer; 1
+@typeChar = global %Type* zeroinitializer; 1
+@typeStr = global %Type* zeroinitializer; 1
+@typeBaseInt = global %Type* zeroinitializer; 1
+@typeFreePtr = global %Type* zeroinitializer; 1
+@typeNumeric = global %Type* zeroinitializer; 1
+@unsafe = global i1 0; 1
+@ctype = global %Type* zeroinitializer; 1
+@asm0 = global %Assembly zeroinitializer; 1
+@unions = global %List zeroinitializer; 1
+@nocnt = global %Nat32 0; 1
+@nocnt2 = global %Nat32 0; 1
+@cctx = global %Context* zeroinitializer; 1
+@builtinContext = global %Context zeroinitializer; 1
+@module = global %Module* zeroinitializer; 1
+@fctx = global %FuncContext* zeroinitializer; 1
+@warncnt = global %Nat32 0; 1
+@errcnt = global %Int32 0; 1
+@local_type_id_cnt = global %Nat32 0; 1
+@func_uid = global %Nat32 0; 1
+@str_uid = global %Nat32 0; 1
+@arr_uid = global %Nat32 0; 1
+@var_uid = global %Nat32 0; 1
+@type_uid = global %Nat32 0; 1
+@lstate = global %LexerState zeroinitializer; 1
+@pstat = global %ParserState zeroinitializer; 1
+@external = global i1 0; 1
+@comments = global i1 0; 1
+@xarghack = global i1 0; 1
+@fout = global %FILE* zeroinitializer; 1
+@clab = global %Nat32 0; 1
+@global_if_id = global %Nat32 0; 1
+@global_while_id = global %Nat32 0; 1
+@while_id = global %Nat32 0; 1
+@blockno = global %Nat32 0; 1
+@stmtno = global %Nat32 0; 1
+@select_no = global %Nat32 0; 1
+@local_vars_map = global [1024 x %Nat32] zeroinitializer; 1
+@local_x_map = global [1024 x %Nat32] zeroinitializer; 1
+@union_id = global %Nat32 0; 1
+@spec_type_uid = global %Nat32 0; 1
+@fuid = global %Nat32 0; 1
+@imp_list = global %List zeroinitializer; 1
+@z = global %Point zeroinitializer; 1
 
 ;funcs:
 
@@ -8414,39 +8416,53 @@ then_1:
   %19 = getelementptr inbounds %union.9, %union.9* %18, i1 0, i32 1
   %20 = bitcast [72 x %Nat8]* %19 to %ValueRecord*
   %21 = load %ValueRecord, %ValueRecord* %20
-  %22 = bitcast [2 x %Nat8]* @func284_str3 to %Str
-  call void (%Str) @o (%Str %22)
-  %23 = alloca %ValueRecord
-  store %ValueRecord %21, %ValueRecord* %23, align 8
-  %24 = getelementptr inbounds %ValueRecord, %ValueRecord* %23, i1 0, i32 1; loadImmPtr
-  %25 = inttoptr i64 0 to%Unit*
-  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %24, %ListForeachHandler @func285, %Unit* %25)
-  %26 = bitcast [2 x %Nat8]* @func284_str4 to %Str
-  call void (%Str) @o (%Str %26)
-  %27 = bitcast [21 x %Nat8]* @func284_str5 to %Str
-  %28 = call %Int32 (%Str, ...) @printf (%Str %27)
-ret void
-  br label %endif_1
-else_1:
-  br label %endif_1
-endif_1:
-  %30 = call %LLVM_Value (%Value*) @func296 (%Value* %2)
-  %31 = extractvalue %LLVM_Value %30, 0
-  %32 = icmp ne %LLVM_ValueKind %31, 4
-  br i1 %32, label %then_2, label %else_2
+  %22 = extractvalue %ValueRecord %21, 1
+  %23 = extractvalue %List %22, 2
+  %24 = icmp eq %Nat64 %23, 0
+  br i1 %24, label %then_2, label %else_2
 then_2:
-  %33 = bitcast [29 x %Nat8]* @func284_str6 to %Str
-  %34 = getelementptr inbounds %Value, %Value* %2, i1 0, i32 3
-  %35 = load %TokenInfo*, %TokenInfo** %34
-  call void (%Str, %TokenInfo*) @error (%Str %33, %TokenInfo* %35)
-  %36 = bitcast [16 x %Nat8]* @func284_str7 to %Str
-  call void (%Str) @o (%Str %36)
+  %25 = bitcast [6 x %Nat8]* @func284_str3 to %Str
+  %26 = call %Int32 (%Str, ...) @printf (%Str %25)
+  %27 = bitcast [16 x %Nat8]* @func284_str4 to %Str
+  call void (%Str) @o (%Str %27)
 ret void
   br label %endif_2
 else_2:
   br label %endif_2
 endif_2:
-  call void (%LLVM_Value) @func361 (%LLVM_Value %30)
+  %29 = bitcast [2 x %Nat8]* @func284_str5 to %Str
+  call void (%Str) @o (%Str %29)
+  %30 = alloca %ValueRecord
+  store %ValueRecord %21, %ValueRecord* %30, align 8
+  %31 = getelementptr inbounds %ValueRecord, %ValueRecord* %30, i1 0, i32 1; loadImmPtr
+  %32 = inttoptr i64 0 to%Unit*
+  call void (%List*, %ListForeachHandler, %Unit*) @func64 (%List* %31, %ListForeachHandler @func285, %Unit* %32)
+  %33 = bitcast [2 x %Nat8]* @func284_str6 to %Str
+  call void (%Str) @o (%Str %33)
+ret void
+  br label %endif_1
+else_1:
+  br label %endif_1
+endif_1:
+  %35 = call %LLVM_Value (%Value*) @func296 (%Value* %2)
+  %36 = extractvalue %LLVM_Value %35, 0
+  %37 = icmp ne %LLVM_ValueKind %36, 4
+  br i1 %37, label %then_3, label %else_3
+then_3:
+  %38 = bitcast [29 x %Nat8]* @func284_str7 to %Str
+  %39 = getelementptr inbounds %Value, %Value* %2, i1 0, i32 3
+  %40 = load %TokenInfo*, %TokenInfo** %39
+  call void (%Str, %TokenInfo*) @error (%Str %38, %TokenInfo* %40)
+  %41 = bitcast [16 x %Nat8]* @func284_str8 to %Str
+  call void (%Str) @o (%Str %41)
+ret void
+  br label %endif_3
+else_3:
+  br label %endif_3
+endif_3:
+  call void (%LLVM_Value) @func361 (%LLVM_Value %35)
+  %43 = bitcast [4 x %Nat8]* @func284_str9 to %Str
+  call void (%Str) @o (%Str %43)
   ret void
 }
 

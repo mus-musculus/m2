@@ -1492,6 +1492,12 @@ value_init = () -> () {
   // unit
   _unit = value_new_imm (typeUnit, 0, nil)
   valbind ("unit", _unit)
+
+  // unit2
+  /*unit_value_items = unit to Var List
+  list_init(&unit_value_items)
+  _unit2 = value_new ((type=typeUnit, values=unit_value_items, ti=nil) to ValueRecord, typeUnit, nil)
+  valbind ("unit2", _unit2)*/
 }
 
 
