@@ -329,7 +329,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 %func523.type11 = type {%List, %union.23}
 %func525.type12 = type {%Type*, %List}
 %DoStmtResult = type %union.24
-%Point = type {%Int32, %Int32}
 
 ;strings:
 
@@ -387,6 +386,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func128_str3 = private unnamed_addr constant [2 x i8] c" \00", align 1
 @func128_str4 = private unnamed_addr constant [15 x i8] c"%c[0;%dm^%c[0m\00", align 1
 @func129_str1 = private unnamed_addr constant [6 x i8] c"fatal\00", align 1
+@func129_str2 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @func130_str1 = private unnamed_addr constant [11 x i8] c"type error\00", align 1
 @func130_str2 = private unnamed_addr constant [16 x i8] c"type expected: \00", align 1
 @func130_str3 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
@@ -707,8 +707,7 @@ target triple = "x86_64-apple-macosx10.15.0"
 @func308_func309_str2 = private unnamed_addr constant [7 x i8] c"i1 0, \00", align 1
 @func310_str1 = private unnamed_addr constant [29 x i8] c"print/expr:: x.field == nil\0A\00", align 1
 @func310_str2 = private unnamed_addr constant [13 x i8] c"i1 0, i32 %u\00", align 1
-@func311_str1 = private unnamed_addr constant [7 x i8] c"UUUUU\0A\00", align 1
-@func311_str2 = private unnamed_addr constant [5 x i8] c"i1 0\00", align 1
+@func311_str1 = private unnamed_addr constant [5 x i8] c"i1 0\00", align 1
 @func313_str1 = private unnamed_addr constant [4 x i8] c"xor\00", align 1
 @func313_str2 = private unnamed_addr constant [4 x i8] c", 1\00", align 1
 @func313_str3 = private unnamed_addr constant [5 x i8] c", -1\00", align 1
@@ -997,7 +996,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 
 ;arrays:
 
-@arr = private unnamed_addr constant [2 x %Int32*] [%Int32* @xx, %Int32* @yy], align 16
 
 ;vars:
 
@@ -1047,9 +1045,6 @@ target triple = "x86_64-apple-macosx10.15.0"
 @spec_type_uid = global %Nat32 0; 1
 @fuid = global %Nat32 0; 1
 @imp_list = global %List zeroinitializer; 1
-@xx = global %Int32 0; 1
-@yy = global %Int32 0; 1
-@z = global %Point zeroinitializer; 1
 
 ;funcs:
 
@@ -3004,6 +2999,8 @@ break_0:
 define void @fatal (%Str) {
   %2 = bitcast [6 x %Nat8]* @func129_str1 to %Str
   call void (%Str, %Nat8, %Str) @txt (%Str %2, %Nat8 31, %Str %0)
+  %3 = bitcast [2 x %Nat8]* @func129_str2 to %Str
+  %4 = call %Int32 (%Str, ...) @printf (%Str %3)
   call void (%Int32) @exit (%Int32 1)
   ret void
 }
@@ -9538,52 +9535,50 @@ define %LLVM_Value @func311 (%ValueUn) {
   %7 = icmp eq %Int16 %5, %6
   br i1 %7, label %then_0, label %else_0
 then_0:
-  %8 = bitcast [7 x %Nat8]* @func311_str1 to %Str
-  %9 = call %Int32 (%Str, ...) @printf (%Str %8)
-  %10 = extractvalue %ValueUn %0, 1
-  %11 = getelementptr inbounds %Value, %Value* %10, i1 0, i32 1
-  %12 = load %union.9, %union.9* %11
-  %13 = alloca %union.9
-  store %union.9 %12, %union.9* %13, align 128
-  %14 = getelementptr inbounds %union.9, %union.9* %13, i1 0, i32 1
-  %15 = bitcast [72 x %Nat8]* %14 to %ValueGlobalVar*
-  %16 = load %ValueGlobalVar, %ValueGlobalVar* %15
-  %17 = extractvalue %ValueGlobalVar %16, 1
-  %18 = call %Str (%Definition*) @def_getname (%Definition* %17)
-  %19 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 5, 0
-  %20 = extractvalue %ValueUn %0, 0
-  %21 = insertvalue %LLVM_Value %19, %Type* %20, 1
-  %22 = insertvalue %LLVM_Value %21, %Str %18, 3
-  ret %LLVM_Value %22
+  %8 = extractvalue %ValueUn %0, 1
+  %9 = getelementptr inbounds %Value, %Value* %8, i1 0, i32 1
+  %10 = load %union.9, %union.9* %9
+  %11 = alloca %union.9
+  store %union.9 %10, %union.9* %11, align 128
+  %12 = getelementptr inbounds %union.9, %union.9* %11, i1 0, i32 1
+  %13 = bitcast [72 x %Nat8]* %12 to %ValueGlobalVar*
+  %14 = load %ValueGlobalVar, %ValueGlobalVar* %13
+  %15 = extractvalue %ValueGlobalVar %14, 1
+  %16 = call %Str (%Definition*) @def_getname (%Definition* %15)
+  %17 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 5, 0
+  %18 = extractvalue %ValueUn %0, 0
+  %19 = insertvalue %LLVM_Value %17, %Type* %18, 1
+  %20 = insertvalue %LLVM_Value %19, %Str %16, 3
+  ret %LLVM_Value %20
   br label %endif_0
 else_0:
   br label %endif_0
 endif_0:
-  %24 = extractvalue %ValueUn %0, 1
-  %25 = call %LLVM_Value (%Value*) @func296 (%Value* %24)
-  %26 = extractvalue %LLVM_Value %25, 0
-  %27 = icmp eq %LLVM_ValueKind %26, 8
-  br i1 %27, label %then_1, label %else_1
+  %22 = extractvalue %ValueUn %0, 1
+  %23 = call %LLVM_Value (%Value*) @func296 (%Value* %22)
+  %24 = extractvalue %LLVM_Value %23, 0
+  %25 = icmp eq %LLVM_ValueKind %24, 8
+  br i1 %25, label %then_1, label %else_1
 then_1:
-  %28 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %29 = extractvalue %ValueUn %0, 0
-  %30 = insertvalue %LLVM_Value %28, %Type* %29, 1
-  %31 = extractvalue %LLVM_Value %25, 4
-  %32 = insertvalue %LLVM_Value %30, %Nat32 %31, 4
-  ret %LLVM_Value %32
+  %26 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %27 = extractvalue %ValueUn %0, 0
+  %28 = insertvalue %LLVM_Value %26, %Type* %27, 1
+  %29 = extractvalue %LLVM_Value %23, 4
+  %30 = insertvalue %LLVM_Value %28, %Nat32 %29, 4
+  ret %LLVM_Value %30
   br label %endif_1
 else_1:
   br label %endif_1
 endif_1:
-  %34 = extractvalue %LLVM_Value %25, 1
-  %35 = call %Nat32 (%Type*, %LLVM_Value) @func290 (%Type* %34, %LLVM_Value %25)
-  %36 = bitcast [5 x %Nat8]* @func311_str2 to %Str
-  call void (%Str) @o (%Str %36)
-  %37 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
-  %38 = extractvalue %ValueUn %0, 0
-  %39 = insertvalue %LLVM_Value %37, %Type* %38, 1
-  %40 = insertvalue %LLVM_Value %39, %Nat32 %35, 4
-  ret %LLVM_Value %40
+  %32 = extractvalue %LLVM_Value %23, 1
+  %33 = call %Nat32 (%Type*, %LLVM_Value) @func290 (%Type* %32, %LLVM_Value %23)
+  %34 = bitcast [5 x %Nat8]* @func311_str1 to %Str
+  call void (%Str) @o (%Str %34)
+  %35 = insertvalue %LLVM_Value zeroinitializer, %LLVM_ValueKind 9, 0
+  %36 = extractvalue %ValueUn %0, 0
+  %37 = insertvalue %LLVM_Value %35, %Type* %36, 1
+  %38 = insertvalue %LLVM_Value %37, %Nat32 %33, 4
+  ret %LLVM_Value %38
 }
 
 define %LLVM_Value @func312 (%ValueUn) {

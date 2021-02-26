@@ -154,6 +154,7 @@ show = (ti : *TokenInfo) -> () {
 
 fatal = (s : Str) -> () {
   txt("fatal", cFatal, s)
+  printf("\n")
   exit(1)
 }
 
