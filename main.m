@@ -50,17 +50,6 @@ compilerVersionMajor = 0
 compilerVersionMinor = 5
 
 
-//xx = () -> () {}
-//yy = () -> () {}
-
-xx = 0 to Var Int
-yy = 0 to Var Int
-arr = @[&xx, &yy]
-
-Point = (x, y : Int32)
-
-z = unit to Var Point
-
 main = (argc : Nat, argv : []Str) -> Int32 {
   printf ("m2 v%d.%d\n", compilerVersionMajor, compilerVersionMinor)
 
