@@ -903,11 +903,26 @@ eval_access = (x : ValueAccess) -> LLVM_Value {
 
 
 eval_ref = (x : ValueRef) -> LLVM_Value {
+
+  // get pointer to global var?
+  // глобальная переменная сама по себе является своим адресом (в LLVM)
+  // это особенно важно для создания глобальных массивов указателей
+  // на статические переменные
+  // do here, before eval (!)
+  if x.value.data is ValueGlobalVar {
+    id = def_getname ((x.value.data as ValueGlobalVar).def)
+    // return as LLVM_ValueGlobalConst, а не Var
+    // (тк Var будет пытаться загружаться, чего нам не надо)
+    return (kind=#LLVM_ValueGlobalConst, type=x.type, id=id)
+  }
+
+
   vx = eval (x.value)
   if vx.kind == #LLVM_ValueAddress {
     // если это адрес - вернем его в регистре, а тип обернем в указатель
     return (kind=#LLVM_ValueRegister, type=x.type, reg=vx.reg)
   }
+
 
   //%7 = getelementptr inbounds %Int32, %Int32* @a, i32 0
   reg = llvm_getelementptr (vx.type, vx); o ("i1 0")
